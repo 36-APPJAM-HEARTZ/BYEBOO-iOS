@@ -12,9 +12,9 @@ protocol TestUseCase {
 }
 
 struct DefaultTestUseCase: TestUseCase {
-    private let testRepository: TestRepository
+    private let testRepository: TestInterface
     
-    init(testRepository: TestRepository) {
+    init(testRepository: TestInterface) {
         self.testRepository = testRepository
     }
     
@@ -24,9 +24,9 @@ struct DefaultTestUseCase: TestUseCase {
 }
 
 struct MockTestUseCase: TestUseCase {
-    private let testRepository: TestRepository
+    private let testRepository: TestInterface
     
-    init(testRepository: TestRepository) {
+    init(testRepository: TestInterface) {
         self.testRepository = testRepository
     }
     
