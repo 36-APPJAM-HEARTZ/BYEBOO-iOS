@@ -4,6 +4,11 @@
 //
 //  Created by 최주리 on 6/30/25.
 //
+import Foundation
+
+protocol DependencyAssembler {
+    func assemble()
+}
 
 final class DIContainer {
     static let shared = DIContainer()
