@@ -20,9 +20,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         DIContainer.shared.dependencyInject()
         guard let testViewModel = DIContainer.shared.resolve(type: TestViewModel.self) else {
-            // TODO: Logger로 대체하기
-            print("❌ DI 실패")
-            return
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            fatalError()
         }
 //        let testViewController = TestViewController(viewModel: testViewModel)
         
