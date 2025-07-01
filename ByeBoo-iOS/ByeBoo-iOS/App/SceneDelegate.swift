@@ -18,6 +18,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
+        DIContainer.shared.dependencyInject()
+        guard let testViewModel = DIContainer.shared.resolve(type: TestViewModel.self) else {
+            // TODO: Logger로 대체하기
+            print("❌ DI 실패")
+            return
+        }
+//        let testViewController = TestViewController(viewModel: testViewModel)
+        
         let viewController = ViewController()
         let navigationController = UINavigationController(rootViewController: viewController)
         
