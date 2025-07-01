@@ -79,7 +79,6 @@ struct ByeBooLogger {
         file: String,
         function: String
     ) {
-        #if DEBUG
         let logger = Logger(subsystem: OSLog.subsystem, category: level.category)
         let logMessage = "\(message)"
         let fileName = (file as NSString).lastPathComponent
@@ -96,7 +95,6 @@ struct ByeBooLogger {
         case .error(let error):
             logger.error("[❌ Error] [\(fileName) -> \(function)]: \(error.localizedDescription)")
         }
-        #endif
     }
     
     static func network(
