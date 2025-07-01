@@ -20,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         DIContainer.shared.dependencyInject()
         guard let testViewModel = DIContainer.shared.resolve(type: TestViewModel.self) else {
-            ByeBooLogger.error("의존성 주입 실패.. 앱 꺼집니다...", error: ByeBooError.DIFailedError)
+            ByeBooLogger.error(ByeBooError.DIFailedError)
             fatalError()
         }
 //        let testViewController = TestViewController(viewModel: testViewModel)

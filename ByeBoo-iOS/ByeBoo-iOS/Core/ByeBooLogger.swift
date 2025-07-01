@@ -62,12 +62,10 @@ enum LogLevel {
     
     var osLogType: OSLogType {
         switch self {
-        case .network, .lifeCycle:
+        case .network, .lifeCycle, .data:
                 .default
         case .debug:
                 .debug
-        case .data:
-                .info
         case .error:
                 .error
         }
@@ -96,7 +94,7 @@ struct ByeBooLogger {
         case .data:
             logger.info("[📊 Data] [\(fileName) -> \(function)]: \(logMessage)")
         case .error(let error):
-            logger.error("[❌ Error: \(error.localizedDescription)] [\(fileName) -> \(function)]: \(logMessage)")
+            logger.error("[❌ Error] [\(fileName) -> \(function)]: \(error.localizedDescription)")
         }
         #endif
     }
@@ -134,11 +132,10 @@ struct ByeBooLogger {
     }
     
     static func error(
-        _ message: Any,
-        error: Error,
+        _ error: Error,
         file: String = #file,
         function: String = #function
     ) {
-        log(level: .error(error: error), message: message, file: file, function: function)
+        log(level: .error(error: error), message: "", file: file, function: function)
     }
 }
