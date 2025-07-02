@@ -21,6 +21,7 @@ final class CombineTestViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        dataBind()
     }
     
     required init?(coder: NSCoder) {
