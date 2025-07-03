@@ -11,7 +11,6 @@ import UIKit
 final class CombineTestViewController: UIViewController {
     
     private let viewModel: CombineTestViewModel
-    //private let input = PassthroughSubject<CombineTestViewModel.InputAction, Never>()
     private var cancellables = Set<AnyCancellable>()
     
     init(viewModel: CombineTestViewModel) {
