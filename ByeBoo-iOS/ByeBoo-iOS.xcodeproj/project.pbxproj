@@ -374,6 +374,8 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.7.1;
+            };
+        };
 		18A8172B2E154F3D00F68F9F /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
@@ -394,6 +396,7 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 515C12802E159D77001BA2E0 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+        };
 		18A8172C2E154F3D00F68F9F /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 18A8172B2E154F3D00F68F9F /* XCRemoteSwiftPackageReference "Alamofire" */;
