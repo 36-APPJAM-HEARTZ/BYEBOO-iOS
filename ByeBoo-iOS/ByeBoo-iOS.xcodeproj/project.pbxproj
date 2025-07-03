@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		515C127F2E159D45001BA2E0 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 515C127E2E159D45001BA2E0 /* Then */; };
+		515C12822E159D77001BA2E0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 515C12812E159D77001BA2E0 /* SnapKit */; };
 		18A8172D2E154F3D00F68F9F /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 18A8172C2E154F3D00F68F9F /* Alamofire */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +42,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				515C127F2E159D45001BA2E0 /* Then in Frameworks */,
+				515C12822E159D77001BA2E0 /* SnapKit in Frameworks */,
 				18A8172D2E154F3D00F68F9F /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -83,6 +87,8 @@
 			);
 			name = "ByeBoo-iOS";
 			packageProductDependencies = (
+				515C127E2E159D45001BA2E0 /* Then */,
+				515C12812E159D77001BA2E0 /* SnapKit */,
 				18A8172C2E154F3D00F68F9F /* Alamofire */,
 			);
 			productName = "ByeBoo-iOS";
@@ -114,6 +120,8 @@
 			mainGroup = CB4180822E0925D2001E7BCB;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				515C127D2E159D45001BA2E0 /* XCRemoteSwiftPackageReference "Then" */,
+				515C12802E159D77001BA2E0 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				18A8172B2E154F3D00F68F9F /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -352,6 +360,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		515C127D2E159D45001BA2E0 /* XCRemoteSwiftPackageReference "Then" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/devxoul/Then.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
+		515C12802E159D77001BA2E0 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
 		18A8172B2E154F3D00F68F9F /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
@@ -363,6 +385,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		515C127E2E159D45001BA2E0 /* Then */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 515C127D2E159D45001BA2E0 /* XCRemoteSwiftPackageReference "Then" */;
+			productName = Then;
+		};
+		515C12812E159D77001BA2E0 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 515C12802E159D77001BA2E0 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
 		18A8172C2E154F3D00F68F9F /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 18A8172B2E154F3D00F68F9F /* XCRemoteSwiftPackageReference "Alamofire" */;
