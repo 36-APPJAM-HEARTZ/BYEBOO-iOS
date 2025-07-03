@@ -1,5 +1,5 @@
 {
-  "originHash" : "c4346f38a1062375f708fef53cc6bf388d783cd4f706e82bee303bfde1d89b70",
+  "originHash" : "0cd11a4ea344b95c25e88fb39b351003de5b41040e76927e86f0f8b8a4edc7a3",
   "pins" : [
     {
       "identity" : "snapkit",
@@ -17,8 +17,8 @@
       "state" : {
         "revision" : "d41ef523faef0f911369f79c0b96815d9dbb6d7a",
         "version" : "3.0.0"
-  "originHash" : "e8f130fe30ac6cdc940ef06ee1e8535e9f46ffee6aeead1722b9525562f6ce08",
-  "pins" : [
+      }
+    },
     {
       "identity" : "alamofire",
       "kind" : "remoteSourceControl",
