@@ -15,10 +15,6 @@ final class CombineTestViewModel: ViewModelType {
         case second
     }
     
-    struct Input {
-        let event: AnyPublisher<InputAction, Never>
-    }
-    
     struct Output {
         let result: AnyPublisher<Result<TestEntity, ByeBooError>, Never>
     }
