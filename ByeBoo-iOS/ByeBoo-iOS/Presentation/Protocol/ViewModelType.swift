@@ -6,5 +6,8 @@
 //
 
 protocol ViewModelType {
-    associatedtype Output    
+    associatedtype Input
+    associatedtype Output
+    
+    func action(_ trigger: Input)
 }
