@@ -36,7 +36,7 @@ final class CombineTestViewController: UIViewController {
                 case .success(let entity):
                     self?.updateUI(from: entity)
                 case .failure(let error):
-                    ByeBooLogger.network(error)
+                    ByeBooLogger.error(error)
                 }
             }
             .store(in: &cancellables)
