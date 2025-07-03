@@ -10,41 +10,53 @@ import UIKit
 
 final class CombineTestViewModel: ViewModelType {
     
+    enum InputAction {
+        case first
+        case second
+    }
+    
     struct Input {
-        let publisher: AnyPublisher<Void, Never>
+        let event: AnyPublisher<InputAction, Never>
     }
     
     struct Output {
-        let result: AnyPublisher<Result<TestViewModel, ByeBooError>, Never>
+        let result: AnyPublisher<Result<TestEntity, ByeBooError>, Never>
     }
     
-    private var output: PassthroughSubject<Result<TestViewModel, ByeBooError>, Never> = .init()
+    private var output: PassthroughSubject<Result<TestEntity, ByeBooError>, Never> = .init()
     private var cancellables = Set<AnyCancellable>()
     
-    private let testuseCase: TestUseCase
+    private let testUseCase: TestUseCase
     
     init(testUseCase: TestUseCase) {
-        self.testuseCase = testUseCase
+        self.testUseCase = testUseCase
     }
     
     func transform(input: Input) -> Output {
-        input.publisher
-            .sink { [weak self] _ in
-                self?.fetchTestModel()
+        input.event
+            .sink { [weak self] action in
+                switch action {
+                case .first:
+                    self?.fetchTestModel()
+                case .second:
+                    self?.fetchTestModel()
+                }
             }
             .store(in: &cancellables)
         return Output(result: output.eraseToAnyPublisher())
     }
     
     private func fetchTestModel() {
-//        testuseCase.testFetchModel()
-//            .sink(receiveCompletion: { [weak self] completion in
-//                if case .failure(let error) = completion {
-//                    self?.output.send(.failure(error))
-//                }
-//            }, receiveValue: { [weak self] model in
-//                self?.output.send(.success(model))
-//            })
-//            .store(in: &cancellables)
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let name = try await testUseCase.testFetchUserName()
+                output.send(.success(TestEntity(name: name, birth: "")))
+            } catch {
+                guard let error = error as? ByeBooError else { return }
+                output.send(.failure(error))
+            }
+        }
     }
 }

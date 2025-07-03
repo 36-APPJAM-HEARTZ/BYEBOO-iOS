@@ -11,7 +11,7 @@ import UIKit
 final class CombineTestViewController: UIViewController {
     
     private let viewModel: CombineTestViewModel
-    private let input = PassthroughSubject<Void, Never>()
+    private let input = PassthroughSubject<CombineTestViewModel.InputAction, Never>()
     private var cancellables = Set<AnyCancellable>()
     
     init(viewModel: CombineTestViewModel) {
@@ -22,6 +22,9 @@ final class CombineTestViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         dataBind()
+        // 테스트용으로 명시한 것으로, 실제 앱에서는 input은 버튼 클릭 등 사용자 액션에서 전달됩니다.
+        input.send(.first)
+        input.send(.second)
     }
     
     required init?(coder: NSCoder) {
@@ -30,15 +33,15 @@ final class CombineTestViewController: UIViewController {
     
     func dataBind() {
         let output = viewModel.transform(
-            input: CombineTestViewModel.Input(publisher: input.eraseToAnyPublisher())
+            input: CombineTestViewModel.Input(event: input.eraseToAnyPublisher())
         )
         
         output.result
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 switch result {
-                case .success(let model):
-                    self?.updateUI(model: model)
+                case .success(let entity):
+                    self?.updateUI(from: entity)
                 case .failure(let error):
                     ByeBooLogger.network(error)
                 }
@@ -46,7 +49,7 @@ final class CombineTestViewController: UIViewController {
             .store(in: &cancellables)
     }
     
-    func updateUI(model: TestViewModel) {
+    func updateUI(from entity: TestEntity) {
         
     }
 }
