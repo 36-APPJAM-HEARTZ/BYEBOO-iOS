@@ -23,7 +23,10 @@ final class CombineTestViewModel: ViewModelType {
         let result: AnyPublisher<Result<TestEntity, ByeBooError>, Never>
     }
     
-    private var output: PassthroughSubject<Result<TestEntity, ByeBooError>, Never> = .init()
+    private var resultSubject: PassthroughSubject<Result<TestEntity, ByeBooError>, Never> = .init()
+    var result: AnyPublisher<Result<TestEntity, ByeBooError>, Never> {
+        resultSubject.eraseToAnyPublisher()
+    }
     private var cancellables = Set<AnyCancellable>()
     
     private let testUseCase: TestUseCase
@@ -32,18 +35,11 @@ final class CombineTestViewModel: ViewModelType {
         self.testUseCase = testUseCase
     }
     
-    func transform(input: Input) -> Output {
-        input.event
-            .sink { [weak self] action in
-                switch action {
-                case .first:
-                    self?.fetchTestModel()
-                case .second:
-                    self?.fetchTestModel()
-                }
-            }
-            .store(in: &cancellables)
-        return Output(result: output.eraseToAnyPublisher())
+    func action(_ trigger: InputAction) {
+        switch trigger {
+        case .first, .second:
+            fetchTestModel()
+        }
     }
     
     private func fetchTestModel() {
@@ -52,10 +48,10 @@ final class CombineTestViewModel: ViewModelType {
             
             do {
                 let name = try await testUseCase.testFetchUserName()
-                output.send(.success(TestEntity(name: name, birth: "")))
+                resultSubject.send(.success(TestEntity(name: name, birth: "")))
             } catch {
                 guard let error = error as? ByeBooError else { return }
-                output.send(.failure(error))
+                resultSubject.send(.failure(error))
             }
         }
     }
