@@ -69,13 +69,12 @@ final class ByeBooFilledTag: BaseView {
     
     override func setLayout() {
         self.snp.makeConstraints {
-            $0.height.equalTo(24)
+            $0.height.equalTo(24.adjustedH)
         }
         
         textLabel.snp.makeConstraints {
-            //TODO: - 기기대응 extension 적용
-            $0.leading.trailing.equalToSuperview().inset(17.5)
-            $0.top.bottom.equalToSuperview().inset(3)
+            $0.leading.trailing.equalToSuperview().inset(17.5.adjustedW)
+            $0.top.bottom.equalToSuperview().inset(3.adjustedH)
         }
     }
 }
