@@ -77,7 +77,7 @@ final class ByeBooButton: UIButton {
         self.layer.cornerRadius = 12
         
         self.snp.makeConstraints {
-            $0.height.equalTo(53)
+            $0.height.equalTo(53.adjustedH)
         }
     }
     
