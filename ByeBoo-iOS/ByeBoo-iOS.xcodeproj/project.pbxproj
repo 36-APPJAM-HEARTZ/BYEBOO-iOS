@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18A8172D2E154F3D00F68F9F /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 18A8172C2E154F3D00F68F9F /* Alamofire */; };
 		515C127F2E159D45001BA2E0 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 515C127E2E159D45001BA2E0 /* Then */; };
 		515C12822E159D77001BA2E0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 515C12812E159D77001BA2E0 /* SnapKit */; };
-		18A8172D2E154F3D00F68F9F /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 18A8172C2E154F3D00F68F9F /* Alamofire */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -360,6 +360,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		18A8172B2E154F3D00F68F9F /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.10.2;
+			};
+		};
 		515C127D2E159D45001BA2E0 /* XCRemoteSwiftPackageReference "Then" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/devxoul/Then.git";
@@ -374,19 +382,16 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.7.1;
-            };
-        };
-		18A8172B2E154F3D00F68F9F /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.10.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		18A8172C2E154F3D00F68F9F /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 18A8172B2E154F3D00F68F9F /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
 		515C127E2E159D45001BA2E0 /* Then */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 515C127D2E159D45001BA2E0 /* XCRemoteSwiftPackageReference "Then" */;
@@ -396,11 +401,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 515C12802E159D77001BA2E0 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
-        };
-		18A8172C2E154F3D00F68F9F /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 18A8172B2E154F3D00F68F9F /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
