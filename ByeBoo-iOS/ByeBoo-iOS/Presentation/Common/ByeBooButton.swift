@@ -85,7 +85,3 @@ final class ByeBooButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
-#Preview {
-    ViewController()
-}
