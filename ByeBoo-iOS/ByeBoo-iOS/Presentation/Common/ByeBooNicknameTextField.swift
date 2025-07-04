@@ -5,7 +5,6 @@
 //  Created by APPLE on 7/4/25.
 //
 
-import Combine
 import SnapKit
 import Then
 import UIKit
@@ -14,7 +13,6 @@ final class ByeBooNicknameTextField: UIView {
     
     let nicknameField = UITextField()
     let errorIcon = UIImageView()
-    private var cancellables = Set<AnyCancellable>()
     
     init(_ type: NicknameFieldType) {
         super.init(frame: .zero)
