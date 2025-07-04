@@ -24,7 +24,6 @@ final class QuestViewController: BaseViewController {
     private func setUI() {
         text.do {
             $0.text = "퀘스트"
-            $0.textColor = .white
         }
     }
     

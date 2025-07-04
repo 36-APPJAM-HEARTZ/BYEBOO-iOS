@@ -24,7 +24,6 @@ final class HomeViewController: BaseViewController {
     private func setUI() {
         text.do {
             $0.text = "홈"
-            $0.textColor = .white
         }
     }
     

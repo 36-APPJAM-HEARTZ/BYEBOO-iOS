@@ -24,7 +24,6 @@ final class MyPageViewController: BaseViewController {
     private func setUI() {
         text.do {
             $0.text = "내정보"
-            $0.textColor = .white
         }
     }
     
