@@ -54,6 +54,15 @@ enum ByeBooButtonType {
             UIColor(.clear).cgColor
         }
     }
+    
+    var isEnabled: Bool {
+        switch self {
+        case .sub, .outline, .enabled:
+            true
+        case .disabled, .disabled2:
+            false
+        }
+    }
 }
 
 final class ByeBooButton: UIButton {
@@ -75,6 +84,7 @@ final class ByeBooButton: UIButton {
         self.layer.borderWidth = 1
         self.layer.borderColor = type.borderColor
         self.layer.cornerRadius = 12
+        self.isEnabled = type.isEnabled
         
         self.snp.makeConstraints {
             $0.height.equalTo(53.adjustedH)
