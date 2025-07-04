@@ -33,7 +33,7 @@ extension Double {
 
 extension Int {
     var adjustedW: CGFloat {
-        return CGFloat(self).adjusted
+        return CGFloat(self).adjustedW
     }
     
     var adjustedH: CGFloat {
