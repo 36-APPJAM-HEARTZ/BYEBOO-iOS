@@ -37,7 +37,7 @@ final class CustomModalController: BaseViewController {
     }
     
     override func setAddTarget() {
-        guard let modalView = modalView as? BaseModal else { return }
+        guard let modalView = modalView as? ModalProtocol else { return }
         
         modalView.confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
     }

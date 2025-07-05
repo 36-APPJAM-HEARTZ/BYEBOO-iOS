@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class CongrateModalView: BaseView, BaseModal {
+final class CongrateModalView: BaseView, ModalProtocol {
     let confirmButton: ByeBooButton = ByeBooButton(titleText: "바로가기", type: .enabled)
     
     private let descriptionLabel = UILabel()
