@@ -24,7 +24,7 @@ extension UIFont {
         }
         
         static func font(_ type: FontType, ofsize size: CGFloat) -> UIFont {
-            return UIFont(name: type.rawValue, size: size)!
+            return UIFont(name: type.rawValue, size: size.adjustedW)!
         }
     }
 
