@@ -21,7 +21,8 @@ final class ByeBooNavigationBar {
     static func makeNavigationBar(
         navigationItem: UINavigationItem,
         navigationController: UINavigationController?,
-        type: NavigationBarType
+        type: NavigationBarType,
+        action: Selector? = nil
     ) -> UINavigationBarAppearance {
         
         let barAppearance = UINavigationBarAppearance()
@@ -34,11 +35,16 @@ final class ByeBooNavigationBar {
             ]
         }
         
+        guard let topViewController = navigationController?.topViewController as? BaseViewController else {
+            return barAppearance
+        }
+        
         switch type {
         case .back:
             let backButtonItem = makeBarButtonItem(
                 image: .left.withTintColor(.white),
-                target: navigationController?.topViewController
+                target: navigationController?.topViewController,
+                action: #selector(topViewController.back)
             )
             navigationItem.leftBarButtonItem = backButtonItem
             
@@ -49,14 +55,16 @@ final class ByeBooNavigationBar {
             makeCloseButtonItem(
                 image: .xicon,
                 target: navigationController?.topViewController,
-                navigationItem: navigationItem
+                navigationItem: navigationItem,
+                action: action
             )
             
         case .titleAndClose(let string):
             makeCloseButtonItem(
                 image: .xicon,
                 target: navigationController?.topViewController,
-                navigationItem: navigationItem
+                navigationItem: navigationItem,
+                action: action
             )
             navigationItem.title = string
         }
@@ -69,21 +77,26 @@ final class ByeBooNavigationBar {
         return barAppearance
     }
     
-    private static func makeBarButtonItem(image: UIImage, target: UIViewController?) -> UIBarButtonItem {
+    private static func makeBarButtonItem(
+        image: UIImage,
+        target: UIViewController?,
+        action: Selector?
+    ) -> UIBarButtonItem {
         return UIBarButtonItem(
             image: image.withTintColor(.white).withRenderingMode(.alwaysOriginal),
             style: .plain,
             target: target,
-            action: nil
+            action: action
         )
     }
     
     private static func makeCloseButtonItem(
         image: UIImage,
         target: UIViewController?,
-        navigationItem: UINavigationItem
+        navigationItem: UINavigationItem,
+        action: Selector?
     ) {
-        let closeButtonItem = makeBarButtonItem(image: image, target: target)
+        let closeButtonItem = makeBarButtonItem(image: image, target: target, action: action)
         navigationItem.rightBarButtonItem = closeButtonItem
     }
 }
