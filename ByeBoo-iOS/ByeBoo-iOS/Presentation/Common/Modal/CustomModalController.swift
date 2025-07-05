@@ -50,4 +50,9 @@ extension CustomModalController {
             action()
         }
     }
+    
+    @objc
+    func cancleButtonTapped() {
+        dismiss(animated: false)
+    }
 }
