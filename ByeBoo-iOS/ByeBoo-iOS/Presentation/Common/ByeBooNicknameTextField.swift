@@ -5,21 +5,19 @@
 //  Created by APPLE on 7/4/25.
 //
 
-import SnapKit
-import Then
 import UIKit
 
-final class ByeBooNicknameTextField: UIView {
+import SnapKit
+import Then
+
+final class ByeBooNicknameTextField: BaseView {
     
     let nicknameField = UITextField()
     let errorIcon = UIImageView()
     
     init(_ type: NicknameFieldType) {
         super.init(frame: .zero)
-        setUI()
-        setStyle()
         setTextFieldStyle(type)
-        setLayout()
         setAction()
     }
     
@@ -27,12 +25,7 @@ final class ByeBooNicknameTextField: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setUI() {
-        nicknameField.addSubview(errorIcon)
-        addSubview(nicknameField)
-    }
-    
-    private func setStyle() {
+    override func setStyle() {
         nicknameField.do {
             $0.backgroundColor = .grayscale700
             $0.layer.cornerRadius = 12
@@ -53,16 +46,12 @@ final class ByeBooNicknameTextField: UIView {
         }
     }
     
-    private func setTextFieldStyle(_ type: NicknameFieldType) {
-        nicknameField.do {
-            $0.layer.borderWidth = type.borderWidth
-            $0.layer.borderColor = type.borderColor
-        }
-        
-        errorIcon.isHidden = type.isOccuredError
+    override func setUI() {
+        nicknameField.addSubview(errorIcon)
+        addSubview(nicknameField)
     }
     
-    private func setLayout() {
+    override func setLayout() {
         self.snp.makeConstraints {
             $0.width.equalTo(312)
             $0.height.equalTo(57)
@@ -74,10 +63,19 @@ final class ByeBooNicknameTextField: UIView {
         }
         
         errorIcon.snp.makeConstraints {
-            $0.trailing.equalToSuperview().offset(-24)
+            $0.trailing.equalToSuperview().inset(-24)
             $0.centerY.equalToSuperview()
             $0.width.height.equalTo(18)
         }
+    }
+    
+    private func setTextFieldStyle(_ type: NicknameFieldType) {
+        nicknameField.do {
+            $0.layer.borderWidth = type.borderWidth
+            $0.layer.borderColor = type.borderColor
+        }
+        
+        errorIcon.isHidden = type.isOccuredError
     }
     
     private func setAction() {
