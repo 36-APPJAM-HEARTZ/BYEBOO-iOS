@@ -10,9 +10,9 @@ import UIKit
 struct ModalBuilder {
     private let modalView: UIView
     private let action: (() -> Void)?
+    private let rootViewController: UIViewController
     
-    private var modalViewController: UIViewController
-    private var rootViewController: UIViewController
+    private let modalViewController: CustomModalController
     
     init(
         modalView: UIView,

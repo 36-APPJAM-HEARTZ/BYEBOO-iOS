@@ -31,7 +31,8 @@ final class CustomModalController: BaseViewController {
         view.addSubview(modalView)
         
         modalView.snp.makeConstraints {
-            $0.center.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview().inset(47.5.adjustedW)
+            $0.centerY.equalToSuperview()
         }
     }
     
