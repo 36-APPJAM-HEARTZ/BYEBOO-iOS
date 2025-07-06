@@ -19,6 +19,19 @@ final class QuestModalView: BaseView, ModalProtocol {
     private let titleLabel = UILabel()
     private let tipButton = UIButton()
     
+    private var questNumber: Int
+    private var quest: String
+    
+    init(questNumber: Int, quest: String) {
+        self.questNumber = questNumber
+        self.quest = quest
+        super.init(frame: .zero)
+    }
+    
+    @MainActor required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func setStyle() {
         backgroundColor = .grayscale90080
         layer.cornerRadius = 12
@@ -31,14 +44,14 @@ final class QuestModalView: BaseView, ModalProtocol {
         }
         
         questLabel.do {
-            $0.text = "3번째 퀘스트"
+            $0.text = "\(questNumber)번째 퀘스트"
             $0.textColor = .grayscale400
             $0.textAlignment = .center
             $0.font = FontManager.body2M16.font
         }
         
         titleLabel.do {
-            $0.text = "오늘은 나가서 상쾌하게 달리고 오세요."
+            $0.text = quest
             $0.textColor = .grayscale50
             $0.textAlignment = .center
             $0.numberOfLines = 0
