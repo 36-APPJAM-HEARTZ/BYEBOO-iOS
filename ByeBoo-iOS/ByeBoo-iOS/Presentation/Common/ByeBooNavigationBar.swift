@@ -16,7 +16,7 @@ enum NavigationBarType {
     case titleAndClose(String)
 }
 
-final class ByeBooNavigationBar {
+struct ByeBooNavigationBar {
     
     static func makeNavigationBar(
         navigationItem: UINavigationItem,
@@ -44,7 +44,7 @@ final class ByeBooNavigationBar {
             let backButtonItem = makeBarButtonItem(
                 image: .left.withTintColor(.white),
                 target: navigationController?.topViewController,
-                action: #selector(topViewController.back)
+                action: action
             )
             navigationItem.leftBarButtonItem = backButtonItem
             
