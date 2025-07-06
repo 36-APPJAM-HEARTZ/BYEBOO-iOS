@@ -1,0 +1,111 @@
+//
+//  QuestModelView.swift
+//  ByeBoo-iOS
+//
+//  Created by APPLE on 7/6/25.
+//
+
+import UIKit
+
+import SnapKit
+import Then
+
+final class QuestModalView: BaseView, ModalProtocol {
+    
+    var confirmButton: ByeBooButton = ByeBooButton(titleText: "진행하기", type: .enabled)
+    
+    private let imageView = UIImageView()
+    private let questLabel = UILabel()
+    private let titleLabel = UILabel()
+    private let tipButton = UIButton()
+    
+    override func setStyle() {
+        backgroundColor = .grayscale90080
+        layer.cornerRadius = 12
+        
+        imageView.do {
+            $0.backgroundColor = .grayscale90080
+            $0.image = .banner1
+            $0.contentMode = .scaleAspectFit
+            $0.layer.cornerRadius = 12
+        }
+        
+        questLabel.do {
+            $0.text = "3번째 퀘스트"
+            $0.textColor = .grayscale400
+            $0.textAlignment = .center
+            $0.font = FontManager.body2M16.font
+        }
+        
+        titleLabel.do {
+            $0.text = "오늘은 나가서 상쾌하게 달리고 오세요."
+            $0.textColor = .grayscale50
+            $0.textAlignment = .center
+            $0.numberOfLines = 0
+            $0.lineBreakMode = .byCharWrapping
+            $0.font = FontManager.sub2Sb18.font
+        }
+        
+        tipButton.do {
+            $0.setTitle("작성 TIP", for: .normal)
+            $0.titleLabel?.font = FontManager.body4Sb14.font
+            $0.backgroundColor = .clear
+            $0.setTitleColor(.grayscale300, for: .normal)
+            $0.layer.cornerRadius = 12
+            $0.setUnderLine()
+        }
+    }
+    
+    override func setUI() {
+        addSubviews(
+            imageView,
+            questLabel,
+            titleLabel,
+            tipButton,
+            confirmButton
+        )
+    }
+    
+    override func setLayout() {
+        self.snp.makeConstraints {
+            $0.width.equalTo(263)
+            $0.height.equalTo(301)
+        }
+        
+        imageView.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(10)
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(200)
+            $0.height.equalTo(58)
+        }
+        
+        questLabel.snp.makeConstraints {
+            $0.top.equalTo(imageView.snp.bottom).offset(3)
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(200)
+            $0.height.equalTo(21)
+        }
+        
+        titleLabel.snp.makeConstraints {
+            $0.top.equalTo(questLabel.snp.bottom).offset(5)
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(200)
+            $0.height.equalTo(50)
+        }
+        
+        tipButton.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(10)
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(200)
+            $0.height.equalTo(18)
+        }
+        
+        confirmButton.snp.makeConstraints {
+            $0.top.equalTo(tipButton.snp.bottom).offset(15)
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(215)
+            $0.height.equalTo(53)
+            $0.bottom.equalToSuperview().inset(20)
+        }
+    }
+}
