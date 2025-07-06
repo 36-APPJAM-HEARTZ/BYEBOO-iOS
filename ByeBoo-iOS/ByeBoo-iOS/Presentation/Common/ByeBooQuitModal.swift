@@ -11,12 +11,14 @@ import SnapKit
 import Then
 
 final class ByeBooQuitModal: BaseView, ModalProtocol {
+//    var cancelButton: ByeBooButton?
+    
     
     private let titleLabel = UILabel()
     private let secondDescriptionLabel = UILabel()
     private let buttonStackView = UIStackView()
-    let confirmButton = ByeBooButton(titleText: "머무르기", type: .enabled)
-    lazy var quitButton = ByeBooButton(titleText: "나가기", type: .outline)
+    let actionButton = ByeBooButton(titleText: "머무르기", type: .enabled)
+    let dismissButton: ByeBooButton? = ByeBooButton(titleText: "나가기", type: .outline)
     
     override func setUI() {
         backgroundColor = .grayscale90080
@@ -28,11 +30,11 @@ final class ByeBooQuitModal: BaseView, ModalProtocol {
             buttonStackView
         )
         
-        [confirmButton, quitButton].forEach {
-            buttonStackView.addArrangedSubview($0)
+        if let cancelButton = dismissButton {
+            [actionButton, cancelButton].forEach {
+                buttonStackView.addArrangedSubview($0)
+            }
         }
-        
-        setAddTarget()
     }
     
     override func setStyle() {
@@ -73,21 +75,18 @@ final class ByeBooQuitModal: BaseView, ModalProtocol {
             $0.bottom.equalToSuperview().inset(24)
         }
         
-        confirmButton.snp.makeConstraints {
+        actionButton.snp.makeConstraints {
             $0.width.equalTo(107.adjustedW)
             $0.height.equalTo(53.adjustedH)
             $0.leading.equalToSuperview()
         }
         
-        quitButton.snp.makeConstraints {
-            $0.width.equalTo(107.adjustedW)
-            $0.height.equalTo(53.adjustedH)
-            $0.trailing.equalToSuperview()
+        if let cancelButton = dismissButton {
+            cancelButton.snp.makeConstraints {
+                $0.width.equalTo(107.adjustedW)
+                $0.height.equalTo(53.adjustedH)
+                $0.trailing.equalToSuperview()
+            }
         }
-    }
-    
-    private func setAddTarget() {
-        quitButton.addTarget(target, action: #selector(CustomModalController.confirmButtonTapped), for: .touchUpInside) //TODO: - VC 이동
-        confirmButton.addTarget(target, action: #selector(CustomModalController.cancleButtonTapped), for: .touchUpInside)
     }
 }
