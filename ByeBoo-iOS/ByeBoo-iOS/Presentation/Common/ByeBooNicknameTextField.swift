@@ -14,6 +14,7 @@ final class ByeBooNicknameTextField: BaseView {
     
     let nicknameField = UITextField()
     let errorIcon = UIImageView()
+    var onTextChange: ((String) -> Void)?
     
     init(_ type: NicknameFieldType) {
         super.init(frame: .zero)
@@ -28,12 +29,12 @@ final class ByeBooNicknameTextField: BaseView {
     override func setStyle() {
         nicknameField.do {
             $0.backgroundColor = .grayscale700
-            $0.layer.cornerRadius = 12
+            $0.layer.cornerRadius = 12.adjustedW
             $0.attributedPlaceholder = NSAttributedString(
                 string: "닉네임을 입력해주세요",
                 attributes: [NSAttributedString.Key.foregroundColor : UIColor.grayscale300]
             )
-            $0.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 24, height: 0))
+            $0.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 24.adjustedW, height: 0))
             $0.leftViewMode = .always
             $0.textColor = .grayscale300
         }
@@ -41,7 +42,7 @@ final class ByeBooNicknameTextField: BaseView {
         errorIcon.do {
             $0.image = .errorRed
             $0.clipsToBounds = true
-            $0.layer.cornerRadius = 9
+            $0.layer.cornerRadius = 9.adjustedW
             $0.tintColor = .grayscale600
         }
     }
@@ -53,8 +54,8 @@ final class ByeBooNicknameTextField: BaseView {
     
     override func setLayout() {
         self.snp.makeConstraints {
-            $0.width.equalTo(312)
-            $0.height.equalTo(57)
+            $0.width.equalTo(312.adjustedW)
+            $0.height.equalTo(57.adjustedH)
         }
         
         nicknameField.snp.makeConstraints {
@@ -63,9 +64,10 @@ final class ByeBooNicknameTextField: BaseView {
         }
         
         errorIcon.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(-24)
+            $0.trailing.equalToSuperview().inset(24.adjustedW)
             $0.centerY.equalToSuperview()
-            $0.width.height.equalTo(18)
+            $0.width.equalTo(18.adjustedW)
+            $0.height.equalTo(18.adjustedH)
         }
     }
     
@@ -91,6 +93,8 @@ final class ByeBooNicknameTextField: BaseView {
     @objc
     private func nicknameFieldDidChange() {
         guard let text = nicknameField.text else { return }
+        
+        onTextChange?(text)
         
         if text.isEmpty {
             self.setTextFieldStyle(.onBeginEditing)
