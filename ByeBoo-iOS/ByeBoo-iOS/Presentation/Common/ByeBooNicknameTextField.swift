@@ -14,6 +14,7 @@ final class ByeBooNicknameTextField: BaseView {
     
     let nicknameField = UITextField()
     let errorIcon = UIImageView()
+    var onTextChange: ((String) -> Void)?
     
     init(_ type: NicknameFieldType) {
         super.init(frame: .zero)
@@ -63,7 +64,7 @@ final class ByeBooNicknameTextField: BaseView {
         }
         
         errorIcon.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(-24.adjustedW)
+            $0.trailing.equalToSuperview().inset(24.adjustedW)
             $0.centerY.equalToSuperview()
             $0.width.equalTo(18.adjustedW)
             $0.height.equalTo(18.adjustedH)
@@ -92,6 +93,8 @@ final class ByeBooNicknameTextField: BaseView {
     @objc
     private func nicknameFieldDidChange() {
         guard let text = nicknameField.text else { return }
+        
+        onTextChange?(text)
         
         if text.isEmpty {
             self.setTextFieldStyle(.onBeginEditing)
