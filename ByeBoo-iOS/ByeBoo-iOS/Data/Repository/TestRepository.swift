@@ -16,9 +16,9 @@ struct DefaultTestRepository: TestInterface {
         self.keychain = keychain
     }
     
-    func fetchUserName() -> String {
-        let result: UserResponseDTO = network.request()
-        keychain.save()
+    func fetchUserName() async throws -> String {
+        // TODO: UserDefaults에서 userID 꺼내는 로직 필요 지금은 임시값
+        let result = try await network.request(HomeAPI.character(userID: 1), decodingType: UserResponseDTO.self)
         
         return result.name
     }

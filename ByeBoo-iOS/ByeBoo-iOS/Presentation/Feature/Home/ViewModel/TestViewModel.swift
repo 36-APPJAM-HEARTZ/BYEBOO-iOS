@@ -16,7 +16,7 @@ final class TestViewModel {
         self.testUseCase = testUseCase
     }
     
-    func testFunction() {
-        name = testUseCase.testFetchUserName()
+    func testFunction() async throws {
+        name = try await testUseCase.testFetchUserName()
     }
 }
