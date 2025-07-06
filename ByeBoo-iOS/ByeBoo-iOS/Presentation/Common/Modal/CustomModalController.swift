@@ -52,7 +52,7 @@ extension CustomModalController {
     }
     
     @objc
-    func cancleButtonTapped() {
+    func cancelButtonTapped() {
         dismiss(animated: false)
     }
 }
