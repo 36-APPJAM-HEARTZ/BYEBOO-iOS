@@ -19,6 +19,9 @@ final class ByeBooQuitModal: BaseView, ModalProtocol {
     lazy var quitButton = ByeBooButton(titleText: "나가기", type: .outline)
     
     override func setUI() {
+        backgroundColor = .grayscale90080
+        layer.cornerRadius = 12
+        
         addSubviews(
             titleLabel,
             secondDescriptionLabel,
@@ -66,7 +69,7 @@ final class ByeBooQuitModal: BaseView, ModalProtocol {
         
         buttonStackView.snp.makeConstraints {
             $0.top.equalTo(secondDescriptionLabel.snp.bottom).offset(16)
-            $0.leading.trailing.equalToSuperview().inset(24)
+            $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().inset(24)
         }
         
@@ -84,7 +87,7 @@ final class ByeBooQuitModal: BaseView, ModalProtocol {
     }
     
     private func setAddTarget() {
-        confirmButton.addTarget(target, action: #selector(CustomModalController.confirmButtonTapped), for: .touchUpInside)
-        quitButton.addTarget(target, action: #selector(CustomModalController.cancleButtonTapped), for: .touchUpInside)
+        quitButton.addTarget(target, action: #selector(CustomModalController.confirmButtonTapped), for: .touchUpInside) //TODO: - VC 이동
+        confirmButton.addTarget(target, action: #selector(CustomModalController.cancleButtonTapped), for: .touchUpInside)
     }
 }
