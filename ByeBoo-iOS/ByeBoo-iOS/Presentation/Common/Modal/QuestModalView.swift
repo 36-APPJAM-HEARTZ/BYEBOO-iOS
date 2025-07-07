@@ -34,13 +34,13 @@ final class QuestModalView: BaseView, ModalProtocol {
     
     override func setStyle() {
         backgroundColor = .grayscale90080
-        layer.cornerRadius = 12
+        layer.cornerRadius = 12.adjustedW
         
         imageView.do {
             $0.backgroundColor = .grayscale90080
             $0.image = .banner1
             $0.contentMode = .scaleAspectFit
-            $0.layer.cornerRadius = 12
+            $0.layer.cornerRadius = 12.adjustedW
         }
         
         questLabel.do {
@@ -64,7 +64,7 @@ final class QuestModalView: BaseView, ModalProtocol {
             $0.titleLabel?.font = FontManager.body4Sb14.font
             $0.backgroundColor = .clear
             $0.setTitleColor(.grayscale300, for: .normal)
-            $0.layer.cornerRadius = 12
+            $0.layer.cornerRadius = 12.adjustedW
             $0.setUnderLine()
         }
     }
@@ -81,43 +81,43 @@ final class QuestModalView: BaseView, ModalProtocol {
     
     override func setLayout() {
         self.snp.makeConstraints {
-            $0.width.equalTo(263)
-            $0.height.equalTo(301)
+            $0.width.equalTo(263.adjustedW)
+            $0.height.equalTo(301.adjustedH)
         }
         
         imageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(10)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(200)
-            $0.height.equalTo(58)
+            $0.width.equalTo(200.adjustedW)
+            $0.height.equalTo(58.adjustedH)
         }
         
         questLabel.snp.makeConstraints {
             $0.top.equalTo(imageView.snp.bottom).offset(3)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(200)
-            $0.height.equalTo(21)
+            $0.width.equalTo(200.adjustedW)
+            $0.height.equalTo(21.adjustedH)
         }
         
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(questLabel.snp.bottom).offset(5)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(200)
-            $0.height.equalTo(50)
+            $0.width.equalTo(200.adjustedW)
+            $0.height.equalTo(50.adjustedH)
         }
         
         tipButton.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(10)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(200)
-            $0.height.equalTo(18)
+            $0.width.equalTo(200.adjustedW)
+            $0.height.equalTo(18.adjustedH)
         }
         
         confirmButton.snp.makeConstraints {
             $0.top.equalTo(tipButton.snp.bottom).offset(15)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(215)
-            $0.height.equalTo(53)
+            $0.width.equalTo(215.adjustedW)
+            $0.height.equalTo(53.adjustedH)
             $0.bottom.equalToSuperview().inset(20)
         }
     }
