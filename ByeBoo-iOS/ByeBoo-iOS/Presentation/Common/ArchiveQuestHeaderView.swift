@@ -10,8 +10,14 @@ import UIKit
 import SnapKit
 import Then
 
+enum QuestHeaderType {
+    case complete
+    case archive
+}
+
 final class ArchiveQuestHeaderView: BaseView {
 
+    private let type: QuestHeaderType
     private let stepLabel = UILabel()
     private let questNumberLabel = UILabel()
     private let dateLabel = UILabel()
@@ -23,11 +29,13 @@ final class ArchiveQuestHeaderView: BaseView {
     private let questTitle: String
     
     init(
+        type: QuestHeaderType,
         stepNumber: Int,
         questNumber: Int,
         date: String,
         questTitle: String
     ) {
+        self.type = type
         self.stepNumber = stepNumber
         self.questNumber = questNumber
         self.date = date
@@ -65,6 +73,13 @@ final class ArchiveQuestHeaderView: BaseView {
             $0.font = FontManager.head1Sb24.font
             $0.textColor = .grayscale100
             $0.numberOfLines = 0
+            
+            switch type {
+            case .complete:
+                $0.textAlignment = .center
+            case .archive:
+                $0.textAlignment = .left
+            }
         }
     }
     
@@ -80,7 +95,14 @@ final class ArchiveQuestHeaderView: BaseView {
     override func setLayout() {
         stepLabel.snp.makeConstraints {
             $0.top.equalToSuperview()
-            $0.leading.equalToSuperview().inset(24.adjustedW)
+            
+            
+            switch type {
+            case .complete:
+                $0.leading.equalToSuperview().inset(118.adjustedW)
+            case .archive:
+                $0.leading.equalToSuperview().inset(24.adjustedW)
+            }
         }
         
         questNumberLabel.snp.makeConstraints {
@@ -90,7 +112,13 @@ final class ArchiveQuestHeaderView: BaseView {
         
         dateLabel.snp.makeConstraints {
             $0.top.equalTo(stepLabel.snp.bottom).offset(12.adjustedH)
-            $0.leading.equalToSuperview().inset(24.adjustedW)
+            
+            switch type {
+            case .complete:
+                $0.centerX.equalToSuperview()
+            case .archive:
+                $0.leading.equalToSuperview().inset(24.adjustedW)
+            }
         }
         
         questTitleLabel.snp.makeConstraints {

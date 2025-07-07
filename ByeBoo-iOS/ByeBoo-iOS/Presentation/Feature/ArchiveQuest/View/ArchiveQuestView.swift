@@ -13,6 +13,7 @@ import SnapKit
 final class ArchiveQuestView: BaseView {
  
     private let headerView = ArchiveQuestHeaderView(
+        type: .archive,
         stepNumber: 1,
         questNumber: 2,
         date: "2025. 07. 02",
