@@ -12,7 +12,7 @@ import Then
 
 final class QuestModalView: BaseView, ModalProtocol {
     
-    var confirmButton: ByeBooButton = ByeBooButton(titleText: "진행하기", type: .enabled)
+    let confirmButton: ByeBooButton = ByeBooButton(titleText: "진행하기", type: .enabled)
     
     private let imageView = UIImageView()
     private let questLabel = UILabel()
@@ -28,7 +28,7 @@ final class QuestModalView: BaseView, ModalProtocol {
         super.init(frame: .zero)
     }
     
-    @MainActor required init?(coder: NSCoder) {
+    required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
