@@ -13,12 +13,13 @@ import Then
 enum ByeBooFilledTagType {
     case purple
     case gray
+    case emotionDisabled
     
     var backgroundColor: UIColor {
         switch self {
         case .purple:
             return .primary300
-        case .gray:
+        case .gray, .emotionDisabled:
             return .white10
         }
     }
@@ -29,6 +30,17 @@ enum ByeBooFilledTagType {
             return .white
         case .gray:
             return .grayscale300
+        case .emotionDisabled:
+            return .grayscale50
+        }
+    }
+    
+    var font: UIFont {
+        switch self {
+        case .gray:
+            return FontManager.cap1M12.font
+        case .purple, .emotionDisabled:
+            return FontManager.body4Sb14.font
         }
     }
 }
@@ -36,6 +48,9 @@ enum ByeBooFilledTagType {
 final class ByeBooFilledTag: BaseView {
     private let textLabel =  UILabel()
     private var tagType: ByeBooFilledTagType
+    var isSelected: Bool = false {
+        didSet { toggleTagType() }
+    }
     
     init(tagType: ByeBooFilledTagType, text: String) {
         self.tagType = tagType
@@ -45,7 +60,7 @@ final class ByeBooFilledTag: BaseView {
         setStyle()
         setUI()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -58,8 +73,9 @@ final class ByeBooFilledTag: BaseView {
         }
         
         textLabel.do {
-            $0.font = FontManager.cap1M12.font
+            $0.font = tagType.font
             $0.textColor = tagType.textColor
+            $0.textAlignment = .center
         }
     }
     
@@ -77,4 +93,17 @@ final class ByeBooFilledTag: BaseView {
             $0.top.bottom.equalToSuperview().inset(3.adjustedH)
         }
     }
+    
+    func toggleTagType() {
+        switch tagType {
+        case .emotionDisabled:
+            tagType = isSelected ? .purple: .emotionDisabled
+        case .purple:
+            tagType = isSelected ? .purple : .emotionDisabled
+        case .gray:
+            tagType = isSelected ? .purple : .gray
+       }
+        setStyle()
+    }
+    
 }
