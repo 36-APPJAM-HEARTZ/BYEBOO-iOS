@@ -10,12 +10,24 @@ import UIKit
 import SnapKit
 import Then
 
-enum ByeBooEmotion: String, CaseIterable {
+enum ByeBooEmotion: CaseIterable {
     case neutral
     case selfUnderstanding
     case sad
     case relieved
     
+    var key: String {
+        switch self {
+        case .neutral:
+            return "NEURTRAl"
+        case .sad:
+            return "SAD"
+        case .selfUnderstanding:
+            return "SELF_UNDERSTANDING"
+        case .relieved:
+            return "RELIEVED"
+        }
+    }
     
     var emotionImage: UIImageView {
         switch self {
