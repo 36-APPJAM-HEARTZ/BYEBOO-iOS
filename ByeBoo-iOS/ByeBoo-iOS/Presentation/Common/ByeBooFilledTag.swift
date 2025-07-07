@@ -14,22 +14,19 @@ enum ByeBooFilledTagType {
     case purple
     case gray
     case emotionDisabled
-    case emotionEnabled
     
     var backgroundColor: UIColor {
         switch self {
-        case .purple, .emotionEnabled:
+        case .purple:
             return .primary300
-        case .gray:
-            return .white10
-        case .emotionDisabled:
+        case .gray, .emotionDisabled:
             return .white10
         }
     }
     
     var textColor: UIColor {
         switch self {
-        case .purple, .emotionEnabled:
+        case .purple:
             return .white
         case .gray:
             return .grayscale300
@@ -40,9 +37,9 @@ enum ByeBooFilledTagType {
     
     var font: UIFont {
         switch self {
-        case .purple, .gray:
+        case .gray:
             return FontManager.cap1M12.font
-        case .emotionDisabled, .emotionEnabled:
+        case .purple, .emotionDisabled:
             return FontManager.body4Sb14.font
         }
     }
@@ -99,8 +96,8 @@ final class ByeBooFilledTag: BaseView {
     
     func toggleTagType() {
         switch tagType {
-           case .emotionEnabled, .emotionDisabled:
-               tagType = isSelected ? .emotionEnabled : .emotionDisabled
+        case .emotionDisabled:
+            tagType = isSelected ? .purple: .emotionDisabled
            case .purple, .gray:
                tagType = isSelected ? .purple : .gray
        }
