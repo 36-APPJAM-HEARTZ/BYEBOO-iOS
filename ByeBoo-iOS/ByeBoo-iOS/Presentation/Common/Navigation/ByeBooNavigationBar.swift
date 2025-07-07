@@ -23,12 +23,13 @@ struct ByeBooNavigationBar {
         navigationController: UINavigationController?,
         type: NavigationBarType,
         action: Selector? = nil
-    ) -> UINavigationBarAppearance {
+    ) {
         
         let barAppearance = UINavigationBarAppearance()
         barAppearance.do {
             $0.backgroundColor = .black
             $0.shadowColor = .clear
+            $0.configureWithTransparentBackground()
             $0.titleTextAttributes = [
                 .font: FontManager.sub1Sb20.font,
                 .foregroundColor: UIColor.white
@@ -36,7 +37,7 @@ struct ByeBooNavigationBar {
         }
         
         guard let topViewController = navigationController?.topViewController as? BaseViewController else {
-            return barAppearance
+            return
         }
         
         switch type {
@@ -73,8 +74,6 @@ struct ByeBooNavigationBar {
             $0.standardAppearance = barAppearance
             $0.scrollEdgeAppearance = barAppearance
         }
-        
-        return barAppearance
     }
     
     private static func makeBarButtonItem(
