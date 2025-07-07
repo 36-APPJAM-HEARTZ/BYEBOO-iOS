@@ -12,7 +12,6 @@ import SnapKit
 final class EmotionBottomSheetViewController: BaseViewController {
     private let bottomSheetView = EmotionBottomSheetView()
     private var selectedChip: ByeBooEmotionChip?
-    var onToggle: (() -> (Void))?
 
     override func setView() {
         view.addSubview(bottomSheetView)

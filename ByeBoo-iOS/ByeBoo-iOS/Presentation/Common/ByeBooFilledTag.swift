@@ -54,8 +54,6 @@ final class ByeBooFilledTag: BaseView {
     var isSelected: Bool = false {
         didSet { toggleTagType() }
     }
-    var onToggle: (() -> Void)?
-    
     
     init(tagType: ByeBooFilledTagType, text: String) {
         self.tagType = tagType
