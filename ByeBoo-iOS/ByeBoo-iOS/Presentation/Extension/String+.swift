@@ -14,4 +14,8 @@ extension String {
         let predicate = NSPredicate(format: "SELF MATCHES %@", regularExpression)
         return predicate.evaluate(with: self)
     }
+    
+    func trim(limit: Int) -> String {
+        return String(self.prefix(limit))
+    }
 }
