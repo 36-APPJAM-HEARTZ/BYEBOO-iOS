@@ -36,6 +36,9 @@ final class TextBoxView: BaseView {
     }
     
     override func setStyle() {
+        layer.cornerRadius = 12
+        backgroundColor = .white10
+        
         titleLabel.do {
             $0.numberOfLines = 0
             $0.font = FontManager.body5R14.font
