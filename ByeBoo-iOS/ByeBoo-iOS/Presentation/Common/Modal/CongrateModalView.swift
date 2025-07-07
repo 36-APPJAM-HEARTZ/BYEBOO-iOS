@@ -11,7 +11,9 @@ import SnapKit
 import Then
 
 final class CongrateModalView: BaseView, ModalProtocol {
-    let confirmButton: ByeBooButton = ByeBooButton(titleText: "바로가기", type: .enabled)
+    
+    let actionButton: ByeBooButton = ByeBooButton(titleText: "바로가기", type: .enabled)
+    let dismissButton: ByeBooButton? = nil
     
     private let descriptionLabel = UILabel()
     private let titleLabel = UILabel()
@@ -53,7 +55,7 @@ final class CongrateModalView: BaseView, ModalProtocol {
             titleLabel,
             imageView,
             secondDescriptionLabel,
-            confirmButton
+            actionButton
         )
     }
     
@@ -79,7 +81,7 @@ final class CongrateModalView: BaseView, ModalProtocol {
             $0.centerX.equalToSuperview()
         }
         
-        confirmButton.snp.makeConstraints {
+        actionButton.snp.makeConstraints {
             $0.top.equalTo(secondDescriptionLabel.snp.bottom).offset(16)
             $0.bottom.equalToSuperview().inset(24)
             $0.horizontalEdges.equalToSuperview().inset(24)

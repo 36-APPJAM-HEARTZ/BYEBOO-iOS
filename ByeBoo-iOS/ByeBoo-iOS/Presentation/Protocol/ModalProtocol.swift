@@ -8,5 +8,6 @@
 import UIKit
 
 protocol ModalProtocol {
-    var confirmButton: ByeBooButton { get }
+    var actionButton: ByeBooButton { get }
+    var dismissButton: ByeBooButton? { get }
 }
