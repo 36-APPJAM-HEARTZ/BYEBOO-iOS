@@ -86,39 +86,39 @@ final class QuestModalView: BaseView, ModalProtocol {
         }
         
         imageView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(10)
+            $0.top.equalToSuperview().inset(10.adjustedH)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(200.adjustedW)
             $0.height.equalTo(58.adjustedH)
         }
         
         questLabel.snp.makeConstraints {
-            $0.top.equalTo(imageView.snp.bottom).offset(3)
+            $0.top.equalTo(imageView.snp.bottom).offset(3.adjustedH)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(200.adjustedW)
             $0.height.equalTo(21.adjustedH)
         }
         
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(questLabel.snp.bottom).offset(5)
+            $0.top.equalTo(questLabel.snp.bottom).offset(5.adjustedH)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(200.adjustedW)
             $0.height.equalTo(50.adjustedH)
         }
         
         tipButton.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(10)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(10.adjustedH)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(200.adjustedW)
             $0.height.equalTo(18.adjustedH)
         }
         
         confirmButton.snp.makeConstraints {
-            $0.top.equalTo(tipButton.snp.bottom).offset(15)
+            $0.top.equalTo(tipButton.snp.bottom).offset(15.adjustedH)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(215.adjustedW)
             $0.height.equalTo(53.adjustedH)
-            $0.bottom.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().inset(20.adjustedH)
         }
     }
 }
