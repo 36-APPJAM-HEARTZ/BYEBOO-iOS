@@ -12,7 +12,7 @@ import Then
 
 enum NicknameState: String {
     case normal = "* 공백 없이 영어, 숫자와 한글로 구성\n* 2자 이상 5자 이하"
-    case complete = "설정 가능한 닉네임이에요!"
+    case complete = "* 설정 가능한 닉네임이에요!\n"
 }
 
 final class InputNicknameView: BaseView {
