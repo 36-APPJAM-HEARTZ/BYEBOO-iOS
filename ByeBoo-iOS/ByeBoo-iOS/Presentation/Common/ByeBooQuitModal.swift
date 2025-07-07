@@ -11,8 +11,6 @@ import SnapKit
 import Then
 
 final class ByeBooQuitModal: BaseView, ModalProtocol {
-//    var cancelButton: ByeBooButton?
-    
     
     private let titleLabel = UILabel()
     private let secondDescriptionLabel = UILabel()
