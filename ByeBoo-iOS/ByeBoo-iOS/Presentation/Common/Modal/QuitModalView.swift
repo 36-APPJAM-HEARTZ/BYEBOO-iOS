@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class ByeBooQuitModal: BaseView, ModalProtocol {
+final class QuitModalView: BaseView, ModalProtocol {
     
     private let titleLabel = UILabel()
     private let secondDescriptionLabel = UILabel()
@@ -28,10 +28,8 @@ final class ByeBooQuitModal: BaseView, ModalProtocol {
             buttonStackView
         )
         
-        if let cancelButton = dismissButton {
-            [actionButton, cancelButton].forEach {
-                buttonStackView.addArrangedSubview($0)
-            }
+        if let dismissButton = dismissButton {
+            buttonStackView.addArrangedSubviews(actionButton, dismissButton)
         }
     }
     
@@ -58,19 +56,19 @@ final class ByeBooQuitModal: BaseView, ModalProtocol {
     
     override func setLayout() {
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(24)
+            $0.top.equalToSuperview().inset(24.adjustedH)
             $0.centerX.equalToSuperview()
         }
         
         secondDescriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(16)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(16.adjustedH)
             $0.centerX.equalToSuperview()
         }
         
         buttonStackView.snp.makeConstraints {
-            $0.top.equalTo(secondDescriptionLabel.snp.bottom).offset(16)
+            $0.top.equalTo(secondDescriptionLabel.snp.bottom).offset(16.adjustedH)
             $0.centerX.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(24)
+            $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
         
         actionButton.snp.makeConstraints {
