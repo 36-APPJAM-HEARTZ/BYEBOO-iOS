@@ -13,11 +13,8 @@ final class EmotionBottomSheetViewController: BaseViewController {
     private let bottomSheetView = EmotionBottomSheetView()
     private var selectedChip: ByeBooEmotionChip?
 
-    override func setView() {
-        view.addSubview(bottomSheetView)
-        bottomSheetView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
+    override func loadView() {
+        view = bottomSheetView
     }
     
     override func setAddTarget() {
