@@ -83,7 +83,6 @@ final class EmotionBottomSheet: BaseViewController {
         }
         
         titleLabel.snp.makeConstraints {
-//            $0.top.equalToSuperview().offset(33.adjustedH)
             $0.top.equalTo(grabber.snp.bottom).offset(33.adjustedH)
             $0.centerX.equalToSuperview()
             $0.height.equalTo(96.adjustedH)
