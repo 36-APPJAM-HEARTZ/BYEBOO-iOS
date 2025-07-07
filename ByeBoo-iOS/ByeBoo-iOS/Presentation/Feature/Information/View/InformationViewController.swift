@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class InformationViewController: BaseViewController, BackNavigable {
+final class InformationViewController: BaseViewController {
     
     private var informationView: InformationViewType
     private var progressBarType: ProgressBarType
@@ -39,10 +39,6 @@ final class InformationViewController: BaseViewController, BackNavigable {
         }
     }
     
-    func back() {
-        self.navigationController?.popViewController(animated: true)
-    }
-    
     private func setTopNavigator() {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
@@ -50,5 +46,12 @@ final class InformationViewController: BaseViewController, BackNavigable {
             type: .back,
             action: #selector(back)
         )
+    }
+}
+
+extension InformationViewController: BackNavigable {
+    
+    func back() {
+        self.navigationController?.popViewController(animated: true)
     }
 }
