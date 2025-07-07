@@ -67,7 +67,7 @@ enum ByeBooButtonType {
 
 final class ByeBooButton: UIButton {
     private let titleText: String
-    private let type: ByeBooButtonType
+    private var type: ByeBooButtonType
     
     init(
         titleText: String,
@@ -94,5 +94,15 @@ final class ByeBooButton: UIButton {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func updateType(_ type: ByeBooButtonType) {
+        self.do {
+            $0.type = type
+            $0.setTitleColor(type.textColor, for: .normal)
+            $0.backgroundColor = type.backgroundColor
+            $0.layer.borderColor = type.borderColor
+            $0.isEnabled = type.isEnabled
+        }
     }
 }

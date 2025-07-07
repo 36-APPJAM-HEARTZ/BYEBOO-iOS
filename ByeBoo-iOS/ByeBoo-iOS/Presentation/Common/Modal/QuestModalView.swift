@@ -11,8 +11,8 @@ import SnapKit
 import Then
 
 final class QuestModalView: BaseView, ModalProtocol {
-    
-    let confirmButton: ByeBooButton = ByeBooButton(titleText: "진행하기", type: .enabled)
+    let actionButton: ByeBooButton = ByeBooButton(titleText: "진행하기", type: .enabled)
+    var dismissButton: ByeBooButton?
     
     private let imageView = UIImageView()
     private let questLabel = UILabel()
@@ -75,7 +75,7 @@ final class QuestModalView: BaseView, ModalProtocol {
             questLabel,
             titleLabel,
             tipButton,
-            confirmButton
+            actionButton
         )
     }
     
@@ -113,7 +113,7 @@ final class QuestModalView: BaseView, ModalProtocol {
             $0.height.equalTo(18.adjustedH)
         }
         
-        confirmButton.snp.makeConstraints {
+        actionButton.snp.makeConstraints {
             $0.top.equalTo(tipButton.snp.bottom).offset(15.adjustedH)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(215.adjustedW)
