@@ -10,11 +10,12 @@ import UIKit
 import SnapKit
 import Then
 
-enum ByeBooEmotion: String {
+enum ByeBooEmotion: String, CaseIterable {
     case neutral
+    case selfUnderstanding
     case sad
     case relieved
-    case selfUnderstanding
+    
     
     var emotionImage: UIImageView {
         switch self {
@@ -41,16 +42,17 @@ enum ByeBooEmotion: String {
             return "후련함"
         }
     }
-    
 }
 
 final class ByeBooEmotionChip: BaseView {
     private let emotionImage: UIImageView
-    private let emotionTag: ByeBooFilledTag
-    
+    let emotionTag: ByeBooFilledTag
+    let emotionType: ByeBooEmotion
+
     init(emotionType: ByeBooEmotion) {
         self.emotionImage = emotionType.emotionImage
-        self.emotionTag = ByeBooFilledTag(tagType: .gray, text: emotionType.emotionText)
+        self.emotionTag = ByeBooFilledTag(tagType: .emotionDisabled, text: emotionType.emotionText)
+        self.emotionType = emotionType
         super.init(frame: .zero)
     }
     

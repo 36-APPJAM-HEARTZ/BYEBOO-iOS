@@ -13,22 +13,37 @@ import Then
 enum ByeBooFilledTagType {
     case purple
     case gray
+    case emotionDisabled
+    case emotionEnabled
     
     var backgroundColor: UIColor {
         switch self {
-        case .purple:
+        case .purple, .emotionEnabled:
             return .primary300
         case .gray:
+            return .white10
+        case .emotionDisabled:
             return .white10
         }
     }
     
     var textColor: UIColor {
         switch self {
-        case .purple:
+        case .purple, .emotionEnabled:
             return .white
         case .gray:
             return .grayscale300
+        case .emotionDisabled:
+            return .grayscale50
+        }
+    }
+    
+    var font: UIFont {
+        switch self {
+        case .purple, .gray:
+            return FontManager.cap1M12.font
+        case .emotionDisabled, .emotionEnabled:
+            return FontManager.body4Sb14.font
         }
     }
 }
@@ -36,6 +51,11 @@ enum ByeBooFilledTagType {
 final class ByeBooFilledTag: BaseView {
     private let textLabel =  UILabel()
     private var tagType: ByeBooFilledTagType
+    var isSelected: Bool = false {
+        didSet { toggleTagType() }
+    }
+    var onToggle: (() -> Void)?
+    
     
     init(tagType: ByeBooFilledTagType, text: String) {
         self.tagType = tagType
@@ -45,7 +65,7 @@ final class ByeBooFilledTag: BaseView {
         setStyle()
         setUI()
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -58,7 +78,7 @@ final class ByeBooFilledTag: BaseView {
         }
         
         textLabel.do {
-            $0.font = FontManager.cap1M12.font
+            $0.font = tagType.font
             $0.textColor = tagType.textColor
             $0.textAlignment = .center
         }
@@ -78,4 +98,15 @@ final class ByeBooFilledTag: BaseView {
             $0.top.bottom.equalToSuperview().inset(3.adjustedH)
         }
     }
+    
+    func toggleTagType() {
+        switch tagType {
+           case .emotionEnabled, .emotionDisabled:
+               tagType = isSelected ? .emotionEnabled : .emotionDisabled
+           case .purple, .gray:
+               tagType = isSelected ? .purple : .gray
+       }
+        setStyle()
+    }
+    
 }
