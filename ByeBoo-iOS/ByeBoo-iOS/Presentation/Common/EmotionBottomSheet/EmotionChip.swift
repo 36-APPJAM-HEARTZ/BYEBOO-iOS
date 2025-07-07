@@ -85,7 +85,7 @@ final class ByeBooEmotionChip: BaseView {
         }
         
         emotionTag.snp.makeConstraints {
-            $0.top.equalTo(emotionImage.snp.bottom).offset(8)
+            $0.top.equalTo(emotionImage.snp.bottom).offset(8.adjustedH)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(84.adjustedW)
         }

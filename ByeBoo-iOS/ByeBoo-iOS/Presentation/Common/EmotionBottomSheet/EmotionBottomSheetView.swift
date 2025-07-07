@@ -88,17 +88,17 @@ final class EmotionBottomSheetView: BaseView {
         }
         
         emotionChipFirstStackView.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(3)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(3.adjustedH)
             $0.centerX.equalToSuperview()
         }
         
         emotionChipSecondStackView.snp.makeConstraints {
-            $0.top.equalTo(emotionChipFirstStackView.snp.bottom).offset(20)
+            $0.top.equalTo(emotionChipFirstStackView.snp.bottom).offset(20.adjustedH)
             $0.centerX.equalToSuperview()
         }
         
         confirmButton.snp.makeConstraints {
-            $0.top.equalTo(emotionChipSecondStackView.snp.bottom).offset(37)
+            $0.top.equalTo(emotionChipSecondStackView.snp.bottom).offset(37.adjustedH)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(327.adjustedW)
         }
