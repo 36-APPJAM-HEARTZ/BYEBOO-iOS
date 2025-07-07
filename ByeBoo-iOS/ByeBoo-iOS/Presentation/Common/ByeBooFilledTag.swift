@@ -98,8 +98,10 @@ final class ByeBooFilledTag: BaseView {
         switch tagType {
         case .emotionDisabled:
             tagType = isSelected ? .purple: .emotionDisabled
-           case .purple, .gray:
-               tagType = isSelected ? .purple : .gray
+        case .purple:
+            tagType = isSelected ? .purple : .emotionDisabled
+        case .gray:
+            tagType = isSelected ? .purple : .gray
        }
         setStyle()
     }
