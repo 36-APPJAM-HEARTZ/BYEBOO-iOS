@@ -143,7 +143,7 @@ final class ByeBooNicknameTextField: BaseView {
     
     private func trimText(_ text: String?) -> String {
         if let text {
-            let trimmedText = String(text.prefix(5))
+            let trimmedText = text.trim(limit: 5)
             
             if text != trimmedText {
                 self.nicknameField.text = trimmedText
