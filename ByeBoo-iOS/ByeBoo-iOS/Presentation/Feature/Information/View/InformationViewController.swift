@@ -24,7 +24,7 @@ final class InformationViewController: BaseViewController, BackNavigable {
     
     private lazy var informationBaseView = InformationBaseView(
         progressBarType: progressBarType,
-        informationView: informationView.view
+        informationView: informationView
     )
     
     override func loadView() {

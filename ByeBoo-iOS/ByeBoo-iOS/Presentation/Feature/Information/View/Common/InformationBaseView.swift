@@ -18,9 +18,9 @@ final class InformationBaseView: BaseView {
     let informationView: BaseView
     private var nextButton = ByeBooButton(titleText: "다음으로", type: .disabled2)
     
-    init(progressBarType: ProgressBarType, informationView: BaseView) {
+    init(progressBarType: ProgressBarType, informationView: InformationViewType) {
         self.progressBarType = progressBarType
-        self.informationView = informationView
+        self.informationView = informationView.view
         super.init(frame: .zero)
     }
     
