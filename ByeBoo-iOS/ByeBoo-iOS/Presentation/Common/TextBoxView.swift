@@ -14,15 +14,18 @@ final class TextBoxView: BaseView {
     private let title: String
     private let tagTitle: String?
     private let tagType: ByeBooFilledTagType?
+    private let isHighlighted: Bool
     
     init(
         title: String,
         tagTitle: String? = nil,
-        tagType: ByeBooFilledTagType? = nil
+        tagType: ByeBooFilledTagType? = nil,
+        isHighlighted: Bool = false
     ) {
         self.title = title
         self.tagTitle = tagTitle
         self.tagType = tagType
+        self.isHighlighted = isHighlighted
         
         self.titleLabel.text = title
         
@@ -42,9 +45,18 @@ final class TextBoxView: BaseView {
         layer.cornerRadius = 12
         backgroundColor = .white10
         
+        if isHighlighted {
+            layer.borderWidth = 1
+            layer.borderColor = UIColor(.primary300).cgColor
+        }
+        
         titleLabel.do {
             $0.font = FontManager.body3R16.font
-            $0.textColor = .grayscale300
+            if isHighlighted {
+                $0.textColor = .grayscale50
+            } else {
+                $0.textColor = .grayscale300
+            }
         }
     }
     
@@ -57,6 +69,10 @@ final class TextBoxView: BaseView {
     }
     
     override func setLayout() {
+        self.snp.makeConstraints {
+            $0.height.equalTo(56.adjustedH)
+        }
+        
         if let tagView {
             tagView.snp.makeConstraints {
                 $0.leading.equalToSuperview().inset(24.adjustedW)
