@@ -130,8 +130,6 @@ final class ByeBooNicknameTextField: BaseView {
     
     @objc
     private func nicknameFieldDidChange() {
-        checkLetterCombination(textField: nicknameField)
-        
         DispatchQueue.main.async { [weak self] in
             guard let self = self,
                   let text = self.nicknameField.text else { return }
@@ -140,13 +138,6 @@ final class ByeBooNicknameTextField: BaseView {
             self.onTextChange?(trimmedText)
             
             changeNicknameState(text: trimmedText)
-        }
-    }
-    
-    private func checkLetterCombination(textField: UITextField) {
-        if let range = textField.markedTextRange,
-           textField.position(from: range.start, offset: 0) != nil {
-            return
         }
     }
     
