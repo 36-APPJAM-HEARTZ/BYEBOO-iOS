@@ -8,7 +8,7 @@
 import Foundation
 
 protocol TestUseCase {
-    func testFetchUserName() -> String
+    func testFetchUserName() async throws -> String
 }
 
 struct DefaultTestUseCase: TestUseCase {
@@ -18,8 +18,8 @@ struct DefaultTestUseCase: TestUseCase {
         self.testRepository = testRepository
     }
     
-    func testFetchUserName() -> String {
-        return testRepository.fetchUserName()
+    func testFetchUserName() async throws -> String {
+        return try await testRepository.fetchUserName()
     }
 }
 

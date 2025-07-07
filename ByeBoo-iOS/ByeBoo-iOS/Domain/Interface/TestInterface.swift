@@ -8,5 +8,5 @@
 import Foundation
 
 protocol TestInterface {
-    func fetchUserName() -> String
+    func fetchUserName() async throws -> String
 }
