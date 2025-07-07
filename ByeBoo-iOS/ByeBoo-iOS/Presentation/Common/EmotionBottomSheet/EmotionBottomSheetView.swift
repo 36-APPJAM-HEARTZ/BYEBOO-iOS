@@ -1,5 +1,5 @@
 //
-//  EmotionBottomSheet.swift
+//  EmotionBottomSheetView.swift
 //  ByeBoo-iOS
 //
 //  Created by 이나연 on 7/7/25.
@@ -10,28 +10,17 @@ import UIKit
 import SnapKit
 import Then
 
-final class EmotionBottomSheet: BaseViewController {
+final class EmotionBottomSheetView: BaseView {
     private let grabber = UIImageView()
     private let titleLabel = UILabel()
     private let emotionChipFirstStackView = UIStackView()
     private let emotionChipSecondStackView = UIStackView()
     
-    private let neturalEmotionChip = ByeBooEmotionChip(emotionType: .neutral)
-    private let understandingEmotionChip = ByeBooEmotionChip(emotionType: .selfUnderstanding)
-    private let sadEmotionChip = ByeBooEmotionChip(emotionType: .sad)
-    private let relievedEmotionChip = ByeBooEmotionChip(emotionType: .relieved)
+    let confirmButton = ByeBooButton(titleText: "완료", type: .disabled)
+    var emotionChips: [ByeBooEmotionChip] = []
     
-    private let confirmButton = ByeBooButton(titleText: "완료", type: .disabled)
-    
-    override func viewDidLoad() {
-        setUI()
-        setStyle()
-        setBlurEffect()
-        setLayout()
-    }
-    
-    private func setUI() {
-        view.addSubviews(
+    override func setUI() {
+        addSubviews(
             grabber,
             titleLabel,
             emotionChipFirstStackView,
@@ -39,12 +28,19 @@ final class EmotionBottomSheet: BaseViewController {
             confirmButton
         )
         
-        emotionChipFirstStackView.addArrangedSubviews(neturalEmotionChip, understandingEmotionChip)
-        emotionChipSecondStackView.addArrangedSubviews(sadEmotionChip, relievedEmotionChip)
+        ByeBooEmotion.allCases.enumerated().forEach { index, emotion in
+            let chip = ByeBooEmotionChip(emotionType: emotion)
+            emotionChips.append(chip)
+            if index < 2 {
+                emotionChipFirstStackView.addArrangedSubview(chip)
+            } else {
+                emotionChipSecondStackView.addArrangedSubview(chip)
+            }
+        }
     }
     
-    private func setStyle() {
-        self.view.backgroundColor = .grayscale90080
+    override func setStyle() {
+        backgroundColor = .grayscale90080
         
         grabber.do {
             $0.image = .homeIndicator
@@ -62,19 +58,22 @@ final class EmotionBottomSheet: BaseViewController {
         [emotionChipFirstStackView, emotionChipSecondStackView].forEach {
             $0.do {
                 $0.axis = .horizontal
-                $0.spacing = 20
+                $0.spacing = 20.adjustedW
             }
         }
+        setBlurEffect()
     }
     
     private func setBlurEffect() {
         let blurEffect = UIBlurEffect(style: .dark)
         let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.frame = view.bounds
-        view.insertSubview(blurView, at: 0)
+        insertSubview(blurView, at: 0)
+        blurView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
     }
     
-    private func setLayout() {
+    override func setLayout() {
         grabber.snp.makeConstraints {
             $0.top.equalToSuperview().offset(32.adjustedH)
             $0.centerX.equalToSuperview()
