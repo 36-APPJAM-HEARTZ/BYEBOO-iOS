@@ -10,11 +10,47 @@ import UIKit
 import SnapKit
 import Then
 
+enum NicknameFieldType {
+    case normal, onBeginEditing, error
+    
+    var borderWidth: CGFloat {
+        switch self {
+        case .normal, .error:
+            return 1
+        default:
+            return 0
+        }
+    }
+    
+    var borderColor: CGColor? {
+        switch self {
+        case .onBeginEditing:
+            return UIColor.clear.cgColor
+        case .normal:
+            return UIColor.primary300.cgColor
+        case .error:
+            return UIColor.error300.cgColor
+        }
+    }
+    
+    var isOccuredError: Bool {
+        switch self {
+        case .error:
+            return false
+        default:
+            return true
+        }
+    }
+}
+
 final class ByeBooNicknameTextField: BaseView {
     
     let nicknameField = UITextField()
     let errorIcon = UIImageView()
+    
     var onTextChange: ((String) -> Void)?
+    var onRegex: ((Bool) -> Void)?
+    var onStateChange: ((NicknameFieldType) -> Void)?
     
     init(_ type: NicknameFieldType) {
         super.init(frame: .zero)
@@ -54,8 +90,8 @@ final class ByeBooNicknameTextField: BaseView {
     
     override func setLayout() {
         self.snp.makeConstraints {
-            $0.width.equalTo(312.adjustedW)
-            $0.height.equalTo(57.adjustedH)
+            $0.width.equalTo(327.adjustedW)
+            $0.height.equalTo(56.adjustedH)
         }
         
         nicknameField.snp.makeConstraints {
@@ -71,7 +107,7 @@ final class ByeBooNicknameTextField: BaseView {
         }
     }
     
-    private func setTextFieldStyle(_ type: NicknameFieldType) {
+    func setTextFieldStyle(_ type: NicknameFieldType) {
         nicknameField.do {
             $0.layer.borderWidth = type.borderWidth
             $0.layer.borderColor = type.borderColor
@@ -87,57 +123,57 @@ final class ByeBooNicknameTextField: BaseView {
     
     @objc
     private func nicknameFieldDidTap() {
-        setTextFieldStyle(.onBeginEditing)
+        if let text = nicknameField.text {
+            changeNicknameState(text: text)
+        }
     }
     
     @objc
     private func nicknameFieldDidChange() {
-        guard let text = nicknameField.text else { return }
+        checkLetterCombination(textField: nicknameField)
         
-        onTextChange?(text)
-        
-        if text.isEmpty {
-            self.setTextFieldStyle(.onBeginEditing)
-        } else if !text.isValidNickname {
-            self.setTextFieldStyle(.error)
-        } else {
-            self.setTextFieldStyle(.normal)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self,
+                  let text = self.nicknameField.text else { return }
+            
+            let trimmedText = trimText(text)
+            self.onTextChange?(trimmedText)
+            
+            changeNicknameState(text: trimmedText)
         }
     }
-}
-
-extension ByeBooNicknameTextField {
     
-    enum NicknameFieldType {
-        case normal, onBeginEditing, error
-        
-        var borderWidth: CGFloat {
-            switch self {
-            case .onBeginEditing, .error:
-                return 1
-            default:
-                return 0
+    private func checkLetterCombination(textField: UITextField) {
+        if let range = textField.markedTextRange,
+           textField.position(from: range.start, offset: 0) != nil {
+            return
+        }
+    }
+    
+    private func trimText(_ text: String?) -> String {
+        if let text {
+            let trimmedText = String(text.prefix(5))
+            
+            if text != trimmedText {
+                self.nicknameField.text = trimmedText
             }
+            return trimmedText
+        }
+        return ""
+    }
+    
+    private func changeNicknameState(text: String) {
+        let currentType: NicknameFieldType
+        if text.isEmpty {
+            currentType = .onBeginEditing
+        } else if !text.isValidNickname {
+            currentType = .error
+        } else {
+            currentType = .normal
         }
         
-        var borderColor: CGColor? {
-            switch self {
-            case .normal:
-                return UIColor.clear.cgColor
-            case .onBeginEditing:
-                return UIColor.primary300.cgColor
-            case .error:
-                return UIColor.error300.cgColor
-            }
-        }
-        
-        var isOccuredError: Bool {
-            switch self {
-            case .error:
-                return false
-            default:
-                return true
-            }
-        }
+        self.setTextFieldStyle(currentType)
+        self.onRegex?(currentType == .normal)
+        self.onStateChange?(currentType)
     }
 }
