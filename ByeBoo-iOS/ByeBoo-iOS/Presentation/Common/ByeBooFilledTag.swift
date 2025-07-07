@@ -60,6 +60,7 @@ final class ByeBooFilledTag: BaseView {
         textLabel.do {
             $0.font = FontManager.cap1M12.font
             $0.textColor = tagType.textColor
+            $0.textAlignment = .center
         }
     }
     
