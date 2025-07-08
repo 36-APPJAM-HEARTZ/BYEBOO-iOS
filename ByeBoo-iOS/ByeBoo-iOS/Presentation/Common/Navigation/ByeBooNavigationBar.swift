@@ -25,21 +25,40 @@ struct ByeBooNavigationBar {
         action: Selector? = nil
     ) {
         
+        let barAppearance = makeBasicBarAppearance()
+        
+        guard let topViewController = navigationController?.topViewController as? BaseViewController else {
+            return
+        }
+        
+        configureNavigationItem(
+            navigationItem: navigationItem,
+            navigationController: navigationController,
+            type: type,
+            action: action
+        )
+        
+        registerBarAppearance(barAppearance, to: navigationController)
+    }
+    
+    private static func makeBasicBarAppearance() -> UINavigationBarAppearance {
         let barAppearance = UINavigationBarAppearance()
         barAppearance.do {
-            $0.backgroundColor = .black
-            $0.shadowColor = .clear
             $0.configureWithTransparentBackground()
             $0.titleTextAttributes = [
                 .font: FontManager.sub1Sb20.font,
                 .foregroundColor: UIColor.white
             ]
         }
-        
-        guard let topViewController = navigationController?.topViewController as? BaseViewController else {
-            return
-        }
-        
+        return barAppearance
+    }
+    
+    private static func configureNavigationItem(
+        navigationItem: UINavigationItem,
+        navigationController: UINavigationController?,
+        type: NavigationBarType,
+        action: Selector?
+    ) {
         switch type {
         case .back:
             let backButtonItem = makeBarButtonItem(
@@ -69,7 +88,12 @@ struct ByeBooNavigationBar {
             )
             navigationItem.title = string
         }
-        
+    }
+    
+    private static func registerBarAppearance(
+        _ barAppearance: UINavigationBarAppearance,
+        to navigationController: UINavigationController?
+    ) {
         navigationController?.navigationBar.do {
             $0.standardAppearance = barAppearance
             $0.scrollEdgeAppearance = barAppearance

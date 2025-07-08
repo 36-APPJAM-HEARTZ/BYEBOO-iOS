@@ -64,7 +64,7 @@ final class ByeBooNicknameTextField: BaseView {
     
     override func setStyle() {
         nicknameField.do {
-            $0.backgroundColor = .grayscale700
+            $0.backgroundColor = .white10
             $0.layer.cornerRadius = 12.adjustedW
             $0.attributedPlaceholder = NSAttributedString(
                 string: "닉네임을 입력해주세요",

@@ -43,6 +43,14 @@ final class InformationBaseView: BaseView {
                 self?.nextButton.updateType(.disabled2)
             }
         }
+        
+        if let view = informationView as? SelectEmotionView {
+            view.emotionCardsView.emotionCards.forEach {
+                $0.onSelected = {
+                    self.nextButton.updateType(.enabled)
+                }
+            }
+        }
     }
     
     override func setUI() {
