@@ -1,0 +1,90 @@
+//
+//  WriteQuestTypeView.swift
+//  ByeBoo-iOS
+//
+//  Created by 이나연 on 7/7/25.
+//
+
+import UIKit
+
+import SnapKit
+import Then
+
+final class WriteQuestTitleView: BaseView {
+    private let stepStackView = UIStackView()
+    private let stepNum = UILabel()
+    private let stepTitle = UILabel()
+    
+    private let questNum: Int
+    private let questNumLabel: ByeBooYellowTag
+    
+    private let titleLabel = UILabel()
+    private let tipTag = ByeBooFilledTag(tagType: .purple, text: "작성 TIP")
+    
+        
+    init(stepNum: String, stepTitle: String, questNum: Int, title: String) {
+        self.stepNum.text = "STEP \(stepNum)"
+        self.stepTitle.text = stepTitle
+        self.questNum = questNum
+        self.titleLabel.text = title
+        questNumLabel = .init(text: "\(questNum)번째 퀘스트")
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func setUI() {
+        addSubviews(stepStackView, questNumLabel, titleLabel, tipTag)
+        stepStackView.addArrangedSubviews(stepNum, stepTitle)
+    }
+    
+    override func setStyle() {
+        stepStackView.do {
+            $0.axis = .horizontal
+            $0.spacing = 8.adjustedW
+        }
+        
+        stepNum.do {
+            $0.font = FontManager.cap1M12.font
+            $0.textColor = .grayscale300
+        }
+        
+        stepTitle.do {
+            $0.font = FontManager.body2M16.font
+            $0.textColor = .grayscale500
+        }
+        
+        titleLabel.do {
+            $0.font = FontManager.head1Sb24.font
+            $0.textColor = .white
+            $0.numberOfLines = 0
+            $0.textAlignment = .center
+            $0.lineBreakMode = .byWordWrapping
+        }
+    }
+    
+    override func setLayout() {
+        stepStackView.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.centerX.equalToSuperview()
+        }
+        
+        questNumLabel.snp.makeConstraints {
+            $0.top.equalTo(stepStackView.snp.bottom).offset(12.adjustedH)
+            $0.centerX.equalToSuperview()
+        }
+        
+        titleLabel.snp.makeConstraints {
+            $0.top.equalTo(questNumLabel.snp.bottom).offset(12.adjustedH)
+            $0.centerX.equalToSuperview()
+            $0.width.equalTo(327.adjustedW)
+        }
+        
+        tipTag.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(25.5.adjustedH)
+            $0.centerX.equalToSuperview()
+        }
+    }
+}
