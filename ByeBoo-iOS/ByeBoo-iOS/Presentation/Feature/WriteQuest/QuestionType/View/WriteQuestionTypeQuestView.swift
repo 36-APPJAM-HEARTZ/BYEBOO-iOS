@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class WriteQuestionTypeView: BaseView {
+final class WriteQuestionTypeQuestView: BaseView {
     private let title = WriteQuestTitleView(
         stepNum: "2", 
         stepTitle: "상황 정리하기", 
@@ -76,7 +76,7 @@ final class WriteQuestionTypeView: BaseView {
     }
 }
 
-extension WriteQuestionTypeView: TextViewProtocol {
+extension WriteQuestionTypeQuestView: TextViewProtocol {
     func changeStyle(count: Int) {
         if (count >= 10) {
             confirmButton.updateType(.enabled)

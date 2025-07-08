@@ -7,12 +7,22 @@
 
 import UIKit
 
-final class WriteQuestionTypeViewController: BaseViewController {
+final class WriteQuestionTypeQuestViewController: BaseViewController {
     
-    private let rootView = WriteQuestionTypeView()
+    private let rootView = WriteQuestionTypeQuestView()
     
     override func loadView() {
         view = rootView
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        ByeBooNavigationBar.makeNavigationBar(
+            navigationItem: self.navigationItem,
+            navigationController: self.navigationController,
+            type: .back,
+            action: #selector(back)
+        )
     }
     
     override func setAddTarget() {
@@ -43,6 +53,12 @@ final class WriteQuestionTypeViewController: BaseViewController {
     
     @objc
     private func confirmButtonDidTapped() {
+        
+    }
+}
+
+extension WriteQuestionTypeQuestViewController: BackNavigable {
+    func back() {
         
     }
 }
