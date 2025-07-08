@@ -126,8 +126,7 @@ final class JourneyListView: BaseView {
                 $0.height.equalTo(62.adjustedH)
             }
             prepareTitleLabel.snp.makeConstraints {
-                $0.centerX.equalToSuperview()
-                $0.centerY.equalToSuperview()
+                $0.center.equalToSuperview()
             }
         }
         
