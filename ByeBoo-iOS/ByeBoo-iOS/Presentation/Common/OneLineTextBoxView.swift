@@ -1,5 +1,5 @@
 //
-//  OneLineTextBox.swift
+//  OneLineTextBoxView.swift
 //  ByeBoo-iOS
 //
 //  Created by 최주리 on 7/8/25.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class OneLineTextBox: BaseView {
+final class OneLineTextBoxView: BaseView {
     private let titleLabel = UILabel()
     private var tagView: ByeBooFilledTag? = nil
     
