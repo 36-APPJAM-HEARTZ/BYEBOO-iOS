@@ -16,9 +16,9 @@ final class WriteQuestionTypeViewController: BaseViewController {
     }
     
     override func setAddTarget() {
-        print("등록")
         NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveUp), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveDown), name: UIResponder.keyboardWillHideNotification, object: nil)
+        rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTapped), for: .touchUpInside)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -32,7 +32,6 @@ final class WriteQuestionTypeViewController: BaseViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 let offsetY = keyboardSize.height - self.rootView.safeAreaInsets.bottom * 4
                 self.rootView.transform = CGAffineTransform(translationX: 0, y: -offsetY)
-                print("keyboard height: \(keyboardSize.height)")
             })
         }
     }
@@ -40,5 +39,10 @@ final class WriteQuestionTypeViewController: BaseViewController {
     @objc
     private func textViewMoveDown() {
         self.rootView.transform = .identity
+    }
+    
+    @objc
+    private func confirmButtonDidTapped() {
+        
     }
 }

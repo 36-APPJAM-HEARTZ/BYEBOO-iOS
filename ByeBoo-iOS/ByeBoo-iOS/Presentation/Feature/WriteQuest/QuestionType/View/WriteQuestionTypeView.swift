@@ -19,7 +19,7 @@ final class WriteQuestionTypeView: BaseView {
     )
     private let questTextField = QuestTextField(type: .question)
     private let descriptionLabel = UILabel()
-    private let confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
+    let confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
     
     override func setUI() {
         addSubviews(
@@ -28,6 +28,7 @@ final class WriteQuestionTypeView: BaseView {
             descriptionLabel,
             confirmButton
         )
+        questTextField.delegate = self
     }
     
     override func setStyle() {
@@ -67,6 +68,16 @@ final class WriteQuestionTypeView: BaseView {
             $0.width.equalTo(311.adjustedW)
             $0.bottom.equalTo(self.safeAreaLayoutGuide)
             $0.centerX.equalToSuperview()
+        }
+    }
+}
+
+extension WriteQuestionTypeView: TextViewProtocol {
+    func changeStyle(count: Int) {
+        if (count >= 10) {
+            confirmButton.updateType(.enabled)
+        } else {
+            confirmButton.updateType(.disabled)
         }
     }
 }
