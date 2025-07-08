@@ -52,14 +52,14 @@ final class SelectEmotionView: BaseView {
     
     override func setLayout() {
         titleView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(30.adjustedH)
+            $0.top.equalToSuperview().inset(30.adjustedH)
             $0.width.equalTo(375.adjustedW)
             $0.height.equalTo(98.adjustedH)
         }
         
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(15.adjustedH)
-            $0.leading.equalToSuperview().offset(25.adjustedW)
+            $0.top.equalToSuperview().inset(15.adjustedH)
+            $0.leading.equalToSuperview().inset(25.adjustedW)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(327.adjustedW)
             $0.height.equalTo(31.adjustedH)
@@ -67,7 +67,7 @@ final class SelectEmotionView: BaseView {
         
         subTitleLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(9.adjustedH)
-            $0.leading.equalToSuperview().offset(25.adjustedW)
+            $0.leading.equalToSuperview().inset(25.adjustedW)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(327.adjustedW)
             $0.height.equalTo(18.adjustedH)
