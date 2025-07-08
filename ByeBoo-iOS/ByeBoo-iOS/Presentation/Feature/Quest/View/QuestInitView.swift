@@ -9,8 +9,8 @@ import UIKit
 
 final class QuestInitView: BaseView {
     
-    private let startCardView = QuestSelectCard(type: .start)
-    private let lookBackCardView = QuestSelectCard(type: .lookBack)
+    let startCardView = QuestSelectCard(type: .start)
+    let lookBackCardView = QuestSelectCard(type: .lookBack)
     
     override func setStyle() {
         backgroundColor = .grayscale900
