@@ -18,7 +18,7 @@ struct Journey {
 }
 
 final class LookBackJourneyView: BaseView {
-
+    // TODO: 승준이의 attributedString 반영
     private let titleLabel = UILabel()
     private let divider = SectionDividerView()
     private let completeTitleLabel = UILabel()
