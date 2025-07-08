@@ -63,7 +63,7 @@ final class ByeBooEmotionChip: BaseView {
 
     init(emotionType: ByeBooEmotion) {
         self.emotionImage = emotionType.emotionImage
-        self.emotionTag = ByeBooFilledTag(tagType: .emotionDisabled, text: emotionType.emotionText)
+        self.emotionTag = ByeBooFilledTag(tagType: .largeGray, text: emotionType.emotionText)
         self.emotionType = emotionType
         super.init(frame: .zero)
     }

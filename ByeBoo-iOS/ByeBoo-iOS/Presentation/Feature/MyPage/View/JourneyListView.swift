@@ -16,6 +16,9 @@ final class JourneyListView: BaseView {
     
     private let emptyLabel: UILabel?
     
+    private let prepareView = OneLineTextBoxView(title: "")
+    private let prepareTitleLabel = UILabel()
+    
     private let isFinished: Bool
     private let journeyList: [Journey]
     
@@ -69,6 +72,11 @@ final class JourneyListView: BaseView {
             $0.font = FontManager.body3R16.font
             $0.textColor = .grayscale300
         }
+        prepareTitleLabel.do {
+            $0.text = "준비 중"
+            $0.font = FontManager.body5R14.font
+            $0.textColor = .grayscale600
+        }
     }
     
     override func setUI() {
@@ -83,9 +91,20 @@ final class JourneyListView: BaseView {
         if let journeyListView {
             addSubview(journeyListView)
             journeyList.forEach { journey in
-                let journeyView = OneLineTextBoxView(title: journey.title, tagTitle: journey.type, tagType: .gray)
+                // TODO: 칩 컴포넌트 바꾸기
+                let journeyView = OneLineTextBoxView(
+                    title: journey.title,
+                    tagTitle: journey.type,
+                    tagType: isFinished ? .smallGray : .smallPurple,
+                    isHighlighted: !isFinished
+                )
                 journeyListView.addArrangedSubview(journeyView)
             }
+            prepareView.addSubview(prepareTitleLabel)
+            if !isFinished {
+                journeyListView.addArrangedSubview(prepareView)
+            }
+            
         } else if let emptyLabel {
             addSubview(emptyLabel)
         }
@@ -102,6 +121,12 @@ final class JourneyListView: BaseView {
                 $0.top.equalTo(stackView.snp.bottom).offset(16.adjustedH)
                 $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
                 $0.bottom.equalToSuperview().inset(16.adjustedH)
+            }
+            prepareView.snp.makeConstraints {
+                $0.height.equalTo(62.adjustedH)
+            }
+            prepareTitleLabel.snp.makeConstraints {
+                $0.center.equalToSuperview()
             }
         }
         
