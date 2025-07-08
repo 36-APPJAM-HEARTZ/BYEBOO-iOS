@@ -11,7 +11,6 @@ final class MyRecordView: BaseView {
     
     private let iconImageView = UIImageView()
     private let titleLabel = UILabel()
-    // TODO: 제스처 연결하기
     let textBoxView = OneLineTextBoxView(title: "완료한 여정 돌아보기", isHighlighted: true)
     
     override func setStyle() {

@@ -13,6 +13,7 @@ final class OneLineTextBoxView: BaseView {
     
     private let title: String
     private let tagTitle: String?
+    // TODO: 컴포넌트 변경되면 고치기
     private let tagType: ByeBooFilledTagType?
     private let isHighlighted: Bool
     
@@ -78,7 +79,11 @@ final class OneLineTextBoxView: BaseView {
         
         titleLabel.snp.makeConstraints {
             $0.verticalEdges.equalToSuperview().inset(18.adjustedH)
-            $0.leading.equalToSuperview().inset(tagView == nil ? 24.adjustedW : 91.adjustedW)
+            if let tagView {
+                $0.leading.equalTo(tagView.snp.trailing).offset(12.adjustedW)
+            } else {
+                $0.leading.equalToSuperview().inset(24.adjustedW)
+            }
             $0.centerY.equalToSuperview()
         }
     }
