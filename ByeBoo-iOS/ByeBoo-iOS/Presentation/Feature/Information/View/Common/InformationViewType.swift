@@ -15,7 +15,7 @@ enum InformationViewType {
         case .inputNickname:
             return InputNicknameView()
         case .selectEmotion:
-            return SelectEmotionView()
+            return SelectEmotionView(emotionCardsView: EmotionCardsView(frame: .zero))
         case .selectQuest:
             return SelectQuestView()
         }
