@@ -14,7 +14,7 @@ final class MyPageView: BaseView {
 
     private let nameView: OneLineTextBoxView
     private let divider1 = SectionDividerView()
-    private let myRecordView = MyRecordView()
+    let myRecordView = MyRecordView()
     
     private let nickName: String
     
