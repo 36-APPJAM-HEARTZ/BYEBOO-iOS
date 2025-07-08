@@ -11,36 +11,55 @@ import SnapKit
 import Then
 
 enum ByeBooFilledTagType {
-    case purple
-    case gray
-    case emotionDisabled
+    case largePurple
+    case largeGray
+    case word3Purple
+    case word3Gray
+    case smallPurple
+    case smallGray
     
     var backgroundColor: UIColor {
         switch self {
-        case .purple:
+        case .largePurple, .word3Purple, .smallPurple:
             return .primary300
-        case .gray, .emotionDisabled:
+        case .largeGray, .word3Gray, .smallGray :
             return .white10
         }
     }
     
     var textColor: UIColor {
         switch self {
-        case .purple:
+        case .largePurple, .word3Purple, .smallPurple, .largeGray:
             return .white
-        case .gray:
+        case .word3Gray, .smallGray:
             return .grayscale300
-        case .emotionDisabled:
-            return .grayscale50
         }
     }
     
     var font: UIFont {
         switch self {
-        case .gray:
-            return FontManager.cap1M12.font
-        case .purple, .emotionDisabled:
+        case .largePurple, .largeGray:
             return FontManager.body4Sb14.font
+        case .word3Purple, .word3Gray, .smallPurple, .smallGray:
+            return FontManager.cap1M12.font
+        }
+    }
+    
+    var verticalInset: CGFloat {
+        switch self {
+        case .largePurple, .largeGray:
+            return 3.adjustedH
+        case .word3Purple, .word3Gray, .smallPurple, .smallGray:
+            return 4.adjustedH
+        }
+    }
+    
+    var horizontalInset: CGFloat {
+        switch self {
+        case .largePurple, .largeGray, .word3Purple, .word3Gray:
+            return 17.5.adjustedW
+        case .smallPurple, .smallGray:
+            return 12.adjustedW
         }
     }
 }
@@ -89,19 +108,19 @@ final class ByeBooFilledTag: BaseView {
         }
         
         textLabel.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(17.5.adjustedW)
-            $0.top.bottom.equalToSuperview().inset(3.adjustedH)
+            $0.leading.trailing.equalToSuperview().inset(tagType.horizontalInset)
+            $0.top.bottom.equalToSuperview().inset(tagType.verticalInset)
         }
     }
     
     func toggleTagType() {
         switch tagType {
-        case .emotionDisabled:
-            tagType = isSelected ? .purple: .emotionDisabled
-        case .purple:
-            tagType = isSelected ? .purple : .emotionDisabled
-        case .gray:
-            tagType = isSelected ? .purple : .gray
+        case .largePurple, .largeGray:
+            tagType = isSelected ? .largePurple: .largeGray
+        case .word3Purple, .word3Gray:
+            tagType = isSelected ? .word3Purple : .word3Gray
+        case .smallPurple, .smallGray:
+            tagType = isSelected ? .smallPurple : .smallGray
        }
         setStyle()
     }
