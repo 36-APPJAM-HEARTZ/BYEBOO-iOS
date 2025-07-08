@@ -17,7 +17,7 @@ final class BottomNavigationViewController: UITabBarController {
     private func setViewController() {
         viewControllers = [
             createViewController(for: HomeViewController(), title: "홈", imageName: .homeOff),
-            createViewController(for: QuestInitViewController(), title: "퀘스트", imageName: .questOff),
+            createViewController(for: QuestViewController(), title: "퀘스트", imageName: .questOff),
             createViewController(for: MyPageViewController(), title: "내 정보", imageName: .userOff)
         ]
     }
