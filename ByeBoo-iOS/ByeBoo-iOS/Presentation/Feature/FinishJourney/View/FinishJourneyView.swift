@@ -61,9 +61,9 @@ final class FinishJourneyView: BaseView {
     }
     
     override func setUI() {
-        addSubview(backgroundImageView)
-        backgroundImageView.addSubview(backgroundView)
-        backgroundView.addSubviews(
+        addSubviews(
+            backgroundImageView,
+            backgroundView,
             titleLabel,
             descriptionLabel,
             characterImageView,
@@ -75,7 +75,7 @@ final class FinishJourneyView: BaseView {
 
     override func setLayout() {
         let safeArea = safeAreaLayoutGuide
-        
+
         backgroundImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
