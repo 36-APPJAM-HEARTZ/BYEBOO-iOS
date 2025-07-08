@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension String {
 
@@ -17,5 +18,23 @@ extension String {
     
     func trim(limit: Int) -> String {
         return String(self.prefix(limit))
+    }
+    
+    func makeTitle(rangedText: String) -> NSMutableAttributedString {
+        let range = (self as NSString).range(of: rangedText)
+        
+        let attributedString = NSMutableAttributedString(string: self)
+        attributedString.addAttribute(
+            .foregroundColor,
+            value: UIColor.primary300,
+            range: range
+        )
+        attributedString.addAttribute(
+            .foregroundColor,
+            value: UIColor.grayscale50,
+            range: NSRange(location: range.upperBound, length: self.count - range.upperBound)
+        )
+        
+        return attributedString
     }
 }
