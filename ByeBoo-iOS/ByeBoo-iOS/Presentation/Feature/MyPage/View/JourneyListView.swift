@@ -95,7 +95,7 @@ final class JourneyListView: BaseView {
                 let journeyView = OneLineTextBoxView(
                     title: journey.title,
                     tagTitle: journey.type,
-                    tagType: isFinished ? .smallGray : .smallPurple,
+                    tagType: isFinished ? .word3Gray : .word3Purple,
                     isHighlighted: !isFinished
                 )
                 journeyListView.addArrangedSubview(journeyView)
