@@ -22,7 +22,7 @@ final class EmotionCardsView: BaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setActions()
+        setAction()
     }
     
     required init?(coder: NSCoder) {
@@ -56,7 +56,7 @@ final class EmotionCardsView: BaseView {
         }
     }
     
-    private func setActions() {
+    private func setAction() {
         emotionCards.forEach {
             let tap = UITapGestureRecognizer(target: self, action: #selector(cardDidTap(_:)))
             $0.addGestureRecognizer(tap)
