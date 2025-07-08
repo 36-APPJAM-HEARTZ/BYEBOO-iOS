@@ -12,24 +12,13 @@ import Then
 
 final class HomeViewController: BaseViewController {
     
-    private let text = UILabel()
+    private let rootView = HomeView()
+    
+    override func loadView() {
+        view = rootView
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(text)
-        setUI()
-        setLayout()
-    }
-    
-    private func setUI() {
-        text.do {
-            $0.text = "홈"
-        }
-    }
-    
-    private func setLayout() {
-        text.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
     }
 }
