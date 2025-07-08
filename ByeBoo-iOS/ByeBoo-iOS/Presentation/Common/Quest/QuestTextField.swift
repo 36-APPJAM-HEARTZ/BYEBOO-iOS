@@ -22,6 +22,15 @@ enum QuestType {
             return "꼭 적지 않아도 괜찮지만, 글로 정리해보면 스스로에게 한 걸음 더 가까워질 수 있어요."
         }
     }
+    
+    var textLimit: Int {
+        switch self {
+        case .question:
+            return 500
+        case .activation:
+            return 200
+        }
+    }
 }
 
 final class QuestTextField: BaseView {
@@ -29,11 +38,13 @@ final class QuestTextField: BaseView {
     private let textCount = UILabel()
     private let placeholder: String
     private var isPlaceholderActive: Bool = true
+    private let limitCount: Int
     var count: Int = 0
     weak var delegate: TextViewProtocol?
     
     init(type: QuestType) {
         placeholder = type.plaeholder
+        limitCount = type.textLimit
         super.init(frame: .zero)
         textView.delegate = self
     }
@@ -60,7 +71,7 @@ final class QuestTextField: BaseView {
         }
         
         textCount.do {
-            $0.text = "(\(count)/500)"
+            $0.text = "(\(count)/\(limitCount)"
             $0.font = FontManager.body5R14.font
             $0.textColor = .grayscale300
         }
@@ -109,7 +120,7 @@ extension QuestTextField: UITextViewDelegate {
     }
     
     func textViewDidChange(_ textView: UITextView) {
-        if textView.text.count > 500 {
+        if textView.text.count > limitCount {
             textView.deleteBackward()
             self.layer.borderColor = UIColor.error300.cgColor
             self.layer.borderWidth = 1
@@ -117,7 +128,7 @@ extension QuestTextField: UITextViewDelegate {
         }
         
         count = textView.text.count
-        textCount.text = "(\(count)/500)"
+        textCount.text = "(\(count)/\(limitCount)"
         delegate?.changeStyle(count: count)
     }
 }
