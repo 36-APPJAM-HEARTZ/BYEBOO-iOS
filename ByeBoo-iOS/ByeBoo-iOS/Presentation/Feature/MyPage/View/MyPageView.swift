@@ -12,7 +12,7 @@ import Then
 
 final class MyPageView: BaseView {
 
-    private let nameView: TextBoxView
+    private let nameView: OneLineTextBoxView
     private let divider1 = SectionDividerView()
     private let myRecordView = MyRecordView()
     
@@ -21,7 +21,7 @@ final class MyPageView: BaseView {
     init(nickName: String) {
         self.nickName = nickName
         
-        nameView = TextBoxView(title: "\(nickName)님")
+        nameView = OneLineTextBoxView(title: "\(nickName)님")
         
         super.init(frame: .zero)
     }
