@@ -25,11 +25,12 @@ enum QuestType {
 }
 
 final class QuestTextField: BaseView {
-    let textView = UITextView()
+    private let textView = UITextView()
     private let textCount = UILabel()
     private let placeholder: String
     private var isPlaceholderActive: Bool = true
-    private var count: Int = 0
+    var count: Int = 0
+    weak var delegate: TextViewProtocol?
     
     init(type: QuestType) {
         placeholder = type.plaeholder
@@ -46,13 +47,16 @@ final class QuestTextField: BaseView {
     }
     
     override func setStyle() {
-        textView.do {
+        self.do {
             $0.backgroundColor = .white10
             $0.layer.cornerRadius = 12
+        }
+        
+        textView.do {
+            $0.backgroundColor = .clear
             $0.textColor = .grayscale300
             $0.text = placeholder
             $0.font = FontManager.body3R16.font
-            $0.textContainerInset = UIEdgeInsets(top: 16.adjustedH, left: 24.adjustedW, bottom: 34.adjustedH, right: 24.adjustedW)
         }
         
         textCount.do {
@@ -63,14 +67,20 @@ final class QuestTextField: BaseView {
     }
     
     override func setLayout() {
-        textView.snp.makeConstraints {
+        self.snp.makeConstraints {
             $0.width.equalTo(327.adjustedW)
             $0.height.equalTo(290.adjustedH)
         }
         
+        textView.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(16.adjustedH)
+            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
+            $0.bottom.equalToSuperview().inset(34.adjustedH)
+        }
+        
         textCount.snp.makeConstraints {
-            $0.trailing.equalTo(textView.snp.trailing).inset(24)
-            $0.bottom.equalTo(textView.snp.bottom).inset(16.adjustedW)
+            $0.trailing.equalToSuperview().inset(24)
+            $0.bottom.equalToSuperview().inset(16.adjustedW)
         }
     }
 }
@@ -82,9 +92,8 @@ extension QuestTextField: UITextViewDelegate {
             textView.textColor = .white
             textView.text = nil
         }
-        print("이 텍스트뷰가 firstResponder? \(textView.isFirstResponder)")
-        textView.layer.borderColor = UIColor.primary300.cgColor
-        textView.layer.borderWidth = 1
+        self.layer.borderColor = UIColor.primary300.cgColor
+        self.layer.borderWidth = 1
         textCount.textColor = .primary300
     }
     
@@ -95,19 +104,20 @@ extension QuestTextField: UITextViewDelegate {
             isPlaceholderActive = true
         }
         textView.textColor = .grayscale300
-        textView.layer.borderWidth = 0
+        self.layer.borderWidth = 0
         textCount.textColor = .grayscale300
     }
     
     func textViewDidChange(_ textView: UITextView) {
         if textView.text.count > 500 {
             textView.deleteBackward()
-            textView.layer.borderColor = UIColor.error300.cgColor
-            textView.layer.borderWidth = 1
+            self.layer.borderColor = UIColor.error300.cgColor
+            self.layer.borderWidth = 1
             textCount.textColor = .error300
         }
         
         count = textView.text.count
         textCount.text = "(\(count)/500)"
+        delegate?.changeStyle(count: count)
     }
 }
