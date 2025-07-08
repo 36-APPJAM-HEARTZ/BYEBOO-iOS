@@ -24,5 +24,18 @@ final class MyPageViewController: BaseViewController {
                 type: .title("마이페이지")
             )
     }
+    
+    override func setAddTarget() {
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(lookBackButtonTapped))
+        rootView.myRecordView.textBoxView.addGestureRecognizer(tapRecognizer)
+        rootView.myRecordView.textBoxView.isUserInteractionEnabled = true
+    }
+}
 
+extension MyPageViewController {
+    @objc
+    private func lookBackButtonTapped() {
+        let lookBackViewController = LookBackJourneyViewController()
+        navigationController?.pushViewController(lookBackViewController, animated: true)
+    }
 }
