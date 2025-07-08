@@ -16,11 +16,11 @@ final class InformationBaseView: BaseView {
     private var progressBarType: ProgressBarType
     private lazy var progressView = ProgressBarView(type: progressBarType)
     let informationView: BaseView
-    private var nextButton = ByeBooButton(titleText: "다음으로", type: .disabled2)
+    var nextButton = ByeBooButton(titleText: "다음으로", type: .disabled2)
     
-    init(progressBarType: ProgressBarType, informationView: InformationViewType) {
+    init(informationViewType: InformationViewType, progressBarType: ProgressBarType) {
+        self.informationView = informationViewType.view
         self.progressBarType = progressBarType
-        self.informationView = informationView.view
         super.init(frame: .zero)
     }
     
@@ -42,12 +42,37 @@ final class InformationBaseView: BaseView {
                 }
                 self?.nextButton.updateType(.disabled2)
             }
+            if let currentText = view.nicknameTextField.nicknameField.text {
+                if currentText.isValidNickname {
+                    nextButton.updateType(.enabled)
+                }
+            }
         }
         
         if let view = informationView as? SelectEmotionView {
             view.emotionCardsView.emotionCards.forEach {
                 $0.onSelected = {
                     self.nextButton.updateType(.enabled)
+                }
+            }
+            view.emotionCardsView.emotionCards.forEach {
+                if $0.isSelected {
+                    self.nextButton.updateType(.enabled)
+                    return
+                }
+            }
+        }
+        
+        if let view = informationView as? SelectQuestView {
+            view.questCardsView.questCards.forEach {
+                $0.onSelected = {
+                    self.nextButton.updateType(.enabled)
+                }
+            }
+            view.questCardsView.questCards.forEach {
+                if $0.isSelected {
+                    self.nextButton.updateType(.enabled)
+                    return
                 }
             }
         }

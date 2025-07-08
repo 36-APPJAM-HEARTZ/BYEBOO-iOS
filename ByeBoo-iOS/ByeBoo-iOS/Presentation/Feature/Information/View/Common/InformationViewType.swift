@@ -6,18 +6,15 @@
 //
 
 enum InformationViewType {
-    case inputNickname
-    case selectEmotion
-    case selectQuest
+    case inputNickname(InputNicknameView)
+    case selectEmotion(SelectEmotionView)
+    case selectQuest(SelectQuestView)
     
     var view: BaseView {
         switch self {
-        case .inputNickname:
-            return InputNicknameView()
-        case .selectEmotion:
-            return SelectEmotionView(emotionCardsView: EmotionCardsView())
-        case .selectQuest:
-            return SelectQuestView()
+        case .inputNickname(let view): return view
+        case .selectEmotion(let view): return view
+        case .selectQuest(let view): return view
         }
     }
 }

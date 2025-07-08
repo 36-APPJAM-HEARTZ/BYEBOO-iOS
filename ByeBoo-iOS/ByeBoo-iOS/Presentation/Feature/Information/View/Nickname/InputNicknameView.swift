@@ -27,7 +27,7 @@ final class InputNicknameView: BaseView {
     private let nicknameStateView = UIView()
     private let nicknameStateLabel = UILabel()
     private let letterCountLabel = UILabel()
-    
+        
     override func setStyle() {
         titleView.backgroundColor = .clear
         
