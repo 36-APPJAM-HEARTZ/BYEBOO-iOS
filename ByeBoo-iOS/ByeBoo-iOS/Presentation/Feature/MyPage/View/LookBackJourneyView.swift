@@ -21,25 +21,15 @@ final class LookBackJourneyView: BaseView {
     // TODO: 승준이의 attributedString 반영
     private let titleLabel = UILabel()
     private let divider = SectionDividerView()
-    private let completeTitleLabel = UILabel()
-    private let completeCountLabel = UILabel()
-    private let listView = UIStackView()
-    
-    private var emptyLabel: UILabel?
+    private let journeyView: JourneyListView
     
     private let journeyList: [Journey]
     
     init(journeyList: [Journey]) {
         self.journeyList = journeyList
-        if journeyList.isEmpty {
-            self.emptyLabel = UILabel()
-        } else {
-            self.emptyLabel = nil
-        }
-        
+        self.journeyView = JourneyListView(isFinished: true, journeyList: journeyList)
+
         super.init(frame: .zero)
-        
-        completeCountLabel.text = "\(journeyList.count)개"
     }
     
     required init?(coder: NSCoder) {
@@ -53,43 +43,14 @@ final class LookBackJourneyView: BaseView {
             $0.font = FontManager.head1Sb24.font
             $0.textColor = .grayscale50
         }
-        completeTitleLabel.do {
-            $0.text = "완료"
-            $0.font = FontManager.cap1M12.font
-            $0.textColor = .grayscale300
-        }
-        completeCountLabel.do {
-            $0.font = FontManager.body2M16.font
-            $0.textColor = .grayscale500
-        }
-        listView.do {
-            $0.spacing = 16.adjustedH
-            $0.axis = .vertical
-        }
-        emptyLabel?.do {
-            $0.text = "아직 완료된 여정이 없어요!"
-            $0.font = FontManager.body3R16.font
-            $0.textColor = .grayscale300
-        }
     }
     
     override func setUI() {
         addSubviews(
             titleLabel,
             divider,
-            completeTitleLabel,
-            completeCountLabel
+            journeyView
         )
-        
-        if let emptyLabel {
-            addSubview(emptyLabel)
-        } else {
-            addSubview(listView)
-            journeyList.forEach { journey in
-                let journeyView = OneLineTextBoxView(title: journey.title, tagTitle: journey.type, tagType: .gray)
-                listView.addArrangedSubview(journeyView)
-            }
-        }
     }
     
     override func setLayout() {
@@ -102,25 +63,9 @@ final class LookBackJourneyView: BaseView {
             $0.top.equalTo(titleLabel.snp.bottom).offset(12.5.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
-        completeTitleLabel.snp.makeConstraints {
-            $0.top.equalTo(divider.snp.bottom).offset(29.adjustedH)
-            $0.leading.equalToSuperview().inset(24.adjustedW)
-        }
-        completeCountLabel.snp.makeConstraints {
-            $0.top.equalTo(divider.snp.bottom).offset(26.5.adjustedH)
-            $0.leading.equalTo(completeTitleLabel.snp.trailing).offset(8.adjustedW)
-        }
-        
-        if let emptyLabel {
-            emptyLabel.snp.makeConstraints {
-                $0.top.equalTo(completeCountLabel.snp.bottom).offset(201.adjustedH)
-                $0.centerX.equalToSuperview()
-            }
-        } else {
-            listView.snp.makeConstraints {
-                $0.top.equalTo(completeCountLabel.snp.bottom).offset(16.adjustedH)
-                $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-            }
+        journeyView.snp.makeConstraints {
+            $0.top.equalTo(divider.snp.bottom).offset(8.adjustedH)
+            $0.horizontalEdges.equalToSuperview()
         }
     }
 }
