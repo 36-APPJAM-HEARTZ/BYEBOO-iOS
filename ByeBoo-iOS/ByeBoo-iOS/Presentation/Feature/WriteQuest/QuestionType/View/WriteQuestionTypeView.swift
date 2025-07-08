@@ -28,7 +28,7 @@ final class WriteQuestionTypeView: BaseView {
             descriptionLabel,
             confirmButton
         )
-        questTextField.delegate = self
+        setDelegate()
     }
     
     override func setStyle() {
@@ -40,6 +40,10 @@ final class WriteQuestionTypeView: BaseView {
             $0.textColor = .grayscale400
             $0.textAlignment = .center
         }
+    }
+    
+    private func setDelegate() {
+        questTextField.delegate = self
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
