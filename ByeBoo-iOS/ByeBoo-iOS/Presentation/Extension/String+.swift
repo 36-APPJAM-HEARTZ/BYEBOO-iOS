@@ -5,7 +5,6 @@
 //  Created by APPLE on 7/5/25.
 //
 
-import Foundation
 import UIKit
 
 extension String {
