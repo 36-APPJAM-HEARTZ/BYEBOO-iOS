@@ -33,10 +33,10 @@ final class FinishJourneyViewController: BaseViewController {
     }
     
     override func setAddTarget() {
-        rootView.startButton.addTarget(self, action: #selector(startButtonTapped), for: .touchUpInside)
-        rootView.lookBackButton.addTarget(self, action: #selector(lookBackButtonTapped), for: .touchUpInside)
+        rootView.startButton.addTarget(self, action: #selector(startButtonDidTap), for: .touchUpInside)
+        rootView.lookBackButton.addTarget(self, action: #selector(lookBackButtonDidTap), for: .touchUpInside)
         
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(homeLabelTapped))
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(homeLabelDidTap))
         rootView.backHomeLabel.addGestureRecognizer(tapRecognizer)
         rootView.backHomeLabel.isUserInteractionEnabled = true
     }
@@ -44,7 +44,7 @@ final class FinishJourneyViewController: BaseViewController {
 
 extension FinishJourneyViewController {
     @objc
-    private func startButtonTapped() {
+    private func startButtonDidTap() {
         ByeBooLogger.debug("starbuttontapped")
         let viewController = NewJourneySelectViewController()
         guard let navigationController else {
@@ -55,7 +55,7 @@ extension FinishJourneyViewController {
     }
     
     @objc
-    private func lookBackButtonTapped() {
+    private func lookBackButtonDidTap() {
         ByeBooLogger.debug("lookBackButtonTapped")
         let viewController = LookBackJourneyViewController()
         guard let navigationController else {
@@ -66,7 +66,7 @@ extension FinishJourneyViewController {
     }
     
     @objc
-    private func homeLabelTapped() {
+    private func homeLabelDidTap() {
         ByeBooLogger.debug("homeLabelTapped")
         guard let navigationController else {
             ByeBooLogger.error(ByeBooError.navigationControllerMissing)

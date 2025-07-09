@@ -26,14 +26,14 @@ final class HomeOnboardingViewController: BaseViewController {
 
 extension HomeOnboardingViewController {
     private func setGesture() {
-        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longTapped))
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longDidTap))
         longPressGesture.minimumPressDuration = 2
         rootView.characterImageView.addGestureRecognizer(longPressGesture)
         rootView.characterImageView.isUserInteractionEnabled = true
     }
     
     @objc
-    private func longTapped() {
+    private func longDidTap() {
         ByeBooLogger.debug("꾹 눌렀음")
         let viewController = BottomNavigationViewController()
         if let windowScene = UIApplication.shared.connectedScenes

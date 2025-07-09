@@ -34,7 +34,7 @@ final class JourneyResultViewController: BaseViewController {
     }
 
     override func setAddTarget() {
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(confirmLabelTapped))
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(confirmLabelDidTap))
         rootView.confirmLabel.addGestureRecognizer(tapRecognizer)
         rootView.confirmLabel.isUserInteractionEnabled = true
     }
@@ -42,7 +42,7 @@ final class JourneyResultViewController: BaseViewController {
 
 extension JourneyResultViewController {
     @objc
-    private func confirmLabelTapped() {
+    private func confirmLabelDidTap() {
         let viewController = HomeOnboardingViewController()
         viewController.navigationItem.hidesBackButton = true
         navigationController?.pushViewController(viewController, animated: false)

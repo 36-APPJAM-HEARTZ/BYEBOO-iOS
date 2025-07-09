@@ -39,15 +39,15 @@ final class CustomModalController: BaseViewController {
     override func setAddTarget() {
         guard let modalView = modalView as? ModalProtocol else { return }
         
-        modalView.actionButton.addTarget(self, action: #selector(actionButtonDidTapped), for: .touchUpInside)
+        modalView.actionButton.addTarget(self, action: #selector(actionButtonDidTap), for: .touchUpInside)
         guard let cancelButton = modalView.dismissButton else { return }
-        cancelButton.addTarget(self, action: #selector(dismissButtonDidTapped), for: .touchUpInside)
+        cancelButton.addTarget(self, action: #selector(dismissButtonDidTap), for: .touchUpInside)
     }
 }
 
 extension CustomModalController {
     @objc
-    func actionButtonDidTapped() {
+    func actionButtonDidTap() {
         if let action {
             ByeBooLogger.debug("action button 터치")
             action()
@@ -56,7 +56,7 @@ extension CustomModalController {
     }
     
     @objc
-    func dismissButtonDidTapped() {
+    func dismissButtonDidTap() {
         ByeBooLogger.debug("dismiss button 터치")
         dismiss(animated: false)
     }
