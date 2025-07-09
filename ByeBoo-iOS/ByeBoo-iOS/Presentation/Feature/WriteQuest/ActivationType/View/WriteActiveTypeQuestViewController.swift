@@ -85,7 +85,10 @@ extension WriteActiveTypeQuestViewController: BackNavigable {
 }
 
 extension WriteActiveTypeQuestViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+    func gestureRecognizer(
+        _ agestureRecognizer: UIGestureRecognizer,
+        shouldReceive touch: UITouch)
+    -> Bool {
         return true
     }
 }
@@ -99,7 +102,7 @@ extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, U
     }
     
     func imagePickerController(_ picker: UIImagePickerController,
-      didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
             ByeBooLogger.debug(image)
             rootView.imageContainer.selectedImageView.image = image

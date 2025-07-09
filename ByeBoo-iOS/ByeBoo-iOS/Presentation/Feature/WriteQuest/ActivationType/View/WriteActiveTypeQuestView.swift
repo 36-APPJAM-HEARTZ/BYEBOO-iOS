@@ -160,7 +160,7 @@ final class WriteActiveTypeQuestView: BaseView {
 
 extension WriteActiveTypeQuestView: QuestCompleteProtocol {
     func changeStyle(count: Int) {
-        if imgCount == 1 {
+        if count == 1 {
             confirmButton.updateType(.enabled)
         }
     }
