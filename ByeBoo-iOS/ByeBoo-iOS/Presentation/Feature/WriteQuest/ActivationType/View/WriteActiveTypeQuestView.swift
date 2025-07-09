@@ -24,14 +24,13 @@ final class WriteActiveTypeQuestView: BaseView {
     private let yellowTag = ByeBooFilledTag(tagType: .yelloFilled, text: "필수")
     private let imgTitleLabel = UILabel()
     private let imgCountLabel = UILabel()
-    private var imgCount: Int = 0
-    private let imageContainer = ImagePickerContainer()
+    var imgCount: Int = 0
+    let imageContainer = ImagePickerContainer()
     
     private let textStackView = UIStackView()
     private let grayTag = ByeBooFilledTag(tagType: .smallGray, text: "선택")
     private let thinkTitleLabel = UILabel()
     private let questTextField = QuestTextField(type: .activation)
-    private let touchCatcher = UIView()
     let confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
     
     override func setUI() {
@@ -39,7 +38,6 @@ final class WriteActiveTypeQuestView: BaseView {
         scrollView.addSubviews(contentView)
         
         contentView.addSubviews(
-            touchCatcher,
             title,
             imgStackView,
             textStackView,
@@ -57,14 +55,6 @@ final class WriteActiveTypeQuestView: BaseView {
         )
     }
     
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-//    }
-//    @objc
-//    private func endEditingOnTap() {
-//        self.endEditing(true)
-//    }
-    
     override func setStyle() {
         backgroundColor = .grayscale900
         
@@ -76,7 +66,7 @@ final class WriteActiveTypeQuestView: BaseView {
         }
         
         contentView.do {
-            $0.backgroundColor = .clear
+            $0.backgroundColor = .grayscale900
             $0.isUserInteractionEnabled = true
         }
         
@@ -108,11 +98,6 @@ final class WriteActiveTypeQuestView: BaseView {
             $0.text = "생각 적기"
             $0.font = FontManager.body2M16.font
             $0.textColor = .grayscale50
-        }
-        
-        touchCatcher.do {
-            $0.backgroundColor = .grayscale900
-            $0.isUserInteractionEnabled = true
         }
     }
     
@@ -166,9 +151,17 @@ final class WriteActiveTypeQuestView: BaseView {
             $0.bottom.equalToSuperview().inset(24.adjustedH)
             $0.centerX.equalToSuperview()
         }
-        
-        touchCatcher.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+    }
+    
+    func updateImageCountLabel(count: Int) {
+        imgCountLabel.text = "(\(count)/1)"
+    }
+}
+
+extension WriteActiveTypeQuestView: QuestCompleteProtocol {
+    func changeStyle(count: Int) {
+        if imgCount == 1 {
+            confirmButton.updateType(.enabled)
         }
     }
 }
