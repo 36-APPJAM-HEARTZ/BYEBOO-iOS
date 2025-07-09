@@ -59,7 +59,7 @@ final class InformationViewModel: ViewModelType {
             userInformationSubject.send(.success(user))
         }
     }
-    
+            
     func resetData() {
         currentEmotion = nil
         currentQuest = nil
@@ -71,10 +71,9 @@ final class InformationViewModel: ViewModelType {
         emotion: EmotionState?,
         quest: QuestStyle?
     ) -> UserEntity {
-        guard let nickname, let emotion, let quest else {
-            return UserEntity(userID: 1, name: "Anonymous")
+        guard let nickname = nickname else {
+            return UserEntity(userID: 1, name: "")
         }
-        let dto = UserResponseDTO(userID: 1, name: nickname)
-        return dto.toEntity()
+        return UserEntity(userID: 1, name: nickname)
     }
 }

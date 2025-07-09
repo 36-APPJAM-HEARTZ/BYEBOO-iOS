@@ -12,14 +12,3 @@ struct UserRequestDTO: Encodable {
     let emotion: EmotionState
     let quest: QuestStyle
 }
-
-enum EmotionState: Encodable {
-    case exhausted
-    case recovering
-    case overcoming
-}
-
-enum QuestStyle: Encodable {
-    case recording
-    case active
-}

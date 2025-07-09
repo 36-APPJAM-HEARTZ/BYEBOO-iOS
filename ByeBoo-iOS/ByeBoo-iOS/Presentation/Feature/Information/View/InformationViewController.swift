@@ -5,9 +5,8 @@
 //  Created by APPLE on 7/7/25.
 //
 
-import UIKit
-
 import Combine
+import UIKit
 
 final class InformationViewController: BaseViewController {
     
@@ -23,16 +22,17 @@ final class InformationViewController: BaseViewController {
     private lazy var selectEmotionType = InformationViewType.selectEmotion(selectEmotionView)
     private lazy var selectQuestType = InformationViewType.selectQuest(selectQuestView)
     
-    private var viewModel = InformationViewModel()
+    private var viewModel: InformationViewModel
     private var cancellables = Set<AnyCancellable>()
     
-    init() {
+    init(viewModel: InformationViewModel) {
         self.inputNicknameView = InputNicknameView()
         self.informationViewType = .inputNickname(self.inputNicknameView)
         self.informationBaseView = InformationBaseView(
             informationViewType: self.informationViewType,
             progressBarType: .first
         )
+        self.viewModel = viewModel
         self.maxStep = .first
         super.init(nibName: nil, bundle: nil)
     }
@@ -151,34 +151,20 @@ extension InformationViewController {
             
         case .selectEmotion:
             let emotionCards = selectEmotionView.emotionCardsView.emotionCards
-            for index in 0..<emotionCards.count {
-                if emotionCards[index].isSelected {
-                    switch index {
-                    case 0:
-                        viewModel.action(.emotionButtonDidTap(.exhausted))
-                    case 1:
-                        viewModel.action(.emotionButtonDidTap(.recovering))
-                    case 2:
-                        viewModel.action(.emotionButtonDidTap(.overcoming))
-                    default:
-                        break
-                    }
+            for (index, emotionCard) in emotionCards.enumerated() where emotionCard.isSelected {
+                if EmotionState.allCases.indices.contains(index) {
+                    let emotion = EmotionState.allCases[index]
+                    viewModel.action(.emotionButtonDidTap(emotion))
                 }
             }
             move(viewType: selectQuestType, progress: .third)
             
         case .selectQuest:
             let questCards = selectQuestView.questCardsView.questCards
-            for index in 0..<questCards.count {
-                if questCards[index].isSelected {
-                    switch index {
-                    case 0:
-                        viewModel.action(.questButtonDidTap(.recording))
-                    case 1:
-                        viewModel.action(.questButtonDidTap(.active))
-                    default:
-                        break
-                    }
+            for (index, questCard) in questCards.enumerated() where questCard.isSelected {
+                if QuestStyle.allCases.indices.contains(index) {
+                    let quest = QuestStyle.allCases[index]
+                    viewModel.action(.questButtonDidTap(quest))
                 }
             }
         }
