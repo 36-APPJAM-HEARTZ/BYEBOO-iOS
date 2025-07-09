@@ -74,7 +74,7 @@ final class JourneyResultView: BaseView {
         }
         confirmLabel.do {
             $0.text = "확인했어요"
-            // TODO: 머지하고 underline 넣기
+            $0.underLine(text: $0.text ?? "")
             $0.font = FontManager.body4Sb14.font
             $0.textColor = .secondary300
             $0.textAlignment = .center
