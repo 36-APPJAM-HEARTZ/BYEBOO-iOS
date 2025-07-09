@@ -14,6 +14,7 @@ final class InformationViewController: BaseViewController {
     private let inputNicknameView: InputNicknameView
     private var informationViewType: InformationViewType
     private var informationBaseView: InformationBaseView
+    private var maxStep: ProgressBarType
     
     private let selectEmotionView = SelectEmotionView(emotionCardsView: EmotionCardsView())
     private let selectQuestView = SelectQuestView(questCardsView: QuestCardsView())
@@ -32,6 +33,7 @@ final class InformationViewController: BaseViewController {
             informationViewType: self.informationViewType,
             progressBarType: .first
         )
+        self.maxStep = .first
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -80,8 +82,9 @@ final class InformationViewController: BaseViewController {
             .sink { result in
                 switch result {
                 case .success(let user):
-                    // 닉네임 들고 로딩 뷰로 이동하기
-                    print("유저의 닉네임 : \(user.name)")
+                    let loadingViewController = LoadingViewController()
+                    loadingViewController.nickname = user.name
+                    self.navigationController?.pushViewController(loadingViewController, animated: false)
                 case .failure:
                     break
                 }
@@ -93,6 +96,10 @@ final class InformationViewController: BaseViewController {
 extension InformationViewController {
     
     private func move(viewType: InformationViewType, progress: ProgressBarType) {
+        if progress.rawValue > maxStep.rawValue {
+            maxStep = progress
+        }
+        
         self.informationViewType = viewType
         let newBaseView = InformationBaseView(
             informationViewType: viewType,
@@ -103,6 +110,12 @@ extension InformationViewController {
         
         switch viewType {
         case .inputNickname:
+            if maxStep == .third {
+                viewModel.resetData()
+                selectEmotionView.resetSelected()
+                selectQuestView.resetSelected()
+                maxStep = .first
+            }
             setTopNavigationBar(type: .none)
         default:
             setTopNavigationBar(type: .back)
