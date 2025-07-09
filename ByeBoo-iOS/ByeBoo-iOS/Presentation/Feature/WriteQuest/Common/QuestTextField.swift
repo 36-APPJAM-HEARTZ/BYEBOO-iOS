@@ -122,9 +122,6 @@ extension QuestTextField: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         if textView.text.count > limitCount {
             textView.deleteBackward()
-            self.layer.borderColor = UIColor.error300.cgColor
-            self.layer.borderWidth = 1
-            textCount.textColor = .error300
         }
         
         count = textView.text.count
