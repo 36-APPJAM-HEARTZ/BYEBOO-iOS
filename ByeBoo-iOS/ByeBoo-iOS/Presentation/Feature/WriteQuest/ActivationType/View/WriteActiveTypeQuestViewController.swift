@@ -31,7 +31,9 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     override func setAddTarget() {
         NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveUp), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveDown), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
         rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTapped), for: .touchUpInside)
+        rootView.title.tipTag.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tipTagDidTap)))
     }
     
     private func setGesture() {
@@ -112,5 +114,11 @@ extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, U
             rootView.changeStyle(count: rootView.imgCount)
         }
         dismiss(animated: true, completion: nil)
+    }
+}
+
+extension WriteActiveTypeQuestViewController: TipTagDidTapProtocol {
+    func tipTagDidTap() {
+        
     }
 }

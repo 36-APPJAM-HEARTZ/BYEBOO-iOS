@@ -11,7 +11,7 @@ import SnapKit
 import Then
 
 final class WriteQuestionTypeQuestView: BaseView {
-    private let title = WriteQuestTitleView(
+    let title = WriteQuestTitleView(
         stepNum: "2", 
         stepTitle: "상황 정리하기", 
         questNum: 10,
