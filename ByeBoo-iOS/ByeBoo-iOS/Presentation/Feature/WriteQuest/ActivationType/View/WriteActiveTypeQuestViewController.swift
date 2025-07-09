@@ -110,5 +110,4 @@ extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, U
         }
         dismiss(animated: true, completion: nil)
     }
-
 }
