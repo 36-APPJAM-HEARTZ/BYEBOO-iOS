@@ -16,11 +16,11 @@ final class QuestInitViewController: BaseViewController {
     }
     
     override func setAddTarget() {
-        let startTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(startButtonTapped))
+        let startTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(startButtonDidTap))
         rootView.startCardView.addGestureRecognizer(startTapRecognizer)
         rootView.startCardView.isUserInteractionEnabled = true
         
-        let lookBackTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(lookBackButtonTapped))
+        let lookBackTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(lookBackButtonDidTap))
         rootView.lookBackCardView.addGestureRecognizer(lookBackTapRecognizer)
         rootView.lookBackCardView.isUserInteractionEnabled = true
     }
@@ -28,7 +28,7 @@ final class QuestInitViewController: BaseViewController {
 
 extension QuestInitViewController {
     @objc
-    private func startButtonTapped() {
+    private func startButtonDidTap() {
         let viewController = NewJourneySelectViewController()
         
         guard let navigationController else {
@@ -40,7 +40,7 @@ extension QuestInitViewController {
     }
     
     @objc
-    private func lookBackButtonTapped() {
+    private func lookBackButtonDidTap() {
         let viewController = LookBackJourneyViewController()
         
         guard let navigationController else {

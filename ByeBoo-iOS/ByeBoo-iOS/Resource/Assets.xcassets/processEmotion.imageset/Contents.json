@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "processEmotion.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
