@@ -7,15 +7,16 @@
 
 import UIKit
 
+import Lottie
 import SnapKit
 import Then
 
 final class LoadingView: BaseView {
     
-    private let nickname: String
+    private var nickname: String
     
     private let loadingStackView = UIStackView()
-    private let lottie = UIImageView()
+    private let loadingView = LottieAnimationView(name: "Loading_byeboo")
     private let titleLabel = UILabel()
     
     init(nickname: String) {
@@ -32,16 +33,23 @@ final class LoadingView: BaseView {
             $0.axis = .vertical
             $0.spacing = 35
         }
+        loadingView.do {
+            $0.play()
+            $0.loopMode = .loop
+            $0.contentMode = .scaleAspectFill
+            $0.transform = CGAffineTransform(scaleX: 2.3, y: 2.3)
+        }
         titleLabel.do {
             $0.font = FontManager.body3R16.font
             $0.attributedText = "\(nickname)님에게 꼭 맞는\n이별 극복 여정을 찾는 중 ..."
                 .makeTitle(rangedText: nickname, font: FontManager.body1Sb16.font)
             $0.numberOfLines = 2
+            $0.textAlignment = .center
         }
     }
     
     override func setUI() {
-        loadingStackView.addArrangedSubviews(lottie, titleLabel)
+        loadingStackView.addArrangedSubviews(loadingView, titleLabel)
         addSubviews(loadingStackView)
     }
     
@@ -51,9 +59,15 @@ final class LoadingView: BaseView {
             $0.width.equalTo(168.adjustedW)
             $0.height.equalTo(96.adjustedH)
         }
-        lottie.snp.makeConstraints {
+        loadingView.snp.makeConstraints {
             $0.width.equalTo(76.68.adjustedW)
             $0.height.equalTo(19.adjustedH)
         }
+    }
+    
+    func updateNickname(_ newNickname: String) {
+        self.nickname = newNickname
+        titleLabel.attributedText = "\(nickname)님에게 꼭 맞는\n이별 극복 여정을 찾는 중 ..."
+            .makeTitle(rangedText: nickname, font: FontManager.body1Sb16.font)
     }
 }

@@ -38,10 +38,10 @@ final class InformationViewModel: ViewModelType {
     private let questSubject = PassthroughSubject<Result<QuestStyle, ByeBooError>, Never>()
     private let userInformationSubject = PassthroughSubject<Result<UserEntity, ByeBooError>, Never>()
     
-    private var currentNickname: String?
+    var currentNickname: String?
     private var currentEmotion: EmotionState?
     private var currentQuest: QuestStyle?
-        
+         
     var output: Output {
         Output(
             nicknamePublisher: nicknameSubject.eraseToAnyPublisher(),
@@ -69,6 +69,11 @@ final class InformationViewModel: ViewModelType {
             )
             userInformationSubject.send(.success(user))
         }
+    }
+    
+    func resetData() {
+        currentEmotion = nil
+        currentQuest = nil
     }
     
     // 실제로는 서버에 POST 요청을 통해 유저 정보 생성 예정
