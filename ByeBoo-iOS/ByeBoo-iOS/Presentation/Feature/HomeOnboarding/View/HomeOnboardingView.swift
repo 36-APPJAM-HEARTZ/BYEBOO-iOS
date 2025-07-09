@@ -90,15 +90,18 @@ final class HomeOnboardingView: BaseView {
 
 extension HomeOnboardingView {
     func startAnimation() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+        
+        UIView.animate(withDuration: 0.5, delay: 0.7) {
             self.welcomeView.alpha = 1
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+        } completion: { _ in
+            UIView.animate(withDuration: 0.5, delay: 0.7) {
                 self.introduceView.alpha = 1
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: {
+            } completion: { _ in
+                UIView.animate(withDuration: 0.5, delay: 0.7) {
                     self.descriptionLabel.alpha = 1
                     self.bubbleImageView.alpha = 1
-                })
-            })
-        })
+                }
+            }
+        }
     }
 }
