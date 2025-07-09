@@ -43,6 +43,8 @@ final class JourneyResultViewController: BaseViewController {
 extension JourneyResultViewController {
     @objc
     private func confirmLabelTapped() {
-        
+        let viewController = HomeOnboardingViewController()
+        viewController.navigationItem.hidesBackButton = true
+        navigationController?.pushViewController(viewController, animated: false)
     }
 }

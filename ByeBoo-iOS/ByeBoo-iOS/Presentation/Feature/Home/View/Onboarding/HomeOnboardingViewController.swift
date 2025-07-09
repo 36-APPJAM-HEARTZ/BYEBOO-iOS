@@ -35,5 +35,13 @@ extension HomeOnboardingViewController {
     @objc
     private func longTapped() {
         ByeBooLogger.debug("꾹 눌렀음")
+        let viewController = BottomNavigationViewController()
+        if let windowScene = UIApplication.shared.connectedScenes
+            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
+           let window = windowScene.windows.first {
+
+            window.rootViewController = viewController
+            window.makeKeyAndVisible()
+        }
     }
 }
