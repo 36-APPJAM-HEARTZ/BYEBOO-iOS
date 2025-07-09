@@ -8,5 +8,5 @@
 import Foundation
 
 @objc protocol TipTagDidTapProtocol {
-    @objc func tipTagDidTap()
+    func tipTagDidTap()
 }

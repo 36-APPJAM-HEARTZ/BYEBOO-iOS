@@ -10,7 +10,6 @@ import UIKit
 final class WriteQuestionTypeQuestViewController: BaseViewController {
     
     private let rootView = WriteQuestionTypeQuestView()
-    private let tipViewModel = QuestTipViewModel()
     
     override func loadView() {
         view = rootView
@@ -68,7 +67,6 @@ extension WriteQuestionTypeQuestViewController: BackNavigable {
 
 extension WriteQuestionTypeQuestViewController: TipTagDidTapProtocol {
     func tipTagDidTap() {
-        tipViewModel.action(.tagButtonDidTap)
         let vc = QuestTipViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }

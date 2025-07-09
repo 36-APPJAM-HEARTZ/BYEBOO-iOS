@@ -29,7 +29,7 @@ final class QuestTipViewController: BaseViewController {
         )
         
         bind()
-        viewModel.action(.tagButtonDidTap)
+        viewModel.action(.questTipDidLoad)
     }
     
     private func bind() {

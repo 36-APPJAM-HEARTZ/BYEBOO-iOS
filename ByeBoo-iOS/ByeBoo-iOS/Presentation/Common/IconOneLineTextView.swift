@@ -66,7 +66,7 @@ final class IconOneLineTextView: BaseView {
         
         textLabel.snp.makeConstraints {
             $0.top.equalToSuperview()
-            $0.leading.equalTo(icon.snp.trailing).offset(8)
+            $0.leading.equalTo(icon.snp.trailing).offset(8.adjustedW)
             $0.centerY.equalTo(icon.snp.centerY)
         }
     }

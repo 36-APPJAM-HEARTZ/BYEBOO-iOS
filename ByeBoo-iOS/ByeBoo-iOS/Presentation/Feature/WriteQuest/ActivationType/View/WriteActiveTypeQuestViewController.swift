@@ -119,6 +119,7 @@ extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, U
 
 extension WriteActiveTypeQuestViewController: TipTagDidTapProtocol {
     func tipTagDidTap() {
-        
+        let vc = QuestTipViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
