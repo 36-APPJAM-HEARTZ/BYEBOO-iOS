@@ -16,11 +16,11 @@ final class InformationBaseView: BaseView {
     private var progressBarType: ProgressBarType
     private lazy var progressView = ProgressBarView(type: progressBarType)
     let informationView: BaseView
-    private var nextButton = ByeBooButton(titleText: "다음으로", type: .disabled2)
+    var nextButton = ByeBooButton(titleText: "다음으로", type: .disabled2)
     
-    init(progressBarType: ProgressBarType, informationView: InformationViewType) {
+    init(informationViewType: InformationViewType, progressBarType: ProgressBarType) {
+        self.informationView = informationViewType.view
         self.progressBarType = progressBarType
-        self.informationView = informationView.view
         super.init(frame: .zero)
     }
     
@@ -34,22 +34,11 @@ final class InformationBaseView: BaseView {
             $0.contentMode = .scaleAspectFill
         }
         
-        if let view = informationView as? InputNicknameView {
-            view.nicknameTextField.onRegex = { [weak self] condition in
-                if condition {
-                    self?.nextButton.updateType(.enabled)
-                    return
-                }
-                self?.nextButton.updateType(.disabled2)
-            }
-        }
-        
-        if let view = informationView as? SelectEmotionView {
-            view.emotionCardsView.emotionCards.forEach {
-                $0.onSelected = {
-                    self.nextButton.updateType(.enabled)
-                }
-            }
+        switch informationView {
+        case let view as InputNicknameView: updateNicknameViewNextButton(view: view)
+        case let view as SelectEmotionView: updateEmotionViewNextButton(view: view)
+        case let view as SelectQuestView: updateQuestViewNextButton(view: view)
+        default: break
         }
     }
     
@@ -82,6 +71,48 @@ final class InformationBaseView: BaseView {
             $0.centerX.equalToSuperview()
             $0.width.equalTo(326.adjustedH)
             $0.height.equalTo(53.adjustedH)
+        }
+    }
+    
+    private func updateNicknameViewNextButton(view: InputNicknameView) {
+        view.nicknameTextField.onRegex = { [weak self] condition in
+            if condition {
+                self?.nextButton.updateType(.enabled)
+                return
+            }
+            self?.nextButton.updateType(.disabled2)
+        }
+        
+        if let currentText = view.nicknameTextField.nicknameField.text {
+            updateButtonWhenBack(condition: currentText.isValidNickname)
+        }
+    }
+    
+    private func updateEmotionViewNextButton(view: SelectEmotionView) {
+        view.emotionCardsView.emotionCards.forEach {
+            $0.onSelected = {
+                self.nextButton.updateType(.enabled)
+            }
+        }
+        
+        let hasSelected = view.emotionCardsView.emotionCards.contains { $0.isSelected }
+        updateButtonWhenBack(condition: hasSelected)
+    }
+    
+    private func updateQuestViewNextButton(view: SelectQuestView) {
+        view.questCardsView.questCards.forEach {
+            $0.onSelected = {
+                self.nextButton.updateType(.enabled)
+            }
+        }
+        
+        let hasSelected = view.questCardsView.questCards.contains { $0.isSelected }
+        updateButtonWhenBack(condition: hasSelected)
+    }
+    
+    private func updateButtonWhenBack(condition: Bool) {
+        if condition {
+            self.nextButton.updateType(.enabled)
         }
     }
 }

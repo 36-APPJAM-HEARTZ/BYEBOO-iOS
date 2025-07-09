@@ -17,6 +17,7 @@ enum ByeBooFilledTagType {
     case word3Gray
     case smallPurple
     case smallGray
+    case yelloFilled
     
     var backgroundColor: UIColor {
         switch self {
@@ -24,6 +25,8 @@ enum ByeBooFilledTagType {
             return .primary300
         case .largeGray, .word3Gray, .smallGray :
             return .white10
+        case .yelloFilled:
+            return .secondary30010
         }
     }
     
@@ -33,6 +36,8 @@ enum ByeBooFilledTagType {
             return .white
         case .word3Gray, .smallGray:
             return .grayscale300
+        case .yelloFilled:
+            return .secondary300
         }
     }
     
@@ -40,7 +45,7 @@ enum ByeBooFilledTagType {
         switch self {
         case .largePurple, .largeGray:
             return FontManager.body4Sb14.font
-        case .word3Purple, .word3Gray, .smallPurple, .smallGray:
+        case .word3Purple, .word3Gray, .smallPurple, .smallGray, .yelloFilled:
             return FontManager.cap1M12.font
         }
     }
@@ -49,16 +54,16 @@ enum ByeBooFilledTagType {
         switch self {
         case .largePurple, .largeGray:
             return 3.adjustedH
-        case .word3Purple, .word3Gray, .smallPurple, .smallGray:
+        case .word3Purple, .word3Gray, .smallPurple, .smallGray, .yelloFilled:
             return 4.adjustedH
         }
     }
     
     var horizontalInset: CGFloat {
         switch self {
-        case .largePurple, .largeGray, .word3Purple, .word3Gray:
+        case .largePurple, .largeGray,.smallPurple, .smallGray, .yelloFilled:
             return 17.5.adjustedW
-        case .smallPurple, .smallGray:
+        case .word3Purple, .word3Gray:
             return 12.adjustedW
         }
     }
@@ -121,6 +126,8 @@ final class ByeBooFilledTag: BaseView {
             tagType = isSelected ? .word3Purple : .word3Gray
         case .smallPurple, .smallGray:
             tagType = isSelected ? .smallPurple : .smallGray
+        default:
+            break
        }
         setStyle()
     }

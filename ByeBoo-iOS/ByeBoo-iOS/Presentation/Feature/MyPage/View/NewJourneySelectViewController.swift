@@ -29,6 +29,11 @@ final class NewJourneySelectViewController: BaseViewController {
 
 extension NewJourneySelectViewController: BackNavigable {
     func back() {
+        guard let navigationController else {
+            ByeBooLogger.error(ByeBooError.navigationControllerMissing)
+            return
+        }
         
+        navigationController.popViewController(animated: true)
     }
 }

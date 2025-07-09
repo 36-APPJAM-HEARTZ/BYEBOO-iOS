@@ -20,6 +20,8 @@ final class EmotionCardsView: BaseView {
     
     private let emotionStackView = UIStackView()
     
+    var onEmotionSelected: ((Int) -> Void)?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setAction()
@@ -67,6 +69,11 @@ final class EmotionCardsView: BaseView {
     @objc
     private func cardDidTap(_ sender: UITapGestureRecognizer) {
         guard let tappedCard = sender.view as? EmotionCardView else { return }
-        emotionCards.forEach { $0.isSelected = ($0 == tappedCard) }
+
+        for index in 0..<emotionCards.count {
+            let card = emotionCards[index]
+            card.isSelected = (card == tappedCard)
+            onEmotionSelected?(index)
+        }
     }
 }

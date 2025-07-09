@@ -40,7 +40,7 @@ final class QuestTextField: BaseView {
     private var isPlaceholderActive: Bool = true
     private let limitCount: Int
     var count: Int = 0
-    weak var delegate: TextViewProtocol?
+    weak var delegate: QuestCompleteProtocol?
     
     init(type: QuestType) {
         placeholder = type.plaeholder
@@ -71,7 +71,7 @@ final class QuestTextField: BaseView {
         }
         
         textCount.do {
-            $0.text = "(\(count)/\(limitCount)"
+            $0.text = "(\(count)/\(limitCount))"
             $0.font = FontManager.body5R14.font
             $0.textColor = .grayscale300
         }
@@ -128,7 +128,7 @@ extension QuestTextField: UITextViewDelegate {
         }
         
         count = textView.text.count
-        textCount.text = "(\(count)/\(limitCount)"
+        textCount.text = "(\(count)/\(limitCount))"
         delegate?.changeStyle(count: count)
     }
 }
