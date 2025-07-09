@@ -24,12 +24,8 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
             action: #selector(back)
         )
         
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(endEditingOnTap))
-        ByeBooLogger.debug(tapGestureRecognizer)
-        tapGestureRecognizer.isEnabled = true
-        tapGestureRecognizer.delegate = self
-        tapGestureRecognizer.cancelsTouchesInView = false
-        self.rootView.scrollView.addGestureRecognizer(tapGestureRecognizer)
+        setGesture()
+        presentPhotoPicker()
     }
     
     override func setAddTarget() {
@@ -38,6 +34,24 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTapped), for: .touchUpInside)
     }
     
+    private func setGesture() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(endEditingOnTap))
+        ByeBooLogger.debug(tapGestureRecognizer)
+        tapGestureRecognizer.isEnabled = true
+        tapGestureRecognizer.delegate = self
+        tapGestureRecognizer.cancelsTouchesInView = false
+        self.rootView.scrollView.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    private func presentPhotoPicker() {
+        rootView.imageContainer.didTapAddImage = { [weak self] in
+            guard let self = self else { return }
+            self.openPhotosButtenPressed()
+        }
+    }
+}
+
+extension WriteActiveTypeQuestViewController {
     @objc
     private func textViewMoveUp(_ notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -72,9 +86,29 @@ extension WriteActiveTypeQuestViewController: BackNavigable {
 
 extension WriteActiveTypeQuestViewController: UIGestureRecognizerDelegate {
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        if (touch.view is UITextView || touch.view is UITextField) {
-            return false
-        }
         return true
     }
+}
+
+extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func openPhotosButtenPressed() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = .photoLibrary
+        present(imagePicker, animated: true)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController,
+      didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            ByeBooLogger.debug(image)
+            rootView.imageContainer.selectedImageView.image = image
+            rootView.imageContainer.changeIconHidden()
+            rootView.imgCount += 1
+            rootView.updateImageCountLabel(count: rootView.imgCount)
+            rootView.changeStyle(count: rootView.imgCount)
+        }
+        dismiss(animated: true, completion: nil)
+    }
+
 }
