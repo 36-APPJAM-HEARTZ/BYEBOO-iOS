@@ -40,7 +40,7 @@ final class QuestTextField: BaseView {
     private var isPlaceholderActive: Bool = true
     private let limitCount: Int
     var count: Int = 0
-    weak var delegate: TextViewProtocol?
+    weak var delegate: QuestCompleteProtocol?
     
     init(type: QuestType) {
         placeholder = type.plaeholder

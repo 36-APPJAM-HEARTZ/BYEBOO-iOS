@@ -76,7 +76,7 @@ final class WriteQuestionTypeQuestView: BaseView {
     }
 }
 
-extension WriteQuestionTypeQuestView: TextViewProtocol {
+extension WriteQuestionTypeQuestView: QuestCompleteProtocol {
     func changeStyle(count: Int) {
         if (count >= 10) {
             confirmButton.updateType(.enabled)
