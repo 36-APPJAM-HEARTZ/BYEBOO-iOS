@@ -7,17 +7,6 @@
 
 import Combine
 
-enum EmotionState {
-    case exhausted
-    case recovering
-    case overcoming
-}
-
-enum QuestStyle {
-    case recording
-    case active
-}
-
 final class InformationViewModel: ViewModelType {
     
     enum InputAction {
