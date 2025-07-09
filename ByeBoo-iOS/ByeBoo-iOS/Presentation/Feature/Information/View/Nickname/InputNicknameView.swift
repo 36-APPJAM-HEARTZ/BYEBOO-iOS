@@ -27,12 +27,12 @@ final class InputNicknameView: BaseView {
     private let nicknameStateView = UIView()
     private let nicknameStateLabel = UILabel()
     private let letterCountLabel = UILabel()
-    
+        
     override func setStyle() {
         titleView.backgroundColor = .clear
         
         titleLabel.do {
-            $0.attributedText = makeTitle()
+            $0.attributedText = "닉네임을 입력해주세요".makeTitle(rangedText: "닉네임")
             $0.textAlignment = .left
             $0.font = FontManager.head1Sb24.font
         }
@@ -130,18 +130,6 @@ final class InputNicknameView: BaseView {
             $0.width.equalTo(27.adjustedW)
             $0.height.equalTo(16.adjustedH)
         }
-    }
-    
-    private func makeTitle() -> NSMutableAttributedString {
-        let fullText = "닉네임을 입력해주세요"
-        
-        let nicknameRange = (fullText as NSString).range(of: "닉네임")
-        
-        let attributedString = NSMutableAttributedString(string: fullText)
-        attributedString.addAttribute(.foregroundColor, value: UIColor.primary300, range: nicknameRange)
-        attributedString.addAttribute(.foregroundColor, value: UIColor.grayscale50, range: NSRange(location: nicknameRange.upperBound, length: fullText.count - nicknameRange.upperBound))
-        
-        return attributedString
     }
     
     func updateNicknameState(_ type: NicknameFieldType) {

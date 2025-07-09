@@ -33,7 +33,7 @@ struct ByeBooNavigationBar {
         
         configureNavigationItem(
             navigationItem: navigationItem,
-            navigationController: navigationController,
+            topViewController: topViewController,
             type: type,
             action: action
         )
@@ -55,7 +55,7 @@ struct ByeBooNavigationBar {
     
     private static func configureNavigationItem(
         navigationItem: UINavigationItem,
-        navigationController: UINavigationController?,
+        topViewController: BaseViewController,
         type: NavigationBarType,
         action: Selector?
     ) {
@@ -63,7 +63,7 @@ struct ByeBooNavigationBar {
         case .back:
             let backButtonItem = makeBarButtonItem(
                 image: .left.withTintColor(.white),
-                target: navigationController?.topViewController,
+                target: topViewController,
                 action: action
             )
             navigationItem.leftBarButtonItem = backButtonItem
@@ -74,7 +74,7 @@ struct ByeBooNavigationBar {
         case .close:
             makeCloseButtonItem(
                 image: .xicon,
-                target: navigationController?.topViewController,
+                target: topViewController,
                 navigationItem: navigationItem,
                 action: action
             )
@@ -82,7 +82,7 @@ struct ByeBooNavigationBar {
         case .titleAndClose(let string):
             makeCloseButtonItem(
                 image: .xicon,
-                target: navigationController?.topViewController,
+                target: topViewController,
                 navigationItem: navigationItem,
                 action: action
             )
@@ -102,7 +102,7 @@ struct ByeBooNavigationBar {
     
     private static func makeBarButtonItem(
         image: UIImage,
-        target: UIViewController?,
+        target: BaseViewController,
         action: Selector?
     ) -> UIBarButtonItem {
         return UIBarButtonItem(
@@ -115,7 +115,7 @@ struct ByeBooNavigationBar {
     
     private static func makeCloseButtonItem(
         image: UIImage,
-        target: UIViewController?,
+        target: BaseViewController,
         navigationItem: UINavigationItem,
         action: Selector?
     ) {

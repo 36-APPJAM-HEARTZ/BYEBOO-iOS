@@ -30,7 +30,7 @@ final class SelectEmotionView: BaseView {
         titleView.backgroundColor = .clear
         
         titleLabel.do {
-            $0.attributedText = makeTitle()
+            $0.attributedText = "감정 상태를 알려주세요".makeTitle(rangedText: "감정 상태")
             $0.textAlignment = .left
             $0.font = FontManager.head1Sb24.font
         }
@@ -78,17 +78,5 @@ final class SelectEmotionView: BaseView {
             $0.width.equalTo(375.adjustedW)
             $0.height.equalTo(168.adjustedH)
         }
-    }
-    
-    private func makeTitle() -> NSMutableAttributedString {
-        let fullText = "감정 상태를 알려주세요"
-        
-        let nicknameRange = (fullText as NSString).range(of: "감정 상태")
-        
-        let attributedString = NSMutableAttributedString(string: fullText)
-        attributedString.addAttribute(.foregroundColor, value: UIColor.primary300, range: nicknameRange)
-        attributedString.addAttribute(.foregroundColor, value: UIColor.grayscale50, range: NSRange(location: nicknameRange.upperBound, length: fullText.count - nicknameRange.upperBound))
-        
-        return attributedString
     }
 }
