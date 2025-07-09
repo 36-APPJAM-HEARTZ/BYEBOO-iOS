@@ -19,7 +19,7 @@ extension String {
         return String(self.prefix(limit))
     }
     
-    func makeTitle(rangedText: String) -> NSMutableAttributedString {
+    func makeTitle(rangedText: String, font: UIFont? = nil) -> NSMutableAttributedString {
         let attributedString = NSMutableAttributedString(string: self)
         
         attributedString.addAttribute(
@@ -27,6 +27,17 @@ extension String {
             value: UIColor.grayscale50,
             range: NSRange(location: 0, length: self.count)
         )
+        
+        if let font = font {
+            attributedString.addAttribute(
+                .font,
+                value: font,
+                range: NSRange(
+                    location: 0,
+                    length: self.count
+                )
+            )
+        }
         
         let range = (self as NSString).range(of: rangedText)
         if range.location != NSNotFound {
