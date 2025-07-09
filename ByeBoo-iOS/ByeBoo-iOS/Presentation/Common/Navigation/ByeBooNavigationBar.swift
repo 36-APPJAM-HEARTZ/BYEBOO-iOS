@@ -9,11 +9,12 @@ import UIKit
 
 import SnapKit
 
-enum NavigationBarType {
+enum NavigationBarType: Equatable {
     case back
     case title(String)
     case close
     case titleAndClose(String)
+    case none
 }
 
 struct ByeBooNavigationBar {
@@ -87,6 +88,13 @@ struct ByeBooNavigationBar {
                 action: action
             )
             navigationItem.title = string
+        case .none:
+            let emptyItem = makeBarButtonItem(
+                image: UIImage(),
+                target: topViewController,
+                action: nil
+            )
+            navigationItem.leftBarButtonItem = emptyItem
         }
     }
     
