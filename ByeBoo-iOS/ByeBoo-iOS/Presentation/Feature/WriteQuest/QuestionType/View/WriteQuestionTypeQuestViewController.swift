@@ -55,13 +55,21 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     
     @objc
     private func confirmButtonDidTapped() {
-        
+        let vc = EmotionBottomSheetViewController()
+
+      if let sheet = vc.sheetPresentationController{
+          sheet.detents = [.custom { _ in 515.adjustedH }]
+          sheet.prefersGrabberVisible = false
+          sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+          sheet.preferredCornerRadius = 8
+      }
+      self.present(vc, animated: true)
     }
 }
 
 extension WriteQuestionTypeQuestViewController: BackNavigable {
     func back() {
-        
+        //모달 빌더
     }
 }
 
