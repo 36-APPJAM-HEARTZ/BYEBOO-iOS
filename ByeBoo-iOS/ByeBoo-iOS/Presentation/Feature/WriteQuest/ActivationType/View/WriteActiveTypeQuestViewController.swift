@@ -104,7 +104,7 @@ extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, U
             ByeBooLogger.debug(image)
             rootView.imageContainer.selectedImageView.image = image
             rootView.imageContainer.changeIconHidden()
-            rootView.imgCount += 1
+            rootView.imgCount = 1
             rootView.updateImageCountLabel(count: rootView.imgCount)
             rootView.changeStyle(count: rootView.imgCount)
         }
