@@ -12,6 +12,7 @@ import Lottie
 final class HomeView: BaseView {
 
     private let backgroundImageView = LottieAnimationView(name: "Bori_home_4")
+    private let headerView = HomeHeaderView(state: .beforeQuest)
     
     override func setStyle() {
         backgroundImageView.do {
@@ -22,12 +23,20 @@ final class HomeView: BaseView {
     }
 
     override func setUI() {
-        addSubviews(backgroundImageView)
+        addSubviews(
+            backgroundImageView,
+            headerView
+        )
     }
     
     override func setLayout() {
         backgroundImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
+        }
+        
+        headerView.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview()
         }
     }
 }
