@@ -13,4 +13,9 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
     override func loadView() {
         view = rootView
     }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        ByeBooLogger.debug("뷰 디드로드")
+    }
 }

@@ -73,7 +73,7 @@ extension WriteActiveTypeQuestViewController {
     private func confirmButtonDidTapped() {
         let vc = EmotionBottomSheetViewController()
         vc.previousView = .activation
-        
+        vc.delegate = self
         if let sheet = vc.sheetPresentationController{
             sheet.detents = [.custom { _ in 515.adjustedH }]
             sheet.prefersGrabberVisible = false
@@ -130,6 +130,14 @@ extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, U
             rootView.changeStyle(count: rootView.imgCount)
         }
         dismiss(animated: true, completion: nil)
+    }
+}
+
+extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
+    func presentNextVC(from previousView: PreviousView) {
+        let vc = CompleteActiveTypeQuestViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
 }
 
