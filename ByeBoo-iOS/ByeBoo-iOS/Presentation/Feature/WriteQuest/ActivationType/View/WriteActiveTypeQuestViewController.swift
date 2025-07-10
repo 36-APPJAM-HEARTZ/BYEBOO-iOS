@@ -91,7 +91,14 @@ extension WriteActiveTypeQuestViewController {
 
 extension WriteActiveTypeQuestViewController: BackNavigable {
     func back() {
-        
+        ModalBuilder(
+            modalView: QuitModalView(),
+            action: {
+                ByeBooLogger.debug("모달 뜸")
+                // TODO: 퀘스트 조회 뷰로 연결
+            },
+            rootViewController: self
+        ).present()
     }
 }
 
