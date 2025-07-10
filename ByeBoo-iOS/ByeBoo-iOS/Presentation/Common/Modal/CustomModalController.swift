@@ -60,4 +60,17 @@ extension CustomModalController {
         ByeBooLogger.debug("dismiss button 터치")
         dismiss(animated: false)
     }
+    
+    @objc
+    func backgroundDidTap() {
+        ByeBooLogger.debug("background 터치")
+        dismiss(animated: false)
+    }
+    
+    private func setGesture() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(backgroundDidTap))
+        tapGestureRecognizer.isEnabled = true
+        tapGestureRecognizer.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGestureRecognizer)
+    }
 }

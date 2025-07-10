@@ -5,6 +5,7 @@
 //  Created by APPLE on 7/7/25.
 //
 
+import Combine
 import UIKit
 
 final class InformationViewController: BaseViewController {
@@ -12,6 +13,7 @@ final class InformationViewController: BaseViewController {
     private let inputNicknameView: InputNicknameView
     private var informationViewType: InformationViewType
     private var informationBaseView: InformationBaseView
+    private var maxStep: ProgressBarType
     
     private let selectEmotionView = SelectEmotionView(emotionCardsView: EmotionCardsView())
     private let selectQuestView = SelectQuestView(questCardsView: QuestCardsView())
@@ -19,14 +21,19 @@ final class InformationViewController: BaseViewController {
     private lazy var inputNicknameType = InformationViewType.inputNickname(inputNicknameView)
     private lazy var selectEmotionType = InformationViewType.selectEmotion(selectEmotionView)
     private lazy var selectQuestType = InformationViewType.selectQuest(selectQuestView)
-        
-    init(progressBarType: ProgressBarType) {
+    
+    private var viewModel: InformationViewModel
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(viewModel: InformationViewModel) {
         self.inputNicknameView = InputNicknameView()
         self.informationViewType = .inputNickname(self.inputNicknameView)
         self.informationBaseView = InformationBaseView(
             informationViewType: self.informationViewType,
-            progressBarType: progressBarType
+            progressBarType: .first
         )
+        self.viewModel = viewModel
+        self.maxStep = .first
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -41,14 +48,9 @@ final class InformationViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        ByeBooNavigationBar.makeNavigationBar(
-            navigationItem: self.navigationItem,
-            navigationController: self.navigationController,
-            type: .back,
-            action: #selector(back)
-        )
-        
+        setTopNavigationBar(type: .none)
         setAddTarget(informationBaseView: informationBaseView)
+        bindViewModel()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -58,6 +60,15 @@ final class InformationViewController: BaseViewController {
         }
     }
     
+    private func setTopNavigationBar(type: NavigationBarType) {
+        ByeBooNavigationBar.makeNavigationBar(
+            navigationItem: self.navigationItem,
+            navigationController: self.navigationController,
+            type: type,
+            action: type == .none ? nil : #selector(back)
+        )
+    }
+    
     private func setAddTarget(informationBaseView: InformationBaseView) {
         informationBaseView.nextButton.addTarget(
             self,
@@ -65,11 +76,30 @@ final class InformationViewController: BaseViewController {
             for: .touchUpInside
         )
     }
+    
+    private func bindViewModel() {
+        viewModel.output.userInformationPublisher
+            .sink { result in
+                switch result {
+                case .success(let user):
+                    let loadingViewController = LoadingViewController()
+                    loadingViewController.nickname = user.name
+                    self.navigationController?.pushViewController(loadingViewController, animated: false)
+                case .failure:
+                    break
+                }
+            }
+            .store(in: &cancellables)
+    }
 }
 
 extension InformationViewController {
     
     private func move(viewType: InformationViewType, progress: ProgressBarType) {
+        if progress.rawValue > maxStep.rawValue {
+            maxStep = progress
+        }
+        
         self.informationViewType = viewType
         let newBaseView = InformationBaseView(
             informationViewType: viewType,
@@ -77,6 +107,19 @@ extension InformationViewController {
         )
         self.view = newBaseView
         setAddTarget(informationBaseView: newBaseView)
+        
+        switch viewType {
+        case .inputNickname:
+            if maxStep == .third {
+                viewModel.resetData()
+                selectEmotionView.resetSelected()
+                selectQuestView.resetSelected()
+                maxStep = .first
+            }
+            setTopNavigationBar(type: .none)
+        default:
+            setTopNavigationBar(type: .back)
+        }
     }
 }
 
@@ -84,9 +127,12 @@ extension InformationViewController: BackNavigable {
     
     func back() {
         switch informationViewType {
-        case .inputNickname: ByeBooLogger.data("Input Nickname")
-        case .selectEmotion: move(viewType: inputNicknameType, progress: .first)
-        case .selectQuest: move(viewType: selectEmotionType, progress: .second)
+        case .selectEmotion:
+            move(viewType: inputNicknameType, progress: .first)
+        case .selectQuest:
+            move(viewType: selectEmotionType, progress: .second)
+        default:
+            break
         }
     }
 }
@@ -96,9 +142,31 @@ extension InformationViewController {
     @objc
     private func nextButtonDidTap() {
         switch informationViewType {
-        case .inputNickname: move(viewType: selectEmotionType, progress: .second)
-        case .selectEmotion: move(viewType: selectQuestType, progress: .third)
-        case .selectQuest: ByeBooLogger.data("Loading")
+        case .inputNickname:
+            if let nickname = inputNicknameView.nicknameTextField.nicknameField.text,
+               !nickname.isEmpty {
+                viewModel.action(.nicknameButtonDidTap(nickname))
+            }
+            move(viewType: selectEmotionType, progress: .second)
+            
+        case .selectEmotion:
+            let emotionCards = selectEmotionView.emotionCardsView.emotionCards
+            for (index, emotionCard) in emotionCards.enumerated() where emotionCard.isSelected {
+                if EmotionState.allCases.indices.contains(index) {
+                    let emotion = EmotionState.allCases[index]
+                    viewModel.action(.emotionButtonDidTap(emotion))
+                }
+            }
+            move(viewType: selectQuestType, progress: .third)
+            
+        case .selectQuest:
+            let questCards = selectQuestView.questCardsView.questCards
+            for (index, questCard) in questCards.enumerated() where questCard.isSelected {
+                if QuestStyle.allCases.indices.contains(index) {
+                    let quest = QuestStyle.allCases[index]
+                    viewModel.action(.questButtonDidTap(quest))
+                }
+            }
         }
     }
 }
