@@ -56,7 +56,7 @@ final class EmotionBottomSheetViewController: BaseViewController {
             ByeBooLogger.debug(previousView)
             
             self.dismiss(animated: true) {
-                self.delegate?.presentNextVC(from: previousView)
+                self.delegate?.presentNextViewController(from: previousView)
             }
         }
     }

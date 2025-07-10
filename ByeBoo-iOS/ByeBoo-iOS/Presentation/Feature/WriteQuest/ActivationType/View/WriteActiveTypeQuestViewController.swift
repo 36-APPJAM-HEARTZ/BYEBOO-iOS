@@ -72,16 +72,16 @@ extension WriteActiveTypeQuestViewController {
     
     @objc
     private func confirmButtonDidTap() {
-        let vc = EmotionBottomSheetViewController()
-        vc.previousView = .activation
-        vc.delegate = self
-        if let sheet = vc.sheetPresentationController{
+        let viewController = EmotionBottomSheetViewController()
+        viewController.previousView = .activation
+        viewController.delegate = self
+        if let sheet = viewController.sheetPresentationController{
             sheet.detents = [.custom { _ in 515.adjustedH }]
             sheet.prefersGrabberVisible = false
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
             sheet.preferredCornerRadius = 8
         }
-        self.present(vc, animated: true)
+        self.present(viewController, animated: true)
     }
     
     @objc
@@ -92,8 +92,8 @@ extension WriteActiveTypeQuestViewController {
 // TODO: Quest Tip View 머지 후 주석 해제
 //    @objc
 //    private func tipTagDidTap() {
-//        let vc = QuestTipViewController()
-//        self.navigationController?.pushViewController(vc, animated: true)
+//        let viewController = QuestTipViewController()
+//        self.navigationController?.pushViewController(viewController, animated: true)
 //    }
 }
 
@@ -142,9 +142,9 @@ extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, U
 }
 
 extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
-    func presentNextVC(from previousView: PreviousView) {
-        let vc = CompleteActiveTypeQuestViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
+    func presentNextViewController(from previousView: PreviousView) {
+        let viewController = CompleteActiveTypeQuestViewController()
+        self.navigationController?.pushViewController(viewController, animated: true)
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
 }

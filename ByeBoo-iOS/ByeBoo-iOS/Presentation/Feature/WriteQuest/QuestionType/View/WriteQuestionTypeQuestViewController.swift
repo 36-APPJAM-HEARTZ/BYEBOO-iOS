@@ -58,23 +58,23 @@ extension WriteQuestionTypeQuestViewController {
     
     @objc
     private func confirmButtonDidTap() {
-        let vc = EmotionBottomSheetViewController()
-        vc.previousView = .question
-        vc.delegate = self
-        if let sheet = vc.sheetPresentationController{
+        let viewController = EmotionBottomSheetViewController()
+        viewController.previousView = .question
+        viewController.delegate = self
+        if let sheet = viewController.sheetPresentationController{
             sheet.detents = [.custom { _ in 515.adjustedH }]
             sheet.prefersGrabberVisible = false
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
             sheet.preferredCornerRadius = 8
         }
-        self.present(vc, animated: true)
+        self.present(viewController, animated: true)
     }
     
 // TODO: Quest Tip View 머지 후 주석 해제
 //    @objc
 //    private func tipTagDidTap() {
-//        let vc = QuestTipViewController()
-//        self.navigationController?.pushViewController(vc, animated: true)
+//        let viewController = QuestTipViewController()
+//        self.navigationController?.pushViewController(viewController, animated: true)
 //    }
 }
 
@@ -99,9 +99,9 @@ extension WriteQuestionTypeQuestViewController: TipTagDidTapProtocol {
 }
 
 extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
-    func presentNextVC(from previousView: PreviousView) {
-        let vc = CompleteQuestionTypeQuestViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
+    func presentNextViewController(from previousView: PreviousView) {
+        let viewController = CompleteQuestionTypeQuestViewController()
+        self.navigationController?.pushViewController(viewController, animated: true)
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
 }

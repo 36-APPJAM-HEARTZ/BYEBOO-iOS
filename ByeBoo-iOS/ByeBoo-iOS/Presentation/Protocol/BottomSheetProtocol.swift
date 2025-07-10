@@ -8,5 +8,5 @@
 import Foundation
 
 protocol BottomSheetProtocol: AnyObject {
-    func presentNextVC(from previousView: PreviousView)
+    func presentNextViewController(from previousView: PreviousView)
 }
