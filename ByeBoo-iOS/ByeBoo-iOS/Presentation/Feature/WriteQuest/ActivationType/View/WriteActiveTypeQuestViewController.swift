@@ -72,6 +72,7 @@ extension WriteActiveTypeQuestViewController {
     @objc
     private func confirmButtonDidTapped() {
         let vc = EmotionBottomSheetViewController()
+        vc.previousView = .activation
         
         if let sheet = vc.sheetPresentationController{
             sheet.detents = [.custom { _ in 515.adjustedH }]

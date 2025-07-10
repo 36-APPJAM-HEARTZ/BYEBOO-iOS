@@ -9,22 +9,28 @@ import UIKit
 
 import SnapKit
 
-final class EmotionBottomSheetViewController: BaseViewController {
-    private let bottomSheetView = EmotionBottomSheetView()
-    private var selectedChip: ByeBooEmotionChip?
+enum PreviousView {
+    case activation
+    case question
+}
 
+final class EmotionBottomSheetViewController: BaseViewController {
+    private let rootView = EmotionBottomSheetView()
+    private var selectedChip: ByeBooEmotionChip?
+    var previousView: PreviousView?
+    
     override func loadView() {
-        view = bottomSheetView
+        view = rootView
     }
     
     override func setAddTarget() {
-        bottomSheetView.emotionChips.forEach { chip in
+        rootView.emotionChips.forEach { chip in
             let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(emotionChipDidTapped(_:)))
             chip.addGestureRecognizer(tapRecognizer)
             chip.isUserInteractionEnabled = true
         }
         
-        bottomSheetView.confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
+        rootView.confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
     }
     
     @objc
@@ -34,15 +40,27 @@ final class EmotionBottomSheetViewController: BaseViewController {
         selectedChip?.emotionTag.isSelected = false
         chip.emotionTag.isSelected = true
         selectedChip = chip
-
+        
         let emotion = chip.emotionType.emotionText
         chip.emotionTag.toggleTagType()
+        rootView.confirmButton.updateType(.enabled)
+        
         ByeBooLogger.debug("터치된 감정: \(emotion)")
     }
     
     @objc
     private func confirmButtonTapped() {
         ByeBooLogger.debug("컨펌 버튼 터치됨")
+        if let previousView = previousView {
+            ByeBooLogger.debug(previousView)
+            switch previousView {
+            case .activation:
+                let vc = CompleteActiveTypeQuestViewController()
+                navigationController?.pushViewController(vc, animated: true)
+            case .question:
+                let vc = CompleteQuestionTypeQuestViewController()
+                navigationController?.pushViewController(vc, animated: true)
+            }
+        }
     }
-                                                          
 }
