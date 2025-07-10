@@ -32,17 +32,26 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveUp), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveDown), name: UIResponder.keyboardWillHideNotification, object: nil)
         rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
-        
-//        let tap = UITapGestureRecognizer(target: self, action: #selector(tipTagDidTap))
-//        rootView.title.tipTag.addGestureRecognizer(tap)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        rootView.layoutIfNeeded()
+        ByeBooLogger.debug("✅ tipTag frame: \(rootView.title.tipTag.frame)")
     }
     
     private func setGesture() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(endEditingOnTap))
-        ByeBooLogger.debug(tapGestureRecognizer)
+        let tipTagGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tipTagDidTap))
+        
         tapGestureRecognizer.isEnabled = true
         tapGestureRecognizer.delegate = self
         tapGestureRecognizer.cancelsTouchesInView = false
+        
+        
+        tipTagGestureRecognizer.isEnabled = true
+
+        self.rootView.title.tipTag.addGestureRecognizer(tipTagGestureRecognizer)
         self.rootView.scrollView.addGestureRecognizer(tapGestureRecognizer)
     }
     
@@ -89,12 +98,13 @@ extension WriteActiveTypeQuestViewController {
         self.view.endEditing(true)
     }
     
-// TODO: Quest Tip View 머지 후 주석 해제
-//    @objc
-//    private func tipTagDidTap() {
-//        let viewController = QuestTipViewController()
-//        self.navigationController?.pushViewController(viewController, animated: true)
-//    }
+    @objc
+    private func tipTagDidTap() {
+        ByeBooLogger.debug("탭 버튼 터치됨")
+        let viewController = QuestTipViewController()
+        viewController.navigationItem.hidesBackButton = true
+        self.navigationController?.pushViewController(viewController, animated: true)
+    }
 }
 
 extension WriteActiveTypeQuestViewController: BackNavigable {
@@ -117,6 +127,13 @@ extension WriteActiveTypeQuestViewController: UIGestureRecognizerDelegate {
     -> Bool {
         return true
     }
+    
+//    func gestureRecognizer(
+//        _ gestureRecognizer: UIGestureRecognizer,
+//       shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer)
+//    -> Bool {
+//            return true
+//    }
 }
 
 extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -146,12 +163,5 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
         let viewController = CompleteActiveTypeQuestViewController()
         self.navigationController?.pushViewController(viewController, animated: true)
         navigationController?.setNavigationBarHidden(true, animated: false)
-    }
-}
-
-extension WriteActiveTypeQuestViewController: TipTagDidTapProtocol {
-    func tipTagDidTap() {
-        let vc = QuestTipViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
     }
 }

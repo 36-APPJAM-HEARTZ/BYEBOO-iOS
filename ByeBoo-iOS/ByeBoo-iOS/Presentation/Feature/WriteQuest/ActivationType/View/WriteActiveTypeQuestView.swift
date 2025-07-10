@@ -114,6 +114,7 @@ final class WriteActiveTypeQuestView: BaseView {
         
         title.snp.makeConstraints {
             $0.top.equalTo(0)
+            $0.leading.trailing.equalToSuperview()
             $0.centerX.equalToSuperview()
             $0.height.equalTo(200.adjustedH)
         }
