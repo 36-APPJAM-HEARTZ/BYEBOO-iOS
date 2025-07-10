@@ -28,7 +28,9 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     override func setAddTarget() {
         NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveUp), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveDown), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
         rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTapped), for: .touchUpInside)
+        rootView.title.tipTag.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tipTagDidTap)))
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -60,5 +62,12 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
 extension WriteQuestionTypeQuestViewController: BackNavigable {
     func back() {
         
+    }
+}
+
+extension WriteQuestionTypeQuestViewController: TipTagDidTapProtocol {
+    func tipTagDidTap() {
+        let viewController = QuestTipViewController()
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
 }
