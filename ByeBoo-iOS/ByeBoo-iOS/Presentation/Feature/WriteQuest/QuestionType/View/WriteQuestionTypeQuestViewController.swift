@@ -96,6 +96,5 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
     func presentNextViewController(from previousView: PreviousView) {
         let viewController = CompleteQuestionTypeQuestViewController()
         self.navigationController?.pushViewController(viewController, animated: true)
-        navigationController?.setNavigationBarHidden(true, animated: false)
     }
 }
