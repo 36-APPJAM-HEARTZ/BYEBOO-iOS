@@ -1,0 +1,18 @@
+//
+//  CompleteQuestionTypeQuestView.swift
+//  ByeBoo-iOS
+//
+//  Created by 이나연 on 7/10/25.
+//
+
+import UIKit
+
+import SnapKit
+import Then
+
+final class CompleteQuestionTypeQuestView: BaseView {
+    override func setStyle() {
+        backgroundColor = .primary400
+    }
+}
+
