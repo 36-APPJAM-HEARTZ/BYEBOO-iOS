@@ -91,6 +91,8 @@ final class QuestTipView: BaseView {
     }
     
     override func setLayout() {
+        backgroundColor = .grayscale900
+        
         stepStackView.snp.makeConstraints {
             $0.top.equalTo(safeAreaLayoutGuide).offset(12.adjustedH)
             $0.centerX.equalToSuperview()
