@@ -5,7 +5,7 @@
 //  Created by APPLE on 7/10/25.
 //
 
-enum QuestStyle: Encodable, CaseIterable {
+enum QuestStyle: CaseIterable {
     case recording
     case active
     

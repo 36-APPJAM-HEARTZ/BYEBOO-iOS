@@ -9,6 +9,6 @@ import Foundation
 
 struct UserRequestDTO: Encodable {
     let nickname: Int
-    let emotion: EmotionState
-    let quest: QuestStyle
+    let emotion: String
+    let quest: String
 }
