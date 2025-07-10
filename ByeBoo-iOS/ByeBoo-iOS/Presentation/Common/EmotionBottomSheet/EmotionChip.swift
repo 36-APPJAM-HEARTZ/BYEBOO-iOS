@@ -60,10 +60,16 @@ final class ByeBooEmotionChip: BaseView {
     private let emotionImage: UIImageView
     let emotionTag: ByeBooFilledTag
     let emotionType: ByeBooEmotion
-
-    init(emotionType: ByeBooEmotion) {
+    
+    init(emotionType: ByeBooEmotion, isPurple: Bool = false) {
         self.emotionImage = emotionType.emotionImage
-        self.emotionTag = ByeBooFilledTag(tagType: .largeGray, text: emotionType.emotionText)
+        
+        if isPurple == true {
+            self.emotionTag = ByeBooFilledTag(tagType: .largePurple, text: emotionType.emotionText)
+        } else {
+            self.emotionTag = ByeBooFilledTag(tagType: .largeGray, text: emotionType.emotionText)
+        }
+        
         self.emotionType = emotionType
         super.init(frame: .zero)
     }
@@ -100,6 +106,18 @@ final class ByeBooEmotionChip: BaseView {
             $0.top.equalTo(emotionImage.snp.bottom).offset(8.adjustedH)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(84.adjustedW)
+        }
+    }
+}
+
+extension ByeBooEmotion {
+    static func toEmotion(text: String) -> ByeBooEmotion {
+        switch text {
+        case "그저그런": return .neutral
+        case "슬픈": return .sad
+        case "자기이해": return .selfUnderstanding
+        case "후련함": return .relieved
+        default: return .neutral
         }
     }
 }
