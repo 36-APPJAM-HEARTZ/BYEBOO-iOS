@@ -17,6 +17,8 @@ struct DataDependencyAssembler: DependencyAssembler {
             return DefaultTestRepository(network: networkService, keychain: keychainService)
         }
         
-        // repository dependency 추가 여기서...
+        DIContainer.shared.register(type: UsersInterface.self) { _ in
+            return DefaultUsersRepository(network: networkService)
+        }
     }
 }
