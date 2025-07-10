@@ -31,9 +31,10 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     override func setAddTarget() {
         NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveUp), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveDown), name: UIResponder.keyboardWillHideNotification, object: nil)
+        rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
         
-        rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTapped), for: .touchUpInside)
-        rootView.title.tipTag.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tipTagDidTap)))
+//        let tap = UITapGestureRecognizer(target: self, action: #selector(tipTagDidTap))
+//        rootView.title.tipTag.addGestureRecognizer(tap)
     }
     
     private func setGesture() {
@@ -70,7 +71,7 @@ extension WriteActiveTypeQuestViewController {
     }
     
     @objc
-    private func confirmButtonDidTapped() {
+    private func confirmButtonDidTap() {
         let vc = EmotionBottomSheetViewController()
         vc.previousView = .activation
         vc.delegate = self
@@ -87,6 +88,13 @@ extension WriteActiveTypeQuestViewController {
     private func endEditingOnTap(sender: UITapGestureRecognizer){
         self.view.endEditing(true)
     }
+    
+// TODO: Quest Tip View 머지 후 주석 해제
+//    @objc
+//    private func tipTagDidTap() {
+//        let vc = QuestTipViewController()
+//        self.navigationController?.pushViewController(vc, animated: true)
+//    }
 }
 
 extension WriteActiveTypeQuestViewController: BackNavigable {

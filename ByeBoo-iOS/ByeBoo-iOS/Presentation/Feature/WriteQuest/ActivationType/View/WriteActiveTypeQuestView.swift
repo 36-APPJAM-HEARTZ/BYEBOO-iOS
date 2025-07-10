@@ -12,7 +12,7 @@ import Then
 
 final class WriteActiveTypeQuestView: BaseView {
     let scrollView = UIScrollView()
-    private let contentView = UIView()
+    let contentView = UIView()
     let title = WriteQuestTitleView(
         stepNum: "2",
         stepTitle: "감정 정리하기",
