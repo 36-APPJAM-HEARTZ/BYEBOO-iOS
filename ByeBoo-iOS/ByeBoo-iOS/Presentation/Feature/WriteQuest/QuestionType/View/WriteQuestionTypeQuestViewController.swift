@@ -30,8 +30,9 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveDown), name: UIResponder.keyboardWillHideNotification, object: nil)
         rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
         
-//        let tap = UITapGestureRecognizer(target: self, action: #selector(tipTagDidTap))
-//        rootView.title.tipTag.addGestureRecognizer(tap)
+        let tipTagGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tipTagDidTap))
+        self.rootView.title.tipTag.addGestureRecognizer(tipTagGestureRecognizer)
+        self.rootView.title.tipTag.isUserInteractionEnabled = true
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -70,12 +71,12 @@ extension WriteQuestionTypeQuestViewController {
         self.present(viewController, animated: true)
     }
     
-// TODO: Quest Tip View 머지 후 주석 해제
-//    @objc
-//    private func tipTagDidTap() {
-//        let viewController = QuestTipViewController()
-//        self.navigationController?.pushViewController(viewController, animated: true)
-//    }
+    @objc
+    private func tipTagDidTap() {
+        let viewController = QuestTipViewController()
+        viewController.navigationItem.hidesBackButton = true
+        self.navigationController?.pushViewController(viewController, animated: false)
+    }
 }
 
 extension WriteQuestionTypeQuestViewController: BackNavigable {
@@ -88,13 +89,6 @@ extension WriteQuestionTypeQuestViewController: BackNavigable {
             },
             rootViewController: self
         ).present()
-    }
-}
-
-extension WriteQuestionTypeQuestViewController: TipTagDidTapProtocol {
-    func tipTagDidTap() {
-        let viewController = QuestTipViewController()
-        self.navigationController?.pushViewController(viewController, animated: true)
     }
 }
 
