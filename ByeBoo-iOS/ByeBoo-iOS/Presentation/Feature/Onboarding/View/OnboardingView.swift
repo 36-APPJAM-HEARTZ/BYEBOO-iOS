@@ -1,0 +1,59 @@
+//
+//  OnboardingView.swift
+//  ByeBoo-iOS
+//
+//  Created by 최주리 on 7/10/25.
+//
+
+import UIKit
+
+final class OnboardingView: BaseView {
+
+    let headerView = OnboardingHeaderView()
+    private let contentView = OnboardingContentView()
+    let nextButton = ByeBooButton(titleText: "다음으로", type: .enabled)
+    
+    var step: OnboardingStep = .first {
+        didSet {
+            changeStep()
+        }
+    }
+    
+    override func setStyle() {
+        backgroundColor = .primary900
+    }
+    
+    override func setUI() {
+        addSubviews(
+            contentView,
+            nextButton,
+            headerView
+        )
+    }
+    
+    override func setLayout() {
+        headerView.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview()
+        }
+        contentView.snp.makeConstraints {
+            $0.top.equalTo(headerView.snp.bottom)
+            $0.horizontalEdges.equalToSuperview()
+            $0.bottom.equalTo(nextButton.snp.top).offset(-20.adjustedH)
+        }
+        nextButton.snp.makeConstraints {
+            $0.bottom.equalToSuperview().inset(36.adjustedH)
+            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+        }
+    }
+}
+
+extension OnboardingView {
+    private func changeStep() {
+        headerView.step = step
+        contentView.step = step
+        if step == .third {
+            nextButton.updateTitle("시작하기")
+        }
+    }
+}
