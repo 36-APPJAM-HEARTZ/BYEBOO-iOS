@@ -79,7 +79,7 @@ final class QuestStartView: BaseView {
         descriptionLabel.snp.makeConstraints {
             $0.top.equalTo(cloverImageView.snp.bottom).offset(31.5.adjustedH)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(262.adjustedW)
+            $0.width.equalTo(270.adjustedW)
         }
         confirmButton.snp.makeConstraints {
             $0.centerX.equalToSuperview()
