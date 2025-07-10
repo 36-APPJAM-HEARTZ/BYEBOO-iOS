@@ -67,7 +67,7 @@ extension WriteQuestionTypeQuestViewController: BackNavigable {
 
 extension WriteQuestionTypeQuestViewController: TipTagDidTapProtocol {
     func tipTagDidTap() {
-        let vc = QuestTipViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
+        let viewController = QuestTipViewController()
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
 }
