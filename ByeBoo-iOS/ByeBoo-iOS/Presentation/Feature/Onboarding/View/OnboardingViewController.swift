@@ -34,7 +34,7 @@ final class OnboardingViewController: BaseViewController {
         rootView.nextButton.addTarget(self, action: #selector(nextButtonDidTap), for: .touchUpInside)
     }
     
-    func setGesture() {
+    private func setGesture() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(skipButtonDidTap))
         tapGestureRecognizer.isEnabled = true
         tapGestureRecognizer.cancelsTouchesInView = false
