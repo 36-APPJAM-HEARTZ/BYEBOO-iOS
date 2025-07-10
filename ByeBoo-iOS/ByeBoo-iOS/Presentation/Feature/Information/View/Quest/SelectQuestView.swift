@@ -79,4 +79,10 @@ final class SelectQuestView: BaseView {
             $0.height.equalTo(214.adjustedH)
         }
     }
+    
+    func resetSelected() {
+        self.questCardsView.questCards.forEach {
+            $0.isSelected = false
+        }
+    }
 }

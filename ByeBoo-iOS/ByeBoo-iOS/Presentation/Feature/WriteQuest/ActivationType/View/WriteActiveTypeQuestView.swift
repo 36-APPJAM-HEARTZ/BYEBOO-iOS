@@ -12,8 +12,8 @@ import Then
 
 final class WriteActiveTypeQuestView: BaseView {
     let scrollView = UIScrollView()
-    let contentView = UIView()
-    private let title = WriteQuestTitleView(
+    private let contentView = UIView()
+    let title = WriteQuestTitleView(
         stepNum: "2",
         stepTitle: "감정 정리하기",
         questNum: 10,

@@ -79,4 +79,10 @@ final class SelectEmotionView: BaseView {
             $0.height.equalTo(168.adjustedH)
         }
     }
+    
+    func resetSelected() {
+        self.emotionCardsView.emotionCards.forEach {
+            $0.isSelected = false
+        }
+    }
 }

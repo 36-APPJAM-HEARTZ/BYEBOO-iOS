@@ -8,19 +8,15 @@
 import Foundation
 
 struct UserResponseDTO: Decodable {
+    let userID: Int
     let name: String
-    let birth: String
 }
 
 extension UserResponseDTO {
-    func toEntity() -> TestEntity {
+    func toEntity() -> UserEntity {
         return .init(
-            name: self.name,
-            birth: self.birth
+            userID: self.userID,
+            name: self.name
         )
-    }
-    
-    func stub() -> TestEntity {
-        return .init(name: "주리", birth: "001205")
     }
 }

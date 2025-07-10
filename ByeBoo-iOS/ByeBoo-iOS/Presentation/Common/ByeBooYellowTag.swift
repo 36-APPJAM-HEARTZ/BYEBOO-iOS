@@ -21,4 +21,8 @@ final class ByeBooYellowTag: UILabel {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func updateText(_ text: String) {
+        self.text = text
+    }
 }

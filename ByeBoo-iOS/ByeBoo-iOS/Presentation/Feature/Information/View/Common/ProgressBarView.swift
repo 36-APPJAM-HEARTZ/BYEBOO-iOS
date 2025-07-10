@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Then
 
-enum ProgressBarType {
+enum ProgressBarType: Int {
     case first, second, third
 }
 
