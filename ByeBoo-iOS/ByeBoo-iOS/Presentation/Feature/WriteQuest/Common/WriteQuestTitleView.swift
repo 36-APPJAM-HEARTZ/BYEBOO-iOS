@@ -63,6 +63,10 @@ final class WriteQuestTitleView: BaseView {
             $0.textAlignment = .center
             $0.lineBreakMode = .byWordWrapping
         }
+        
+        tipTag.do {
+            $0.isUserInteractionEnabled = true
+        }
     }
     
     override func setLayout() {
@@ -84,6 +88,8 @@ final class WriteQuestTitleView: BaseView {
         
         tipTag.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(25.5.adjustedH)
+            $0.width.equalTo(76.adjustedW)
+            $0.height.equalTo(24.adjustedH)
             $0.centerX.equalToSuperview()
         }
     }
