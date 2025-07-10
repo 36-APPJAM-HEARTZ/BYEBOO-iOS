@@ -26,16 +26,16 @@ final class EmotionBottomSheetViewController: BaseViewController {
     
     override func setAddTarget() {
         rootView.emotionChips.forEach { chip in
-            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(emotionChipDidTapped(_:)))
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(emotionChipDidTap(_:)))
             chip.addGestureRecognizer(tapRecognizer)
             chip.isUserInteractionEnabled = true
         }
         
-        rootView.confirmButton.addTarget(self, action: #selector(confirmButtonTapped), for: .touchUpInside)
+        rootView.confirmButton.addTarget(self, action: #selector(confirmButtonTap), for: .touchUpInside)
     }
     
     @objc
-    private func emotionChipDidTapped(_ tapRecognizer: UITapGestureRecognizer) {
+    private func emotionChipDidTap(_ tapRecognizer: UITapGestureRecognizer) {
         guard let chip = tapRecognizer.view as? ByeBooEmotionChip else { return }
         if selectedChip === chip { return }
         selectedChip?.emotionTag.isSelected = false
@@ -50,7 +50,7 @@ final class EmotionBottomSheetViewController: BaseViewController {
     }
     
     @objc
-    private func confirmButtonTapped() {
+    private func confirmButtonTap() {
         ByeBooLogger.debug("컨펌 버튼 터치됨")
         if let previousView = previousView {
             ByeBooLogger.debug(previousView)
