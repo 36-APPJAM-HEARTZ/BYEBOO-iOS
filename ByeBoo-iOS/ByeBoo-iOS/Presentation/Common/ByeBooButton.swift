@@ -66,7 +66,7 @@ enum ByeBooButtonType {
 }
 
 final class ByeBooButton: UIButton {
-    private let titleText: String
+    private var titleText: String
     private var type: ByeBooButtonType
     
     init(
@@ -104,5 +104,10 @@ final class ByeBooButton: UIButton {
             $0.layer.borderColor = type.borderColor
             $0.isEnabled = type.isEnabled
         }
+    }
+    
+    func updateTitle(_ title: String) {
+        self.titleText = title
+        self.setTitle(titleText, for: .normal)
     }
 }
