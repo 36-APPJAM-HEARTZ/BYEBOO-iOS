@@ -57,7 +57,7 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     private func confirmButtonDidTapped() {
         let vc = EmotionBottomSheetViewController()
         vc.previousView = .question
-        
+        vc.delegate = self
         if let sheet = vc.sheetPresentationController{
             sheet.detents = [.custom { _ in 515.adjustedH }]
             sheet.prefersGrabberVisible = false
@@ -85,5 +85,13 @@ extension WriteQuestionTypeQuestViewController: TipTagDidTapProtocol {
     func tipTagDidTap() {
         let viewController = QuestTipViewController()
         self.navigationController?.pushViewController(viewController, animated: true)
+    }
+}
+
+extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
+    func presentNextVC(from previousView: PreviousView) {
+        let vc = CompleteQuestionTypeQuestViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
 }

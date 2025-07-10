@@ -11,6 +11,8 @@ import SnapKit
 import Then
 
 final class CompleteQuestionTypeQuestView: BaseView {
-    
+    override func setStyle() {
+        backgroundColor = .primary400
+    }
 }
 
