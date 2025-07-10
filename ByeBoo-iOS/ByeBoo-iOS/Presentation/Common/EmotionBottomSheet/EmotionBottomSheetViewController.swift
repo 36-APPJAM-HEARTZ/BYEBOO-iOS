@@ -31,7 +31,7 @@ final class EmotionBottomSheetViewController: BaseViewController {
             chip.isUserInteractionEnabled = true
         }
         
-        rootView.confirmButton.addTarget(self, action: #selector(confirmButtonTap), for: .touchUpInside)
+        rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
     }
     
     @objc
@@ -50,7 +50,7 @@ final class EmotionBottomSheetViewController: BaseViewController {
     }
     
     @objc
-    private func confirmButtonTap() {
+    private func confirmButtonDidTap() {
         ByeBooLogger.debug("컨펌 버튼 터치됨")
         if let previousView = previousView {
             ByeBooLogger.debug(previousView)
