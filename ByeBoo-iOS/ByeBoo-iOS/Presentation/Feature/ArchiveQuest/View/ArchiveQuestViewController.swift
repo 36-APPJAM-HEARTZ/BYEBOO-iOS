@@ -9,7 +9,7 @@ import UIKit
 
 final class ArchiveQuestViewController: BaseViewController {
     
-    private let rootView = ArchiveQuestView()
+    private let rootView = ArchiveQuestView(type: .activation)
     
     override func loadView() {
         view = rootView
