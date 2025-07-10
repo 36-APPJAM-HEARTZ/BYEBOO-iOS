@@ -18,6 +18,7 @@ final class EmotionBottomSheetViewController: BaseViewController {
     private let rootView = EmotionBottomSheetView()
     private var selectedChip: ByeBooEmotionChip?
     var previousView: PreviousView?
+    weak var delegate: BottomSheetProtocol?
     
     override func loadView() {
         view = rootView
@@ -53,13 +54,9 @@ final class EmotionBottomSheetViewController: BaseViewController {
         ByeBooLogger.debug("컨펌 버튼 터치됨")
         if let previousView = previousView {
             ByeBooLogger.debug(previousView)
-            switch previousView {
-            case .activation:
-                let vc = CompleteActiveTypeQuestViewController()
-                navigationController?.pushViewController(vc, animated: true)
-            case .question:
-                let vc = CompleteQuestionTypeQuestViewController()
-                navigationController?.pushViewController(vc, animated: true)
+            
+            self.dismiss(animated: true) {
+                self.delegate?.presentNextVC(from: previousView)
             }
         }
     }
