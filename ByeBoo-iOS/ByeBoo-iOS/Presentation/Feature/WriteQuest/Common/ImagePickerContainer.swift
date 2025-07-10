@@ -74,12 +74,12 @@ final class ImagePickerContainer: BaseView {
     }
     
     private func setTapGesture() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(imgButtonDidTapped))
+        let tap = UITapGestureRecognizer(target: self, action: #selector(imgButtonDidTap))
         self.addGestureRecognizer(tap)
     }
     
     @objc
-    private func imgButtonDidTapped() {
+    private func imgButtonDidTap() {
         didTapAddImage?()
     }
 }

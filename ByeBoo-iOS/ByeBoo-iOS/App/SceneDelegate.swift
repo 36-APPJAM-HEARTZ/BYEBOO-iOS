@@ -25,8 +25,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 //        let testViewController = TestViewController(viewModel: testViewModel)
         
-        // TODO: 추후 온보딩 화면으로 교체하기
-        let viewController = JourneyResultViewController()
+        let viewController = OnboardingViewController()
         let navigationController = UINavigationController(rootViewController: viewController)
         
         let window = UIWindow(windowScene: windowScene)

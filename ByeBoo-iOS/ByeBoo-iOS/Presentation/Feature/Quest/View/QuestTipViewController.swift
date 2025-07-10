@@ -48,6 +48,6 @@ final class QuestTipViewController: BaseViewController {
 
 extension QuestTipViewController: Dismissible {
     func close() {
-        dismiss(animated: true)
+        navigationController?.popViewController(animated: true)
     }
 }

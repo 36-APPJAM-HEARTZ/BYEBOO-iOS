@@ -94,12 +94,14 @@ final class ByeBooFilledTag: BaseView {
             $0.backgroundColor = tagType.backgroundColor
             $0.layer.cornerRadius = 12
             $0.clipsToBounds = true
+            $0.isUserInteractionEnabled = true
         }
         
         textLabel.do {
             $0.font = tagType.font
             $0.textColor = tagType.textColor
             $0.textAlignment = .center
+            $0.isUserInteractionEnabled = false
         }
     }
     

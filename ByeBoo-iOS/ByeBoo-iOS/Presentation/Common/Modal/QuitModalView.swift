@@ -15,8 +15,8 @@ final class QuitModalView: BaseView, ModalProtocol {
     private let titleLabel = UILabel()
     private let secondDescriptionLabel = UILabel()
     private let buttonStackView = UIStackView()
-    let actionButton = ByeBooButton(titleText: "머무르기", type: .enabled)
-    let dismissButton: ByeBooButton? = ByeBooButton(titleText: "나가기", type: .outline)
+    let dismissButton: ByeBooButton? = ByeBooButton(titleText: "머무르기", type: .enabled)
+    let actionButton = ByeBooButton(titleText: "나가기", type: .outline)
     
     override func setUI() {
         backgroundColor = .grayscale90080
@@ -29,7 +29,7 @@ final class QuitModalView: BaseView, ModalProtocol {
         )
         
         if let dismissButton = dismissButton {
-            buttonStackView.addArrangedSubviews(actionButton, dismissButton)
+            buttonStackView.addArrangedSubviews(dismissButton, actionButton)
         }
     }
     
@@ -71,18 +71,19 @@ final class QuitModalView: BaseView, ModalProtocol {
             $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
         
-        actionButton.snp.makeConstraints {
-            $0.width.equalTo(107.adjustedW)
-            $0.height.equalTo(53.adjustedH)
-            $0.leading.equalToSuperview()
-        }
-        
         if let cancelButton = dismissButton {
             cancelButton.snp.makeConstraints {
                 $0.width.equalTo(107.adjustedW)
                 $0.height.equalTo(53.adjustedH)
-                $0.trailing.equalToSuperview()
+                $0.leading.equalToSuperview()
             }
+        }
+        
+        actionButton.snp.makeConstraints {
+            $0.width.equalTo(107.adjustedW)
+            $0.height.equalTo(53.adjustedH)
+            $0.trailing.equalToSuperview()
+            
         }
     }
 }

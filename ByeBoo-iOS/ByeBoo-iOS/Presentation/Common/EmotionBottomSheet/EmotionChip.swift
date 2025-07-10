@@ -34,7 +34,7 @@ enum ByeBooEmotion: CaseIterable {
         case .neutral:
             return UIImageView(image: .neutral)
         case .sad:
-            return UIImageView(image: .sad)
+            return UIImageView(image: .emotionSad)
         case .selfUnderstanding:
             return UIImageView(image: .selfUnderstanding)
         case .relieved:

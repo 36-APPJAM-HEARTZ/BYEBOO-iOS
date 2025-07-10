@@ -1,12 +1,15 @@
 {
   "images" : [
     {
-      "filename" : "Final_Bg 2.svg",
+      "filename" : "5th.svg",
       "idiom" : "universal"
     }
   ],
   "info" : {
     "author" : "xcode",
     "version" : 1
+  },
+  "properties" : {
+    "preserves-vector-representation" : true
   }
 }
