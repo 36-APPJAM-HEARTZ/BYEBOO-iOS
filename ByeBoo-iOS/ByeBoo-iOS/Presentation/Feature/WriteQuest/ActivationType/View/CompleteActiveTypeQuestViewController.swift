@@ -52,7 +52,7 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
 }
 
 extension CompleteActiveTypeQuestViewController: Dismissible {
-    @objc func close() {
+    func close() {
         // TODO: - 퀘스트 메인 이동 수정
         self.navigationController?.popViewController(animated: true)
     }
