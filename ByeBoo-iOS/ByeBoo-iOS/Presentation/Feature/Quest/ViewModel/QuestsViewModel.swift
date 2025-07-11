@@ -21,8 +21,11 @@ final class QuestsViewModel: ViewModelType {
     lazy var output = Output(questsPublisher: questSubject.eraseToAnyPublisher())
     
     func action(_ trigger: InputAction) {
-        let questsEntity = fetchQuests()
-        questSubject.send(.success(questsEntity))
+        switch trigger {
+        case .handleStartQuestButtonDidTap:
+            let questsEntity = fetchQuests()
+            questSubject.send(.success(questsEntity))
+        }
     }
     
     private func fetchQuests() -> QuestsEntity {
