@@ -19,6 +19,15 @@ enum JourneyType {
                 .processEmotion
         }
     }
+    
+    var description: String {
+        switch self {
+        case .face:
+            return "감정 직면 여정"
+        case .process:
+            return "감정 정리 여정"
+        }
+    }
 }
 
 final class JourneyResultView: BaseView {
