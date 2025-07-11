@@ -39,10 +39,6 @@ final class JourneyResultView: BaseView {
     private let descriptionLabel = UILabel()
     let confirmLabel = UILabel()
     
-    private var name: String = ""
-    private var journeyType: JourneyType = .face
-    private var journeyDescription: String = ""
-    
     override func setStyle() {
         backgroundImageView.do {
             $0.image = .bgLight
@@ -51,15 +47,15 @@ final class JourneyResultView: BaseView {
             $0.backgroundColor = .black50
         }
         titleLabel.do {
-            $0.text = "지금 \(name) 님에게 필요한 건"
+//            $0.text = "지금 \(name) 님에게 필요한 건"
             $0.font = FontManager.body1Sb16.font
             $0.textColor = .white
         }
-        imageView.do {
-            $0.image = journeyType.image
-        }
+//        imageView.do {
+//            $0.image = journeyType.image
+//        }
         descriptionLabel.do {
-            $0.text = journeyDescription
+//            $0.text = journeyDescription
             $0.numberOfLines = 0
             $0.font = FontManager.body5R14.font
             $0.textColor = .secondary100
@@ -119,9 +115,6 @@ extension JourneyResultView {
         journeyType: JourneyType,
         journeyDescription: String
     ) {
-        self.journeyType = journeyType
-        self.journeyDescription = journeyDescription
-
         imageView.image = journeyType.image
         descriptionLabel.text = journeyDescription
     }
