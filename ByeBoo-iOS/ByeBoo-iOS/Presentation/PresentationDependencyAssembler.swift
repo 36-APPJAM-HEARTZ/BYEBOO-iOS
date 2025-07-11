@@ -22,5 +22,13 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             
             return TestViewModel(testUseCase: testUseCase)
         }
+        
+        DIContainer.shared.register(type: JourneyResultViewModel.self) { container in
+            guard let fetchUseCase = container.resolve(type: FetchUserJourneyUseCase.self) else {
+                return
+            }
+            
+            return JourneyResultViewModel(fetchUserJourneyUseCase: fetchUseCase)
+        }
     }
 }

@@ -26,7 +26,12 @@ final class LoadingViewController: BaseViewController {
         super.viewDidLoad()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-            let resultViewController = JourneyResultViewController()
+            guard let viewModel = DIContainer.shared.resolve(type: JourneyResultViewModel.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                fatalError()
+            }
+            
+            let resultViewController = JourneyResultViewController(viewModel: viewModel)
             self.navigationController?.pushViewController(resultViewController, animated: true)
             self.navigationController?.navigationBar.isHidden = true
         }

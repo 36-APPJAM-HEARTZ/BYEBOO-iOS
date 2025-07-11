@@ -30,25 +30,9 @@ final class JourneyResultView: BaseView {
     private let descriptionLabel = UILabel()
     let confirmLabel = UILabel()
     
-    private let name: String
-    private let journeyType: JourneyType
-    private let journeyDescription: String
-    
-    init(
-        name: String,
-        journeyType: JourneyType,
-        journeyDescription: String
-    ) {
-        self.name = name
-        self.journeyType = journeyType
-        self.journeyDescription = journeyDescription
-        
-        super.init(frame: .zero)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    private var name: String = ""
+    private var journeyType: JourneyType = .face
+    private var journeyDescription: String = ""
     
     override func setStyle() {
         backgroundImageView.do {
@@ -115,5 +99,21 @@ final class JourneyResultView: BaseView {
             $0.top.equalTo(descriptionLabel.snp.bottom).offset(24.adjustedH)
             $0.centerX.equalToSuperview()
         }
+    }
+}
+
+extension JourneyResultView {
+    func updateUI(
+        name: String,
+        journeyType: JourneyType,
+        journeyDescription: String
+    ) {
+        self.name = name
+        self.journeyType = journeyType
+        self.journeyDescription = journeyDescription
+        
+        titleLabel.text = "지금 \(name) 님에게 필요한 건"
+        imageView.image = journeyType.image
+        descriptionLabel.text = journeyDescription
     }
 }

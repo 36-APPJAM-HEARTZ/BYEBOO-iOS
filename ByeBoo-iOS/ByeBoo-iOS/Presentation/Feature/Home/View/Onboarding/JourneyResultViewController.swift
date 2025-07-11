@@ -6,24 +6,23 @@
 //
 
 import UIKit
+import Combine
 
 final class JourneyResultViewController: BaseViewController {
-
-    private let rootView = JourneyResultView(
-        name: "하츠핑",
-        journeyType: .face,
-        journeyDescription:
-"""
-너무 힘든 시간을 보내고 있는 당신에게, 
-‘감정 직면 여정’을 추천해요.
-  이 여정은 감정을 직면하고, 
-상황을 정리하며, 점차 앞으로 나아가는
-5단계로 구성되어 있어요.
-  하루에 하나씩 기록해 나가다 보면, 
-감정이 조금씩 정돈되고
-마음이 가벼워질 거예요.
-"""
-    )
+    
+    private let viewModel: JourneyResultViewModel
+    private var cancellables = Set<AnyCancellable>()
+    
+    private let rootView = JourneyResultView()
+    
+    init(viewModel: JourneyResultViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = rootView
@@ -31,6 +30,9 @@ final class JourneyResultViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        dataBind()
+        
+        viewModel.action(.viewDidLoad)
     }
 
     override func setAddTarget() {
@@ -46,5 +48,23 @@ extension JourneyResultViewController {
         let viewController = HomeOnboardingViewController()
         viewController.navigationItem.hidesBackButton = true
         navigationController?.pushViewController(viewController, animated: false)
+    }
+    
+    private func dataBind() {
+        viewModel.output.journeyResult
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success(let journey):
+                    self.rootView.updateUI(
+                        name: "하츠핑",
+                        journeyType: .face,
+                        journeyDescription: journey.description ?? ""
+                    )
+                case .failure(let failure):
+                    ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
     }
 }
