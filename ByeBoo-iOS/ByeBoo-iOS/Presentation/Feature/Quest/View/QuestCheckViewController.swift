@@ -12,16 +12,12 @@ import SnapKit
 
 final class QuestCheckViewController: BaseViewController {
     
-    private let questCheckHeaderView: QuestCheckHeaderView
+    let questsCheckView = QuestsCheckView()
     private let viewModel: QuestsViewModel
     private var cancellable = Set<AnyCancellable>()
     private var questsEntity: QuestsEntity?
     
-    init(
-        questCheckHeaderView: QuestCheckHeaderView,
-        viewModel: QuestsViewModel
-    ) {
-        self.questCheckHeaderView = questCheckHeaderView
+    init(viewModel: QuestsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -30,36 +26,19 @@ final class QuestCheckViewController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private lazy var questCollectionView = UICollectionView(
-        frame: .zero,
-        collectionViewLayout: CollectionViewFactory.createLayout()
-    )
+    override func loadView() {
+        view = questsCheckView
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setView()
         bind()
         viewModel.action(.handleStartQuestButtonDidTap)
     }
     
-    override func setView() {
-        view.addSubviews(questCheckHeaderView, questCollectionView)
-        
-        questCheckHeaderView.snp.makeConstraints {
-            $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(10)
-            $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(129.adjustedH)
-        }
-        questCollectionView.snp.makeConstraints {
-            $0.top.equalTo(questCheckHeaderView.snp.bottom)
-            $0.leading.trailing.bottom.equalToSuperview()
-        }
-    }
-    
     override func setDelegate() {
-        questCollectionView.do {
-            $0.delegate = self
+        questsCheckView.questCollectionView.do {
             $0.dataSource = self
             $0.register(
                 QuestStateCell.self,
@@ -80,8 +59,8 @@ final class QuestCheckViewController: BaseViewController {
                 switch result {
                 case .success(let questsEntity):
                     self.questsEntity = questsEntity
-                    self.questCheckHeaderView.updatePeriod(questsEntity.progressPeriod)
-                    self.questCollectionView.reloadData()
+                    self.questsCheckView.questCheckHeaderView.updatePeriod(questsEntity.progressPeriod)
+                    self.questsCheckView.questCollectionView.reloadData()
                     guard let step = questsEntity.steps.first else { return }
                     if questsEntity.currentStep > step.quests.count {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
@@ -103,15 +82,11 @@ final class QuestCheckViewController: BaseViewController {
                     $0.questNumber == questsEntity.currentStep
                 }) {
                 let indexPath = IndexPath(item: questIndex, section: sectionIndex)
-                questCollectionView.scrollToItem(at: indexPath, at: .top, animated: true)
+                questsCheckView.questCollectionView.scrollToItem(at: indexPath, at: .top, animated: true)
                 return
             }
         }
     }
-}
-
-extension QuestCheckViewController: UICollectionViewDelegateFlowLayout {
-    
 }
 
 extension QuestCheckViewController: UICollectionViewDataSource {

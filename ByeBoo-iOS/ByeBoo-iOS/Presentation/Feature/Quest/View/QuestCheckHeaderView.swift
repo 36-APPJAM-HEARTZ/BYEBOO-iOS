@@ -12,21 +12,8 @@ import Then
 
 final class QuestCheckHeaderView: BaseView {
     
-    private var nickname: String
-    private var journeyType: JourneyType
-    
-    init(
-        nickname: String,
-        journeyType: JourneyType
-    ) {
-        self.nickname = nickname
-        self.journeyType = journeyType
-        super.init(frame: .zero)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    private var nickname: String = ""
+    private var journeyType: JourneyType = .face
     
     private var periodTag = ByeBooFilledTag(tagType: .word3Gray, text: "")
     private let titleLabel = UILabel()
@@ -70,6 +57,14 @@ final class QuestCheckHeaderView: BaseView {
             $0.top.equalTo(titleLabel.snp.bottom).offset(8.adjustedH)
             $0.leading.equalTo(safeAreaLayoutGuide.snp.leading).inset(24.adjustedW)
         }
+    }
+    
+    func updateHeader(nickname: String, journeyType: JourneyType) {
+        self.nickname = nickname
+        self.journeyType = journeyType
+        titleLabel.attributedText = "\(nickname)님, 지금\n\(journeyType.description)을 진행 중이에요.".makeTitle(
+            rangedText: journeyType.description
+        )
     }
     
     func updatePeriod(_ period: String) {
