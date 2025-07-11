@@ -47,15 +47,10 @@ final class JourneyResultView: BaseView {
             $0.backgroundColor = .black50
         }
         titleLabel.do {
-//            $0.text = "지금 \(name) 님에게 필요한 건"
             $0.font = FontManager.body1Sb16.font
             $0.textColor = .white
         }
-//        imageView.do {
-//            $0.image = journeyType.image
-//        }
         descriptionLabel.do {
-//            $0.text = journeyDescription
             $0.numberOfLines = 0
             $0.font = FontManager.body5R14.font
             $0.textColor = .secondary100
