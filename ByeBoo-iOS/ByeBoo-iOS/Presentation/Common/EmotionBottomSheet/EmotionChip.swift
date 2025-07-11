@@ -10,52 +10,6 @@ import UIKit
 import SnapKit
 import Then
 
-enum ByeBooEmotion: CaseIterable {
-    case neutral
-    case selfUnderstanding
-    case sad
-    case relieved
-    
-    var key: String {
-        switch self {
-        case .neutral:
-            return "NEURTRAl"
-        case .sad:
-            return "SAD"
-        case .selfUnderstanding:
-            return "SELF_UNDERSTANDING"
-        case .relieved:
-            return "RELIEVED"
-        }
-    }
-    
-    var emotionImage: UIImageView {
-        switch self {
-        case .neutral:
-            return UIImageView(image: .neutral)
-        case .sad:
-            return UIImageView(image: .emotionSad)
-        case .selfUnderstanding:
-            return UIImageView(image: .selfUnderstanding)
-        case .relieved:
-            return UIImageView(image: .relieved)
-        }
-    }
-    
-    var emotionText: String {
-        switch self {
-        case .neutral:
-            return "그저그런"
-        case .sad:
-            return "슬픈"
-        case .selfUnderstanding:
-            return "자기이해"
-        case .relieved:
-            return "후련함"
-        }
-    }
-}
-
 final class ByeBooEmotionChip: BaseView {
     private let emotionImage: UIImageView
     let emotionTag: ByeBooFilledTag
@@ -106,18 +60,6 @@ final class ByeBooEmotionChip: BaseView {
             $0.top.equalTo(emotionImage.snp.bottom).offset(8.adjustedH)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(84.adjustedW)
-        }
-    }
-}
-
-extension ByeBooEmotion {
-    static func toEmotion(text: String) -> ByeBooEmotion {
-        switch text {
-        case "그저그런": return .neutral
-        case "슬픈": return .sad
-        case "자기이해": return .selfUnderstanding
-        case "후련함": return .relieved
-        default: return .neutral
         }
     }
 }
