@@ -22,8 +22,6 @@ final class CompleteQuestionTypeQuestView: BaseView {
     private let questLabel = UILabel()
     private let dateText = UILabel()
     private let title = UILabel()
-    private let thinkTitle = IconOneLineTextView(iconType: .think, text: "이렇게 생각했어요")
-    private let changeTitle = IconOneLineTextView(iconType: .change, text: "퀘스트 완료 후, 이런 감정을 느꼈어요")
     
     override func setUI() {
         addSubviews(scrollView)
@@ -33,9 +31,7 @@ final class CompleteQuestionTypeQuestView: BaseView {
             congratSquare,
             stepStackView,
             dateText,
-            title,
-            thinkTitle,
-            changeTitle
+            title
         )
         
         stepStackView.addArrangedSubviews(stepLabel, questLabel)
@@ -82,48 +78,35 @@ final class CompleteQuestionTypeQuestView: BaseView {
         self.dateText.text = entity.createdAt
         
         
-        let thinkTextView = TextBoxView(title: entity.answer)
-        let changeTextView = TextBoxView (
-            title: entity.emotionDescription,
-            emotionType: ByeBooEmotion.toEmotion(text: entity.questEmotionState)
-        )
+        let thinkView = ThinkView(descriptionText: entity.answer!)
+        let feelView = FeelView(emotionType: entity.emotionDescription, descriptionText: entity.emotionDescription)
         
-        addSubviews(thinkTextView, changeTextView)
+        contentView.addSubviews(thinkView, feelView)
         
-        thinkTextView.isUserInteractionEnabled = false
-        changeTextView.isUserInteractionEnabled = false
-
-        contentView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-            $0.width.equalToSuperview()
-            $0.height.greaterThanOrEqualToSuperview()
-            $0.bottom.equalTo(changeTextView.snp.bottom).offset(24.adjustedH)
+        thinkView.isUserInteractionEnabled = false
+        feelView.isUserInteractionEnabled = false
+        
+        thinkView.snp.makeConstraints {
+            $0.top.equalTo(title.snp.bottom).offset(12.adjustedH)
+            $0.leading.trailing.equalToSuperview()
         }
         
-        thinkTitle.snp.makeConstraints {
-            $0.top.equalTo(title.snp.bottom).offset(24.5.adjustedH)
-            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
-        }
-        
-        thinkTextView.snp.makeConstraints {
-            $0.top.equalTo(thinkTitle.snp.bottom).offset(12.adjustedH)
-            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
-        }
-        
-        changeTitle.snp.makeConstraints {
-            $0.top.equalTo(thinkTextView.snp.bottom).offset(24.5.adjustedH)
-            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
-        }
-        
-        changeTextView.snp.makeConstraints {
-            $0.top.equalTo(changeTitle.snp.bottom).offset(12.adjustedH)
-            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
+        feelView.snp.makeConstraints {
+            $0.top.equalTo(thinkView.snp.bottom).offset(12.adjustedH)
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
     }
     
     override func setLayout() {
         scrollView.snp.makeConstraints {
             $0.edges.equalTo(self.safeAreaLayoutGuide)
+        }
+        
+        contentView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.width.equalToSuperview()
+            $0.height.greaterThanOrEqualToSuperview()
         }
         
         congratSquare.snp.makeConstraints {
