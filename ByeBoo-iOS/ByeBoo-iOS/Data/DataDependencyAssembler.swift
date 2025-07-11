@@ -18,7 +18,7 @@ struct DataDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: UsersInterface.self) { _ in
-            return DefaultUsersRepository(network: networkService)
+            return DefaultUsersRepository(network: networkService, userDefatulsService: userDefaultService)
         }
     }
 }

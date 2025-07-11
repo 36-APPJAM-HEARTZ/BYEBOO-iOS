@@ -103,16 +103,16 @@ final class JourneyResultView: BaseView {
 }
 
 extension JourneyResultView {
-    func updateUI(
-        name: String,
+    func updateName(name: String) {
+        titleLabel.text = "지금 \(name) 님에게 필요한 건"
+    }
+    func updateJourney(
         journeyType: JourneyType,
         journeyDescription: String
     ) {
-        self.name = name
         self.journeyType = journeyType
         self.journeyDescription = journeyDescription
-        
-        titleLabel.text = "지금 \(name) 님에게 필요한 건"
+
         imageView.image = journeyType.image
         descriptionLabel.text = journeyDescription
     }

@@ -30,7 +30,7 @@ final class JourneyResultViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        dataBind()
+        bind()
         
         viewModel.action(.viewDidLoad)
     }
@@ -50,17 +50,32 @@ extension JourneyResultViewController {
         navigationController?.pushViewController(viewController, animated: false)
     }
     
-    private func dataBind() {
+    private func bind() {
+        let name: String
+        let journeyType: JourneyType
+        let description: String
+        
         viewModel.output.journeyResult
             .receive(on: DispatchQueue.main)
             .sink { result in
                 switch result {
                 case .success(let journey):
-                    self.rootView.updateUI(
-                        name: "하츠핑",
+                    self.rootView.updateJourney(
                         journeyType: .face,
                         journeyDescription: journey.description ?? ""
                     )
+                case .failure(let failure):
+                    ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.userResult
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success(let name):
+                    self.rootView.updateName(name: name)
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }
