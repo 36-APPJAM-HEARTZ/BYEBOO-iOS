@@ -10,60 +10,20 @@ import UIKit
 import SnapKit
 import Then
 
-enum ByeBooEmotion: CaseIterable {
-    case neutral
-    case selfUnderstanding
-    case sad
-    case relieved
-    
-    var key: String {
-        switch self {
-        case .neutral:
-            return "NEURTRAl"
-        case .sad:
-            return "SAD"
-        case .selfUnderstanding:
-            return "SELF_UNDERSTANDING"
-        case .relieved:
-            return "RELIEVED"
-        }
-    }
-    
-    var emotionImage: UIImageView {
-        switch self {
-        case .neutral:
-            return UIImageView(image: .neutral)
-        case .sad:
-            return UIImageView(image: .emotionSad)
-        case .selfUnderstanding:
-            return UIImageView(image: .selfUnderstanding)
-        case .relieved:
-            return UIImageView(image: .relieved)
-        }
-    }
-    
-    var emotionText: String {
-        switch self {
-        case .neutral:
-            return "그저그런"
-        case .sad:
-            return "슬픈"
-        case .selfUnderstanding:
-            return "자기이해"
-        case .relieved:
-            return "후련함"
-        }
-    }
-}
-
 final class ByeBooEmotionChip: BaseView {
     private let emotionImage: UIImageView
     let emotionTag: ByeBooFilledTag
     let emotionType: ByeBooEmotion
-
-    init(emotionType: ByeBooEmotion) {
+    
+    init(emotionType: ByeBooEmotion, isPurple: Bool = false) {
         self.emotionImage = emotionType.emotionImage
-        self.emotionTag = ByeBooFilledTag(tagType: .largeGray, text: emotionType.emotionText)
+        
+        if isPurple == true {
+            self.emotionTag = ByeBooFilledTag(tagType: .largePurple, text: emotionType.emotionText)
+        } else {
+            self.emotionTag = ByeBooFilledTag(tagType: .largeGray, text: emotionType.emotionText)
+        }
+        
         self.emotionType = emotionType
         super.init(frame: .zero)
     }

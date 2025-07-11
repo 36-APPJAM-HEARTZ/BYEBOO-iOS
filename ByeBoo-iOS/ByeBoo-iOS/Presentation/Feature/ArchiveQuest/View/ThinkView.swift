@@ -7,10 +7,11 @@
 
 import UIKit
 
+import SnapKit
+
 final class ThinkView: BaseView {
 
-    private let iconImageView = UIImageView()
-    private let titleLabel = UILabel()
+    private let titleTextView = IconOneLineTextView(iconType: .think, text: "이렇게 생각했어요")
     private let descriptionView: TextBoxView
     
     private let descriptionText: String
@@ -27,35 +28,24 @@ final class ThinkView: BaseView {
     }
     
     override func setStyle() {
-        iconImageView.do {
-            $0.image = .think
-        }
-        titleLabel.do {
-            $0.text = "이렇게 생각했어요"
-            $0.font = FontManager.body2M16.font
-            $0.textColor = .grayscale200
-        }
+
     }
     
     override func setUI() {
         addSubviews(
-            iconImageView,
-            titleLabel,
+            titleTextView,
             descriptionView
         )
     }
     
     override func setLayout() {
-        iconImageView.snp.makeConstraints {
+        titleTextView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(24.5.adjustedH)
-            $0.leading.equalToSuperview().inset(24.adjustedW)
+            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
         }
-        titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(24.5.adjustedH)
-            $0.leading.equalTo(iconImageView.snp.trailing).offset(8.adjustedW)
-        }
+        
         descriptionView.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(12.adjustedH)
+            $0.top.equalTo(titleTextView.snp.bottom).offset(12.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(24.5.adjustedH)
         }
