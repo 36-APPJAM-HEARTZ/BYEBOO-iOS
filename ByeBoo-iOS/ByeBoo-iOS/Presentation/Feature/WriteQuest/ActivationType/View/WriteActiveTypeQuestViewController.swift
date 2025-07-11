@@ -121,13 +121,6 @@ extension WriteActiveTypeQuestViewController: UIGestureRecognizerDelegate {
     -> Bool {
         return true
     }
-    
-//    func gestureRecognizer(
-//        _ gestureRecognizer: UIGestureRecognizer,
-//       shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer)
-//    -> Bool {
-//            return true
-//    }
 }
 
 extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -156,6 +149,5 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
     func presentNextViewController(from previousView: PreviousView) {
         let viewController = CompleteActiveTypeQuestViewController()
         self.navigationController?.pushViewController(viewController, animated: true)
-        navigationController?.setNavigationBarHidden(true, animated: false)
     }
 }
