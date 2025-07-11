@@ -51,10 +51,6 @@ extension JourneyResultViewController {
     }
     
     private func bind() {
-        let name: String
-        let journeyType: JourneyType
-        let description: String
-        
         viewModel.output.journeyResult
             .receive(on: DispatchQueue.main)
             .sink { result in
