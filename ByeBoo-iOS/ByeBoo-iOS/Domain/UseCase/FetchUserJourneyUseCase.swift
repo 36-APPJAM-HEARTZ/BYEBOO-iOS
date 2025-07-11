@@ -17,7 +17,7 @@ struct DefaultFetchUserJourneyUseCase: FetchUserJourneyUseCase {
     }
     
     func execute() async throws -> JourneyEntity {
-        return try await repository.getJourney()
+        return try await repository.fetchJourney()
     }
 }
 

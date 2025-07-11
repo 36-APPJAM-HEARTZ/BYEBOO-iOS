@@ -9,12 +9,21 @@ import Foundation
 
 struct DefaultUsersRepository: UsersInterface {
     private let network: NetworkService
+    private let userDefaultsService: UserDefaultService
     
-    init(network: NetworkService) {
+    init(
+        network: NetworkService,
+        userDefatulsService: UserDefaultService
+    ) {
         self.network = network
+        self.userDefaultsService = userDefatulsService
     }
     
-    func getJourney() async throws -> JourneyEntity {
+    func getUserName() -> String? {
+        userDefaultsService.load(key: .userID)
+    }
+    
+    func fetchJourney() async throws -> JourneyEntity {
         let result = try await network.request(
             UsersAPI.journey(userID: 1),
             decodingType: UserJourneyResponseDTO.self
@@ -25,7 +34,11 @@ struct DefaultUsersRepository: UsersInterface {
 }
 
 struct MockUserRepository: UsersInterface {
-    func getJourney() async throws -> JourneyEntity {
+    func getUserName() -> String? {
+        "하츠핑"
+    }
+    
+    func fetchJourney() async throws -> JourneyEntity {
         return .stub()
     }
 }
