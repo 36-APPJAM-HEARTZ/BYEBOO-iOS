@@ -11,7 +11,7 @@ import UIKit
 final class CompleteQuestionTypeQuestViewController: BaseViewController {
     
     private let rootView = CompleteQuestionTypeQuestView()
-    private let viewModel = CompleteQuestionTypeQuestViewModel()
+    private let viewModel = CompleteQuestViewModel()
     private var cancellables = Set<AnyCancellable>()
     
     override func loadView() {
