@@ -37,14 +37,24 @@ struct DefaultNetworkService: NetworkService {
                 headers: endPoint.headers.value
             )
             .validate()
-            .responseDecodable(of: decodingType) { response in
+            .responseDecodable(of: BaseResponse<T>.self) { response in
+                
+                ByeBooLogger.network("[Response Start]")
+                ByeBooLogger.network("StatusCode: \(response.response!.statusCode)")
+                ByeBooLogger.network("Header: \(response.response!.headers)")
+                ByeBooLogger.network("Description: \(response.response!.description)")
                 switch response.result {
                 case .success(let data):
+                    guard let data = data.data else {
+                        ByeBooLogger.error(ByeBooError.noData)
+                        continuation.resume(throwing: ByeBooError.noData)
+                        return
+                    }
                     ByeBooLogger.data("Decoded Data: \(data)")
                     continuation.resume(returning: data)
                 case .failure:
                     if let data = response.data,
-                       let statusCode = response.response?.statusCode,
+                       let statusCode = response.response?.statusCode,  
                        let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
                         let error = ByeBooError.networkError(
                             code: statusCode,
@@ -52,10 +62,10 @@ struct DefaultNetworkService: NetworkService {
                         )
                         ByeBooLogger.error(error)
                         continuation.resume(throwing: error)
+                    } else {
+                        ByeBooLogger.error(ByeBooError.decodingError)
+                        continuation.resume(throwing: ByeBooError.decodingError)
                     }
-                    
-                    ByeBooLogger.error(ByeBooError.decodingError)
-                    continuation.resume(throwing: ByeBooError.decodingError)
                 }
             }
         }

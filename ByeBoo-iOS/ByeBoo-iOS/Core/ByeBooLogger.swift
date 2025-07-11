@@ -73,6 +73,13 @@ enum LogLevel {
 }
 
 struct ByeBooLogger {
+    static let dateFormatter = DateFormatter()
+    static var date: String {
+        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        return dateFormatter.string(from: Date())
+    }
+    
     private static func log(
         level: LogLevel,
         message: Any,
@@ -85,15 +92,15 @@ struct ByeBooLogger {
         
         switch level {
         case .network:
-            logger.log("[🛜 Network] [\(fileName) -> \(function)]: \(logMessage)")
+            logger.log("[🛜 Network] [Date: \(date)] [\(fileName) -> \(function)]: \(logMessage)")
         case .lifeCycle:
-            logger.log("[🔄 LifeCycle] [\(fileName) -> \(function)]: \(logMessage)")
+            logger.log("[🔄 LifeCycle] [Date: \(date)] [\(fileName) -> \(function)]: \(logMessage)")
         case .debug:
-            logger.debug("[🐛 Debug] [\(fileName) -> \(function)]: \(logMessage)")
+            logger.debug("[🐛 Debug] [Date: \(date)] [\(fileName) -> \(function)]: \(logMessage)")
         case .data:
-            logger.info("[📊 Data] [\(fileName) -> \(function)]: \(logMessage)")
+            logger.info("[📊 Data] [Date: \(date)] [\(fileName) -> \(function)]: \(logMessage)")
         case .error(let error):
-            logger.error("[❌ Error] [\(fileName) -> \(function)]: \(error.localizedDescription)")
+            logger.error("[❌ Error] [Date: \(date)] [\(fileName) -> \(function)]: \(error.localizedDescription)")
         }
     }
     
