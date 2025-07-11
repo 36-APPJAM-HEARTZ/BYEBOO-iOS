@@ -7,14 +7,15 @@
 
 import UIKit
 
+import SnapKit
+
 final class FeelView: BaseView {
 
-    private let iconImageView = UIImageView()
-    private let titleLabel = UILabel()
     private let descriptionView: TextBoxView
-    
     private let emotionType: String
     private let descriptionText: String
+    
+    private let titleTextView = IconOneLineTextView(iconType: .change, text: "퀘스트 완료 후, 이런 감정을 느꼈어요")
     
     init(emotionType: String, descriptionText: String) {
         self.emotionType = emotionType
@@ -29,35 +30,24 @@ final class FeelView: BaseView {
     }
     
     override func setStyle() {
-        iconImageView.do {
-            $0.image = .change
-        }
-        titleLabel.do {
-            $0.text = "퀘스트 완료 후, 이런 감정을 느꼈어요"
-            $0.font = FontManager.body2M16.font
-            $0.textColor = .grayscale200
-        }
+        
     }
     
     override func setUI() {
         addSubviews(
-            iconImageView,
-            titleLabel,
+            titleTextView,
             descriptionView
         )
     }
     
     override func setLayout() {
-        iconImageView.snp.makeConstraints {
+        titleTextView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(24.5.adjustedH)
-            $0.leading.equalToSuperview().inset(24.adjustedW)
+            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
         }
-        titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(24.5.adjustedH)
-            $0.leading.equalTo(iconImageView.snp.trailing).offset(8.adjustedW)
-        }
+       
         descriptionView.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(12.adjustedH)
+            $0.top.equalTo(titleTextView.snp.bottom).offset(12.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(24.5.adjustedH)
         }

@@ -134,4 +134,7 @@ final class ByeBooFilledTag: BaseView {
         setStyle()
     }
     
+    func updateText(_ text: String) {
+        self.textLabel.text = text
+    }
 }

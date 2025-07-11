@@ -33,13 +33,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveDown), name: UIResponder.keyboardWillHideNotification, object: nil)
         rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        rootView.layoutIfNeeded()
-        ByeBooLogger.debug("✅ tipTag frame: \(rootView.title.tipTag.frame)")
-    }
-    
+        
     private func setGesture() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(endEditingOnTap))
         let tipTagGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tipTagDidTap))
@@ -127,13 +121,6 @@ extension WriteActiveTypeQuestViewController: UIGestureRecognizerDelegate {
     -> Bool {
         return true
     }
-    
-//    func gestureRecognizer(
-//        _ gestureRecognizer: UIGestureRecognizer,
-//       shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer)
-//    -> Bool {
-//            return true
-//    }
 }
 
 extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
@@ -162,6 +149,5 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
     func presentNextViewController(from previousView: PreviousView) {
         let viewController = CompleteActiveTypeQuestViewController()
         self.navigationController?.pushViewController(viewController, animated: true)
-        navigationController?.setNavigationBarHidden(true, animated: false)
     }
 }

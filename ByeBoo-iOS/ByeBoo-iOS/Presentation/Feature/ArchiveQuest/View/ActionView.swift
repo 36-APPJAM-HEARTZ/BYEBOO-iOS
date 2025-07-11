@@ -8,15 +8,14 @@
 import UIKit
 
 import Kingfisher
+import SnapKit
 
 final class ActionView: BaseView {
 
-    private let iconImageView = UIImageView()
-    private let titleLabel = UILabel()
     private let photoView = UIImageView()
     private let descriptionView: TextBoxView?
     private let placeholderView = UIImageView()
-    
+    private let thinkTextView =  IconOneLineTextView(iconType: .think,text: "이렇게 완료했어요" )
     private let descriptionText: String?
     private let photoURL: String
     
@@ -41,14 +40,6 @@ final class ActionView: BaseView {
     }
     
     override func setStyle() {
-        iconImageView.do {
-            $0.image = .think
-        }
-        titleLabel.do {
-            $0.text = "이렇게 완료했어요"
-            $0.font = FontManager.body2M16.font
-            $0.textColor = .grayscale200
-        }
         photoView.do {
             $0.layer.cornerRadius = 12
             $0.clipsToBounds = true
@@ -63,9 +54,8 @@ final class ActionView: BaseView {
     
     override func setUI() {
         addSubviews(
-            iconImageView,
-            titleLabel,
-            photoView
+            photoView,
+            thinkTextView
         )
         
         if let descriptionView {
@@ -74,19 +64,20 @@ final class ActionView: BaseView {
     }
     
     override func setLayout() {
-        iconImageView.snp.makeConstraints {
+        thinkTextView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(24.5.adjustedH)
-            $0.leading.equalToSuperview().inset(24.adjustedW)
+            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
         }
-        titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(24.5.adjustedH)
-            $0.leading.equalTo(iconImageView.snp.trailing).offset(8.adjustedW)
-        }
+        
         photoView.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(12.adjustedH)
+            $0.top.equalTo(thinkTextView.snp.bottom).offset(12.adjustedH)
             $0.size.equalTo(327.adjustedW)
             $0.centerX.equalToSuperview()
+            if descriptionView == nil {
+                $0.bottom.equalToSuperview().inset(24.5.adjustedH)
+            }
         }
+        
         if let descriptionView {
             descriptionView.snp.makeConstraints {
                 $0.top.equalTo(photoView.snp.bottom).offset(12.adjustedH)
