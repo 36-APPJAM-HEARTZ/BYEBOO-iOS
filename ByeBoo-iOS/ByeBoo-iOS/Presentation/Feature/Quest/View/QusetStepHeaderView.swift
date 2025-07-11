@@ -27,7 +27,7 @@ final class QuestStepHeaderView: UICollectionReusableView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setStyle() {
+    private func setStyle() {
         stepLabel.do {
             $0.textColor = .secondary300
             $0.font = FontManager.cap1M12.font
@@ -38,7 +38,7 @@ final class QuestStepHeaderView: UICollectionReusableView {
         }
     }
     
-    func setUI() {
+    private func setUI() {
         addSubviews(
             sectionDividerView,
             stepLabel,
@@ -46,7 +46,7 @@ final class QuestStepHeaderView: UICollectionReusableView {
         )
     }
     
-    func setLayout() {
+    private func setLayout() {
         sectionDividerView.snp.makeConstraints {
             $0.width.equalTo(327.adjustedW)
         }

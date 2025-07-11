@@ -65,7 +65,7 @@ final class QuestStateCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setStyle() {
+    private func setStyle() {
         questBackgroundView.do {
             $0.layer.cornerRadius = 12
         }
@@ -81,12 +81,12 @@ final class QuestStateCell: UICollectionViewCell {
         }
     }
     
-    func setUI() {
+    private func setUI() {
         questBackgroundView.addSubviews(frontView, questNumberLabel, imageView)
         addSubviews(questBackgroundView)
     }
     
-    func setLayout() {
+    private func setLayout() {
         questBackgroundView.snp.makeConstraints {
             $0.width.height.equalTo(96.adjustedW)
         }
