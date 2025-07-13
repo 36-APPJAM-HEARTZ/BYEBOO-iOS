@@ -11,10 +11,10 @@ import UIKit
 final class CompleteActiveTypeQuestViewController: BaseViewController {
     
     private let rootView = CompleteActiveTypeQuestView()
-    private let viewModel = CompleteQuestViewModel()
+    private var viewModel: CompleteQuestViewModel
     private var cancellables = Set<AnyCancellable>()
     
-
+    
     override func loadView() {
         view = rootView
     }
@@ -22,6 +22,15 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.navigationItem.hidesBackButton = true
         viewModel.action(.questAnswerDidLoad)
+    }
+    
+    init(viewModel: CompleteQuestViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
