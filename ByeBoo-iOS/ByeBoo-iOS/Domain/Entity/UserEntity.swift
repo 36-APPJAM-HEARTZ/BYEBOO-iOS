@@ -13,7 +13,7 @@ struct UserEntity {
 }
 
 extension UserEntity {
-    static func stub(user: UserRequestDTO) -> Self {
-        return .init(id: 1, name: user.name)
+    static func stub(name: String, feeling: String, questStyle: String) -> Self {
+        return .init(id: 1, name: name)
     }
 }

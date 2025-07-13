@@ -33,9 +33,15 @@ struct DefaultUsersRepository: UsersInterface {
         return result.toEntity()
     }
     
-    func sendUser(user: UserRequestDTO) async throws -> UserEntity {
+    func sendUser(
+        name: String,
+        feeling: String,
+        questStyle: String
+    ) async throws -> UserEntity {
         let result = try await network.request(
-            UsersAPI.sendUser(user: user),
+            UsersAPI.sendUser(name: name,
+                              feeling: feeling,
+                              questStyle: questStyle),
             decodingType: UserResponseDTO.self
         )
         let _ = userDefaultsService.save(result.id, key: .userID)
@@ -53,8 +59,16 @@ struct MockUserRepository: UsersInterface {
         return .stub()
     }
     
-    func sendUser(user: UserRequestDTO) async throws -> UserEntity {
-        return .stub(user: user)
+    func sendUser(
+        name: String,
+        feeling: String,
+        questStyle: String
+    ) async throws -> UserEntity {
+        return .stub(
+            name: name,
+            feeling: feeling,
+            questStyle: questStyle
+        )
     }
 }
 

@@ -10,5 +10,5 @@ import Foundation
 protocol UsersInterface {
     func getUserName() -> String?
     func fetchJourney() async throws -> JourneyEntity
-    func sendUser(user: UserRequestDTO) async throws -> UserEntity
+    func sendUser(name: String, feeling: String, questStyle: String) async throws -> UserEntity
 }
