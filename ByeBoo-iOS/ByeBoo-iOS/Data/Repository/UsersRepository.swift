@@ -38,10 +38,9 @@ struct DefaultUsersRepository: UsersInterface {
         feeling: String,
         questStyle: String
     ) async throws -> UserEntity {
+        let userRequestDTO: UserRequestDTO = .init(name: name, feeling: feeling, questStyle: questStyle)
         let result = try await network.request(
-            UsersAPI.sendUser(name: name,
-                              feeling: feeling,
-                              questStyle: questStyle),
+            UsersAPI.sendUser(requestDTO: userRequestDTO),
             decodingType: UserResponseDTO.self
         )
         let _ = userDefaultsService.save(result.id, key: .userID)

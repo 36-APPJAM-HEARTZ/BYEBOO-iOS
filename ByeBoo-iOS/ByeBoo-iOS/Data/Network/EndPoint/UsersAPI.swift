@@ -11,7 +11,7 @@ import Alamofire
 
 enum UsersAPI {
     case journey(userID: Int)
-    case sendUser(name: String, feeling: String, questStyle: String)
+    case sendUser(requestDTO: UserRequestDTO)
 }
 
 extension UsersAPI: EndPoint {
@@ -63,15 +63,8 @@ extension UsersAPI: EndPoint {
         switch self {
         case .journey:
             return nil
-        case .sendUser(let name, let feeling, let questStyle):
-            let requestBody: [String: Any] = [
-                "name": name,
-                "feeling": feeling,
-                "questStyle": questStyle
-            ]
-            return requestBody
+        case .sendUser(let dto):
+            return try? dto.toDictionary()
         }
     }
-    
-    
 }
