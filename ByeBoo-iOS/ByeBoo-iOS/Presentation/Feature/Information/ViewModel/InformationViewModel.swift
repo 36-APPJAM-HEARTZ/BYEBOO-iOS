@@ -10,7 +10,7 @@ import Combine
 final class InformationViewModel {
     
     private var cancellables = Set<AnyCancellable>()
-    private let userInformationSubject = PassthroughSubject<Result<UserEntity, ByeBooError>, Never>()
+    private let userInformationSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>()
     private let userNameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>()
     private(set) var output: Output
     
@@ -39,12 +39,10 @@ final class InformationViewModel {
         nickname: String?,
         feeling: Feeling?,
         questStyle: QuestStyle?
-    ) -> UserEntity {
+    ) {
         guard let name = currentNickname,
               let feeling = currentFeeling,
-              let questStyle = currentQuestStyle else {
-            return user
-        }
+              let questStyle = currentQuestStyle else { return }
         
         Task {
             do {
@@ -58,7 +56,6 @@ final class InformationViewModel {
                 userInformationSubject.send(.failure(error as! ByeBooError))
             }
         }
-        return user
     }
     
     private func getUserName() {
@@ -76,7 +73,7 @@ extension InformationViewModel: ViewModelType {
     }
     
     struct Output {
-        let userInformationPublisher: AnyPublisher<Result<UserEntity, ByeBooError>, Never>
+        let userInformationPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
         let userNamePublisher: AnyPublisher<Result<String, ByeBooError>, Never>
     }
     
@@ -88,12 +85,12 @@ extension InformationViewModel: ViewModelType {
             currentFeeling = feeling
         case .questButtonDidTap(let questStyle):
             currentQuestStyle = questStyle
-            let user = createUserInformation(
+            createUserInformation(
                 nickname: currentNickname,
                 feeling: currentFeeling,
                 questStyle: currentQuestStyle
             )
-            userInformationSubject.send(.success(user))
+            userInformationSubject.send(.success(()))
         }
     }
 }
