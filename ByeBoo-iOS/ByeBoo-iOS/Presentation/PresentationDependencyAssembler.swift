@@ -17,15 +17,6 @@ struct PresentationDependencyAssembler: DependencyAssembler {
     func assemble() {
         preAssembler.assemble()
         
-        DIContainer.shared.register(type: TestViewModel.self) { container in
-            guard let testUseCase = container.resolve(type: TestUseCase.self) else {
-                ByeBooLogger.error(ByeBooError.DIFailedError)
-                return
-            }
-            
-            return TestViewModel(testUseCase: testUseCase)
-        }
-        
         DIContainer.shared.register(type: JourneyResultViewModel.self) { container in
             guard let fetchUserUseCase = container.resolve(type: FetchUserJourneyUseCase.self),
                   let getNameUseCase = container.resolve(type: GetUserNameUseCase.self) else {
