@@ -16,6 +16,7 @@ enum ByeBooError: Error, LocalizedError {
     case navigationControllerMissing
     case noData
     case unknownError
+    case encodingError
     
     var errorDescription: String? {
         switch self {
@@ -33,6 +34,8 @@ enum ByeBooError: Error, LocalizedError {
             return "네비게이션 컨트롤러 없음"
         case .noData:
             return "데이터 없음"
+        case .encodingError:
+            return "인코딩 실패"
         case .unknownError:
             return nil
         }
