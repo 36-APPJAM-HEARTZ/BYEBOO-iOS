@@ -84,6 +84,7 @@ final class InformationViewController: BaseViewController {
                 case .success(let user):
                     let loadingViewController = LoadingViewController()
                     loadingViewController.nickname = user.name
+                    loadingViewController.navigationItem.hidesBackButton = true
                     self.navigationController?.pushViewController(loadingViewController, animated: false)
                 case .failure:
                     break

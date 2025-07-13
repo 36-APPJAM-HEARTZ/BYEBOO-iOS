@@ -8,21 +8,23 @@
 import Foundation
 
 protocol UserDefaultService {
-    func save()
-    func load()
-    func delete()
+    func save(_ value: Any, key: UserDefaultsKey) -> Bool
+    func load<T>(key: UserDefaultsKey) -> T?
+    func delete(key: UserDefaultsKey) -> Bool
 }
 
 struct DefaultUserDefaultService: UserDefaultService {
-    func save() {
-        // UD에 저장
+    func save(_ value: Any, key: UserDefaultsKey) -> Bool {
+        UserDefaults.standard.setValue(value, forKey: key.rawValue)
+        return UserDefaults.standard.value(forKey: key.rawValue) != nil
     }
     
-    func load() {
-        //
+    func load<T>(key: UserDefaultsKey) -> T? {
+        UserDefaults.standard.value(forKey: key.rawValue) as? T
     }
     
-    func delete() {
-        //
+    func delete(key: UserDefaultsKey) -> Bool {
+        UserDefaults.standard.removeObject(forKey: key.rawValue)
+        return UserDefaults.standard.value(forKey: key.rawValue) == nil
     }
 }
