@@ -121,3 +121,11 @@ final class HomeStateView: BaseView {
         }
     }
 }
+
+extension HomeStateView {
+    func updateState(_ state: HomeState) {
+        layer.borderColor = state.borderColor.cgColor
+        titleLabel.text = state.title
+        descriptionLabel.text = state.description
+    }
+}

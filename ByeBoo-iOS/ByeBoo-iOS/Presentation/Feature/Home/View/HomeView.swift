@@ -12,7 +12,7 @@ import Lottie
 final class HomeView: BaseView {
 
     private let backgroundImageView = LottieAnimationView(name: "Bori_home8")
-    let headerView = HomeHeaderView(state: .beforeQuest)
+    let headerView = HomeHeaderView()
     
     override func setStyle() {
         backgroundImageView.do {
@@ -46,7 +46,15 @@ extension HomeView {
         headerView.updateTextBox(text)
     }
     
-    func updateProgress(_ prgress: Int) {
-        
+    func updateProgress(_ progress: Int) {
+        headerView.updateProgress(progress)
+    }
+    
+    func updateName(_ name: String) {
+        headerView.updateName(name)
+    }
+    
+    func updateState(_ state: HomeState) {
+        headerView.updateState(state)
     }
 }
