@@ -11,11 +11,20 @@ import UIKit
 final class CompleteQuestionTypeQuestViewController: BaseViewController {
     
     private let rootView = CompleteQuestionTypeQuestView()
-    private let viewModel = CompleteQuestViewModel()
+    private var viewModel: CompleteQuestViewModel
     private var cancellables = Set<AnyCancellable>()
     
     override func loadView() {
         view = rootView
+    }
+    
+    init(viewModel: CompleteQuestViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewWillAppear(_ animated: Bool) {
