@@ -7,73 +7,98 @@
 
 import Combine
 
-final class InformationViewModel: ViewModelType {
+final class InformationViewModel {
+    
+    private var cancellables = Set<AnyCancellable>()
+    private let userInformationSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>()
+    private let userNameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>()
+    private(set) var output: Output
+    
+    private var currentNickname: String?
+    private var currentFeeling: Feeling?
+    private var currentQuestStyle: QuestStyle?
+    private var user: UserEntity = UserEntity(id: 1, name: "")
+    
+    private let sendUserUseCase: SendUserUseCase
+    private let getUserNameUseCase: GetUserNameUseCase
+    
+    init(
+        sendUserUseCase: SendUserUseCase,
+        getUserNameUseCase: GetUserNameUseCase
+    ) {
+        self.sendUserUseCase = sendUserUseCase
+        self.getUserNameUseCase = getUserNameUseCase
+        
+        self.output = Output(
+            userInformationPublisher: userInformationSubject.eraseToAnyPublisher(),
+            userNamePublisher: userNameSubject.eraseToAnyPublisher()
+        )
+    }
+    
+    private func createUserInformation(
+        nickname: String?,
+        feeling: Feeling?,
+        questStyle: QuestStyle?
+    ) {
+        guard let name = currentNickname,
+              let feeling = currentFeeling,
+              let questStyle = currentQuestStyle else { return }
+        
+        Task {
+            do {
+                user = try await sendUserUseCase.execute(
+                    name: name,
+                    feeling: feeling.key,
+                    questStyle: questStyle.key
+                )
+                getUserName()
+            } catch {
+                userInformationSubject.send(.failure(error as! ByeBooError))
+            }
+        }
+    }
+    
+    private func getUserName() {
+        let name = getUserNameUseCase.execute()
+        userNameSubject.send(.success(name))
+    }
+}
+
+extension InformationViewModel: ViewModelType {
     
     enum InputAction {
         case nicknameButtonDidTap(String)
-        case emotionButtonDidTap(EmotionState)
+        case feelingButtonDidTap(Feeling)
         case questButtonDidTap(QuestStyle)
     }
     
     struct Output {
-        let nicknamePublisher: AnyPublisher<Result<String, ByeBooError>, Never>
-        let emotionPublisher: AnyPublisher<Result<EmotionState, ByeBooError>, Never>
-        let questPublisher: AnyPublisher<Result<QuestStyle, ByeBooError>, Never>
-        let userInformationPublisher: AnyPublisher<Result<UserEntity, ByeBooError>, Never>
-    }
-    
-    private let nicknameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>()
-    private let emotionSubject = PassthroughSubject<Result<EmotionState, ByeBooError>, Never>()
-    private let questSubject = PassthroughSubject<Result<QuestStyle, ByeBooError>, Never>()
-    private let userInformationSubject = PassthroughSubject<Result<UserEntity, ByeBooError>, Never>()
-    
-    var currentNickname: String?
-    private var currentEmotion: EmotionState?
-    private var currentQuest: QuestStyle?
-         
-    var output: Output {
-        Output(
-            nicknamePublisher: nicknameSubject.eraseToAnyPublisher(),
-            emotionPublisher: emotionSubject.eraseToAnyPublisher(),
-            questPublisher: questSubject.eraseToAnyPublisher(),
-            userInformationPublisher: userInformationSubject.eraseToAnyPublisher()
-        )
+        let userInformationPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
+        let userNamePublisher: AnyPublisher<Result<String, ByeBooError>, Never>
     }
     
     func action(_ trigger: InputAction) {
         switch trigger {
         case .nicknameButtonDidTap(let nickname):
             currentNickname = nickname
-            nicknameSubject.send(.success(nickname))
-        case .emotionButtonDidTap(let emotionState):
-            currentEmotion = emotionState
-            emotionSubject.send(.success(emotionState))
+        case .feelingButtonDidTap(let feeling):
+            currentFeeling = feeling
         case .questButtonDidTap(let questStyle):
-            currentQuest = questStyle
-            questSubject.send(.success(questStyle))
-            let user = createUserInformation(
+            currentQuestStyle = questStyle
+            createUserInformation(
                 nickname: currentNickname,
-                emotion: currentEmotion,
-                quest: currentQuest
+                feeling: currentFeeling,
+                questStyle: currentQuestStyle
             )
-            userInformationSubject.send(.success(user))
+            userInformationSubject.send(.success(()))
         }
     }
-            
-    func resetData() {
-        currentEmotion = nil
-        currentQuest = nil
-    }
+}
+
+extension InformationViewModel {
     
-    // 실제로는 서버에 POST 요청을 통해 유저 정보 생성 예정
-    private func createUserInformation(
-        nickname: String?,
-        emotion: EmotionState?,
-        quest: QuestStyle?
-    ) -> UserEntity {
-        guard let nickname = nickname else {
-            return UserEntity(userID: 1, name: "")
-        }
-        return UserEntity(userID: 1, name: nickname)
+    func resetData() {
+        currentFeeling = nil
+        currentQuestStyle = nil
     }
 }

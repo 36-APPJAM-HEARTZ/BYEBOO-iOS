@@ -1,11 +1,11 @@
 //
-//  EmotionState+.swift
+//  Feeling+.swift
 //  ByeBoo-iOS
 //
 //  Created by APPLE on 7/10/25.
 //
 
-extension EmotionState {
+extension Feeling {
     var key: String {
         switch self {
         case .exhausted:
