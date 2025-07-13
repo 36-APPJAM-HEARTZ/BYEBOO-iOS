@@ -20,7 +20,7 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func getUserName() -> String? {
-        userDefaultsService.load(key: .userID)
+        userDefaultsService.load(key: .userName)
     }
     
     func fetchJourney() async throws -> JourneyEntity {
@@ -32,6 +32,16 @@ struct DefaultUsersRepository: UsersInterface {
         
         return result.toEntity()
     }
+    
+    func sendUser(user: UserRequestDTO) async throws -> UserEntity {
+        let result = try await network.request(
+            UsersAPI.sendUser(user: user),
+            decodingType: UserResponseDTO.self
+        )
+        let _ = userDefaultsService.save(result.id, key: .userID)
+        let _ = userDefaultsService.save(result.name, key: .userName)
+        return result.toEntity()
+    }
 }
 
 struct MockUserRepository: UsersInterface {
@@ -41,6 +51,10 @@ struct MockUserRepository: UsersInterface {
     
     func fetchJourney() async throws -> JourneyEntity {
         return .stub()
+    }
+    
+    func sendUser(user: UserRequestDTO) async throws -> UserEntity {
+        return .stub(user: user)
     }
 }
 

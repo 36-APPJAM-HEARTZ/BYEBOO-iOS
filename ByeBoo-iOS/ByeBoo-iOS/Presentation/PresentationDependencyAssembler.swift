@@ -38,5 +38,18 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 getUserNameUseCase: getNameUseCase
             )
         }
+        
+        DIContainer.shared.register(type: InformationViewModel.self) { container in
+            guard let sendUserUseCase = container.resolve(type: SendUserUseCase.self),
+                  let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return InformationViewModel(
+                sendUserUseCase: sendUserUseCase,
+                getUserNameUseCase: getUserNameUseCase
+            )
+        }
     }
 }

@@ -62,8 +62,11 @@ extension OnboardingViewController {
     }
     
     private func pushViewController() {
-        // TODO: DIContainer 연결하면 바꿔주기
-        let viewController = InformationViewController(viewModel: .init())
+        guard let viewModel = DIContainer.shared.resolve(type: InformationViewModel.self) else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            fatalError()
+        }
+        let viewController = InformationViewController(viewModel: viewModel)
         navigationController?.pushViewController(viewController, animated: false)
     }
 }

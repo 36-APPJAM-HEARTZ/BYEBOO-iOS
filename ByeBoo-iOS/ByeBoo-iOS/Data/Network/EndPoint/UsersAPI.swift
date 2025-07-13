@@ -11,6 +11,7 @@ import Alamofire
 
 enum UsersAPI {
     case journey(userID: Int)
+    case sendUser(user: UserRequestDTO)
 }
 
 extension UsersAPI: EndPoint {
@@ -22,6 +23,8 @@ extension UsersAPI: EndPoint {
         switch self {
         case .journey:
             return "/journey"
+        case .sendUser:
+            return ""
         }
     }
     
@@ -29,6 +32,8 @@ extension UsersAPI: EndPoint {
         switch self {
         case .journey:
             return .get
+        case .sendUser:
+            return .post
         }
     }
     
@@ -36,11 +41,18 @@ extension UsersAPI: EndPoint {
         switch self {
         case .journey(let userID):
             return .withAuth(userID: userID)
+        case .sendUser:
+            return .basic
         }
     }
     
     var parameterEncoding: ParameterEncoding {
-        return URLEncoding.default
+        switch self {
+        case .journey:
+            return URLEncoding.default
+        case .sendUser:
+            return JSONEncoding.default
+        }
     }
     
     var queryParameters: [String : String]? {
@@ -48,7 +60,17 @@ extension UsersAPI: EndPoint {
     }
     
     var bodyParameters: Parameters? {
-        nil
+        switch self {
+        case .journey:
+            return nil
+        case .sendUser(let user):
+            let requestBody: [String: Any] = [
+                "name": user.name,
+                "feeling": user.feeling,
+                "questStyle": user.questStyle
+            ]
+            return requestBody
+        }
     }
     
     
