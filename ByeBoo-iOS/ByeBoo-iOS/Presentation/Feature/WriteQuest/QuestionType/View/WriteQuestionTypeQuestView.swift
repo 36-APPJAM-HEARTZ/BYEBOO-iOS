@@ -12,10 +12,10 @@ import Then
 
 final class WriteQuestionTypeQuestView: BaseView {
     let title = WriteQuestTitleView(
-        stepNum: "2", 
-        stepTitle: "상황 정리하기", 
-        questNum: 10,
-        title: "연애에서 반복됐던 문제 패턴 3가지를 생각해보아요."
+        stepNum: "",
+        stepTitle: "",
+        questNum: 0,
+        title: ""
     )
     private let questTextField = QuestTextField(type: .question)
     private let descriptionLabel = UILabel()
@@ -77,6 +77,22 @@ final class WriteQuestionTypeQuestView: BaseView {
     }
 }
 
+extension WriteQuestionTypeQuestView {
+    func updateQuestTitle(
+        step: String,
+        stepNum: Int,
+        questNumber: Int,
+        questStyle: String,
+        question: String
+    ) {
+        title.bind(
+            stepNum: String(stepNum),
+            stepTitle: step,
+            questNum: questNumber,
+            title: question
+        )
+    }
+}
 extension WriteQuestionTypeQuestView: QuestCompleteProtocol {
     func changeStyle(count: Int) {
         if (count >= 10) {
