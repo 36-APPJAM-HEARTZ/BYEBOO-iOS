@@ -83,8 +83,8 @@ extension HomeViewModel {
         Task {
             do {
                 let count = try await fetchCompleteQuestCountUseCase.execute()
+                homeStateResultSubject.send(.success(.beforeQuest))
                 countResultSubject.send(.success(count))
-                homeStateResultSubject.send(.success(.afterJourney))
             } catch {
                 if let error = error as? ByeBooError {
                     switch error {
