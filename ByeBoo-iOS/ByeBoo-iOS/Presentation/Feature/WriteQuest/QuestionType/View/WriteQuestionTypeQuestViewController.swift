@@ -5,11 +5,26 @@
 //  Created by 이나연 on 7/8/25.
 //
 
+import Combine
 import UIKit
 
 final class WriteQuestionTypeQuestViewController: BaseViewController {
     
     private let rootView = WriteQuestionTypeQuestView()
+    private let viewModel: WriteQuestionTypeViewModel
+    private var cancellables = Set<AnyCancellable>()
+    let questID: Int = 0
+    
+    init(
+        viewModel: WriteQuestionTypeViewModel
+    ){
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = rootView
@@ -23,6 +38,9 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
             type: .back,
             action: #selector(back)
         )
+        
+        bind()
+        viewModel.action(.viewDidLoad(quesetID: 1))
     }
     
     override func setAddTarget() {
@@ -77,6 +95,26 @@ extension WriteQuestionTypeQuestViewController {
         viewController.navigationItem.hidesBackButton = true
         self.navigationController?.pushViewController(viewController, animated: false)
     }
+    
+    private func bind() {
+        viewModel.output.questInfoResultPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success(let quest):
+                    self.rootView.updateQuestTitle(
+                        step: quest.step,
+                        stepNum: quest.stepNumber,
+                        questNumber: quest.questNumber,
+                        questStyle: quest.questStyle,
+                        question: quest.question
+                    )
+                case .failure(let failure):
+                    ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
+    }
 }
 
 extension WriteQuestionTypeQuestViewController: BackNavigable {
@@ -94,7 +132,11 @@ extension WriteQuestionTypeQuestViewController: BackNavigable {
 
 extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
     func presentNextViewController(from previousView: PreviousView) {
-        let viewController = CompleteQuestionTypeQuestViewController()
+        guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            fatalError()
+        }
+        let viewController = CompleteQuestionTypeQuestViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 }
