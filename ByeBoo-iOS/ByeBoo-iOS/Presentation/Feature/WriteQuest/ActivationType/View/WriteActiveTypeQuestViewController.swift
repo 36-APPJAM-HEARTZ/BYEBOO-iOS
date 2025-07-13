@@ -5,14 +5,30 @@
 //  Created by 이나연 on 7/9/25.
 //
 
+import Combine
 import UIKit
 
 final class WriteActiveTypeQuestViewController: BaseViewController {
     
     private let rootView = WriteActiveTypeQuestView()
+    private let viewModel: WriteActiveTypeViewModel
+    private var cancellables = Set<AnyCancellable>()
+    
+    let questID: Int = 0
     
     override func loadView() {
         view = rootView
+    }
+    
+    init(
+        viewModel: WriteActiveTypeViewModel
+    ){
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
@@ -25,7 +41,9 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         )
         
         setGesture()
+        bind()
         presentPhotoPicker()
+        viewModel.action(.viewDidLoad(quesetID: 1))
     }
     
     override func setAddTarget() {
@@ -33,7 +51,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveDown), name: UIResponder.keyboardWillHideNotification, object: nil)
         rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
     }
-        
+    
     private func setGesture() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(endEditingOnTap))
         let tipTagGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tipTagDidTap))
@@ -44,7 +62,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         
         
         tipTagGestureRecognizer.isEnabled = true
-
+        
         self.rootView.title.tipTag.addGestureRecognizer(tipTagGestureRecognizer)
         self.rootView.scrollView.addGestureRecognizer(tapGestureRecognizer)
     }
@@ -99,6 +117,26 @@ extension WriteActiveTypeQuestViewController {
         viewController.navigationItem.hidesBackButton = true
         self.navigationController?.pushViewController(viewController, animated: true)
     }
+    
+    private func bind() {
+        viewModel.output.questInfoResultPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success(let quest):
+                    self.rootView.updateQuestTitle(
+                        step: quest.step,
+                        stepNum: quest.stepNumber,
+                        questNumber: quest.questNumber,
+                        questStyle: quest.questStyle,
+                        question: quest.question
+                    )
+                case .failure(let failure):
+                    ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
+    }
 }
 
 extension WriteActiveTypeQuestViewController: BackNavigable {
@@ -147,7 +185,11 @@ extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, U
 
 extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
     func presentNextViewController(from previousView: PreviousView) {
-        let viewController = CompleteActiveTypeQuestViewController()
+        guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            fatalError()
+        }
+        let viewController = CompleteActiveTypeQuestViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 }

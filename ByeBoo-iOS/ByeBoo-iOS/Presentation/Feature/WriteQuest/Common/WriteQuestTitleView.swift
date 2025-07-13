@@ -15,7 +15,7 @@ final class WriteQuestTitleView: BaseView {
     private let stepNum = UILabel()
     private let stepTitle = UILabel()
     
-    private let questNum: Int
+    private var questNum: Int
     private let questNumLabel: ByeBooYellowTag
     
     private let titleLabel = UILabel()
@@ -93,4 +93,14 @@ final class WriteQuestTitleView: BaseView {
             $0.centerX.equalToSuperview()
         }
     }
+}
+
+extension WriteQuestTitleView {
+    func bind(stepNum: String, stepTitle: String, questNum: Int, title: String) {
+        self.stepNum.text = "STEP \(stepNum)"
+        self.stepTitle.text = stepTitle
+        self.questNum = questNum
+        self.titleLabel.text = title
+        questNumLabel.text = "\(questNum)번째 퀘스트"
+       }
 }

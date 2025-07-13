@@ -1,14 +1,14 @@
 //
-//  WriteQuestionTypeViewModel.swift
+//  WriteActiveQuestViewModel.swift
 //  ByeBoo-iOS
 //
-//  Created by 이나연 on 7/7/25.
+//  Created by 이나연 on 7/13/25.
 //
 
 import Combine
 import Foundation
 
-struct WriteQuestionTypeViewModel: ViewModelType {
+struct WriteActiveTypeViewModel: ViewModelType {
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -33,9 +33,19 @@ struct WriteQuestionTypeViewModel: ViewModelType {
             didSuccessPostPublisher: didSuccessPostSubject.eraseToAnyPublisher()
         )
     }
+    
+    func action(_ trigger: Input) {
+        switch trigger {
+        case .viewDidLoad(let questID):
+            getQuestInfo()
+        case .didTapCompleteButton:
+            postQuestType()
+        }
+        
+    }
 }
 
-extension WriteQuestionTypeViewModel {
+extension WriteActiveTypeViewModel {
     enum Input {
         case viewDidLoad(quesetID: Int)
         case didTapCompleteButton
@@ -45,19 +55,10 @@ extension WriteQuestionTypeViewModel {
         let questInfoResultPublisher: AnyPublisher<Result<QuestInfoEntity, ByeBooError>, Never>
         let didSuccessPostPublisher:  AnyPublisher<Result<Void, ByeBooError>, Never>
     }
-    
-    func action(_ trigger: Input) {
-        switch trigger {
-        case .viewDidLoad(let questID):
-            getQuestInfo(quesID: questID)
-        case .didTapCompleteButton:
-            postQuestType()
-        }
-    }
 }
 
-extension WriteQuestionTypeViewModel {
-    private func getQuestInfo(quesID: Int) {
+extension WriteActiveTypeViewModel {
+    private func getQuestInfo() {
         Task {
             do {
                 let questInfo = try await getQuestInfoUseCase.execute(questID: 1)
@@ -72,16 +73,6 @@ extension WriteQuestionTypeViewModel {
     }
     
     private func postQuestType() {
-        Task {
-            do {
-                try await saveQuestTypeUseCase.execute(questID: 1)
-                didSuccessPostSubject.send(.success(()))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
-                didSuccessPostSubject.send(.failure(error as ByeBooError))
-            }
-        }
+        // TODO: Signed URL 연결
     }
 }
