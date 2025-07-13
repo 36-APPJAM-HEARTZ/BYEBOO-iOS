@@ -46,7 +46,7 @@ final class OnboardingContentView: BaseView {
             $0.textAlignment = .center
             $0.numberOfLines = 0
             $0.font = FontManager.body3R16.font
-            $0.textColor = .primary100
+            $0.textColor = .grayscale900
         }
         firstBottomImageView.do {
             $0.image = .second
@@ -56,7 +56,7 @@ final class OnboardingContentView: BaseView {
             $0.textAlignment = .center
             $0.numberOfLines = 0
             $0.font = FontManager.body3R16.font
-            $0.textColor = .primary100
+            $0.textColor = .grayscale900
         }
         secondTopImageView.do {
             $0.image = .third
@@ -66,7 +66,7 @@ final class OnboardingContentView: BaseView {
             $0.textAlignment = .center
             $0.numberOfLines = 0
             $0.font = FontManager.body3R16.font
-            $0.textColor = .primary100
+            $0.textColor = .grayscale900
         }
         secondBottomImageView.do {
             $0.image = .fourth
@@ -76,7 +76,7 @@ final class OnboardingContentView: BaseView {
             $0.textAlignment = .center
             $0.numberOfLines = 0
             $0.font = FontManager.body3R16.font
-            $0.textColor = .primary100
+            $0.textColor = .grayscale900
         }
         thirdImageView.do {
             $0.image = .fifth
@@ -94,7 +94,7 @@ final class OnboardingContentView: BaseView {
             $0.textAlignment = .center
             $0.numberOfLines = 0
             $0.font = FontManager.body3R16.font
-            $0.textColor = .primary100
+            $0.textColor = .grayscale900
         }
     }
     

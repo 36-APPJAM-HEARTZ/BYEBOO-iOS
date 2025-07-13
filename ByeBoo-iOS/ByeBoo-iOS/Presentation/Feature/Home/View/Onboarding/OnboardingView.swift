@@ -9,6 +9,7 @@ import UIKit
 
 final class OnboardingView: BaseView {
 
+    private let backgroundImageView = UIImageView()
     let headerView = OnboardingHeaderView()
     private let contentView = OnboardingContentView()
     let nextButton = ByeBooButton(titleText: "다음으로", type: .enabled)
@@ -20,11 +21,12 @@ final class OnboardingView: BaseView {
     }
     
     override func setStyle() {
-        backgroundColor = .primary900
+        backgroundImageView.image = .bgOnboarding
     }
     
     override func setUI() {
         addSubviews(
+            backgroundImageView,
             contentView,
             nextButton,
             headerView
@@ -32,6 +34,9 @@ final class OnboardingView: BaseView {
     }
     
     override func setLayout() {
+        backgroundImageView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
         headerView.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.horizontalEdges.equalToSuperview()

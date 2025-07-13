@@ -24,7 +24,7 @@ final class OnboardingHeaderView: BaseView {
         stepLabel.do {
             $0.text = "\(step.rawValue)/3"
             $0.font = FontManager.body5R14.font
-            $0.textColor = .primary200
+            $0.textColor = .primary300
         }
         skipStackView.do {
             $0.axis = .horizontal
@@ -33,15 +33,15 @@ final class OnboardingHeaderView: BaseView {
             $0.isHidden = step.rawValue == 3 ? true : false
         }
         skipLabel.do {
-            $0.text = "Skip"
+            $0.text = "SKIP"
             $0.underLine(text: $0.text ?? "")
             $0.font = FontManager.body5R14.font
-            $0.textColor = .primary200
+            $0.textColor = .primary300
         }
         
         arrowImageView.do {
             $0.image = .right.withRenderingMode(.alwaysTemplate)
-            $0.tintColor = .primary200
+            $0.tintColor = .primary300
         }
     }
     
