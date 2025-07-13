@@ -11,9 +11,12 @@ import Foundation
 struct WriteActiveTypeViewModel: ViewModelType {
     
     private var cancellables = Set<AnyCancellable>()
+    
     private(set) var output: Output
+    
     private let saveQuestTypeUseCase: SaveQuestTypeUseCase
     private let getQuestInfoUseCase: GetQuestInfoUseCase
+    
     private let questInfoResultSubject: PassthroughSubject<Result<QuestInfoEntity, ByeBooError>, Never> = .init()
     private let didSuccessPostSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     
@@ -33,7 +36,7 @@ struct WriteActiveTypeViewModel: ViewModelType {
     
     func action(_ trigger: Input) {
         switch trigger {
-        case .viewDidLoad(let questId):
+        case .viewDidLoad(let questID):
             getQuestInfo()
         case .didTapCompleteButton:
             postQuestType()

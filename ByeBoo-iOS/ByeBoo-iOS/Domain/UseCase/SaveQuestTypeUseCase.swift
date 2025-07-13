@@ -8,7 +8,7 @@
 import Foundation
 
 protocol SaveQuestTypeUseCase {
-    func execute(questID: Int) async throws -> Void
+    func execute(questID: Int) async throws
 }
 
 struct DefaultSaveQuestTypeUseCase: SaveQuestTypeUseCase {
