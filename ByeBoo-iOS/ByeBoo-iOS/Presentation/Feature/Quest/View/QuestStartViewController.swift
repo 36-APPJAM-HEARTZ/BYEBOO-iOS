@@ -51,6 +51,6 @@ extension QuestStartViewController {
     
     @objc
     func questStartButtonDidTap() {
-        // 퀘스트 
+        navigationController?.tabBarController?.selectedIndex = 1
     }
 }
