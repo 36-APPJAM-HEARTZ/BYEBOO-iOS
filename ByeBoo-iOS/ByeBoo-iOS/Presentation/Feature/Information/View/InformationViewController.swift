@@ -92,15 +92,14 @@ final class InformationViewController: BaseViewController {
     
     private func bindName() {
         viewModel.output.userNamePublisher
+            .receive(on: DispatchQueue.main)
             .sink { result in
                 switch result {
                 case .success(let userName):
-                    DispatchQueue.main.async {
-                        let loadingViewController = LoadingViewController()
-                        loadingViewController.nickname = userName
-                        loadingViewController.navigationItem.hidesBackButton = true
-                        self.navigationController?.pushViewController(loadingViewController, animated: false)
-                    }
+                    let loadingViewController = LoadingViewController()
+                    loadingViewController.nickname = userName
+                    loadingViewController.navigationItem.hidesBackButton = true
+                    self.navigationController?.pushViewController(loadingViewController, animated: false)
                 case .failure:
                     break
                 }
