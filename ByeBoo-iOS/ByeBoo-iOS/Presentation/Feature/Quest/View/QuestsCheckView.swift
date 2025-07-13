@@ -18,6 +18,10 @@ final class QuestsCheckView: BaseView {
         collectionViewLayout: CollectionViewFactory.createLayout()
     )
     
+    override func setStyle() {
+        backgroundColor = .grayscale900
+    }
+    
     override func setUI() {
         addSubviews(
             questCheckHeaderView,
@@ -27,7 +31,7 @@ final class QuestsCheckView: BaseView {
     
     override func setLayout() {
         questCheckHeaderView.snp.makeConstraints {
-            $0.top.equalTo(safeAreaLayoutGuide.snp.top).inset(10)
+            $0.top.equalToSuperview()
             $0.leading.trailing.equalToSuperview()
             $0.height.equalTo(129.adjustedH)
         }

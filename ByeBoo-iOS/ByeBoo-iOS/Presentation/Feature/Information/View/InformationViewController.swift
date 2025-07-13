@@ -50,7 +50,7 @@ final class InformationViewController: BaseViewController {
         
         setTopNavigationBar(type: .none)
         setAddTarget(informationBaseView: informationBaseView)
-        bindViewModel()
+        bind()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -77,15 +77,30 @@ final class InformationViewController: BaseViewController {
         )
     }
     
-    private func bindViewModel() {
+    private func bind() {
         viewModel.output.userInformationPublisher
             .sink { result in
                 switch result {
-                case .success(let user):
-                    let loadingViewController = LoadingViewController()
-                    loadingViewController.nickname = user.name
-                    loadingViewController.navigationItem.hidesBackButton = true
-                    self.navigationController?.pushViewController(loadingViewController, animated: false)
+                case .success:
+                    self.bindName()
+                case .failure:
+                    break
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func bindName() {
+        viewModel.output.userNamePublisher
+            .sink { result in
+                switch result {
+                case .success(let userName):
+                    DispatchQueue.main.async {
+                        let loadingViewController = LoadingViewController()
+                        loadingViewController.nickname = userName
+                        loadingViewController.navigationItem.hidesBackButton = true
+                        self.navigationController?.pushViewController(loadingViewController, animated: false)
+                    }
                 case .failure:
                     break
                 }
@@ -153,9 +168,9 @@ extension InformationViewController {
         case .selectEmotion:
             let emotionCards = selectEmotionView.emotionCardsView.emotionCards
             for (index, emotionCard) in emotionCards.enumerated() where emotionCard.isSelected {
-                if EmotionState.allCases.indices.contains(index) {
-                    let emotion = EmotionState.allCases[index]
-                    viewModel.action(.emotionButtonDidTap(emotion))
+                if Feeling.allCases.indices.contains(index) {
+                    let feeling = Feeling.allCases[index]
+                    viewModel.action(.feelingButtonDidTap(feeling))
                 }
             }
             move(viewType: selectQuestType, progress: .third)

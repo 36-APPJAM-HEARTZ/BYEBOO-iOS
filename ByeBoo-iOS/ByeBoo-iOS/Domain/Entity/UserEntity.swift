@@ -8,6 +8,12 @@
 import Foundation
 
 struct UserEntity {
-    let userID: Int
+    let id: Int
     let name: String
+}
+
+extension UserEntity {
+    static func stub(name: String, feeling: String, questStyle: String) -> Self {
+        return .init(id: 1, name: name)
+    }
 }

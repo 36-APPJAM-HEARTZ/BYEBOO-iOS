@@ -57,7 +57,7 @@ extension JourneyResultViewController {
                 switch result {
                 case .success(let journey):
                     self.rootView.updateJourney(
-                        journeyType: .face,
+                        journeyType: JourneyType(text: journey.title),
                         journeyDescription: journey.description ?? ""
                     )
                 case .failure(let failure):

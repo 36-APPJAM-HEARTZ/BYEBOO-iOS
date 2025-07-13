@@ -10,19 +10,25 @@ import UIKit
 final class HomeHeaderView: BaseView {
 
     private let stackView = UIStackView()
-    private let homeStateView = HomeStateView(state: .beforeJourneyStart(journey: .stub()))
+    let homeStateView: HomeStateView
     private let journeyProgressView: JourneyProgressView?
-    private let textBox = OnboardingTextView(text: "제가 하츠핑님의 이별 극복을 도와드릴게요.")
+    let textBox: OnboardingTextView = OnboardingTextView(text: "dd")
     
     private let state: HomeState
     
-    init(state: HomeState) {
+    init(
+        state: HomeState
+    ) {
         self.state = state
+        
         if state.hasProgress {
             journeyProgressView = JourneyProgressView()
         } else{
             journeyProgressView = nil
         }
+        
+        homeStateView = HomeStateView(state: state)
+        
         super.init(frame: .zero)
     }
     
@@ -60,6 +66,7 @@ final class HomeHeaderView: BaseView {
         stackView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(72.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.bottom.equalToSuperview()
         }
     }
 }
