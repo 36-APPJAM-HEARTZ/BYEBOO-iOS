@@ -52,5 +52,6 @@ extension QuestStartViewController {
     @objc
     func questStartButtonDidTap() {
         navigationController?.tabBarController?.selectedIndex = 1
+        navigationController?.popToRootViewController(animated: true)
     }
 }
