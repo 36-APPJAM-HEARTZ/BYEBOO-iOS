@@ -11,7 +11,7 @@ class BaseViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        ByeBooLogger.lifeCycle("viewDidLoad 호출")
+        ByeBooLogger.lifeCycle("\(#file) viewDidLoad 호출")
 
         setView()
         setAddTarget()
