@@ -8,7 +8,7 @@
 import Foundation
 
 struct UserRequestDTO: Encodable {
-    let nickname: Int
-    let emotion: String
-    let quest: String
+    let name: String
+    let feeling: String
+    let questStyle: String
 }
