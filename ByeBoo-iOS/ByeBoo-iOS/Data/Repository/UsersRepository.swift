@@ -24,8 +24,9 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func fetchJourney() async throws -> JourneyEntity {
+        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
-            UsersAPI.journey(userID: 1),
+            UsersAPI.journey(userID: userID),
             decodingType: UserJourneyResponseDTO.self
         )
         
