@@ -21,22 +21,22 @@ class BaseViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        ByeBooLogger.lifeCycle("viewWillAppear 호출")
+        ByeBooLogger.lifeCycle("\(#file) viewWillAppear 호출")
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        ByeBooLogger.lifeCycle("viewDidAppear 호출")
+        ByeBooLogger.lifeCycle("\(#file) viewDidAppear 호출")
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        ByeBooLogger.lifeCycle("viewWillDisappear 호출")
+        ByeBooLogger.lifeCycle("\(#file) viewWillDisappear 호출")
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        ByeBooLogger.lifeCycle("viewDidDisappear 호출")
+        ByeBooLogger.lifeCycle("\(#file) viewDidDisappear 호출")
     }
 
     func setView() {}
