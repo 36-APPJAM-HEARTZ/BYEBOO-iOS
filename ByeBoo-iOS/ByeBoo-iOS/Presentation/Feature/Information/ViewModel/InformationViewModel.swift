@@ -14,10 +14,10 @@ final class InformationViewModel {
     private let userNameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>()
     private(set) var output: Output
     
-    var currentNickname: String?
+    private var currentNickname: String?
     private var currentFeeling: Feeling?
     private var currentQuestStyle: QuestStyle?
-    var user: UserEntity = UserEntity(id: 1, name: "")
+    private var user: UserEntity = UserEntity(id: 1, name: "")
     
     private let sendUserUseCase: SendUserUseCase
     private let getUserNameUseCase: GetUserNameUseCase
@@ -48,13 +48,12 @@ final class InformationViewModel {
         
         Task {
             do {
-                let userRequestDTO = UserRequestDTO(
+                user = try await sendUserUseCase.execute(
                     name: name,
                     feeling: feeling.key,
                     questStyle: questStyle.key
                 )
-                self.user = try await sendUserUseCase.execute(user: userRequestDTO)
-                userNameSubject.send(.success(getUserName()))
+                getUserName()
             } catch {
                 userInformationSubject.send(.failure(error as! ByeBooError))
             }
@@ -62,8 +61,9 @@ final class InformationViewModel {
         return user
     }
     
-    private func getUserName() -> String {
-        return getUserNameUseCase.execute()
+    private func getUserName() {
+        let name = getUserNameUseCase.execute()
+        userNameSubject.send(.success(name))
     }
 }
 
