@@ -50,7 +50,7 @@ struct CollectionViewFactory {
     
     private static func createSectionHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
         let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                heightDimension: .estimated(45.adjustedH))
+                                                heightDimension: .absolute(45.adjustedH))
         return NSCollectionLayoutBoundarySupplementaryItem(
             layoutSize: headerSize,
             elementKind: UICollectionView.elementKindSectionHeader,

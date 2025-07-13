@@ -48,15 +48,21 @@ final class QuestStepHeaderView: UICollectionReusableView {
     
     private func setLayout() {
         sectionDividerView.snp.makeConstraints {
-            $0.width.equalTo(327.adjustedW)
+            $0.top.equalToSuperview()
+            $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(1.adjustedH)
         }
         stepLabel.snp.makeConstraints {
-            $0.top.equalTo(sectionDividerView.snp.bottom).offset(20.adjustedH)
+            $0.top.greaterThanOrEqualTo(sectionDividerView.snp.bottom).offset(18.adjustedH)
             $0.leading.equalToSuperview()
+            $0.centerY.equalTo(titleLabel.snp.centerY)
         }
+
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(sectionDividerView.snp.bottom).offset(18.adjustedH)
             $0.leading.equalTo(stepLabel.snp.trailing).offset(8.adjustedW)
+            $0.trailing.lessThanOrEqualToSuperview()
+            $0.bottom.equalToSuperview().inset(12.adjustedH)
         }
     }
     

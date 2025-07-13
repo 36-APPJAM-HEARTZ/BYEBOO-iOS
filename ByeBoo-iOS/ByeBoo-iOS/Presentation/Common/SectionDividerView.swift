@@ -24,8 +24,8 @@ final class SectionDividerView: BaseView {
     override func setLayout() {
         dividerView.snp.makeConstraints {
             $0.height.equalTo(1.adjustedW)
-            $0.width.equalTo(snp.width)
-            
+            $0.leading.trailing.equalToSuperview()
+            $0.top.bottom.equalToSuperview()
         }
     }
 
