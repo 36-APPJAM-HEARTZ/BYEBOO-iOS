@@ -70,3 +70,9 @@ final class HomeHeaderView: BaseView {
         }
     }
 }
+
+extension HomeHeaderView {
+    func updateTextBox(_ text: String) {
+        textBox.updateText(text)
+    }
+}

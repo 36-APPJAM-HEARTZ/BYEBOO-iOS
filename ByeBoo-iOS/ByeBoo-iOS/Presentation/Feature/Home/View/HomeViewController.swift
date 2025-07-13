@@ -5,13 +5,27 @@
 //  Created by 이나연 on 7/5/25.
 //
 
+import Combine
 import UIKit
 
 import SnapKit
 import Then
 
 final class HomeViewController: BaseViewController {
+    
+    private let viewModel: HomeViewModel
+    private var cancellables = Set<AnyCancellable>()
     private let rootView = HomeView()
+    
+    init(viewModel: HomeViewModel) {
+        self.viewModel = viewModel
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = rootView
@@ -20,7 +34,10 @@ final class HomeViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        bind()
         setGesture()
+        
+        viewModel.action(.viewDidLoad)
     }
     
     private func setGesture() {
@@ -47,7 +64,17 @@ extension HomeViewController {
 }
 
 extension HomeViewController {
-    private func updateCharacterMessage() {
-        
+    private func bind() {
+        viewModel.output.characterResult
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success(let text):
+                    self.rootView.updateOnboardingText(text)
+                case .failure(let failure):
+                    ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
     }
 }

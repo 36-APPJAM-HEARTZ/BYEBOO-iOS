@@ -42,5 +42,14 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 getUserNameUseCase: getUserNameUseCase
             )
         }
+        
+        DIContainer.shared.register(type: HomeViewModel.self) { container in
+            guard let characterUseCase = container.resolve(type: FetchCharacterDialogueUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return HomeViewModel(fetchCharacterDialogueUseCase: characterUseCase)
+        }
     }
 }

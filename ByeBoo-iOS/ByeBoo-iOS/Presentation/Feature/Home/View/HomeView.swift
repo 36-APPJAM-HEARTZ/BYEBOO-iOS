@@ -43,6 +43,10 @@ final class HomeView: BaseView {
 
 extension HomeView {
     func updateOnboardingText(_ text: String) {
-        headerView.textBox.text = text
+        headerView.updateTextBox(text)
+    }
+    
+    func updateProgress(_ prgress: Int) {
+        
     }
 }

@@ -33,5 +33,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: SendUserUseCase.self) { _ in
             return DefaultSenduserUseCase(repository: userRepository)
         }
+        
+        DIContainer.shared.register(type: FetchCharacterDialogueUseCase.self) { _ in
+            return DefaultFetchCharacterDialogueUseCase(repository: userRepository)
+        }
     }
 }
