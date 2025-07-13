@@ -32,6 +32,11 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return
         }
         
+        guard let questAnswerRepository = DIContainer.shared.resolve(type: QuestAnswerInterface.self) else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            return
+        }
+        
         DIContainer.shared.register(type: FetchUserJourneyUseCase.self) { _ in
             return DefaultFetchUserJourneyUseCase(repository: userRepository)
         }
@@ -50,6 +55,10 @@ struct DomainDependencyAssembler: DependencyAssembler {
       
         DIContainer.shared.register(type: SendUserUseCase.self) { _ in
             return DefaultSenduserUseCase(repository: userRepository)
+        }
+        
+        DIContainer.shared.register(type: QuestAnswerUseCase.self) { _ in
+            return DefaultQuestAnswerUseCase(questAnswerRepository: questAnswerRepository)
         }
     }
 }

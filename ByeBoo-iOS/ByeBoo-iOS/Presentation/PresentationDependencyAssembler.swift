@@ -66,5 +66,16 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 getUserNameUseCase: getUserNameUseCase
             )
         }
+        
+        DIContainer.shared.register(type: CompleteQuestViewModel.self) { container in
+            guard let questAnswerUseCase = container.resolve(type: QuestAnswerUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return CompleteQuestViewModel(
+                useCase: questAnswerUseCase
+            )
+        }
     }
 }
