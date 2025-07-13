@@ -58,7 +58,7 @@ extension WriteActiveTypeViewModel {
     private func getQuestInfo() {
         Task {
             do {
-                let questInfo = try await getQuestInfoUseCase.execute(questId: 1)
+                let questInfo = try await getQuestInfoUseCase.execute(questID: 1)
                 questInfoResultSubject.send(.success(questInfo))
             } catch {
                 guard let error = error as? ByeBooError else {

@@ -33,7 +33,7 @@ struct WriteQuestionTypeViewModel: ViewModelType {
     
     func action(_ trigger: Input) {
         switch trigger {
-        case .viewDidLoad(let questId):
+        case .viewDidLoad(let questID):
             getQuestInfo()
         case .didTapCompleteButton:
             postQuestType()
@@ -58,7 +58,7 @@ extension WriteQuestionTypeViewModel {
     private func getQuestInfo() {
         Task {
             do {
-                let questInfo = try await getQuestInfoUseCase.execute(questId: 1)
+                let questInfo = try await getQuestInfoUseCase.execute(questID: 1)
                 questInfoResultSubject.send(.success(questInfo))
             } catch {
                 guard let error = error as? ByeBooError else {

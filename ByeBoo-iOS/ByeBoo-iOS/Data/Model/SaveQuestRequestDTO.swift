@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SaveQuestDTO: Encodable {
+struct SaveQuestRequestDTO: Encodable {
     var questId: Int
     var isComplete: Bool
 }

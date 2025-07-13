@@ -8,7 +8,7 @@
 import Foundation
 
 protocol GetQuestInfoUseCase {
-    func execute(questId: Int) async throws -> QuestInfoEntity
+    func execute(questID: Int) async throws -> QuestInfoEntity
 }
 
 struct DefaultGetQuestInfoUseCase: GetQuestInfoUseCase {
@@ -18,7 +18,7 @@ struct DefaultGetQuestInfoUseCase: GetQuestInfoUseCase {
         self.questInfoReposiroty = questInfoReposiroty
     }
     
-    func execute(questId: Int) async throws -> QuestInfoEntity {
-        try await questInfoReposiroty.execute(questID: questId)
+    func execute(questID: Int) async throws -> QuestInfoEntity {
+        try await questInfoReposiroty.execute(questID: questID)
     }
 }

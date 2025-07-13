@@ -18,6 +18,7 @@ enum QuestAPI {
 }
 
 extension QuestAPI: EndPoint {
+    
     var basePath: String {
         return "/api/v1/quests"
     }
@@ -37,18 +38,12 @@ extension QuestAPI: EndPoint {
         }
     }
     
-    var method: Alamofire.HTTPMethod {
+    var method: HTTPMethod {
         switch self {
-        case .checkQuest:
+        case .checkQuest, .tip:
             return .get
-        case .recording:
+        case .recording, .active, .images:
             return .post
-        case .active:
-            return .post
-        case .images:
-            return .post
-        case .tip:
-            return .get
         }
     }
     
@@ -63,7 +58,7 @@ extension QuestAPI: EndPoint {
         }
     }
     
-    var parameterEncoding: any Alamofire.ParameterEncoding {
+    var parameterEncoding: any ParameterEncoding {
         switch self {
         case .checkQuest, .tip:
             return URLEncoding.default
@@ -87,7 +82,7 @@ extension QuestAPI: EndPoint {
         }
     }
     
-    var bodyParameters: Alamofire.Parameters? {
+    var bodyParameters: Parameters? {
         nil
     }
     
