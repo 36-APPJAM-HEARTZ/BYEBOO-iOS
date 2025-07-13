@@ -8,3 +8,4 @@
 protocol QuestAnswerInterface {
     func fetchQuestAnswer() async throws -> QuestAnswerEntity
 }
+

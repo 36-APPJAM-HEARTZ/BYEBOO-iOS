@@ -36,13 +36,11 @@ final class CompleteQuestViewModel: ViewModelType {
     
     private var cancellables: Set<AnyCancellable> = []
     
-//    private let useCase: QuestAnswerUseCase
+    private let useCase: QuestAnswerUseCase
     
-//    init(useCase: QuestAnswerUseCase) {
-//        self.useCase = useCase
-//    }
-    
-    init() { }
+    init(useCase: QuestAnswerUseCase) {
+        self.useCase = useCase
+    }
     
     private func fetchQuestAnswer() -> QuestAnswerEntity {
         let data = QuestAnswerEntity(
