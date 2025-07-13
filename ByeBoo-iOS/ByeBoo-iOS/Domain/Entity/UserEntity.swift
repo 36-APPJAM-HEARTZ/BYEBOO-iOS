@@ -8,6 +8,12 @@
 import Foundation
 
 struct UserEntity {
-    let userID: Int
+    let id: Int
     let name: String
+}
+
+extension UserEntity {
+    static func stub(user: UserRequestDTO) -> Self {
+        return .init(id: 1, name: user.name)
+    }
 }
