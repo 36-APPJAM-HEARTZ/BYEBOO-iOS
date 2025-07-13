@@ -32,9 +32,9 @@ enum ByeBooFilledTagType {
     
     var textColor: UIColor {
         switch self {
-        case .largePurple, .word3Purple, .smallPurple, .largeGray:
+        case .largePurple, .word3Purple, .smallPurple:
             return .white
-        case .word3Gray, .smallGray:
+        case .word3Gray, .smallGray, .largeGray:
             return .grayscale300
         case .yelloFilled:
             return .secondary300
