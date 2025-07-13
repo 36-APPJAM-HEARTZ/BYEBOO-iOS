@@ -17,7 +17,7 @@ final class WriteQuestionTypeQuestView: BaseView {
         questNum: 0,
         title: ""
     )
-    private let questTextField = QuestTextField(type: .question)
+    let questTextField = QuestTextField(type: .question)
     private let descriptionLabel = UILabel()
     let confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
     

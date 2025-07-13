@@ -13,7 +13,10 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     private let rootView = WriteQuestionTypeQuestView()
     private let viewModel: WriteQuestionTypeViewModel
     private var cancellables = Set<AnyCancellable>()
+    
     let questID: Int = 0
+    private var answerText: String = ""
+    private var emotionState: String = ""
     
     init(
         viewModel: WriteQuestionTypeViewModel
@@ -77,6 +80,10 @@ extension WriteQuestionTypeQuestViewController {
     
     @objc
     private func confirmButtonDidTap() {
+        answerText = rootView.questTextField.textView.text ?? ""
+        
+        viewModel.action(.didTapCompleteButton(questID: 1, answer: answerText, emotionState: emotionState))
+        
         let viewController = EmotionBottomSheetViewController()
         viewController.previousView = .question
         viewController.delegate = self
@@ -131,12 +138,18 @@ extension WriteQuestionTypeQuestViewController: BackNavigable {
 }
 
 extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
+    func saveEmotionState(emotionState: ByeBooEmotion) {
+        self.emotionState = emotionState.key
+    }
+    
     func presentNextViewController(from previousView: PreviousView) {
         guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             fatalError()
         }
+        
         let viewController = CompleteQuestionTypeQuestViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(viewController, animated: true)
     }
+
 }
