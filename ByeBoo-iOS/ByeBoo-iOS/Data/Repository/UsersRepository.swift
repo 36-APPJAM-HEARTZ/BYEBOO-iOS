@@ -56,6 +56,16 @@ struct DefaultUsersRepository: UsersInterface {
         return result.dialogue
     }
     
+    func fetchCompleteQuestCount() async throws -> Int {
+        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
+        let result = try await network.request(
+            UsersAPI.count(userID: userID),
+            decodingType: CompleteQuestCountResponseDTO.self
+        )
+        
+        return result.count
+    }
+    
     // MARK: Persistence
     
     func getUserName() -> String? {
@@ -86,6 +96,10 @@ struct MockUserRepository: UsersInterface {
     
     func fetchCharacterDialogue() async throws -> String {
         return "천천히, 하지만 분명하게. 오늘도 나아가 봐요."
+    }
+    
+    func fetchCompleteQuestCount() async throws -> Int {
+        return 1
     }
 }
 

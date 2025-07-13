@@ -17,22 +17,25 @@ struct PresentationDependencyAssembler: DependencyAssembler {
     func assemble() {
         preAssembler.assemble()
         
+        guard let getUserNameUseCase = DIContainer.shared.resolve(type: GetUserNameUseCase.self) else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            return
+        }
+        
         DIContainer.shared.register(type: JourneyResultViewModel.self) { container in
-            guard let fetchUserUseCase = container.resolve(type: FetchUserJourneyUseCase.self),
-                  let getNameUseCase = container.resolve(type: GetUserNameUseCase.self) else {
+            guard let fetchUserUseCase = container.resolve(type: FetchUserJourneyUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
             return JourneyResultViewModel(
                 fetchUserJourneyUseCase: fetchUserUseCase,
-                getUserNameUseCase: getNameUseCase
+                getUserNameUseCase: getUserNameUseCase
             )
         }
         
         DIContainer.shared.register(type: InformationViewModel.self) { container in
-            guard let sendUserUseCase = container.resolve(type: SendUserUseCase.self),
-                  let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self) else {
+            guard let sendUserUseCase = container.resolve(type: SendUserUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -44,12 +47,18 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: HomeViewModel.self) { container in
-            guard let characterUseCase = container.resolve(type: FetchCharacterDialogueUseCase.self) else {
+            guard let characterUseCase = container.resolve(type: FetchCharacterDialogueUseCase.self),
+            let countUseCase = container.resolve(type: FetchCompleteQuestCountUseCase.self)
+            else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
-            return HomeViewModel(fetchCharacterDialogueUseCase: characterUseCase)
+            return HomeViewModel(
+                fetchCharacterDialogueUseCase: characterUseCase,
+                fetchCompleteQuestCountUseCase: countUseCase,
+                getUserNameUseCase: getUserNameUseCase
+            )
         }
     }
 }

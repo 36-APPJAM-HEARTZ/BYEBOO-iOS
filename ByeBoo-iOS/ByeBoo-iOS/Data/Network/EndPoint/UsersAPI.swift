@@ -13,6 +13,7 @@ enum UsersAPI {
     case journey(userID: Int)
     case sendUser(requestDTO: UserRequestDTO)
     case character(userID: Int)
+    case count(userID: Int)
 }
 
 extension UsersAPI: EndPoint {
@@ -28,12 +29,14 @@ extension UsersAPI: EndPoint {
             return ""
         case .character:
             return "/character"
+        case .count:
+            return "/count"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .journey, .character:
+        case .journey, .character, .count:
             return .get
         case .sendUser:
             return .post
@@ -42,7 +45,7 @@ extension UsersAPI: EndPoint {
     
     var headers: HeaderType {
         switch self {
-        case .journey(let userID), .character(let userID):
+        case .journey(let userID), .character(let userID), .count(let userID):
             return .withAuth(userID: userID)
         case .sendUser:
             return .basic
@@ -51,7 +54,7 @@ extension UsersAPI: EndPoint {
     
     var parameterEncoding: ParameterEncoding {
         switch self {
-        case .journey, .character:
+        case .journey, .character, .count:
             return URLEncoding.default
         case .sendUser:
             return JSONEncoding.default
@@ -64,7 +67,7 @@ extension UsersAPI: EndPoint {
     
     var bodyParameters: Parameters? {
         switch self {
-        case .journey, .character:
+        case .journey, .character, .count:
             return nil
         case .sendUser(let dto):
             return try? dto.toDictionary()

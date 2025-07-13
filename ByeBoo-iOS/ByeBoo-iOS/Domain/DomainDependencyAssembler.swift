@@ -37,5 +37,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: FetchCharacterDialogueUseCase.self) { _ in
             return DefaultFetchCharacterDialogueUseCase(repository: userRepository)
         }
+        
+        DIContainer.shared.register(type: FetchCompleteQuestCountUseCase.self) { _ in
+            return DefaultFetchCompleteQuestCountUseCase(repository: userRepository)
+        }
     }
 }

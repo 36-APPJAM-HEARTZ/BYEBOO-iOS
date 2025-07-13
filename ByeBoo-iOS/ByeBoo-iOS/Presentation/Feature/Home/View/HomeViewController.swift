@@ -76,5 +76,41 @@ extension HomeViewController {
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.output.countResult
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success(let count):
+                    self.rootView.updateProgress(count)
+                case .failure(let failure):
+                    ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.userResult
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success(let name):
+                    self.rootView.updateName(name)
+                case .failure(let failure):
+                    ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.homeStateResult
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success(let state):
+                    self.rootView.updateState(state)
+                case .failure(let failure):
+                    ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
     }
 }

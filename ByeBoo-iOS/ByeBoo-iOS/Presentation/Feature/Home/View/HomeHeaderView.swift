@@ -10,31 +10,11 @@ import UIKit
 final class HomeHeaderView: BaseView {
 
     private let stackView = UIStackView()
-    let homeStateView: HomeStateView
-    private let journeyProgressView: JourneyProgressView?
-    let textBox: OnboardingTextView = OnboardingTextView(text: "dd")
+    let homeStateView: HomeStateView = HomeStateView(state: .afterJourney)
+    private var journeyProgressView: JourneyProgressView? = nil
+    let textBox: OnboardingTextView = OnboardingTextView(text: "안녕")
     
-    private let state: HomeState
-    
-    init(
-        state: HomeState
-    ) {
-        self.state = state
-        
-        if state.hasProgress {
-            journeyProgressView = JourneyProgressView()
-        } else{
-            journeyProgressView = nil
-        }
-        
-        homeStateView = HomeStateView(state: state)
-        
-        super.init(frame: .zero)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    private let state: HomeState = .afterJourney
     
     override func setStyle() {
         backgroundColor = .clear
@@ -48,18 +28,10 @@ final class HomeHeaderView: BaseView {
     override func setUI() {
         addSubview(stackView)
     
-        if let journeyProgressView {
-            stackView.addArrangedSubviews(
-                homeStateView,
-                journeyProgressView,
-                textBox
-            )
-        } else {
-            stackView.addArrangedSubviews(
-                homeStateView,
-                textBox
-            )
-        }
+        stackView.addArrangedSubviews(
+            homeStateView,
+            textBox
+        )
     }
     
     override func setLayout() {
@@ -74,5 +46,29 @@ final class HomeHeaderView: BaseView {
 extension HomeHeaderView {
     func updateTextBox(_ text: String) {
         textBox.updateText(text)
+    }
+    
+    func updateProgress(_ progress: Int) {
+        journeyProgressView?.updateProgress(progress)
+    }
+    
+    func updateName(_ name: String) {
+        journeyProgressView?.updateName(name)
+    }
+    
+    func updateState(_ state: HomeState) {
+        if state.hasProgress {
+            journeyProgressView = JourneyProgressView()
+
+            if let journeyProgressView {
+                stackView.removeArrangedSubview(textBox)
+                stackView.addArrangedSubviews(
+                    journeyProgressView,
+                    textBox
+                )
+            }
+        }
+        
+        homeStateView.updateState(state)
     }
 }
