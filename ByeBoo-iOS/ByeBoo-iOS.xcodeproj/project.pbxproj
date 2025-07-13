@@ -237,6 +237,8 @@
 		};
 		CB4180A12E0925D4001E7BCB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = CB41808D2E0925D2001E7BCB /* ByeBoo-iOS */;
+			baseConfigurationReferenceRelativePath = Data/Config/Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -300,6 +302,8 @@
 		};
 		CB4180A22E0925D4001E7BCB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = CB41808D2E0925D2001E7BCB /* ByeBoo-iOS */;
+			baseConfigurationReferenceRelativePath = Data/Config/Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;

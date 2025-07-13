@@ -14,6 +14,7 @@ enum ByeBooError: Error, LocalizedError {
     case networkRequestFailed
     case networkError(code: Int, message: String)
     case navigationControllerMissing
+    case noData
     case unknownError
     
     var errorDescription: String? {
@@ -30,6 +31,8 @@ enum ByeBooError: Error, LocalizedError {
             return "\(code): \(message)"
         case .navigationControllerMissing:
             return "네비게이션 컨트롤러 없음"
+        case .noData:
+            return "데이터 없음"
         case .unknownError:
             return nil
         }
