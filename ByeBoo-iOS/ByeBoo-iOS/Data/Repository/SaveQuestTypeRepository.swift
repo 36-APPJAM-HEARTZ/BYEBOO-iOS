@@ -19,10 +19,12 @@ struct DefaultSaveQuestTypeRepository: SaveQuestTypeInterface {
         self.userDefaultService = userDefaultService
     }
     
-    func postSaveQuest(questID: Int) async throws -> Void {
+    func postSaveQuest(questID: Int, answer: String, emotionState: String) async throws -> Void {
         let userID: Int = userDefaultService.load(key: .userID) ?? 1
-        let result = try await network.request(
-            QuestAPI.recording(userID: userID, questID: questID),
+        let saveQuestRequestDTO: SaveQuestRequestDTO = .init(answer: answer, questEmotionState: emotionState)
+        
+        let _ = try await network.request(
+            QuestAPI.recording(userID: userID, questID: questID, request: saveQuestRequestDTO),
             decodingType: BaseResponse<EmptyResponse>.self
         )
     }

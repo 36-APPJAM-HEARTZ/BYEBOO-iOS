@@ -11,7 +11,7 @@ import Alamofire
 
 enum QuestAPI {
     case checkQuest(userID: Int, questID: Int)
-    case recording(userID: Int, questID: Int)
+    case recording(userID: Int, questID: Int, request: SaveQuestRequestDTO)
     case active(userID: Int, questID: Int)
     case images(userID: Int)
     case tip(userID: Int, questID: Int)
@@ -27,7 +27,7 @@ extension QuestAPI: EndPoint {
         switch self {
         case .checkQuest(_, let questID):
             return "/\(questID)"
-        case .recording(_, let questID):
+        case .recording(_, let questID, _):
             return "/\(questID)/recording"
         case .active(_, let questID):
             return "/\(questID)/active"
@@ -50,7 +50,7 @@ extension QuestAPI: EndPoint {
     var headers: HeaderType {
         switch self {
         case let .checkQuest(userID, _),
-            let .recording(userID, _),
+            let .recording(userID, _, _),
             let .active(userID, _),
             let .tip(userID, _),
             let .images(userID):
@@ -71,7 +71,7 @@ extension QuestAPI: EndPoint {
         switch self {
         case let .checkQuest(_, questID):
             return ["questID": "\(questID)"]
-        case let .recording(_, questID):
+        case let .recording(_, _, questID):
             return ["questID": "\(questID)"]
         case let .active(_, questID):
             return ["questID": "\(questID)"]
@@ -83,7 +83,12 @@ extension QuestAPI: EndPoint {
     }
     
     var bodyParameters: Parameters? {
-        nil
+        switch self {
+        case .recording(_, _, let dto):
+            return try? dto.toDictionary()
+        case .checkQuest, .active, .tip, .images:
+            return nil
+        }
     }
     
 }

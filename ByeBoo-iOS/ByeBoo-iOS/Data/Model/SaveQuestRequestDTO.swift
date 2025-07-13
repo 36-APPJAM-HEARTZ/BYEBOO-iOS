@@ -8,6 +8,6 @@
 import Foundation
 
 struct SaveQuestRequestDTO: Encodable {
-    var questId: Int
-    var isComplete: Bool
+    var answer: String
+    var questEmotionState: String
 }

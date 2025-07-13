@@ -8,5 +8,5 @@
 import Foundation
 
 protocol SaveQuestTypeInterface {
-    func postSaveQuest(questID: Int) async throws 
+    func postSaveQuest(questID: Int, answer: String, emotionState: String) async throws
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 protocol SaveQuestTypeUseCase {
-    func execute(questID: Int) async throws
+    func execute(questID: Int, answer: String, emotionState: String) async throws
 }
 
 struct DefaultSaveQuestTypeUseCase: SaveQuestTypeUseCase {
@@ -18,5 +18,5 @@ struct DefaultSaveQuestTypeUseCase: SaveQuestTypeUseCase {
         self.repqository = repqository
     }
     
-    func execute(questID: Int) -> Void { }
+    func execute(questID: Int, answer: String, emotionState: String) { }
 }
