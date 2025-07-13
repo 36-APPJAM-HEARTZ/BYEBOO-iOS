@@ -14,10 +14,10 @@ final class WriteActiveTypeQuestView: BaseView {
     let scrollView = UIScrollView()
     let contentView = UIView()
     let title = WriteQuestTitleView(
-        stepNum: "2",
-        stepTitle: "감정 정리하기",
-        questNum: 10,
-        title: "오늘은 나가서 상쾌하게 달리고 오세요."
+        stepNum: "",
+        stepTitle: "",
+        questNum: 0,
+        title: ""
     )
     
     private let imgStackView = UIStackView()
@@ -156,6 +156,23 @@ final class WriteActiveTypeQuestView: BaseView {
     
     func updateImageCountLabel(count: Int) {
         imgCountLabel.text = "(\(count)/1)"
+    }
+}
+
+extension WriteActiveTypeQuestView {
+    func updateQuestTitle(
+        step: String,
+        stepNum: Int,
+        questNumber: Int,
+        questStyle: String,
+        question: String
+    ) {
+        title.bind(
+            stepNum: String(stepNum),
+            stepTitle: step,
+            questNum: questNumber,
+            title: question
+        )
     }
 }
 
