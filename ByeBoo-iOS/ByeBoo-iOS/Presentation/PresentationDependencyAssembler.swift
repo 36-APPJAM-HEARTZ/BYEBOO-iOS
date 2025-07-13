@@ -50,5 +50,17 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 getQuestInfoUseCase: getQuestInfoUseCase
             )
         }
+        
+        DIContainer.shared.register(type: WriteActiveTypeViewModel.self) { container in
+            guard let getQuestInfoUseCase = container.resolve(type: GetQuestInfoUseCase.self),
+                let saveQuestTypeUseCase = container.resolve(type: SaveQuestTypeUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            return WriteActiveTypeViewModel(
+                saveQuestTypeUseCase: saveQuestTypeUseCase,
+                getQuestInfoUseCase: getQuestInfoUseCase
+            )
+        }
     }
 }

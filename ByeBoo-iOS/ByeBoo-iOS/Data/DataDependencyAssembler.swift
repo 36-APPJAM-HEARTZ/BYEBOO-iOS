@@ -27,6 +27,6 @@ struct DataDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: SaveQuestTypeInterface.self) { _ in
             return DefaultSaveQuestTypeRepository(network: networkService, userDefaultService: userDefaultService)
-        }
+        }        
     }
 }
