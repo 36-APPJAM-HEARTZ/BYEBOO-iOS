@@ -28,6 +28,17 @@ enum JourneyType {
             return "감정 정리 여정"
         }
     }
+    
+    init(text: String) {
+        switch text {
+        case "감정 직면":
+            self = .face
+        case "감정 정리":
+            self = .process
+        default:
+            self = .face
+        }
+    }
 }
 
 final class JourneyResultView: BaseView {

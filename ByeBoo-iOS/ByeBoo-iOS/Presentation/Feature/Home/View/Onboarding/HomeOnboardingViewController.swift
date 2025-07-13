@@ -17,7 +17,7 @@ final class HomeOnboardingViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         rootView.startAnimation()
         setGesture()
     }
@@ -33,15 +33,22 @@ extension HomeOnboardingViewController {
     }
     
     @objc
-    private func longDidTap() {
+    private func longDidTap(_ gesture: UILongPressGestureRecognizer) {
+        
+        guard gesture.state == .began else { return }
+        
         ByeBooLogger.debug("꾹 눌렀음")
-        let viewController = BottomNavigationViewController()
-        if let windowScene = UIApplication.shared.connectedScenes
-            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene,
-           let window = windowScene.windows.first {
-
-            window.rootViewController = viewController
-            window.makeKeyAndVisible()
+        
+        let tabBarController = BottomNavigationViewController()
+        
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+            
+            ViewControllerUtils.setRootViewController(
+                window: window,
+                viewController: tabBarController,
+                withAnimation: true
+            )
         }
     }
 }

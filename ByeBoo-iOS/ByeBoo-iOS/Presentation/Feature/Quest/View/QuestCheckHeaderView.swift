@@ -20,6 +20,7 @@ final class QuestCheckHeaderView: BaseView {
     private let subTitleLabel = UILabel()
     
     override func setStyle() {
+        backgroundColor = .black50
         titleLabel.do {
             titleLabel.attributedText = "\(nickname)님, 지금\n\(journeyType.description)을 진행 중이에요.".makeTitle(
                 rangedText: "\(journeyType.description)"

@@ -11,7 +11,7 @@ final class OnboardingTextView: BaseView {
 
     private let titleLabel = UILabel()
     
-    private let text: String
+    var text: String
     
     init(text: String) {
         self.text = text
