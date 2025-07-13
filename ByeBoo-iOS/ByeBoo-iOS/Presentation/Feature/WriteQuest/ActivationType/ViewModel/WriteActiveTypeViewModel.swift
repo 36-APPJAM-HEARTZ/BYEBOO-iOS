@@ -1,14 +1,14 @@
 //
-//  WriteQuestionTypeViewModel.swift
+//  WriteActiveQuestViewModel.swift
 //  ByeBoo-iOS
 //
-//  Created by 이나연 on 7/7/25.
+//  Created by 이나연 on 7/13/25.
 //
 
 import Combine
 import Foundation
 
-struct WriteQuestionTypeViewModel: ViewModelType {
+struct WriteActiveTypeViewModel: ViewModelType {
     
     private var cancellables = Set<AnyCancellable>()
     private(set) var output: Output
@@ -42,7 +42,7 @@ struct WriteQuestionTypeViewModel: ViewModelType {
     }
 }
 
-extension WriteQuestionTypeViewModel {
+extension WriteActiveTypeViewModel {
     enum Input {
         case viewDidLoad(quesetID: Int)
         case didTapCompleteButton
@@ -54,7 +54,7 @@ extension WriteQuestionTypeViewModel {
     }
 }
 
-extension WriteQuestionTypeViewModel {
+extension WriteActiveTypeViewModel {
     private func getQuestInfo() {
         Task {
             do {
@@ -70,16 +70,6 @@ extension WriteQuestionTypeViewModel {
     }
     
     private func postQuestType() {
-        Task {
-            do {
-                try await saveQuestTypeUseCase.execute(questID: 1)
-                didSuccessPostSubject.send(.success(()))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
-                didSuccessPostSubject.send(.failure(error))
-            }
-        }
+        // TODO: Signed URL 연결
     }
 }
