@@ -15,11 +15,14 @@ final class BottomNavigationViewController: UITabBarController {
     }
     
     private func setViewController() {
-        viewControllers = [
+        // TODO: viewmodel di로 바꿔주기
+        let questViewModel = QuestsViewModel()
+        let viewControllers = [
             createViewController(for: HomeViewController(), title: "홈", imageName: .homeOff),
-            createViewController(for: QuestViewController(), title: "퀘스트", imageName: .questOff),
+            createViewController(for: QuestCheckViewController(viewModel: questViewModel), title: "퀘스트", imageName: .questOff),
             createViewController(for: MyPageViewController(), title: "내 정보", imageName: .userOff)
         ]
+        setViewControllers(viewControllers, animated: true)
     }
     
     private func setViewControllerAppearance() {
@@ -50,8 +53,8 @@ final class BottomNavigationViewController: UITabBarController {
                                       title: String,
                                       imageName: UIImage) -> UIViewController {
         let viewController = UINavigationController(rootViewController: rootViewController)
-        viewController.tabBarItem.title = title
-        viewController.tabBarItem.image = imageName.withRenderingMode(.alwaysTemplate)
+        rootViewController.tabBarItem.title = title
+        rootViewController.tabBarItem.image = imageName.withRenderingMode(.alwaysTemplate)
         return viewController
     }
 }

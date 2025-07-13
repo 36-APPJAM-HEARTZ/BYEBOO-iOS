@@ -29,6 +29,7 @@ final class QuestStartView: BaseView {
     let confirmButton = ByeBooButton(titleText: "시작하기", type: .enabled)
     
     override func setStyle() {
+        backgroundColor = .grayscale900
         titleLabel.do {
             $0.attributedText = "QUEST JOURNEY\nSTART!".makeTitle(rangedText: "QUEST JOURNEY")
             $0.textAlignment = .center

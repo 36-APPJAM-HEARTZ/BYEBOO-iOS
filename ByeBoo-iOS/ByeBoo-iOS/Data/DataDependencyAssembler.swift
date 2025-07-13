@@ -13,9 +13,6 @@ struct DataDependencyAssembler: DependencyAssembler {
     private let userDefaultService: UserDefaultService = DefaultUserDefaultService()
     
     func assemble() {
-        DIContainer.shared.register(type: TestInterface.self) { _ in
-            return DefaultTestRepository(network: networkService, keychain: keychainService)
-        }
         
         DIContainer.shared.register(type: UsersInterface.self) { _ in
             return DefaultUsersRepository(network: networkService, userDefatulsService: userDefaultService)
