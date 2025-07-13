@@ -12,7 +12,7 @@ import Lottie
 final class HomeView: BaseView {
 
     private let backgroundImageView = LottieAnimationView(name: "Bori_home8")
-    private let headerView = HomeHeaderView(state: .beforeQuest)
+    let headerView = HomeHeaderView(state: .beforeQuest)
     
     override func setStyle() {
         backgroundImageView.do {
@@ -38,5 +38,11 @@ final class HomeView: BaseView {
             $0.top.equalToSuperview()
             $0.horizontalEdges.equalToSuperview()
         }
+    }
+}
+
+extension HomeView {
+    func updateOnboardingText(_ text: String) {
+        headerView.textBox.text = text
     }
 }
