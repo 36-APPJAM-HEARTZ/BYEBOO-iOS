@@ -30,11 +30,23 @@ final class QuestCheckViewController: BaseViewController {
         view = questsCheckView
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.isHidden = true
+        self.tabBarController?.tabBar.isHidden = true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         bind()
         viewModel.action(.handleStartQuestButtonDidTap)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.navigationBar.isHidden = false
+        self.tabBarController?.tabBar.isHidden = false
     }
     
     override func setDelegate() {
@@ -60,6 +72,7 @@ final class QuestCheckViewController: BaseViewController {
                 case .success(let questsEntity):
                     self.questsEntity = questsEntity
                     self.questsCheckView.questCheckHeaderView.updatePeriod(questsEntity.progressPeriod)
+                    self.questsCheckView.questCheckHeaderView.updateHeader(nickname: "파카", journeyType: .face)
                     self.questsCheckView.questCollectionView.reloadData()
                     guard let step = questsEntity.steps.first else { return }
                     if questsEntity.currentStep > step.quests.count {
@@ -81,8 +94,18 @@ final class QuestCheckViewController: BaseViewController {
                 where: {
                     $0.questNumber == questsEntity.currentStep
                 }) {
-                let indexPath = IndexPath(item: questIndex, section: sectionIndex)
-                questsCheckView.questCollectionView.scrollToItem(at: indexPath, at: .top, animated: true)
+                let indexPath = IndexPath(item: 0, section: sectionIndex)
+                
+                if let attributes = questsCheckView.questCollectionView.layoutAttributesForSupplementaryElement(
+                    ofKind: UICollectionView.elementKindSectionHeader,
+                    at: indexPath
+                ) {
+                    let offsetY = attributes.frame.origin.y - questsCheckView.questCollectionView.contentInset.top
+                    questsCheckView.questCollectionView.setContentOffset(
+                        CGPoint(x: 0, y: offsetY.adjustedH),
+                        animated: true
+                    )
+                }
                 return
             }
         }

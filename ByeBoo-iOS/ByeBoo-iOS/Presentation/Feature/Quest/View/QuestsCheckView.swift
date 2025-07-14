@@ -33,7 +33,6 @@ final class QuestsCheckView: BaseView {
         questCheckHeaderView.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.leading.trailing.equalToSuperview()
-            $0.height.equalTo(129.adjustedH)
         }
         questCollectionView.snp.makeConstraints {
             $0.top.equalTo(questCheckHeaderView.snp.bottom)
