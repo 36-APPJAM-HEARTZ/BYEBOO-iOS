@@ -8,5 +8,5 @@
 import Foundation
 
 protocol GetProgressingQuestsInterface {
-    func fetchProgressingQuests() async throws -> ProgressingQuestsEntity
+    func fetchProgressingQuests(userID: Int) async throws -> ProgressingQuestsEntity
 }

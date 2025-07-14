@@ -12,6 +12,8 @@ import SnapKit
 
 final class QuestCheckViewController: BaseViewController {
     
+    private var isStartedQuset = false
+    
     let questsCheckView = QuestsCheckView()
     private let viewModel: QuestsViewModel
     private var cancellable = Set<AnyCancellable>()
@@ -33,24 +35,11 @@ final class QuestCheckViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
         
-        // state가 before journey인 경우
-        // 요거 viewDidLoad말고 다른 곳에서 해주어야 함 !!!!!!
-//        guard let startViewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {
-//            ByeBooLogger.error(ByeBooError.DIFailedError)
-//            fatalError()
-//        }
-//        
-//        let viewController = QuestStartViewController(viewModel: startViewModel)
-//        viewController.modalPresentationStyle = .fullScreen
-//        self.present(viewController, animated: false)
+        isStartedQuset = false
         
         bind()
-        viewModel.action(.handleStartQuestButtonDidTap)
+        viewModel.action(.questViewWillAppear)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -76,31 +65,63 @@ final class QuestCheckViewController: BaseViewController {
     }
     
     private func bind() {
-        viewModel.output.questsPublisher
-            .sink { result in
-                switch result {
-                case .success(let questsEntity):
-                    self.questsEntity = questsEntity
-                    self.questsCheckView.questCheckHeaderView.updatePeriod(questsEntity.progressPeriod)
-                    self.questsCheckView.questCheckHeaderView.updateHeader(nickname: "파카", journeyType: .face)
-                    self.questsCheckView.questCollectionView.reloadData()
-                    guard let step = questsEntity.steps.first else { return }
-                    if questsEntity.currentStep > step.quests.count {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                            self.scrollToCurrentStep()
-                        }
+        cancellable.forEach { $0.cancel() }
+        cancellable.removeAll()
+        
+        Publishers.CombineLatest3(
+            viewModel.output.namePublisher,
+            viewModel.output.journeyPublisher,
+            viewModel.output.questsPublisher
+        )
+        .receive(on: DispatchQueue.main)
+        .sink { name, journey, quests in
+            switch (name, journey, quests) {
+            case let (.success(name), .success(journey), .success(quests)):
+                self.isStartedQuset = false
+                self.questsCheckView.questCheckHeaderView.updateHeader(
+                    nickname: name,
+                    journey: journey.title
+                )
+                self.questsEntity = quests
+                self.questsCheckView.questCheckHeaderView.updatePeriod(quests.progressPeriod)
+                self.questsCheckView.questCollectionView.reloadData()
+                
+                guard let step = quests.steps.first else { return }
+                if quests.currentStep > step.quests.count {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        self.scrollToCurrentStep()
                     }
-                case .failure:
-                    break
                 }
+                ByeBooLogger.error(ByeBooError.unknownError)
+                
+            case (.success(_), .success(_), .failure(_)):
+                guard !self.isStartedQuset else { return }
+                self.isStartedQuset = true
+                
+                guard let startViewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {
+                    ByeBooLogger.error(ByeBooError.DIFailedError)
+                    fatalError()
+                }
+                
+                let viewController = QuestStartViewController(viewModel: startViewModel)
+                viewController.modalPresentationStyle = .fullScreen
+                viewController.onStartedQuest = { [weak self] in
+                    self?.viewModel.action(.questViewWillAppear)
+                    self?.bind()
+                }
+                self.present(viewController, animated: false)
+                
+            default:
+                ByeBooLogger.error(ByeBooError.unknownError)
             }
-            .store(in: &cancellable)
+        }
+        .store(in: &cancellable)
     }
     
     private func scrollToCurrentStep() {
         guard let questsEntity = questsEntity else { return }
         for (sectionIndex, step) in questsEntity.steps.enumerated() {
-            if let questIndex = step.quests.firstIndex(
+            if let _ = step.quests.firstIndex(
                 where: {
                     $0.questNumber == questsEntity.currentStep
                 }) {

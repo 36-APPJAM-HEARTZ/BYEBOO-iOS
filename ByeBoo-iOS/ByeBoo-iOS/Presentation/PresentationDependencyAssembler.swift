@@ -117,7 +117,9 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             
             return QuestsViewModel(
                 progressingQuestsUseCase: progressingQuestsUseCase,
-                getUserIDUseCase: getUserIDUseCase
+                getUserIDUseCase: getUserIDUseCase,
+                getUserNameUseCase: getUserNameUseCase,
+                fetchUserJourneyUseCase: fetchUserJourneyUseCase
             )
         }
     }

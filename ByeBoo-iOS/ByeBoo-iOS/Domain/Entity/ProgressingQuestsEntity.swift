@@ -8,7 +8,7 @@
 import Foundation
 
 struct ProgressingQuestsEntity {
-    let progressPeriod: String
+    let progressPeriod: Int
     let currentStep: Int
     let steps: [StepEntity]
 }
@@ -22,6 +22,7 @@ struct StepEntity {
 struct QuestEntity {
     let questId: Int
     let question: String
+    let questStyle: String
     let questNumber: Int
 }
 
@@ -29,7 +30,7 @@ extension ProgressingQuestsEntity {
     
     static func stub() -> Self {
         return .init(
-            progressPeriod: "1",
+            progressPeriod: 1,
             currentStep: 1,
             steps: [StepEntity.stub()]
         )
@@ -53,6 +54,7 @@ extension QuestEntity {
         return .init(
             questId: 31,
             question: "무슨 일이 있었나요?",
+            questStyle: "RECORDING",
             questNumber: 1
         )
     }

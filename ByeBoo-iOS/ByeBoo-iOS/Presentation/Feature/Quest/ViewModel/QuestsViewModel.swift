@@ -10,56 +10,89 @@ import Combine
 final class QuestsViewModel: ViewModelType {
     
     private let cancellables = Set<AnyCancellable>()
+    private let nameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>.init()
+    private let journeySubject = PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never>.init()
     private let questsSubject = PassthroughSubject<Result<ProgressingQuestsEntity, ByeBooError>, Never>.init()
     private(set) var output: Output
     
     private let progressingQuestsUseCase: GetProgressingQuestsUseCase
     private let getUserIDUseCase: GetUserIDUseCase
+    private let getUserNameUseCase: GetUserNameUseCase
+    private let fetchUserJourneyUseCase: FetchUserJourneyUseCase
     
     init(
         progressingQuestsUseCase: GetProgressingQuestsUseCase,
-        getUserIDUseCase: GetUserIDUseCase
+        getUserIDUseCase: GetUserIDUseCase,
+        getUserNameUseCase: GetUserNameUseCase,
+        fetchUserJourneyUseCase: FetchUserJourneyUseCase
     ) {
         self.progressingQuestsUseCase = progressingQuestsUseCase
         self.getUserIDUseCase = getUserIDUseCase
+        self.getUserNameUseCase = getUserNameUseCase
+        self.fetchUserJourneyUseCase = fetchUserJourneyUseCase
         
-        self.output = Output(questsPublisher: questsSubject.eraseToAnyPublisher())
+        self.output = Output(
+            namePublisher: nameSubject.eraseToAnyPublisher(),
+            journeyPublisher: journeySubject.eraseToAnyPublisher(),
+            questsPublisher: questsSubject.eraseToAnyPublisher()
+        )
     }
     
-    private func fetchProgressingQuests() -> ProgressingQuestsEntity {
-        guard let userID = getUserIDUseCase.execute() else {
-            return .stub()
+    private func getUseName() {
+        let name = getUserNameUseCase.execute()
+        nameSubject.send(.success(name))
+    }
+    
+    private func fetchUserJourney() {
+        Task {
+            do {
+                let journeyEntity = try await fetchUserJourneyUseCase.execute()
+                journeySubject.send(.success(journeyEntity))
+            } catch {
+                journeySubject.send(
+                    .failure(
+                        error as? ByeBooError ?? ByeBooError.unknownError
+                    )
+                )
+            }
         }
-        
-        var quests: ProgressingQuestsEntity = .stub()
+    }
+    
+    private func fetchProgressingQuests() {
+        guard let userID = getUserIDUseCase.execute() else {
+            questsSubject.send(.success(.stub()))
+            return
+        }
         
         Task {
             do {
-                quests = try await progressingQuestsUseCase.execute(userID: userID)
-            }
-            catch {
+                let quests = try await progressingQuestsUseCase.execute(userID: userID)
+                questsSubject.send(.success(quests))
+            } catch {
                 questsSubject.send(.failure(error as! ByeBooError))
             }
         }
-        return quests
     }
 }
 
 extension QuestsViewModel {
     
     enum InputAction {
-        case handleStartQuestButtonDidTap
+        case questViewWillAppear
     }
     
     struct Output {
+        let namePublisher: AnyPublisher<Result<String, ByeBooError>, Never>
+        let journeyPublisher: AnyPublisher<Result<JourneyEntity, ByeBooError>, Never>
         let questsPublisher: AnyPublisher<Result<ProgressingQuestsEntity, ByeBooError>, Never>
     }
     
     func action(_ trigger: InputAction) {
         switch trigger {
-        case .handleStartQuestButtonDidTap:
-            let questsEntity = fetchProgressingQuests()
-            questsSubject.send(.success(questsEntity))
+        case .questViewWillAppear:
+            getUseName()
+            fetchUserJourney()
+            fetchProgressingQuests()
         }
     }
 }

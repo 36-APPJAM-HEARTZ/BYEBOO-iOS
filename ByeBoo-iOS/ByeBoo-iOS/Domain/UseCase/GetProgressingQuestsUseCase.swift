@@ -18,6 +18,6 @@ struct DefaultGetProgressingQuestsUseCase: GetProgressingQuestsUseCase {
     }
     
     func execute(userID: Int) async throws -> ProgressingQuestsEntity {
-        return try await repository.fetchProgressingQuests()
+        return try await repository.fetchProgressingQuests(userID: userID)
     }
 }

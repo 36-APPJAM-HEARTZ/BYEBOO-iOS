@@ -20,16 +20,11 @@ struct DefaultGetProgressingQuestsRepository: GetProgressingQuestsInterface {
         self.userDefaultsService = userDefaultsService
     }
     
-    func fetchProgressingQuests() async throws -> ProgressingQuestsEntity {
-        let userID = userDefaultsService.load(key: .userID) ?? 1
+    func fetchProgressingQuests(userID: Int) async throws -> ProgressingQuestsEntity {
         let result = try await network.request(
             QuestAPI.progressingQuests(userID: userID),
             decodingType: ProgressingQuestsResponseDTO.self
         )
         return result.toEntity()
-    }
-    
-    func getUserID() -> Int? {
-        return userDefaultsService.load(key: .userID)
     }
 }
