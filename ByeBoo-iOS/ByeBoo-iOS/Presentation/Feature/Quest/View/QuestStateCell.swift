@@ -112,7 +112,7 @@ final class QuestStateCell: UICollectionViewCell {
         imageView.image = state.image
         
         imageView.tintColor = state == .locked ? .white10 : .clear
-        imageView.snp.remakeConstraints {
+        imageView.snp.makeConstraints {
             $0.center.equalToSuperview()
             if state == .locked {
                 $0.width.height.equalTo(24.adjustedW)

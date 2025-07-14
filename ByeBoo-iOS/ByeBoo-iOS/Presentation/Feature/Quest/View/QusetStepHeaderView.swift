@@ -62,7 +62,6 @@ final class QuestStepHeaderView: UICollectionReusableView {
             $0.top.equalTo(sectionDividerView.snp.bottom).offset(18.adjustedH)
             $0.leading.equalTo(stepLabel.snp.trailing).offset(8.adjustedW)
             $0.trailing.lessThanOrEqualToSuperview()
-            $0.bottom.equalToSuperview().inset(12.adjustedH)
         }
     }
     
