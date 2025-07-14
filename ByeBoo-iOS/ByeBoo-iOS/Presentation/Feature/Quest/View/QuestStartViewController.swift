@@ -6,10 +6,22 @@
 //
 
 import UIKit
+import Combine
 
 final class QuestStartViewController: BaseViewController {
     
+    private let viewModel: QuestStartViewModel
+    private var cancellables = Set<AnyCancellable>()
     private let rootView = QuestStartView(nickname: "하츠핑")
+    
+    init(viewModel: QuestStartViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = rootView
@@ -29,6 +41,7 @@ final class QuestStartViewController: BaseViewController {
             type: .back,
             action: #selector(back)
         )
+        bind()
     }
     
     override func setAddTarget() {
@@ -48,9 +61,23 @@ extension QuestStartViewController: BackNavigable {
 }
 
 extension QuestStartViewController {
-    
     @objc
     func questStartButtonDidTap() {
-        navigationController?.tabBarController?.selectedIndex = 1
+        viewModel.action(.buttonDidTap)
+    }
+    
+    private func bind() {
+        viewModel.output.startResult
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success:
+                    self.navigationController?.tabBarController?.selectedIndex = 1
+                    self.navigationController?.popToRootViewController(animated: true)
+                case .failure(let failure):
+                    ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
     }
 }

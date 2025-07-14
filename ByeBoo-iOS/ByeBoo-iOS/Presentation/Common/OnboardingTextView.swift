@@ -45,3 +45,9 @@ final class OnboardingTextView: BaseView {
         }
     }
 }
+
+extension OnboardingTextView {
+    func updateText(_ text: String) {
+        titleLabel.text = text
+    }
+}

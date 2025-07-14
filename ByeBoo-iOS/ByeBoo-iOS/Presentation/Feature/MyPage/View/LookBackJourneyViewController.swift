@@ -9,7 +9,7 @@ import UIKit
 
 final class LookBackJourneyViewController: BaseViewController {
     
-    private let rootView = LookBackJourneyView(journeyList: [Journey.stub()])
+    private let rootView = LookBackJourneyView(journeyList: [JourneyEntity.stub()])
     
     override func loadView() {
         view = rootView

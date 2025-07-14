@@ -8,7 +8,7 @@
 import UIKit
 
 enum HomeState {
-    case beforeJourneyStart(journey: Journey)
+    case beforeJourneyStart(journey: JourneyEntity)
     case beforeQuest
     case afterQuest
     case afterJourney
@@ -16,7 +16,7 @@ enum HomeState {
     var title: String {
         switch self {
         case .beforeJourneyStart(let journey):
-            "\(journey.title) 시작하기"
+            "\(journey.title) 여정 시작하기"
         case .beforeQuest:
             "오늘의 퀘스트 하러가기"
         case .afterQuest:
@@ -119,5 +119,13 @@ final class HomeStateView: BaseView {
             $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().inset(24.adjustedW)
         }
+    }
+}
+
+extension HomeStateView {
+    func updateState(_ state: HomeState) {
+        layer.borderColor = state.borderColor.cgColor
+        titleLabel.text = state.title
+        descriptionLabel.text = state.description
     }
 }
