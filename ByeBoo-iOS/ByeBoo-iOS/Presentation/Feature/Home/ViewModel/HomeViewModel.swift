@@ -17,6 +17,7 @@ final class HomeViewModel {
     private var countResultSubject = PassthroughSubject<Result<Int, ByeBooError>, Never>()
     private var userResultSubject = PassthroughSubject<Result<String, ByeBooError>, Never>()
     private var homeStateResultSubject = PassthroughSubject<Result<HomeState, ByeBooError>, Never>()
+    private var journeyResultSubject = PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never>()
 
     private let fetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase
     private let fetchCompleteQuestCountUseCase: FetchCompleteQuestCountUseCase
@@ -40,7 +41,8 @@ final class HomeViewModel {
             characterResult: characterResultSubject.eraseToAnyPublisher(),
             countResult: countResultSubject.eraseToAnyPublisher(),
             userResult: userResultSubject.eraseToAnyPublisher(),
-            homeStateResult: homeStateResultSubject.eraseToAnyPublisher()
+            homeStateResult: homeStateResultSubject.eraseToAnyPublisher(),
+            journeyResult: journeyResultSubject.eraseToAnyPublisher()
         )
     }
 }
@@ -55,6 +57,7 @@ extension HomeViewModel: ViewModelType {
         let countResult: AnyPublisher<Result<Int, ByeBooError>, Never>
         let userResult: AnyPublisher<Result<String, ByeBooError>, Never>
         let homeStateResult: AnyPublisher<Result<HomeState, ByeBooError>, Never>
+        let journeyResult: AnyPublisher<Result<JourneyEntity, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
@@ -108,8 +111,14 @@ extension HomeViewModel {
             do {
                 let journey = try await fetchUserJourneyUseCase.execute()
                 homeStateResultSubject.send(.success(.beforeJourneyStart(journey: journey)))
+                journeyResultSubject.send(.success(journey))
             } catch {
                 homeStateResultSubject.send(
+                    .failure(
+                        error as? ByeBooError ?? ByeBooError.unknownError
+                    )
+                )
+                journeyResultSubject.send(
                     .failure(
                         error as? ByeBooError ?? ByeBooError.unknownError
                     )

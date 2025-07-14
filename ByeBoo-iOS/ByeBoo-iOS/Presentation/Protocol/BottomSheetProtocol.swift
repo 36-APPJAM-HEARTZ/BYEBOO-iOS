@@ -8,5 +8,6 @@
 import Foundation
 
 protocol BottomSheetProtocol: AnyObject {
+    func saveEmotionState(emotionState: ByeBooEmotion)
     func presentNextViewController(from previousView: PreviousView)
 }

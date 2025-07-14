@@ -33,11 +33,21 @@ final class QuestCheckViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
-        self.tabBarController?.tabBar.isHidden = true
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // state가 before journey인 경우
+        // 요거 viewDidLoad말고 다른 곳에서 해주어야 함 !!!!!!
+//        guard let startViewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {
+//            ByeBooLogger.error(ByeBooError.DIFailedError)
+//            fatalError()
+//        }
+//        
+//        let viewController = QuestStartViewController(viewModel: startViewModel)
+//        viewController.modalPresentationStyle = .fullScreen
+//        self.present(viewController, animated: false)
         
         bind()
         viewModel.action(.handleStartQuestButtonDidTap)

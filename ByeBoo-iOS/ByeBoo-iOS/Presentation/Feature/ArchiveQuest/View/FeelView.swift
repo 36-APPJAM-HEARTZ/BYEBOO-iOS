@@ -21,7 +21,11 @@ final class FeelView: BaseView {
         self.emotionType = emotionType
         self.descriptionText = descriptionText
         
-        descriptionView = TextBoxView(title: descriptionText, emotionType: .neutral)
+        descriptionView = TextBoxView(
+            title: descriptionText,
+            emotionType: ByeBooEmotion.toEmotion(text: emotionType)
+        )
+        
         super.init(frame: .zero)
     }
     

@@ -42,22 +42,24 @@ final class EmotionBottomSheetViewController: BaseViewController {
         chip.emotionTag.isSelected = true
         selectedChip = chip
         
-        let emotion = chip.emotionType.emotionText
+        let emotion = chip.emotionType
         chip.emotionTag.toggleTagType()
         rootView.confirmButton.updateType(.enabled)
-        
         ByeBooLogger.debug("터치된 감정: \(emotion)")
     }
     
     @objc
     private func confirmButtonDidTap() {
         ByeBooLogger.debug("컨펌 버튼 터치됨")
-        if let previousView = previousView {
-            ByeBooLogger.debug(previousView)
-            
-            self.dismiss(animated: true) {
-                self.delegate?.presentNextViewController(from: previousView)
-            }
+        guard let previousView = previousView else { return }
+        guard let selectedEmotion = selectedChip?.emotionType else {
+            ByeBooLogger.debug("감정 선택 안됨")
+            return
+        }
+        
+        self.dismiss(animated: true) {
+            self.delegate?.saveEmotionState(emotionState: selectedEmotion)
+            self.delegate?.presentNextViewController(from: previousView)
         }
     }
 }
