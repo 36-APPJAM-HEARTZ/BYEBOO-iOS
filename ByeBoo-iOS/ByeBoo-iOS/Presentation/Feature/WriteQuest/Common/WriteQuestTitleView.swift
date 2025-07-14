@@ -49,6 +49,7 @@ final class WriteQuestTitleView: BaseView {
         stepNum.do {
             $0.font = FontManager.cap1M12.font
             $0.textColor = .grayscale300
+            $0.textAlignment = .center
         }
         
         stepTitle.do {
