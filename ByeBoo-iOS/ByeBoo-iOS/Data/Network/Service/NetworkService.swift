@@ -52,13 +52,14 @@ struct DefaultNetworkService: NetworkService {
                         
                         if statusCode == 404 {
                             error = ByeBooError.notFoundQuest
+                        } else if statusCode == 400 {
+                            error = ByeBooError.beforeJourney
                         } else {
                             error = ByeBooError.networkError(
                                 code: statusCode,
                                 message: errorResponse.message
                             )
                         }
-                        
                         
                         ByeBooLogger.error(error)
                         continuation.resume(throwing: error)
@@ -126,6 +127,8 @@ struct DefaultNetworkService: NetworkService {
         
         if statusCode == 404 {
             error = ByeBooError.notFoundQuest
+        } else if statusCode == 400 {
+            error = ByeBooError.beforeJourney
         } else {
             error = ByeBooError.networkError(
                 code: statusCode,
