@@ -44,12 +44,14 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: WriteActiveTypeViewModel.self) { container in
             guard let getQuestInfoUseCase = container.resolve(type: GetQuestInfoUseCase.self),
+                  let saveActiveTypeUseCase = container.resolve(type: SaveQuestActiveUseCase.self),
                 let saveQuestTypeUseCase = container.resolve(type: SaveQuestTypeUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             return WriteActiveTypeViewModel(
                 saveQuestTypeUseCase: saveQuestTypeUseCase,
+                saveActiveTypeUseCase: saveActiveTypeUseCase,
                 getQuestInfoUseCase: getQuestInfoUseCase
             )
         }
