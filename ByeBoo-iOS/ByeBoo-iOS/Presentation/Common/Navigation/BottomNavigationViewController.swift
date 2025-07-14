@@ -7,9 +7,14 @@
 
 import UIKit
 
+
+
 final class BottomNavigationViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = .grayscale900
+        
         setViewController()
         setViewControllerAppearance()
     }
@@ -31,7 +36,6 @@ final class BottomNavigationViewController: UITabBarController {
             createViewController(for: QuestCheckViewController(viewModel: questViewModel), title: "퀘스트", imageName: .questOff),
             createViewController(for: MyPageViewController(), title: "내 정보", imageName: .userOff)
         ]
-        setViewControllers(viewControllers, animated: true)
     }
     
     private func setViewControllerAppearance() {

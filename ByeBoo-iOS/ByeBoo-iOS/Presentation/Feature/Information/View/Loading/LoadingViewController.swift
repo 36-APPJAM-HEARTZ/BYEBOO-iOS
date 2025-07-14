@@ -32,8 +32,8 @@ final class LoadingViewController: BaseViewController {
             }
             
             let resultViewController = JourneyResultViewController(viewModel: viewModel)
-            self.navigationController?.pushViewController(resultViewController, animated: true)
             self.navigationController?.navigationBar.isHidden = true
+            self.navigationController?.pushViewController(resultViewController, animated: true)
         }
     }
 }
