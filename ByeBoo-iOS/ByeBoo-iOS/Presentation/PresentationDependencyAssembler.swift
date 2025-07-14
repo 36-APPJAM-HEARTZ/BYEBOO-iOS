@@ -17,19 +17,15 @@ struct PresentationDependencyAssembler: DependencyAssembler {
     func assemble() {
         preAssembler.assemble()
         
-        guard let getUserNameUseCase = DIContainer.shared.resolve(type: GetUserNameUseCase.self) else {
+        guard let getUserNameUseCase = DIContainer.shared.resolve(type: GetUserNameUseCase.self),
+              let fetchUserJourneyUseCase = DIContainer.shared.resolve(type: FetchUserJourneyUseCase.self) else {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             return
         }
         
-        DIContainer.shared.register(type: JourneyResultViewModel.self) { container in
-            guard let fetchUserUseCase = container.resolve(type: FetchUserJourneyUseCase.self) else {
-                ByeBooLogger.error(ByeBooError.DIFailedError)
-                return
-            }
-            
+        DIContainer.shared.register(type: JourneyResultViewModel.self) { _ in
             return JourneyResultViewModel(
-                fetchUserJourneyUseCase: fetchUserUseCase,
+                fetchUserJourneyUseCase: fetchUserJourneyUseCase,
                 getUserNameUseCase: getUserNameUseCase
             )
         }
@@ -57,6 +53,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             return HomeViewModel(
                 fetchCharacterDialogueUseCase: characterUseCase,
                 fetchCompleteQuestCountUseCase: countUseCase,
+                fetchUserJourneyUseCase: fetchUserJourneyUseCase,
                 getUserNameUseCase: getUserNameUseCase
             )
         }

@@ -15,20 +15,25 @@ final class HomeViewModel {
     private(set) var output: Output
     private var characterResultSubject = PassthroughSubject<Result<String, ByeBooError>, Never>()
     private var countResultSubject = PassthroughSubject<Result<Int, ByeBooError>, Never>()
-    private var userResultSubject: PassthroughSubject<Result<String, ByeBooError>, Never> = .init()
-    private var homeStateResultSubject: PassthroughSubject<Result<HomeState, ByeBooError>, Never> = .init()
+    private var userResultSubject = PassthroughSubject<Result<String, ByeBooError>, Never>()
+    private var homeStateResultSubject = PassthroughSubject<Result<HomeState, ByeBooError>, Never>()
 
     private let fetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase
     private let fetchCompleteQuestCountUseCase: FetchCompleteQuestCountUseCase
+    private let fetchUserJourneyUseCase: FetchUserJourneyUseCase
     private let getUserNameUseCase: GetUserNameUseCase
+    
+    private var homeSate: HomeState = .beforeJourneyStart(journey: .stub())
     
     init(
         fetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase,
         fetchCompleteQuestCountUseCase: FetchCompleteQuestCountUseCase,
+        fetchUserJourneyUseCase: FetchUserJourneyUseCase,
         getUserNameUseCase: GetUserNameUseCase
     ) {
         self.fetchCharacterDialogueUseCase = fetchCharacterDialogueUseCase
         self.fetchCompleteQuestCountUseCase = fetchCompleteQuestCountUseCase
+        self.fetchUserJourneyUseCase = fetchUserJourneyUseCase
         self.getUserNameUseCase = getUserNameUseCase
         
         output = Output(
@@ -42,7 +47,7 @@ final class HomeViewModel {
 
 extension HomeViewModel: ViewModelType {
     enum Input {
-        case viewDidLoad
+        case viewWillAppear
     }
     
     struct Output {
@@ -54,7 +59,7 @@ extension HomeViewModel: ViewModelType {
     
     func action(_ trigger: Input) {
         switch trigger {
-        case .viewDidLoad:
+        case .viewWillAppear:
             // TODO: 구조적 동시성 반영
             fetchDialogue()
             fetchCount()
@@ -89,14 +94,26 @@ extension HomeViewModel {
                 if let error = error as? ByeBooError {
                     switch error {
                     case .notFoundQuest:
-                        countResultSubject.send(.success(0))
-                        // TODO: 서버한테 여정 달라고 하기
-                        homeStateResultSubject.send(.success(.beforeJourneyStart(journey: .stub())))
+                        fetchJourney()
                     default:
                         countResultSubject.send(.failure(error))
                     }
                 }
-                
+            }
+        }
+    }
+    
+    private func fetchJourney() {
+        Task {
+            do {
+                let journey = try await fetchUserJourneyUseCase.execute()
+                homeStateResultSubject.send(.success(.beforeJourneyStart(journey: journey)))
+            } catch {
+                homeStateResultSubject.send(
+                    .failure(
+                        error as? ByeBooError ?? ByeBooError.unknownError
+                    )
+                )
             }
         }
     }
