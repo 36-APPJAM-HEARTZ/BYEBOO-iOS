@@ -29,6 +29,24 @@ enum JourneyType {
         }
     }
     
+    var frontImage: UIImage {
+        switch self {
+        case .face:
+                .faceFront
+        case .process:
+                .processFront
+        }
+    }
+    
+    var backImage: UIImage {
+        switch self {
+        case .face:
+                .faceBack
+        case .process:
+                .processBack
+        }
+    }
+    
     init(text: String) {
         switch text {
         case "감정 직면":
