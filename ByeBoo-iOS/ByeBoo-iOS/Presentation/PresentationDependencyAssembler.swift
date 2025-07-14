@@ -106,5 +106,17 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 fetchJourneyUseCase: fetchUserJourneyUseCase
             )
         }
+        
+        DIContainer.shared.register(type: QuestTipViewModel.self) { container in
+            guard let questTipUseCase = container.resolve(type: QuestTipUseCase.self)
+            else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return QuestTipViewModel(
+                useCase: questTipUseCase
+            )
+        }
     }
 }
