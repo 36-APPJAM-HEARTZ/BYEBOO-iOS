@@ -71,7 +71,7 @@ final class QuestStartView: BaseView {
             $0.size.equalTo(24.adjustedW)
         }
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(backButton.snp.bottom).inset(67.adjustedH)
+            $0.top.equalTo(backButton.snp.bottom).offset(67.adjustedH) 
             $0.centerX.equalToSuperview()
         }
         cloverImageView.snp.makeConstraints {
