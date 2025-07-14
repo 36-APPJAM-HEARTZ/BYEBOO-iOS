@@ -115,7 +115,7 @@ extension HomeOnboardingView {
     }
     
     func startPressAnimation() {
-        UIView.animate(withDuration: 1.5) {
+        UIView.animate(withDuration: 1) {
             self.foregroundView.alpha = 1
         }
     }
