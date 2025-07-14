@@ -20,11 +20,11 @@ final class JourneyListView: BaseView {
     private let prepareTitleLabel = UILabel()
     
     private let isFinished: Bool
-    private let journeyList: [Journey]
+    private let journeyList: [JourneyEntity]
     
     init(
         isFinished: Bool,
-        journeyList: [Journey]
+        journeyList: [JourneyEntity]
     ) {
         self.isFinished = isFinished
         self.journeyList = journeyList
@@ -94,7 +94,7 @@ final class JourneyListView: BaseView {
                 // TODO: 칩 컴포넌트 바꾸기
                 let journeyView = OneLineTextBoxView(
                     title: journey.title,
-                    tagTitle: journey.type,
+                    tagTitle: journey.title,
                     tagType: isFinished ? .word3Gray : .word3Purple,
                     isHighlighted: !isFinished
                 )

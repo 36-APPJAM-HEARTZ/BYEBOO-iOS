@@ -8,7 +8,7 @@
 import UIKit
 
 enum HomeState {
-    case beforeJourneyStart(journey: Journey)
+    case beforeJourneyStart(journey: JourneyEntity)
     case beforeQuest
     case afterQuest
     case afterJourney

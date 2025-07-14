@@ -9,7 +9,7 @@ import UIKit
 
 final class NewJourneySelectViewController: BaseViewController {
     
-    private let rootView = NewJourneySelectView(unCompleteJourneyList: [Journey.stub()], completeJourneyList: [Journey.stub()])
+    private let rootView = NewJourneySelectView(unCompleteJourneyList: [JourneyEntity.stub()], completeJourneyList: [JourneyEntity.stub()])
     
     override func loadView() {
         view = rootView
