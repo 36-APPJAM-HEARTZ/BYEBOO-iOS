@@ -15,7 +15,7 @@ final class QuestCheckViewController: BaseViewController {
     let questsCheckView = QuestsCheckView()
     private let viewModel: QuestsViewModel
     private var cancellable = Set<AnyCancellable>()
-    private var questsEntity: QuestsEntity?
+    private var questsEntity: ProgressingQuestsEntity?
     
     init(viewModel: QuestsViewModel) {
         self.viewModel = viewModel
@@ -152,7 +152,7 @@ extension QuestCheckViewController: UICollectionViewDataSource {
             state = .locked
         }
         
-        cell.dataBind(state: state, questNumber: quest.questNumber)
+        cell.bind(state: state, questNumber: quest.questNumber)
         return cell
     }
     

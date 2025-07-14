@@ -16,6 +16,7 @@ enum QuestAPI {
     case images(userID: Int)
     case tip(userID: Int, questID: Int)
     case answer(userID: Int, questID: Int)
+    case progressingQuests(userID: Int)
 }
 
 extension QuestAPI: EndPoint {
@@ -38,6 +39,8 @@ extension QuestAPI: EndPoint {
             return "/\(questID)/tip"
         case .answer(_, let questID):
             return "/answer/\(questID)"
+        case .progressingQuests:
+            return "/all/progress"
         }
     }
     

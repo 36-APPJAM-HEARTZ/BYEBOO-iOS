@@ -29,5 +29,13 @@ struct DataDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: QuestAnswerInterface.self) { _ in
             return DefaultQuestAnswerRepository(network: networkService, userDefaultService: userDefaultService)
         }
+        }
+        
+        DIContainer.shared.register(type: GetProgressingQuestsInterface.self) { _ in
+            return DefaultGetProgressingQuestsRepository(
+                network: networkService,
+                userDefaultsService: userDefaultService
+            )
+        }
     }
 }

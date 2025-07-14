@@ -76,11 +76,19 @@ struct DefaultUsersRepository: UsersInterface {
     func getUserName() -> String? {
         userDefaultsService.load(key: .userName)
     }
+    
+    func getUserID() -> Int? {
+        userDefaultsService.load(key: .userID)
+    }
 }
 
 struct MockUserRepository: UsersInterface {
     func getUserName() -> String? {
         "하츠핑"
+    }
+    
+    func getUserID() -> Int? {
+        1
     }
     
     func fetchJourney() async throws -> JourneyEntity {
