@@ -102,12 +102,23 @@ extension HomeViewController {
             }
             .store(in: &cancellables)
         
-        Publishers.CombineLatest(viewModel.output.countResult, viewModel.output.userResult)
+        Publishers.CombineLatest3(
+            viewModel.output.countResult,
+            viewModel.output.userResult,
+            viewModel.output.journeyResult
+        )
             .receive(on: DispatchQueue.main)
-            .sink { count, name in
-                switch (count, name) {
-                case let (.success(count), .success(name)):
-                    self.rootView.updateProgressView(name, count)
+            .sink {
+                count,
+                name,
+                journey in
+                switch (count, name, journey) {
+                case let (.success(count), .success(name), .success(journey)):
+                    self.rootView.updateProgressView(
+                        name: name,
+                        progress: count,
+                        journey: journey.title
+                    )
                 default:
                     ByeBooLogger.error(ByeBooError.noData)
                 }
