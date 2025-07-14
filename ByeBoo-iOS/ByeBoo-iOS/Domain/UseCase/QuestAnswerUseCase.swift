@@ -19,6 +19,6 @@ struct DefaultQuestAnswerUseCase: QuestAnswerUseCase {
     }
     
     func execute(questID: Int) async throws -> QuestAnswerEntity {
-        return try await questAnswerRepository.execute(questID: questID)
+        return try await questAnswerRepository.fetchQuestAnswer(questID: questID)
     }
 }
