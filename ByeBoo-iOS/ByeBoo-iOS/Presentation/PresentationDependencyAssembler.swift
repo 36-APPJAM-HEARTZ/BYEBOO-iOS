@@ -74,7 +74,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             }
             
             return CompleteQuestViewModel(
-                useCase: questAnswerUseCase
+                questAnswerCase: questAnswerUseCase
             )
         }
     }

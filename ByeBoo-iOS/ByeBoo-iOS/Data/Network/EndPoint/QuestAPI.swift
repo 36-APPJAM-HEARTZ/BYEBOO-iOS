@@ -15,6 +15,7 @@ enum QuestAPI {
     case active(userID: Int, questID: Int)
     case images(userID: Int)
     case tip(userID: Int, questID: Int)
+    case answer(userID: Int, questID: Int)
 }
 
 extension QuestAPI: EndPoint {
@@ -35,12 +36,14 @@ extension QuestAPI: EndPoint {
             return "/images/signed-url"
         case .tip(_, let questID):
             return "/\(questID)/tip"
+        case .answer(_, let questID):
+            return "/answer/\(questID)"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .checkQuest, .tip:
+        case .checkQuest, .tip, .answer:
             return .get
         case .recording, .active, .images:
             return .post
@@ -53,14 +56,15 @@ extension QuestAPI: EndPoint {
             let .recording(userID, _, _),
             let .active(userID, _),
             let .tip(userID, _),
-            let .images(userID):
+            let .images(userID),
+            let .answer(userID, _):
             return .withAuth(userID: userID)
         }
     }
     
     var parameterEncoding: any ParameterEncoding {
         switch self {
-        case .checkQuest, .tip:
+        case .checkQuest, .tip, .answer:
             return URLEncoding.default
         case .recording, .active, .images:
             return JSONEncoding.default
@@ -68,25 +72,14 @@ extension QuestAPI: EndPoint {
     }
     
     var queryParameters: [String : String]? {
-        switch self {
-        case let .checkQuest(_, questID):
-            return ["questID": "\(questID)"]
-        case let .recording(_, _, questID):
-            return ["questID": "\(questID)"]
-        case let .active(_, questID):
-            return ["questID": "\(questID)"]
-        case let .tip(_, questID):
-            return ["questID": "\(questID)"]
-        case .images:
-            return nil
-        }
+        return nil
     }
     
     var bodyParameters: Parameters? {
         switch self {
         case .recording(_, _, let dto):
             return try? dto.toDictionary()
-        case .checkQuest, .active, .tip, .images:
+        case .checkQuest, .active, .tip, .images, .answer:
             return nil
         }
     }
