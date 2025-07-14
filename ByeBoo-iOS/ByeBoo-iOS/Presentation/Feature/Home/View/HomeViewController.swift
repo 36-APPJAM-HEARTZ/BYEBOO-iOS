@@ -120,7 +120,7 @@ extension HomeViewController {
                         journey: journey.title
                     )
                 default:
-                    ByeBooLogger.error(ByeBooError.noData)
+                    ByeBooLogger.error(ByeBooError.unknownError)
                 }
             }
             .store(in: &cancellables)
