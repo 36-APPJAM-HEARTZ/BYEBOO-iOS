@@ -60,5 +60,15 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 getUserNameUseCase: getUserNameUseCase
             )
         }
+        
+        DIContainer.shared.register(type: QuestStartViewModel.self) { container in
+            guard let startJourneyUseCase = container.resolve(type: StartJourneyUseCase.self)
+            else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return QuestStartViewModel(startJourneyUseCase: startJourneyUseCase)
+        }
     }
 }

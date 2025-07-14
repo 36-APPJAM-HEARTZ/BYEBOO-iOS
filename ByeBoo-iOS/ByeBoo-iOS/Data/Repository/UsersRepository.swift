@@ -66,6 +66,11 @@ struct DefaultUsersRepository: UsersInterface {
         return result.count
     }
     
+    func startJourney() async throws {
+        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
+        try await network.request(UsersAPI.start(userID: userID))
+    }
+    
     // MARK: Persistence
     
     func getUserName() -> String? {
@@ -101,6 +106,8 @@ struct MockUserRepository: UsersInterface {
     func fetchCompleteQuestCount() async throws -> Int {
         return 1
     }
+    
+    func startJourney() async throws { }
 }
 
 

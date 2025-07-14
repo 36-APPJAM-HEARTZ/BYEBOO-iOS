@@ -41,5 +41,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: FetchCompleteQuestCountUseCase.self) { _ in
             return DefaultFetchCompleteQuestCountUseCase(repository: userRepository)
         }
+        
+        DIContainer.shared.register(type: StartJourneyUseCase.self) { _ in
+            return DefaultStartJourneyUseCase(repository: userRepository)
+        }
     }
 }

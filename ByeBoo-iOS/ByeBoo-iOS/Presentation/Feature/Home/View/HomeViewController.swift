@@ -53,10 +53,14 @@ final class HomeViewController: BaseViewController {
 extension HomeViewController {
     @objc
     private func headerDidTap() {
+        guard let viewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            fatalError()
+        }
         
         switch state {
         case .beforeJourneyStart:
-            let viewController = QuestStartViewController()
+            let viewController = QuestStartViewController(viewModel: viewModel)
             viewController.hidesBottomBarWhenPushed = true
             viewController.navigationItem.hidesBackButton = true
             navigationController?.pushViewController(viewController, animated: false)
@@ -88,7 +92,6 @@ extension HomeViewController {
                 switch result {
                 case .success(let count):
                     self.rootView.updateProgress(count)
-                    self.state = .beforeQuest
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }
@@ -113,6 +116,7 @@ extension HomeViewController {
                 switch result {
                 case .success(let state):
                     self.rootView.updateState(state)
+                    self.state = state
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }
