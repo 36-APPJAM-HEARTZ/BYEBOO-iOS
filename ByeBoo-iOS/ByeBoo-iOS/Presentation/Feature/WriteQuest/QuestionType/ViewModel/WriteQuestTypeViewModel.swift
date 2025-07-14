@@ -38,7 +38,7 @@ struct WriteQuestionTypeViewModel: ViewModelType {
 extension WriteQuestionTypeViewModel {
     enum Input {
         case viewDidLoad(quesetID: Int)
-        case didTapCompleteButton(questID: Int, answer: String, emotionState: String)
+        case presentCompleteView(questID: Int, answer: String, emotionState: String)
     }
     
     struct Output {
@@ -50,7 +50,7 @@ extension WriteQuestionTypeViewModel {
         switch trigger {
         case .viewDidLoad(let questID):
             getQuestInfo(questID: questID)
-        case .didTapCompleteButton(
+        case .presentCompleteView(
             let questID,
             let answer,
             let emotionState
@@ -64,7 +64,7 @@ extension WriteQuestionTypeViewModel {
     private func getQuestInfo(questID: Int) {
         Task {
             do {
-                let questInfo = try await getQuestInfoUseCase.execute(questID: 1)
+                let questInfo = try await getQuestInfoUseCase.execute(questID: 31)
                 questInfoResultSubject.send(.success(questInfo))
             } catch {
                 guard let error = error as? ByeBooError else {
@@ -78,9 +78,8 @@ extension WriteQuestionTypeViewModel {
     private func postQuestType(questID: Int, answer: String, emotionState: String) {
         Task {
             do {
-                try await saveQuestTypeUseCase.execute(questID: 1, answer: answer, emotionState: emotionState)
+                let _ = try await saveQuestTypeUseCase.execute(questID: 31, answer: answer, emotionState: emotionState)
                 didSuccessPostSubject.send(.success(()))
-                ByeBooLogger.debug("네트워크 호출 성공")
             } catch {
                 guard let error = error as? ByeBooError else {
                     return

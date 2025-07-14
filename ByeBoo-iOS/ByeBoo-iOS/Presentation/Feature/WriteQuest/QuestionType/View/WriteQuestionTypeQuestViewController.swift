@@ -82,8 +82,6 @@ extension WriteQuestionTypeQuestViewController {
     private func confirmButtonDidTap() {
         answerText = rootView.questTextField.textView.text ?? ""
         
-        viewModel.action(.didTapCompleteButton(questID: 1, answer: answerText, emotionState: emotionState))
-        
         let viewController = EmotionBottomSheetViewController()
         viewController.previousView = .question
         viewController.delegate = self
@@ -147,6 +145,10 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             fatalError()
         }
+        
+        ByeBooLogger.debug("text: \(answerText)")
+        ByeBooLogger.debug("emtionState: \(emotionState)")
+        self.viewModel.action(.presentCompleteView(questID: 31, answer: answerText, emotionState: emotionState))
         
         let viewController = CompleteQuestionTypeQuestViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(viewController, animated: true)
