@@ -15,7 +15,9 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     
     let questID: Int = 0
+    private var answerText: String = ""
     private var emotionState: String = ""
+    private var image: UIImage = UIImage()
     
     override func loadView() {
         view = rootView
@@ -94,6 +96,8 @@ extension WriteActiveTypeQuestViewController {
     
     @objc
     private func confirmButtonDidTap() {
+        answerText = rootView.questTextField.textView.text ?? ""
+        
         let viewController = EmotionBottomSheetViewController()
         viewController.previousView = .activation
         viewController.delegate = self
@@ -179,6 +183,7 @@ extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, U
             rootView.imgCount = 1
             rootView.updateImageCountLabel(count: rootView.imgCount)
             rootView.changeStyle(count: rootView.imgCount)
+            self.image = image
         }
         dismiss(animated: true, completion: nil)
     }
@@ -194,6 +199,11 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             fatalError()
         }
+        
+        let uuidKey = UUID().uuidString
+        ByeBooLogger.debug("UUID: \(uuidKey)")
+        self.viewModel.action(.didTapCompleteButton(questID: 186, answer: answerText, emotionState: emotionState, image: image, imageKey: uuidKey))
+        
         let viewController = CompleteActiveTypeQuestViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(viewController, animated: true)
     }

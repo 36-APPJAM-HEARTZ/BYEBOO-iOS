@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import UIKit
 
 struct WriteActiveTypeViewModel: ViewModelType {
     
@@ -15,17 +16,21 @@ struct WriteActiveTypeViewModel: ViewModelType {
     private(set) var output: Output
     
     private let saveQuestTypeUseCase: SaveQuestTypeUseCase
+    private let saveActiveQuestUseCase: SaveQuestActiveUseCase
     private let getQuestInfoUseCase: GetQuestInfoUseCase
     
     private let questInfoResultSubject: PassthroughSubject<Result<QuestInfoEntity, ByeBooError>, Never> = .init()
+    private let questActiveResultSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private let didSuccessPostSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     
     init(
         saveQuestTypeUseCase:  SaveQuestTypeUseCase,
+        saveActiveTypeUseCase: SaveQuestActiveUseCase,
         getQuestInfoUseCase: GetQuestInfoUseCase
         
     ){
         self.saveQuestTypeUseCase = saveQuestTypeUseCase
+        self.saveActiveQuestUseCase = saveActiveTypeUseCase
         self.getQuestInfoUseCase = getQuestInfoUseCase
         
         output = Output(
@@ -37,18 +42,17 @@ struct WriteActiveTypeViewModel: ViewModelType {
     func action(_ trigger: Input) {
         switch trigger {
         case .viewDidLoad(let questID):
-            getQuestInfo()
-        case .didTapCompleteButton:
-            postQuestType()
+            getQuestInfo(questID: questID)
+        case .didTapCompleteButton(let questID, let answer, let emotionState, let image, let imageKey):
+            postActiveType(questID: questID, answer: answer, emotionState: emotionState, image: image, imageKey: imageKey)
         }
-        
     }
 }
 
 extension WriteActiveTypeViewModel {
     enum Input {
         case viewDidLoad(quesetID: Int)
-        case didTapCompleteButton
+        case didTapCompleteButton(questID: Int, answer: String, emotionState: String, image: UIImage, imageKey: String)
     }
     
     struct Output {
@@ -58,10 +62,10 @@ extension WriteActiveTypeViewModel {
 }
 
 extension WriteActiveTypeViewModel {
-    private func getQuestInfo() {
+    private func getQuestInfo(questID: Int) {
         Task {
             do {
-                let questInfo = try await getQuestInfoUseCase.execute(questID: 1)
+                let questInfo = try await getQuestInfoUseCase.execute(questID: questID)
                 questInfoResultSubject.send(.success(questInfo))
             } catch {
                 guard let error = error as? ByeBooError else {
@@ -72,7 +76,29 @@ extension WriteActiveTypeViewModel {
         }
     }
     
-    private func postQuestType() {
-        // TODO: Signed URL 연결
+    private func postActiveType(questID: Int, answer: String, emotionState: String, image: UIImage, imageKey: String) {
+        Task {
+            do {
+                ByeBooLogger.debug("data size: \(image.size)")
+                if let jpegImage = image.jpegData(compressionQuality: 0.5) {
+                    
+                    try await saveActiveQuestUseCase.execute(
+                        questID: questID,
+                        answer: answer,
+                        emotionState: emotionState,
+                        image: jpegImage,
+                        imageKey: imageKey
+                    )
+                    didSuccessPostSubject.send(.success(()))
+                } else {
+                    print("")
+                }
+            } catch {
+                guard let error = error as? ByeBooError else {
+                    return
+                }
+                didSuccessPostSubject.send(.failure(error))
+            }
+        }
     }
 }
