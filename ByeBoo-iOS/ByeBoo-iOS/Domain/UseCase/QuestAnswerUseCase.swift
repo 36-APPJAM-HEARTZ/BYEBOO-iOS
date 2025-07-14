@@ -8,7 +8,7 @@
 import Foundation
 
 protocol QuestAnswerUseCase {
-    func fetchQuestAnswer() async throws -> QuestAnswerEntity
+    func execute(questID: Int) async throws -> QuestAnswerEntity
 }
 
 struct DefaultQuestAnswerUseCase: QuestAnswerUseCase {
@@ -18,7 +18,7 @@ struct DefaultQuestAnswerUseCase: QuestAnswerUseCase {
         self.questAnswerRepository = questAnswerRepository
     }
     
-    func fetchQuestAnswer() async throws -> QuestAnswerEntity {
-        return try await questAnswerRepository.fetchQuestAnswer()
+    func execute(questID: Int) async throws -> QuestAnswerEntity {
+        return try await questAnswerRepository.execute(questID: questID)
     }
 }

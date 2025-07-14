@@ -34,7 +34,7 @@ enum QuestType {
 }
 
 final class QuestTextField: BaseView {
-    private let textView = UITextView()
+    let textView = UITextView()
     private let textCount = UILabel()
     private let placeholder: String
     private var isPlaceholderActive: Bool = true

@@ -14,6 +14,8 @@ final class CompleteQuestionTypeQuestViewController: BaseViewController {
     private var viewModel: CompleteQuestViewModel
     private var cancellables = Set<AnyCancellable>()
     
+    let questID: Int = 0
+    
     override func loadView() {
         view = rootView
     }
@@ -29,7 +31,7 @@ final class CompleteQuestionTypeQuestViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationItem.hidesBackButton = true
-        viewModel.action(.questAnswerDidLoad)
+        viewModel.action(.questAnswerDidLoad(questID: 31))
     }
     
     override func viewDidLoad() {
@@ -47,6 +49,7 @@ final class CompleteQuestionTypeQuestViewController: BaseViewController {
     
     private func bind() {
         viewModel.output.resultPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 switch result {
                 case .success(let entity):
