@@ -14,6 +14,7 @@ protocol NetworkService {
         _ endPoint: EndPoint,
         decodingType: T.Type
     ) async throws -> T
+    func request(_ endPoint: EndPoint) async throws
 }
 
 struct DefaultNetworkService: NetworkService {
@@ -21,12 +22,7 @@ struct DefaultNetworkService: NetworkService {
         _ endPoint: EndPoint,
         decodingType: T.Type
     ) async throws -> T {
-        
-        ByeBooLogger.network("[Reqeust Start]")
-        ByeBooLogger.network("URL: \(endPoint.requestURL)")
-        ByeBooLogger.network("Method: \(endPoint.method.rawValue)")
-        ByeBooLogger.network("Headers: \(endPoint.headers.value)")
-        ByeBooLogger.network("Parameters: \(String(describing: endPoint.bodyParameters))")
+        requestLogger(endPoint)
         
         return try await withCheckedThrowingContinuation { continuation in
             AF.request(
@@ -38,11 +34,7 @@ struct DefaultNetworkService: NetworkService {
             )
             .validate()
             .responseDecodable(of: BaseResponse<T>.self) { response in
-                
-                ByeBooLogger.network("[Response Start]")
-                ByeBooLogger.network("StatusCode: \(response.response!.statusCode)")
-                ByeBooLogger.network("Header: \(response.response!.headers)")
-                ByeBooLogger.network("Description: \(response.response!.description)")
+                responseLogger(response)
                 switch response.result {
                 case .success(let data):
                     guard let data = data.data else {
@@ -56,10 +48,16 @@ struct DefaultNetworkService: NetworkService {
                     if let data = response.data,
                        let statusCode = response.response?.statusCode,  
                        let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
-                        let error = ByeBooError.networkError(
-                            code: statusCode,
-                            message: errorResponse.message
-                        )
+                        let error: ByeBooError
+                        
+                        if statusCode == 404 {
+                            error = ByeBooError.notFoundQuest
+                        } else {
+                            error = ByeBooError.networkError(
+                                code: statusCode,
+                                message: errorResponse.message
+                            )
+                        }
                         ByeBooLogger.error(error)
                         continuation.resume(throwing: error)
                     } else {
@@ -71,4 +69,62 @@ struct DefaultNetworkService: NetworkService {
         }
     }
     
+    /// data가 없는 경우 네트워크 처리
+    func request(_ endPoint: EndPoint) async throws {
+        requestLogger(endPoint)
+        
+        return try await withCheckedThrowingContinuation { continuation in
+            AF.request(
+                endPoint.requestURL,
+                method: endPoint.method,
+                parameters: endPoint.bodyParameters,
+                encoding: endPoint.parameterEncoding,
+                headers: endPoint.headers.value
+            )
+            .validate()
+            .responseDecodable(of: EmptyResponse.self) { response in
+                responseLogger(response)
+                
+                switch response.result {
+                case .success:
+                    continuation.resume(returning: ())
+                case .failure:
+                    if let data = response.data,
+                       let statusCode = response.response?.statusCode,
+                       let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
+                        let error: ByeBooError
+                        
+                        if statusCode == 404 {
+                            error = ByeBooError.notFoundQuest
+                        } else {
+                            error = ByeBooError.networkError(
+                                code: statusCode,
+                                message: errorResponse.message
+                            )
+                        }
+                        ByeBooLogger.error(error)
+                        continuation.resume(throwing: error)
+                    } else {
+                        ByeBooLogger.error(ByeBooError.decodingError)
+                        continuation.resume(throwing: ByeBooError.decodingError)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func requestLogger(_ endPoint: EndPoint) {
+        ByeBooLogger.network("[Reqeust Start]")
+        ByeBooLogger.network("URL: \(endPoint.requestURL)")
+        ByeBooLogger.network("Method: \(endPoint.method.rawValue)")
+        ByeBooLogger.network("Headers: \(endPoint.headers.value)")
+        ByeBooLogger.network("Parameters: \(String(describing: endPoint.bodyParameters))")
+    }
+    
+    private func responseLogger<T>(_ response: DataResponse<T, AFError>) {
+        ByeBooLogger.network("[Response Start]")
+        ByeBooLogger.network("StatusCode: \(response.response!.statusCode)")
+        ByeBooLogger.network("Header: \(response.response!.headers)")
+        ByeBooLogger.network("Description: \(response.response!.description)")
+    }
 }

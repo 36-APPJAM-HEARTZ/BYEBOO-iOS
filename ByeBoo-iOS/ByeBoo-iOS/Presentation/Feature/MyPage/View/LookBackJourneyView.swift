@@ -7,25 +7,15 @@
 
 import UIKit
 
-// TODO: 임시 객체 추후 서버 API 확정되면 교체 예정
-struct Journey {
-    let type: String
-    let title: String
-    
-    static func stub() -> Journey {
-        return .init(type: "질문형", title: "감정 직면 여정")
-    }
-}
-
 final class LookBackJourneyView: BaseView {
     // TODO: 승준이의 attributedString 반영
     private let titleLabel = UILabel()
     private let divider = SectionDividerView()
     private let journeyView: JourneyListView
     
-    private let journeyList: [Journey]
+    private let journeyList: [JourneyEntity]
     
-    init(journeyList: [Journey]) {
+    init(journeyList: [JourneyEntity]) {
         self.journeyList = journeyList
         self.journeyView = JourneyListView(isFinished: true, journeyList: journeyList)
 

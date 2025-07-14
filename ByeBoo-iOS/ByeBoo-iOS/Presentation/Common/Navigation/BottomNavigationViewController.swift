@@ -17,8 +17,14 @@ final class BottomNavigationViewController: UITabBarController {
     private func setViewController() {
         // TODO: viewmodel di로 바꿔주기
         let questViewModel = QuestsViewModel()
+        
+        guard let homeViewModel = DIContainer.shared.resolve(type: HomeViewModel.self) else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            fatalError()
+        }
+        
         let viewControllers = [
-            createViewController(for: HomeViewController(), title: "홈", imageName: .homeOff),
+            createViewController(for: HomeViewController(viewModel: homeViewModel), title: "홈", imageName: .homeOff),
             createViewController(for: QuestCheckViewController(viewModel: questViewModel), title: "퀘스트", imageName: .questOff),
             createViewController(for: MyPageViewController(), title: "내 정보", imageName: .userOff)
         ]

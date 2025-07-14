@@ -19,9 +19,7 @@ struct DefaultUsersRepository: UsersInterface {
         self.userDefaultsService = userDefatulsService
     }
     
-    func getUserName() -> String? {
-        userDefaultsService.load(key: .userName)
-    }
+    // MARK: Network
     
     func fetchJourney() async throws -> JourneyEntity {
         let userID: Int = userDefaultsService.load(key: .userID) ?? 1
@@ -47,6 +45,37 @@ struct DefaultUsersRepository: UsersInterface {
         let _ = userDefaultsService.save(result.name, key: .userName)
         return result.toEntity()
     }
+    
+    func fetchCharacterDialogue() async throws -> String {
+        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
+        let result = try await network.request(
+            UsersAPI.character(userID: userID),
+            decodingType: DialogueResponseDTO.self
+        )
+        
+        return result.dialogue
+    }
+    
+    func fetchCompleteQuestCount() async throws -> Int {
+        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
+        let result = try await network.request(
+            UsersAPI.count(userID: userID),
+            decodingType: CompleteQuestCountResponseDTO.self
+        )
+        
+        return result.count
+    }
+    
+    func startJourney() async throws {
+        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
+        try await network.request(UsersAPI.start(userID: userID))
+    }
+    
+    // MARK: Persistence
+    
+    func getUserName() -> String? {
+        userDefaultsService.load(key: .userName)
+    }
 }
 
 struct MockUserRepository: UsersInterface {
@@ -69,6 +98,16 @@ struct MockUserRepository: UsersInterface {
             questStyle: questStyle
         )
     }
+    
+    func fetchCharacterDialogue() async throws -> String {
+        return "천천히, 하지만 분명하게. 오늘도 나아가 봐요."
+    }
+    
+    func fetchCompleteQuestCount() async throws -> Int {
+        return 1
+    }
+    
+    func startJourney() async throws { }
 }
 
 
