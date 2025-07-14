@@ -15,7 +15,7 @@ final class QuestCheckViewController: BaseViewController {
     let questsCheckView = QuestsCheckView()
     private let viewModel: QuestsViewModel
     private var cancellable = Set<AnyCancellable>()
-    private var questsEntity: QuestsEntity?
+    private var questsEntity: ProgressingQuestsEntity?
     
     init(viewModel: QuestsViewModel) {
         self.viewModel = viewModel
@@ -33,11 +33,21 @@ final class QuestCheckViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
-        self.tabBarController?.tabBar.isHidden = true
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // state가 before journey인 경우
+        // 요거 viewDidLoad말고 다른 곳에서 해주어야 함 !!!!!!
+//        guard let startViewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {
+//            ByeBooLogger.error(ByeBooError.DIFailedError)
+//            fatalError()
+//        }
+//        
+//        let viewController = QuestStartViewController(viewModel: startViewModel)
+//        viewController.modalPresentationStyle = .fullScreen
+//        self.present(viewController, animated: false)
         
         bind()
         viewModel.action(.handleStartQuestButtonDidTap)
@@ -142,7 +152,7 @@ extension QuestCheckViewController: UICollectionViewDataSource {
             state = .locked
         }
         
-        cell.dataBind(state: state, questNumber: quest.questNumber)
+        cell.bind(state: state, questNumber: quest.questNumber)
         return cell
     }
     

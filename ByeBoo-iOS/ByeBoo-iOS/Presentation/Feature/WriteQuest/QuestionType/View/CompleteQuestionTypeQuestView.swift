@@ -79,7 +79,7 @@ final class CompleteQuestionTypeQuestView: BaseView {
         
         
         let thinkView = ThinkView(descriptionText: entity.answer!)
-        let feelView = FeelView(emotionType: entity.emotionDescription, descriptionText: entity.emotionDescription)
+        let feelView = FeelView(emotionType: entity.questEmotionState, descriptionText: entity.emotionDescription)
         
         contentView.addSubviews(thinkView, feelView)
         

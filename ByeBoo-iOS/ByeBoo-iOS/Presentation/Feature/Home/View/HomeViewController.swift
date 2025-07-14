@@ -65,9 +65,8 @@ extension HomeViewController {
         switch state {
         case .beforeJourneyStart:
             let viewController = QuestStartViewController(viewModel: viewModel)
-            viewController.hidesBottomBarWhenPushed = true
-            viewController.navigationItem.hidesBackButton = true
-            navigationController?.pushViewController(viewController, animated: false)
+            viewController.modalPresentationStyle = .fullScreen
+            self.present(viewController, animated: false)
         case .beforeQuest:
             navigationController?.tabBarController?.selectedIndex = 1
         case .afterJourney, .afterQuest:
@@ -90,30 +89,6 @@ extension HomeViewController {
             }
             .store(in: &cancellables)
         
-        viewModel.output.countResult
-            .receive(on: DispatchQueue.main)
-            .sink { result in
-                switch result {
-                case .success(let count):
-                    self.rootView.updateProgress(count)
-                case .failure(let failure):
-                    ByeBooLogger.error(failure)
-                }
-            }
-            .store(in: &cancellables)
-        
-        viewModel.output.userResult
-            .receive(on: DispatchQueue.main)
-            .sink { result in
-                switch result {
-                case .success(let name):
-                    self.rootView.updateName(name)
-                case .failure(let failure):
-                    ByeBooLogger.error(failure)
-                }
-            }
-            .store(in: &cancellables)
-        
         viewModel.output.homeStateResult
             .receive(on: DispatchQueue.main)
             .sink { result in
@@ -123,6 +98,29 @@ extension HomeViewController {
                     self.state = state
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
+        
+        Publishers.CombineLatest3(
+            viewModel.output.countResult,
+            viewModel.output.userResult,
+            viewModel.output.journeyResult
+        )
+            .receive(on: DispatchQueue.main)
+            .sink {
+                count,
+                name,
+                journey in
+                switch (count, name, journey) {
+                case let (.success(count), .success(name), .success(journey)):
+                    self.rootView.updateProgressView(
+                        name: name,
+                        progress: count,
+                        journey: journey.title
+                    )
+                default:
+                    ByeBooLogger.error(ByeBooError.unknownError)
                 }
             }
             .store(in: &cancellables)

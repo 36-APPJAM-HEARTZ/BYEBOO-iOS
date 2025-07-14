@@ -16,7 +16,7 @@ enum ByeBooEmotion: CaseIterable {
     var key: String {
         switch self {
         case .neutral:
-            return "NEURTRAl"
+            return "NEUTRAl"
         case .sad:
             return "SAD"
         case .selfUnderstanding:
@@ -55,8 +55,8 @@ enum ByeBooEmotion: CaseIterable {
     static func toEmotion(text: String) -> ByeBooEmotion {
         switch text {
         case "그저그런": return .neutral
-        case "슬픈": return .sad
-        case "자기이해": return .selfUnderstanding
+        case "슬픔": return .sad
+        case "자기 이해": return .selfUnderstanding
         case "후련함": return .relieved
         default: return .neutral
         }

@@ -15,6 +15,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     
     let questID: Int = 0
+    private var emotionState: String = ""
     
     override func loadView() {
         view = rootView
@@ -184,6 +185,10 @@ extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, U
 }
 
 extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
+    func saveEmotionState(emotionState: ByeBooEmotion) {
+        self.emotionState = emotionState.key
+    }
+    
     func presentNextViewController(from previousView: PreviousView) {
         guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
             ByeBooLogger.error(ByeBooError.DIFailedError)

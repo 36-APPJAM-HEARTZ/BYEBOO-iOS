@@ -65,7 +65,18 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 getUserNameUseCase: getUserNameUseCase
             )
         }
-        
+
+        DIContainer.shared.register(type: CompleteQuestViewModel.self) { container in
+            guard let questAnswerUseCase = container.resolve(type: QuestAnswerUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return CompleteQuestViewModel(
+                questAnswerCase: questAnswerUseCase
+            )
+        }
+
         DIContainer.shared.register(type: HomeViewModel.self) { container in
             guard let characterUseCase = container.resolve(type: FetchCharacterDialogueUseCase.self),
             let countUseCase = container.resolve(type: FetchCompleteQuestCountUseCase.self)
@@ -73,7 +84,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
-            
+                                                               
             return HomeViewModel(
                 fetchCharacterDialogueUseCase: characterUseCase,
                 fetchCompleteQuestCountUseCase: countUseCase,
@@ -89,7 +100,25 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 return
             }
             
-            return QuestStartViewModel(startJourneyUseCase: startJourneyUseCase)
+            return QuestStartViewModel(
+                startJourneyUseCase: startJourneyUseCase,
+                getUserNameUseCase: getUserNameUseCase,
+                fetchJourneyUseCase: fetchUserJourneyUseCase
+            )
+        }
+        
+        DIContainer.shared.register(type: QuestsViewModel.self) { container in
+            guard let progressingQuestsUseCase = container.resolve(type: GetProgressingQuestsUseCase.self),
+                  let getUserIDUseCase = container.resolve(type: GetUserIDUseCase.self)
+            else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return QuestsViewModel(
+                progressingQuestsUseCase: progressingQuestsUseCase,
+                getUserIDUseCase: getUserIDUseCase
+            )
         }
     }
 }

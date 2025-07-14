@@ -56,6 +56,10 @@ extension HomeHeaderView {
         journeyProgressView?.updateName(name)
     }
     
+    func updateJourney(_ title: String) {
+        journeyProgressView?.updateJourney(title)
+    }
+    
     func updateState(_ state: HomeState) {
         if state.hasProgress {
             if journeyProgressView == nil {
@@ -71,8 +75,6 @@ extension HomeHeaderView {
                 journeyProgressView,
                 textBox
             )
-            
-            journeyProgressView.updateJourney(state.title)
         }
         
         homeStateView.updateState(state)

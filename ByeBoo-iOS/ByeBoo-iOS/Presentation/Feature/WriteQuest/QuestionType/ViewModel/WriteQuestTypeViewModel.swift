@@ -38,7 +38,7 @@ struct WriteQuestionTypeViewModel: ViewModelType {
 extension WriteQuestionTypeViewModel {
     enum Input {
         case viewDidLoad(quesetID: Int)
-        case didTapCompleteButton
+        case presentCompleteView(questID: Int, answer: String, emotionState: String)
     }
     
     struct Output {
@@ -49,18 +49,22 @@ extension WriteQuestionTypeViewModel {
     func action(_ trigger: Input) {
         switch trigger {
         case .viewDidLoad(let questID):
-            getQuestInfo(quesID: questID)
-        case .didTapCompleteButton:
-            postQuestType()
+            getQuestInfo(questID: questID)
+        case .presentCompleteView(
+            let questID,
+            let answer,
+            let emotionState
+        ):
+            postQuestType(questID: questID, answer: answer, emotionState: emotionState)
         }
     }
 }
 
 extension WriteQuestionTypeViewModel {
-    private func getQuestInfo(quesID: Int) {
+    private func getQuestInfo(questID: Int) {
         Task {
             do {
-                let questInfo = try await getQuestInfoUseCase.execute(questID: 1)
+                let questInfo = try await getQuestInfoUseCase.execute(questID: 31)
                 questInfoResultSubject.send(.success(questInfo))
             } catch {
                 guard let error = error as? ByeBooError else {
@@ -71,16 +75,17 @@ extension WriteQuestionTypeViewModel {
         }
     }
     
-    private func postQuestType() {
+    private func postQuestType(questID: Int, answer: String, emotionState: String) {
         Task {
             do {
-                try await saveQuestTypeUseCase.execute(questID: 1)
+                let _ = try await saveQuestTypeUseCase.execute(questID: 31, answer: answer, emotionState: emotionState)
                 didSuccessPostSubject.send(.success(()))
             } catch {
                 guard let error = error as? ByeBooError else {
                     return
                 }
                 didSuccessPostSubject.send(.failure(error as ByeBooError))
+                ByeBooLogger.debug("네트워크 호출 실패")
             }
         }
     }
