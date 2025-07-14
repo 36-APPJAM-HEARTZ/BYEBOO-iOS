@@ -46,12 +46,14 @@ extension HomeView {
         headerView.updateTextBox(text)
     }
     
-    func updateProgress(_ progress: Int) {
+    func updateProgressView(
+        name: String,
+        progress: Int,
+        journey: String
+    ) {
         headerView.updateProgress(progress)
-    }
-    
-    func updateName(_ name: String) {
         headerView.updateName(name)
+        headerView.updateJourney(journey)
     }
     
     func updateState(_ state: HomeState) {

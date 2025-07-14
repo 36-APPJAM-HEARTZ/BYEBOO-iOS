@@ -58,6 +58,8 @@ struct DefaultNetworkService: NetworkService {
                                 message: errorResponse.message
                             )
                         }
+                        
+                        
                         ByeBooLogger.error(error)
                         continuation.resume(throwing: error)
                     } else {
@@ -92,16 +94,7 @@ struct DefaultNetworkService: NetworkService {
                     if let data = response.data,
                        let statusCode = response.response?.statusCode,
                        let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
-                        let error: ByeBooError
-                        
-                        if statusCode == 404 {
-                            error = ByeBooError.notFoundQuest
-                        } else {
-                            error = ByeBooError.networkError(
-                                code: statusCode,
-                                message: errorResponse.message
-                            )
-                        }
+                        let error = handleError(statusCode, errorResponse.message)
                         ByeBooLogger.error(error)
                         continuation.resume(throwing: error)
                     } else {
@@ -126,5 +119,20 @@ struct DefaultNetworkService: NetworkService {
         ByeBooLogger.network("StatusCode: \(response.response!.statusCode)")
         ByeBooLogger.network("Header: \(response.response!.headers)")
         ByeBooLogger.network("Description: \(response.response!.description)")
+    }
+    
+    private func handleError(_ statusCode: Int, _ errorResponse: String) -> ByeBooError {
+        let error: ByeBooError
+        
+        if statusCode == 404 {
+            error = ByeBooError.notFoundQuest
+        } else {
+            error = ByeBooError.networkError(
+                code: statusCode,
+                message: errorResponse
+            )
+        }
+        
+        return error
     }
 }
