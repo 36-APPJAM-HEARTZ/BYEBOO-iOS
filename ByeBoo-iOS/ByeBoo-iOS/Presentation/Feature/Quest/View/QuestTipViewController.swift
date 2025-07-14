@@ -11,11 +11,25 @@ import UIKit
 final class QuestTipViewController: BaseViewController {
     
     private let rootView = QuestTipView()
-    private let viewModel = QuestTipViewModel()
+    private let viewModel: QuestTipViewModel
     private var cancellables = Set<AnyCancellable>()
     
     override func loadView() {
         view = rootView
+    }
+    
+    init(viewModel: QuestTipViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationItem.hidesBackButton = true
+        viewModel.action(.questTipDidLoad(questID: 1))
     }
     
     override func viewDidLoad() {
@@ -29,17 +43,17 @@ final class QuestTipViewController: BaseViewController {
         )
         
         bind()
-        viewModel.action(.questTipDidLoad)
     }
     
     private func bind() {
         viewModel.output.questTipPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 switch result {
                 case .success(let entity):
                     self?.rootView.bind(with: entity)
                 case .failure(let error):
-                    print("에러 발생: \(error)")
+                    ByeBooLogger.debug(error)
                 }
             }
             .store(in: &cancellables)
