@@ -18,7 +18,6 @@ final class EmotionBottomSheetViewController: BaseViewController {
     private let rootView = EmotionBottomSheetView()
     private var selectedChip: ByeBooEmotionChip?
     var previousView: PreviousView?
-    //    private var emotionState: ByeBooEmotion = .neutral
     weak var delegate: BottomSheetProtocol?
     
     override func loadView() {
