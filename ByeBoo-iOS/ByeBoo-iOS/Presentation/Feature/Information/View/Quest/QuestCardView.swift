@@ -112,6 +112,10 @@ final class QuestCardView: BaseView {
         let blurEffect = UIBlurEffect(style: .dark)
         let blurView = UIVisualEffectView(effect: blurEffect)
         insertSubview(blurView, at: 0)
+        blurView.do {
+            $0.layer.cornerRadius = 12
+            $0.clipsToBounds = true
+        }
         blurView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }

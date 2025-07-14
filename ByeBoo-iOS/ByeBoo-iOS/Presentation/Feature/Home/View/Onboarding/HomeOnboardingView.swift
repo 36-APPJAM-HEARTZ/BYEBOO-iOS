@@ -16,6 +16,7 @@ final class HomeOnboardingView: BaseView {
     private let descriptionLabel = UILabel()
     private let bubbleImageView = UIImageView()
     let characterImageView = UIImageView()
+    private let foregroundView = UIView()
     
     override func setStyle() {
         backgroundImageView.do {
@@ -44,6 +45,10 @@ final class HomeOnboardingView: BaseView {
         characterImageView.do {
             $0.image = .newborn
         }
+        foregroundView.do {
+            $0.backgroundColor = .black
+            $0.alpha = 0
+        }
     }
 
     override func setUI() {
@@ -54,7 +59,8 @@ final class HomeOnboardingView: BaseView {
             introduceView,
             descriptionLabel,
             bubbleImageView,
-            characterImageView
+            characterImageView,
+            foregroundView
         )
     }
     
@@ -85,6 +91,9 @@ final class HomeOnboardingView: BaseView {
             $0.top.equalTo(bubbleImageView.snp.bottom).offset(19.adjustedH)
             $0.centerX.equalToSuperview()
         }
+        foregroundView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
     }
 }
 
@@ -102,6 +111,18 @@ extension HomeOnboardingView {
                     self.bubbleImageView.alpha = 1
                 }
             }
+        }
+    }
+    
+    func startPressAnimation() {
+        UIView.animate(withDuration: 1) {
+            self.foregroundView.alpha = 1
+        }
+    }
+    
+    func revertPressAnimation() {
+        UIView.animate(withDuration: 0.3) {
+            self.foregroundView.alpha = 0
         }
     }
 }

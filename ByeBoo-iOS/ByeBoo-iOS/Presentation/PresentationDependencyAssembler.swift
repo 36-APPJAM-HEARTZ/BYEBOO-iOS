@@ -17,16 +17,16 @@ struct PresentationDependencyAssembler: DependencyAssembler {
     func assemble() {
         preAssembler.assemble()
         
-        DIContainer.shared.register(type: JourneyResultViewModel.self) { container in
-            guard let fetchUserUseCase = container.resolve(type: FetchUserJourneyUseCase.self),
-                  let getNameUseCase = container.resolve(type: GetUserNameUseCase.self) else {
-                ByeBooLogger.error(ByeBooError.DIFailedError)
-                return
-            }
-            
+        guard let getUserNameUseCase = DIContainer.shared.resolve(type: GetUserNameUseCase.self),
+              let fetchUserJourneyUseCase = DIContainer.shared.resolve(type: FetchUserJourneyUseCase.self) else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            return
+        }
+        
+        DIContainer.shared.register(type: JourneyResultViewModel.self) { _ in
             return JourneyResultViewModel(
-                fetchUserJourneyUseCase: fetchUserUseCase,
-                getUserNameUseCase: getNameUseCase
+                fetchUserJourneyUseCase: fetchUserJourneyUseCase,
+                getUserNameUseCase: getUserNameUseCase
             )
         }
         
@@ -55,8 +55,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
 
         DIContainer.shared.register(type: InformationViewModel.self) { container in
-            guard let sendUserUseCase = container.resolve(type: SendUserUseCase.self),
-                  let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self) else {
+            guard let sendUserUseCase = container.resolve(type: SendUserUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -66,7 +65,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 getUserNameUseCase: getUserNameUseCase
             )
         }
-        
+
         DIContainer.shared.register(type: CompleteQuestViewModel.self) { container in
             guard let questAnswerUseCase = container.resolve(type: QuestAnswerUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
@@ -75,6 +74,36 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             
             return CompleteQuestViewModel(
                 questAnswerCase: questAnswerUseCase
+            )
+        }
+
+        DIContainer.shared.register(type: HomeViewModel.self) { container in
+            guard let characterUseCase = container.resolve(type: FetchCharacterDialogueUseCase.self),
+            let countUseCase = container.resolve(type: FetchCompleteQuestCountUseCase.self)
+            else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+                                                               
+            return HomeViewModel(
+                fetchCharacterDialogueUseCase: characterUseCase,
+                fetchCompleteQuestCountUseCase: countUseCase,
+                fetchUserJourneyUseCase: fetchUserJourneyUseCase,
+                getUserNameUseCase: getUserNameUseCase
+            )
+        }
+        
+        DIContainer.shared.register(type: QuestStartViewModel.self) { container in
+            guard let startJourneyUseCase = container.resolve(type: StartJourneyUseCase.self)
+            else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return QuestStartViewModel(
+                startJourneyUseCase: startJourneyUseCase,
+                getUserNameUseCase: getUserNameUseCase,
+                fetchJourneyUseCase: fetchUserJourneyUseCase
             )
         }
     }

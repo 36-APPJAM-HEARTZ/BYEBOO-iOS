@@ -6,10 +6,22 @@
 //
 
 import UIKit
+import Combine
 
 final class QuestStartViewController: BaseViewController {
     
-    private let rootView = QuestStartView(nickname: "하츠핑")
+    private let viewModel: QuestStartViewModel
+    private var cancellables = Set<AnyCancellable>()
+    private let rootView = QuestStartView()
+    
+    init(viewModel: QuestStartViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = rootView
@@ -22,13 +34,10 @@ final class QuestStartViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        ByeBooNavigationBar.makeNavigationBar(
-            navigationItem: self.navigationItem,
-            navigationController: self.navigationController,
-            type: .back,
-            action: #selector(back)
-        )
+
+        bind()
+        setGesture()
+        viewModel.action(.viewDidLoad)
     }
     
     override func setAddTarget() {
@@ -38,19 +47,84 @@ final class QuestStartViewController: BaseViewController {
             for: .touchUpInside
         )
     }
+    
+    private func setGesture() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(back))
+        tapGestureRecognizer.isEnabled = true
+        tapGestureRecognizer.cancelsTouchesInView = false
+        rootView.backButton.addGestureRecognizer(tapGestureRecognizer)
+    }
 }
 
 extension QuestStartViewController: BackNavigable {
-    
     func back() {
-        self.navigationController?.popViewController(animated: true)
+        if let presentingVC = self.presentingViewController {
+            if let tabBarController = presentingVC as? UITabBarController {
+                // 홈 탭에서 진입
+                if tabBarController.selectedIndex == 0 {
+                    self.dismiss(animated: false)
+                } else {
+                    // 퀘스트 탭에서 진입
+                    self.dismiss(animated: false)
+                    tabBarController.selectedIndex = 0
+                }
+            }
+        }
     }
 }
 
 extension QuestStartViewController {
-    
     @objc
     func questStartButtonDidTap() {
-        navigationController?.tabBarController?.selectedIndex = 1
+        viewModel.action(.buttonDidTap)
+    }
+    
+    private func bind() {
+        viewModel.output.nameResult
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success(let name):
+                    self.rootView.updateName(name)
+                case .failure(let failure):
+                    ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.journeyResult
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success(let journey):
+                    self.rootView.updateJourney(journey.title)
+                case .failure(let failure):
+                    ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.startResult
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success:
+                    if let presentingVC = self.presentingViewController {
+                        if let tabBarController = presentingVC as? UITabBarController {
+                            // 홈 탭에서 진입
+                            if tabBarController.selectedIndex == 0 {
+                                self.dismiss(animated: false)
+                                tabBarController.selectedIndex = 1
+                            } else {
+                                // 퀘스트 탭에서 진입
+                                self.dismiss(animated: false)
+                            }
+                        }
+                    }
+                case .failure(let failure):
+                    ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
     }
 }

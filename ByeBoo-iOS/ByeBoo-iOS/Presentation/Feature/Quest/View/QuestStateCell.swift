@@ -82,12 +82,17 @@ final class QuestStateCell: UICollectionViewCell {
     }
     
     private func setUI() {
-        questBackgroundView.addSubviews(frontView, questNumberLabel, imageView)
+        questBackgroundView.addSubviews(
+            frontView,
+            questNumberLabel,
+            imageView
+        )
         addSubviews(questBackgroundView)
     }
     
     private func setLayout() {
         questBackgroundView.snp.makeConstraints {
+            $0.center.equalToSuperview()
             $0.width.height.equalTo(96.adjustedW)
         }
         frontView.snp.makeConstraints {
@@ -106,16 +111,13 @@ final class QuestStateCell: UICollectionViewCell {
         questNumberLabel.textColor = state.questNumberColor
         imageView.image = state.image
         
-        if state == .locked {
-            imageView.tintColor = .white10
-            imageView.snp.makeConstraints {
+        imageView.tintColor = state == .locked ? .white10 : .clear
+        imageView.snp.makeConstraints {
+            $0.center.equalToSuperview()
+            if state == .locked {
                 $0.width.height.equalTo(24.adjustedW)
-                $0.center.equalToSuperview()
-            }
-        } else {
-            imageView.snp.makeConstraints {
-                $0.top.equalTo(frontView.snp.top).offset(5.adjustedH)
-                $0.centerX.equalTo(frontView.snp.centerX)
+            } else {
+                $0.width.height.equalTo(80.adjustedW)
             }
         }
     }

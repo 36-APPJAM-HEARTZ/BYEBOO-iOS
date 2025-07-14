@@ -28,3 +28,17 @@ struct DefaultUserDefaultService: UserDefaultService {
         return UserDefaults.standard.value(forKey: key.rawValue) == nil
     }
 }
+
+struct MockUserDefaultService: UserDefaultService {
+    func save(_ value: Any, key: UserDefaultsKey) -> Bool {
+        return true
+    }
+    
+    func load<T>(key: UserDefaultsKey) -> T? {
+        return 96 as? T
+    }
+    
+    func delete(key: UserDefaultsKey) -> Bool {
+        return true
+    }
+}

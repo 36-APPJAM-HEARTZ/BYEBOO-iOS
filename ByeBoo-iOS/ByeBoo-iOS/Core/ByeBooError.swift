@@ -16,6 +16,7 @@ enum ByeBooError: Error, LocalizedError {
     case navigationControllerMissing
     case noData
     case unknownError
+    case notFoundQuest
     case encodingError
     
     var errorDescription: String? {
@@ -36,6 +37,8 @@ enum ByeBooError: Error, LocalizedError {
             return "데이터 없음"
         case .encodingError:
             return "인코딩 실패"
+        case .notFoundQuest:
+            return "진행 중인 퀘스트가 없음"
         case .unknownError:
             return nil
         }

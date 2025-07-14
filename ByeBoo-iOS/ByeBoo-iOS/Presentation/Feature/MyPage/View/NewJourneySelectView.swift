@@ -16,12 +16,12 @@ final class NewJourneySelectView: BaseView {
     private let divider2 = SectionDividerView()
     private let completeListView: JourneyListView
     
-    private let unCompleteJourneyList: [Journey]
-    private let completeJourneyList: [Journey]
+    private let unCompleteJourneyList: [JourneyEntity]
+    private let completeJourneyList: [JourneyEntity]
     
     init(
-        unCompleteJourneyList: [Journey],
-        completeJourneyList: [Journey]
+        unCompleteJourneyList: [JourneyEntity],
+        completeJourneyList: [JourneyEntity]
     ) {
         self.unCompleteJourneyList = unCompleteJourneyList
         self.completeJourneyList = completeJourneyList

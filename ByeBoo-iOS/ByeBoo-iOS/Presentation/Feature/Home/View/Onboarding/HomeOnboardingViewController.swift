@@ -10,6 +10,7 @@ import UIKit
 final class HomeOnboardingViewController: BaseViewController {
     
     private let rootView = HomeOnboardingView()
+    private var pressStartTime: Date?
     
     override func loadView() {
         view = rootView
@@ -27,7 +28,6 @@ final class HomeOnboardingViewController: BaseViewController {
 extension HomeOnboardingViewController {
     private func setGesture() {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longDidTap))
-        longPressGesture.minimumPressDuration = 2
         rootView.characterImageView.addGestureRecognizer(longPressGesture)
         rootView.characterImageView.isUserInteractionEnabled = true
     }
@@ -35,20 +35,43 @@ extension HomeOnboardingViewController {
     @objc
     private func longDidTap(_ gesture: UILongPressGestureRecognizer) {
         
-        guard gesture.state == .began else { return }
         
-        ByeBooLogger.debug("꾹 눌렀음")
-        
-        let tabBarController = BottomNavigationViewController()
-        
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+        switch gesture.state {
+        case .began:
+            ByeBooLogger.debug("꾹 누르기 시작")
+            pressStartTime = Date()
+            rootView.startPressAnimation()
+        case .ended:
+            ByeBooLogger.debug("꾹 누르기 종료")
+            guard let start = pressStartTime else {
+                rootView.revertPressAnimation()
+                pressStartTime = nil
+                return
+            }
             
-            ViewControllerUtils.setRootViewController(
-                window: window,
-                viewController: tabBarController,
-                withAnimation: true
-            )
+            let duration = Date().timeIntervalSince(start)
+            
+            if duration >= 1 {
+                let tabBarController = BottomNavigationViewController()
+                
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                    let haptick = UINotificationFeedbackGenerator()
+                    haptick.notificationOccurred(.success)
+                    
+                    ViewControllerUtils.setRootViewController(
+                        window: window,
+                        viewController: tabBarController,
+                        withAnimation: true
+                    )
+                }
+            } else {
+                rootView.revertPressAnimation()
+                pressStartTime = nil
+            }
+            
+        default:
+            break
         }
     }
 }
