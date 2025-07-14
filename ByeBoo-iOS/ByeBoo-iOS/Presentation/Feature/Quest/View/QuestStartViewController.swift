@@ -109,8 +109,18 @@ extension QuestStartViewController {
             .sink { result in
                 switch result {
                 case .success:
-                    self.navigationController?.tabBarController?.selectedIndex = 1
-                    self.dismiss(animated: false)
+                    if let presentingVC = self.presentingViewController {
+                        if let tabBarController = presentingVC as? UITabBarController {
+                            // 홈 탭에서 진입
+                            if tabBarController.selectedIndex == 0 {
+                                self.dismiss(animated: false)
+                                tabBarController.selectedIndex = 1
+                            } else {
+                                // 퀘스트 탭에서 진입
+                                self.dismiss(animated: false)
+                            }
+                        }
+                    }
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }
