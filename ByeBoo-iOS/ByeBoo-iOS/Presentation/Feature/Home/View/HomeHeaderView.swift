@@ -58,15 +58,21 @@ extension HomeHeaderView {
     
     func updateState(_ state: HomeState) {
         if state.hasProgress {
-            journeyProgressView = JourneyProgressView()
-
-            if let journeyProgressView {
-                stackView.removeArrangedSubview(textBox)
-                stackView.addArrangedSubviews(
-                    journeyProgressView,
-                    textBox
-                )
+            if journeyProgressView == nil {
+                journeyProgressView = JourneyProgressView()
             }
+            
+            stackView.subviews.forEach { stackView.removeArrangedSubview($0) }
+            
+            guard let journeyProgressView else { return }
+            
+            stackView.addArrangedSubviews(
+                homeStateView,
+                journeyProgressView,
+                textBox
+            )
+            
+            journeyProgressView.updateJourney(state.title)
         }
         
         homeStateView.updateState(state)

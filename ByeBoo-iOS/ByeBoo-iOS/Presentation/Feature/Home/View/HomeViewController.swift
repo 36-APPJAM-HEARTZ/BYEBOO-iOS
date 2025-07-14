@@ -38,8 +38,12 @@ final class HomeViewController: BaseViewController {
         
         bind()
         setGesture()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        viewModel.action(.viewDidLoad)
+        viewModel.action(.viewWillAppear)
     }
     
     private func setGesture() {

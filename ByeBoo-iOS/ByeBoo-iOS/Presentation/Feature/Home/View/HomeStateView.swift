@@ -16,7 +16,7 @@ enum HomeState {
     var title: String {
         switch self {
         case .beforeJourneyStart(let journey):
-            "\(journey.title) 시작하기"
+            "\(journey.title) 여정 시작하기"
         case .beforeQuest:
             "오늘의 퀘스트 하러가기"
         case .afterQuest:

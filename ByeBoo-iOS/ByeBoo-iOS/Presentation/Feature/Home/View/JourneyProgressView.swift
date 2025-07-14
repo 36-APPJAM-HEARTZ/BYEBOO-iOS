@@ -14,12 +14,15 @@ final class JourneyProgressView: BaseView {
     private let progressView = UIProgressView()
     private let progressLabel = UILabel()
     
+    private var name: String = ""
+    private var journeyTitle: String = ""
+    
     override func setStyle() {
         backgroundColor = .white10
         layer.cornerRadius = 12
         
         titleLabel.do {
-            $0.text = "하츠핑님의 자기 성찰 여정"
+            $0.text = "\(name)님의 \(journeyTitle)"
             $0.font = FontManager.sub2Sb18.font
             $0.textColor = .grayscale50
         }
@@ -77,6 +80,12 @@ extension JourneyProgressView {
     }
     
     func updateName(_ name: String) {
-        titleLabel.text = "\(name)님의 자기 성찰 여정"
+        self.name = name
+        titleLabel.text = "\(name)님의 \(journeyTitle)"
+    }
+    
+    func updateJourney(_ journey: String) {
+        self.journeyTitle = journey
+        titleLabel.text = "\(name)님의 \(journeyTitle)"
     }
 }
