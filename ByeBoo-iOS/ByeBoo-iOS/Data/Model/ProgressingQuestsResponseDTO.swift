@@ -8,7 +8,7 @@
 import Foundation
 
 struct ProgressingQuestsResponseDTO: Decodable {
-    let progressPeriod: String
+    let progressPeriod: Int
     let currentStep: Int
     let steps: [StepResponseDTO]
 }
@@ -22,6 +22,7 @@ struct StepResponseDTO: Decodable {
 struct QuestResponseDTO: Decodable {
     let questId: Int
     let question: String
+    let questStyle: String
     let questNumber: Int
 }
 
@@ -50,6 +51,7 @@ extension QuestResponseDTO {
         return .init(
             questId: questId,
             question: question,
+            questStyle: questStyle,
             questNumber: questNumber
         )
     }
