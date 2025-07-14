@@ -89,30 +89,6 @@ extension HomeViewController {
             }
             .store(in: &cancellables)
         
-        viewModel.output.countResult
-            .receive(on: DispatchQueue.main)
-            .sink { result in
-                switch result {
-                case .success(let count):
-                    self.rootView.updateProgress(count)
-                case .failure(let failure):
-                    ByeBooLogger.error(failure)
-                }
-            }
-            .store(in: &cancellables)
-        
-        viewModel.output.userResult
-            .receive(on: DispatchQueue.main)
-            .sink { result in
-                switch result {
-                case .success(let name):
-                    self.rootView.updateName(name)
-                case .failure(let failure):
-                    ByeBooLogger.error(failure)
-                }
-            }
-            .store(in: &cancellables)
-        
         viewModel.output.homeStateResult
             .receive(on: DispatchQueue.main)
             .sink { result in
@@ -122,6 +98,18 @@ extension HomeViewController {
                     self.state = state
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
+        
+        Publishers.CombineLatest(viewModel.output.countResult, viewModel.output.userResult)
+            .receive(on: DispatchQueue.main)
+            .sink { count, name in
+                switch (count, name) {
+                case let (.success(count), .success(name)):
+                    self.rootView.updateProgressView(name, count)
+                default:
+                    ByeBooLogger.error(ByeBooError.noData)
                 }
             }
             .store(in: &cancellables)
