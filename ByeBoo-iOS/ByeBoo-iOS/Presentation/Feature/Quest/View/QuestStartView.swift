@@ -12,8 +12,8 @@ import Then
 
 final class QuestStartView: BaseView {
     
-    private var nickname: String = "하츠핑"
-    private var journey: String = "감정 직면 여정"
+    private var nickname: String?
+    private var journey: String?
     
     let backButton = UIImageView()
     private let titleLabel = UILabel()
@@ -39,16 +39,7 @@ final class QuestStartView: BaseView {
         }
         descriptionLabel.do {
             $0.font = FontManager.body3R16.font
-            $0.attributedText = """
-                \(nickname)님의 상황에 꼭 맞춘
-                \(journey)의 퀘스트 30개를 드릴게요.\n
-                제가 드리는 퀘스트와 함께
-                이별을 극복해나가요 !
-                """.makeTitle(
-                    rangedText: "\(nickname)",
-                    font: FontManager.body1Sb16.font,
-                    baseFont: FontManager.body3R16.font
-                )
+            $0.attributedText = nil
             $0.textAlignment = .center
             $0.numberOfLines = 0
         }
@@ -71,7 +62,7 @@ final class QuestStartView: BaseView {
             $0.size.equalTo(24.adjustedW)
         }
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(backButton.snp.bottom).offset(67.adjustedH) 
+            $0.top.equalTo(backButton.snp.bottom).offset(67.adjustedH)
             $0.centerX.equalToSuperview()
         }
         cloverImageView.snp.makeConstraints {
@@ -95,11 +86,11 @@ final class QuestStartView: BaseView {
 }
 
 extension QuestStartView {
-    func updateName(_ nickname: String) {
-        self.nickname = nickname
+    
+    func updateDescription(nickname: String, journey: String) {
         descriptionLabel.attributedText = """
                 \(nickname)님의 상황에 꼭 맞춘
-                \(self.journey) 여정의 퀘스트 30개를 드릴게요.\n
+                \(journey) 여정의 퀘스트 30개를 드릴게요.\n
                 제가 드리는 퀘스트와 함께
                 이별을 극복해나가요 !
                 """.makeTitle(
@@ -109,17 +100,11 @@ extension QuestStartView {
                 )
     }
     
-    func updateJourney(_ journey: String) {
-        self.journey = journey
-        descriptionLabel.attributedText = """
-                \(self.nickname)님의 상황에 꼭 맞춘
-                \(journey) 여정의 퀘스트 30개를 드릴게요.\n
-                제가 드리는 퀘스트와 함께
-                이별을 극복해나가요 !
-                """.makeTitle(
-                    rangedText: "\(self.nickname)",
-                    font: FontManager.body1Sb16.font,
-                    baseFont: FontManager.body3R16.font
-                )
-    }
+//    func updateName(_ nickname: String) {
+//        self.nickname = nickname
+//    }
+//    
+//    func updateJourney(_ journey: String) {
+//        self.journey = journey
+//    }
 }
