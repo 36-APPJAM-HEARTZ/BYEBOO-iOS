@@ -10,7 +10,7 @@ import UIKit
 final class HomeHeaderView: BaseView {
 
     private let stackView = UIStackView()
-    let homeStateView: HomeStateView = HomeStateView(state: .afterJourney)
+    let homeStateView: HomeStateView = HomeStateView(state: .beforeJourneyStart(journey: .stub()))
     private var journeyProgressView: JourneyProgressView? = nil
     let textBox: OnboardingTextView = OnboardingTextView(text: "안녕")
     

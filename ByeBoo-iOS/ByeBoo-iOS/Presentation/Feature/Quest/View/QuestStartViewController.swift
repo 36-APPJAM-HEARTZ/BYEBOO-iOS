@@ -71,7 +71,7 @@ extension QuestStartViewController {
             .receive(on: DispatchQueue.main)
             .sink { result in
                 switch result {
-                case .success(let success):
+                case .success:
                     self.navigationController?.tabBarController?.selectedIndex = 1
                     self.navigationController?.popToRootViewController(animated: true)
                 case .failure(let failure):
