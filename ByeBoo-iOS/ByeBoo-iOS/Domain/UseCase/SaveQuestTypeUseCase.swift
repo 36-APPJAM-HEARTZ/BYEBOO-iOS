@@ -18,5 +18,7 @@ struct DefaultSaveQuestTypeUseCase: SaveQuestTypeUseCase {
         self.repqository = repqository
     }
     
-    func execute(questID: Int, answer: String, emotionState: String) { }
+    func execute(questID: Int, answer: String, emotionState: String) async throws {
+        try await repqository.postSaveQuest(questID: questID, answer: answer, emotionState: emotionState)
+    }
 }
