@@ -22,6 +22,16 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return
         }
         
+        guard let questInfoRepository = DIContainer.shared.resolve(type: GetQuestInfoInterface.self) else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            return
+        }
+        
+        guard let saveQuestTypeRepository = DIContainer.shared.resolve(type: SaveQuestTypeInterface.self) else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            return
+        }
+        
         DIContainer.shared.register(type: FetchUserJourneyUseCase.self) { _ in
             return DefaultFetchUserJourneyUseCase(repository: userRepository)
         }
@@ -30,6 +40,14 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultGetUserNameUseCase(repository: userRepository)
         }
         
+        DIContainer.shared.register(type: GetQuestInfoUseCase.self) { _ in
+            return DefaultGetQuestInfoUseCase(questInfoReposiroty: questInfoRepository)
+        }
+        
+        DIContainer.shared.register(type: SaveQuestTypeUseCase.self) { _ in
+            return DefaultSaveQuestTypeUseCase(repqository: saveQuestTypeRepository)
+        }
+      
         DIContainer.shared.register(type: SendUserUseCase.self) { _ in
             return DefaultSenduserUseCase(repository: userRepository)
         }

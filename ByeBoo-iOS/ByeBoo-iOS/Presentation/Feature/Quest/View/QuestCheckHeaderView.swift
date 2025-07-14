@@ -22,9 +22,6 @@ final class QuestCheckHeaderView: BaseView {
     override func setStyle() {
         backgroundColor = .black50
         titleLabel.do {
-            titleLabel.attributedText = "\(nickname)님, 지금\n\(journeyType.description)을 진행 중이에요.".makeTitle(
-                rangedText: "\(journeyType.description)"
-            )
             $0.font = FontManager.head1Sb24.font
             $0.numberOfLines = 2
             $0.textAlignment = .left
@@ -47,7 +44,7 @@ final class QuestCheckHeaderView: BaseView {
     
     override func setLayout() {
         periodTag.snp.makeConstraints {
-            $0.top.equalTo(safeAreaLayoutGuide.snp.top)
+            $0.top.equalToSuperview().inset(72.adjustedH)
             $0.leading.equalTo(safeAreaLayoutGuide.snp.leading).inset(24.adjustedW)
         }
         titleLabel.snp.makeConstraints {
@@ -57,6 +54,7 @@ final class QuestCheckHeaderView: BaseView {
         subTitleLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(8.adjustedH)
             $0.leading.equalTo(safeAreaLayoutGuide.snp.leading).inset(24.adjustedW)
+            $0.bottom.equalToSuperview().inset(19.adjustedH)
         }
     }
     
