@@ -33,7 +33,6 @@ final class QuestCheckViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
-        self.tabBarController?.tabBar.isHidden = true
     }
     
     override func viewDidLoad() {
