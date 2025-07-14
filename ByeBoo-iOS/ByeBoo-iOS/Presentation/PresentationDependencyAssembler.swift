@@ -89,7 +89,11 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 return
             }
             
-            return QuestStartViewModel(startJourneyUseCase: startJourneyUseCase)
+            return QuestStartViewModel(
+                startJourneyUseCase: startJourneyUseCase,
+                getUserNameUseCase: getUserNameUseCase,
+                fetchJourneyUseCase: fetchUserJourneyUseCase
+            )
         }
     }
 }

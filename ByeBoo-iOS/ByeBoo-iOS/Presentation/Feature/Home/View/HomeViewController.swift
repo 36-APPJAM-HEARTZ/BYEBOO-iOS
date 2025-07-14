@@ -65,9 +65,8 @@ extension HomeViewController {
         switch state {
         case .beforeJourneyStart:
             let viewController = QuestStartViewController(viewModel: viewModel)
-            viewController.hidesBottomBarWhenPushed = true
-            viewController.navigationItem.hidesBackButton = true
-            navigationController?.pushViewController(viewController, animated: false)
+            viewController.modalPresentationStyle = .overFullScreen
+            self.present(viewController, animated: false)
         case .beforeQuest:
             navigationController?.tabBarController?.selectedIndex = 1
         case .afterJourney, .afterQuest:
