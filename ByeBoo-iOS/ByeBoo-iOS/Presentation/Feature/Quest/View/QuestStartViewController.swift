@@ -58,7 +58,18 @@ final class QuestStartViewController: BaseViewController {
 
 extension QuestStartViewController: BackNavigable {
     func back() {
-        dismiss(animated: false)
+        if let presentingVC = self.presentingViewController {
+            if let tabBarController = presentingVC as? UITabBarController {
+                // 홈 탭에서 진입
+                if tabBarController.selectedIndex == 0 {
+                    self.dismiss(animated: false)
+                } else {
+                    // 퀘스트 탭에서 진입
+                    self.dismiss(animated: false)
+                    tabBarController.selectedIndex = 0
+                }
+            }
+        }
     }
 }
 

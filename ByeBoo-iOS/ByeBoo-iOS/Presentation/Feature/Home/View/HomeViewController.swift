@@ -65,7 +65,7 @@ extension HomeViewController {
         switch state {
         case .beforeJourneyStart:
             let viewController = QuestStartViewController(viewModel: viewModel)
-            viewController.modalPresentationStyle = .overFullScreen
+            viewController.modalPresentationStyle = .fullScreen
             self.present(viewController, animated: false)
         case .beforeQuest:
             navigationController?.tabBarController?.selectedIndex = 1
