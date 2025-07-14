@@ -106,5 +106,10 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 fetchJourneyUseCase: fetchUserJourneyUseCase
             )
         }
+     
+        DIContainer.shared.register(type: MyPageViewModel.self) { container in
+            
+            return MyPageViewModel(getUserNameUseCase: getUserNameUseCase)
+        }
     }
 }

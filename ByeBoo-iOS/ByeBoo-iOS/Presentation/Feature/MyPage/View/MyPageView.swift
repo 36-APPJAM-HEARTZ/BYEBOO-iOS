@@ -12,27 +12,12 @@ import Then
 
 final class MyPageView: BaseView {
 
-    private let nameView: OneLineTextBoxView
+    private let nameView = OneLineTextBoxView(title: "")
     private let divider1 = SectionDividerView()
     let myRecordView = MyRecordView()
     
-    private let nickName: String
-    
-    init(nickName: String) {
-        self.nickName = nickName
-        
-        nameView = OneLineTextBoxView(title: "\(nickName)님")
-        
-        super.init(frame: .zero)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     override func setStyle() {
         backgroundColor = .grayscale900
-        
     }
     
     override func setUI() {
@@ -59,5 +44,11 @@ final class MyPageView: BaseView {
         }
     }
     
+}
+
+extension MyPageView {
+    func updateName(_ name: String) {
+        nameView.updateTitle("\(name)님")
+    }
 }
 
