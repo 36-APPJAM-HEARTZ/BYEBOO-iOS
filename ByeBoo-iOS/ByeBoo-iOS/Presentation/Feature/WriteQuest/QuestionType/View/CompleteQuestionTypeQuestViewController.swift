@@ -29,13 +29,11 @@ final class CompleteQuestionTypeQuestViewController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        self.navigationItem.hidesBackButton = true
-        viewModel.action(.questAnswerDidLoad(questID: 31))
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationItem.hidesBackButton = true
+        viewModel.action(.questAnswerDidLoad(questID: 31))
         
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,

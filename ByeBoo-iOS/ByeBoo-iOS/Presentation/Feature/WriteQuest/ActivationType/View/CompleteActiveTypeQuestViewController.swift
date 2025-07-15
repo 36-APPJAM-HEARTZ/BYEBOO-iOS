@@ -19,12 +19,7 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
     override func loadView() {
         view = rootView
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.navigationItem.hidesBackButton = true
-        viewModel.action(.questAnswerDidLoad(questID: 31))
-    }
-    
+        
     init(viewModel: CompleteQuestViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -36,6 +31,9 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationItem.hidesBackButton = true
+        viewModel.action(.questAnswerDidLoad(questID: 31))
         
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
