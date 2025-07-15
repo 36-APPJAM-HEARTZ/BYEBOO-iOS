@@ -41,7 +41,7 @@ struct DefaultSaveActiveQuestRepository: SaveQuestActiveInterface{
         let signedURLRequestDTO = SignedURLRequestDTO(contentType: "image/jpeg", imageKey: imageKey)
         
         let result = try await network.request(
-            QuestAPI.images(userID: 186, request: signedURLRequestDTO),
+            QuestAPI.images(userID: userID, request: signedURLRequestDTO),
             decodingType: SignedURLResponseDTO.self
         )
         
@@ -66,7 +66,7 @@ struct DefaultSaveActiveQuestRepository: SaveQuestActiveInterface{
         )
         
         let _ = try await network.request(
-            QuestAPI.active(userID: 186, questID: 6, request: saveQuestActiveDTO)
+            QuestAPI.active(userID: userID, questID: questID, request: saveQuestActiveDTO)
         )
     }
 }

@@ -14,14 +14,16 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     private let viewModel: WriteQuestionTypeViewModel
     private var cancellables = Set<AnyCancellable>()
     
-    let questID: Int = 0
+    private var questID: Int
     private var answerText: String = ""
     private var emotionState: String = ""
     
     init(
-        viewModel: WriteQuestionTypeViewModel
+        viewModel: WriteQuestionTypeViewModel,
+        questID: Int
     ){
         self.viewModel = viewModel
+        self.questID = questID
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -43,7 +45,7 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
         )
         
         bind()
-        viewModel.action(.viewDidLoad(quesetID: 1))
+        viewModel.action(.viewDidLoad(quesetID: questID))
     }
     
     override func setAddTarget() {
@@ -151,7 +153,13 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
         
         ByeBooLogger.debug("text: \(answerText)")
         ByeBooLogger.debug("emtionState: \(emotionState)")
-        self.viewModel.action(.presentCompleteView(questID: 31, answer: answerText, emotionState: emotionState))
+        self.viewModel.action(
+            .presentCompleteView(
+                questID: questID,
+                answer: answerText,
+                emotionState: emotionState
+            )
+        )
         
         let viewController = CompleteQuestionTypeQuestViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(viewController, animated: true)

@@ -14,7 +14,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private let viewModel: WriteActiveTypeViewModel
     private var cancellables = Set<AnyCancellable>()
     
-    let questID: Int = 0
+    private let questID: Int
     private var answerText: String = ""
     private var emotionState: String = ""
     private var image: UIImage = UIImage()
@@ -24,9 +24,11 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     }
     
     init(
-        viewModel: WriteActiveTypeViewModel
+        viewModel: WriteActiveTypeViewModel,
+        questID: Int
     ){
         self.viewModel = viewModel
+        self.questID = questID
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -46,7 +48,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         setGesture()
         bind()
         presentPhotoPicker()
-        viewModel.action(.viewDidLoad(quesetID: 1))
+        viewModel.action(.viewDidLoad(quesetID: questID))
     }
     
     override func setAddTarget() {
@@ -204,6 +206,7 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
         
         let uuidKey = UUID().uuidString
         ByeBooLogger.debug("UUID: \(uuidKey)")
+        print("퀘스트 ID: \(questID)")
         self.viewModel.action(.didTapCompleteButton(
             questID: self.questID,
             answer: self.answerText,

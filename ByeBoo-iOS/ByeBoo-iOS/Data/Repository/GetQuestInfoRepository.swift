@@ -22,7 +22,7 @@ struct DefaultGetQuestInfoRepository: GetQuestInfoInterface {
     func execute(questID: Int) async throws -> QuestInfoEntity {
         let userID: Int = userDefaultService.load(key: .userID) ?? 1
         let result = try await network.request(
-            QuestAPI.checkQuest(userID: 186, questID: 6),
+            QuestAPI.checkQuest(userID: userID, questID: questID),
             decodingType: QuestInfoResponseDTO.self
         )
         return result.toEntity()
