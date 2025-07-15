@@ -35,10 +35,10 @@ enum QuestType {
 
 final class QuestTextField: BaseView {
     let textView = UITextView()
-    private let textCount = UILabel()
-    private let placeholder: String
+    var textCount = UILabel()
+    let placeholder: String
     private var isPlaceholderActive: Bool = true
-    private let limitCount: Int
+    let limitCount: Int
     var count: Int = 0
     weak var delegate: QuestCompleteProtocol?
     

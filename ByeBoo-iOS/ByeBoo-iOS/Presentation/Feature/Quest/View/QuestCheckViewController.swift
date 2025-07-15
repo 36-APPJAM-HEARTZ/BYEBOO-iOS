@@ -38,7 +38,6 @@ final class QuestCheckViewController: BaseViewController {
         
         isStartedQuset = false
         
-        bind()
         viewModel.action(.questViewWillAppear)
     }
     

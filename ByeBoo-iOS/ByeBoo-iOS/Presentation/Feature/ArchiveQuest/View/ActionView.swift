@@ -20,14 +20,14 @@ final class ActionView: BaseView {
     var photoURL: String
     
     init(
-        descriptionText: String?,
+        descriptionText: String,
         photoURL: String
     ) {
         self.descriptionText = descriptionText
         self.photoURL = photoURL
         
-        if let text = descriptionText {
-            descriptionView = TextBoxView(title: text)
+        if descriptionText != ""  {
+            descriptionView = TextBoxView(title: descriptionText)
         } else {
             descriptionView = nil
         }

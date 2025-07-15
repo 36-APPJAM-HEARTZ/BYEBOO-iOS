@@ -28,7 +28,7 @@ struct DefaultSaveActiveQuestRepository: SaveQuestActiveInterface{
         image: Data,
         imageKey: String
     ) async throws {
-        let userID: Int = userDefaultService.load(key: .userID) ?? 1
+//        let userID: Int = userDefaultService.load(key: .userID) ?? 1
 
         let url = try await makeSignedURL(imageKey: imageKey)
 

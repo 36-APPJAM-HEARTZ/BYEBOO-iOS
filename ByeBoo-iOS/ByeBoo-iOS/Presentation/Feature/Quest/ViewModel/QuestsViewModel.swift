@@ -10,30 +10,10 @@ import Combine
 final class QuestsViewModel: ViewModelType {
     
     private let cancellables = Set<AnyCancellable>()
-    private let nameSubject = CurrentValueSubject<Result<String, ByeBooError>?, Never>(nil)
-    private let journeySubject = CurrentValueSubject<Result<JourneyEntity, ByeBooError>?, Never>(nil)
-    private let questsSubject = CurrentValueSubject<Result<ProgressingQuestsEntity, ByeBooError>?, Never>(nil)
-    
+    private let nameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>.init()
+    private let journeySubject = PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never>.init()
+    private let questsSubject = PassthroughSubject<Result<ProgressingQuestsEntity, ByeBooError>, Never>.init()
     private(set) var output: Output
-    
-    var isReadyToPresentPublisher: AnyPublisher<Bool, Never> {
-        Publishers.CombineLatest3(
-            nameSubject,
-            journeySubject,
-            questsSubject
-        )
-        .map { nameResult, journeyResult, questsResult in
-            if case .success = nameResult,
-               case .success = journeyResult,
-               case .success = questsResult {
-                return true
-            } else {
-                return false
-            }
-        }
-        .removeDuplicates()
-        .eraseToAnyPublisher()
-    }
     
     private let progressingQuestsUseCase: GetProgressingQuestsUseCase
     private let getUserIDUseCase: GetUserIDUseCase
@@ -52,9 +32,9 @@ final class QuestsViewModel: ViewModelType {
         self.fetchUserJourneyUseCase = fetchUserJourneyUseCase
         
         self.output = Output(
-            namePublisher: nameSubject.compactMap { $0 }.eraseToAnyPublisher(),
-            journeyPublisher: journeySubject.compactMap { $0 }.eraseToAnyPublisher(),
-            questsPublisher: questsSubject.compactMap { $0 }.eraseToAnyPublisher()
+            namePublisher: nameSubject.eraseToAnyPublisher(),
+            journeyPublisher: journeySubject.eraseToAnyPublisher(),
+            questsPublisher: questsSubject.eraseToAnyPublisher()
         )
     }
     
@@ -92,12 +72,6 @@ final class QuestsViewModel: ViewModelType {
                 questsSubject.send(.failure(error as! ByeBooError))
             }
         }
-    }
-    
-    func reset() {
-        nameSubject.send(nil)
-        journeySubject.send(nil)
-        questsSubject.send(nil)
     }
 }
 

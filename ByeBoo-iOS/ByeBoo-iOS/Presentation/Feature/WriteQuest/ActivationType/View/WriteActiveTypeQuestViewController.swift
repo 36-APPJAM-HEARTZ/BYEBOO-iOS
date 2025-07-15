@@ -98,7 +98,13 @@ extension WriteActiveTypeQuestViewController {
     
     @objc
     private func confirmButtonDidTap() {
-        answerText = rootView.questTextField.textView.text ?? ""
+        if rootView.questTextField.textView.text == rootView.questTextField.placeholder ||
+            rootView.questTextField.textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        {
+            answerText = ""
+        } else {
+            answerText = rootView.questTextField.textView.text
+        }
         
         let viewController = EmotionBottomSheetViewController()
         viewController.previousView = .activation
@@ -203,7 +209,7 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             fatalError()
         }
-        
+
         let uuidKey = UUID().uuidString
         ByeBooLogger.debug("UUID: \(uuidKey)")
         print("퀘스트 ID: \(questID)")
@@ -214,8 +220,12 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
             image: self.image,
             imageKey: uuidKey)
         )
-        
-        let viewController = CompleteActiveTypeQuestViewController(viewModel: viewModel)
+
+        viewModel.action(.questAnswerDidLoad(questID: self.questID))
+        let viewController = CompleteActiveTypeQuestViewController(
+            viewModel: viewModel,
+            questID: questID
+        )
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 }

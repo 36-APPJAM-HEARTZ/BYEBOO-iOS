@@ -13,15 +13,15 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
     private let rootView = CompleteActiveTypeQuestView()
     private var viewModel: CompleteQuestViewModel
     private var cancellables = Set<AnyCancellable>()
-    
-    let questID: Int = 0
+    private let questID: Int
     
     override func loadView() {
         view = rootView
     }
     
-    init(viewModel: CompleteQuestViewModel) {
+    init(viewModel: CompleteQuestViewModel, questID: Int) {
         self.viewModel = viewModel
+        self.questID = questID
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -33,7 +33,7 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
         super.viewDidLoad()
         
         self.navigationItem.hidesBackButton = true
-        viewModel.action(.questAnswerDidLoad(questID: 31))
+        viewModel.action(.questAnswerDidLoad(questID: questID))
         
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
@@ -47,6 +47,7 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
     
     private func bind() {
         viewModel.output.resultPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 switch result {
                 case .success(let entity):
@@ -66,5 +67,9 @@ extension CompleteActiveTypeQuestViewController: Dismissible {
             return
         }
         viewModel.action(.questViewWillAppear)
+        self.navigationController?.pushViewController(
+            QuestCheckViewController(viewModel: viewModel),
+            animated: false
+        )
     }
 }
