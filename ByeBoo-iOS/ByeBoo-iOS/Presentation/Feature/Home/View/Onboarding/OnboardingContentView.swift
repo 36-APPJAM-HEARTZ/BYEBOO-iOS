@@ -42,7 +42,7 @@ final class OnboardingContentView: BaseView {
             $0.image = .first
         }
         firstTopDescriptionLabel.do {
-            $0.text = "저는 당신이 털어놓은 감정을 담는 주머니,\n보리라고 해요."
+            $0.text = "저는 당신이 털어놓은 감정을 담는 보따리,\n보리라고 해요."
             $0.textAlignment = .center
             $0.numberOfLines = 0
             $0.font = FontManager.body3R16.font
@@ -52,7 +52,7 @@ final class OnboardingContentView: BaseView {
             $0.image = .second
         }
         firstBottomDescriptionLable.do {
-            $0.text = "이별 후 걸림돌 같은 감정들을 털어놔주시면\n제 안에서 조약돌이 되어 쌓여요."
+            $0.text = "이별 후 걸림돌 같은 감정들을 털어놔주시면\n제 안에서 감정돌이 되어 쌓여요."
             $0.textAlignment = .center
             $0.numberOfLines = 0
             $0.font = FontManager.body3R16.font
@@ -62,7 +62,7 @@ final class OnboardingContentView: BaseView {
             $0.image = .third
         }
         secondTopDescriptionLabel.do {
-            $0.text = "당신이 준비가 되었을 때\n조약돌들을 하나씩 꺼내 바닥에 놓아드려요."
+            $0.text = "당신이 준비가 되었을 때\n감정돌들을 하나씩 꺼내 바닥에 놓아드려요."
             $0.textAlignment = .center
             $0.numberOfLines = 0
             $0.font = FontManager.body3R16.font
@@ -72,7 +72,7 @@ final class OnboardingContentView: BaseView {
             $0.image = .fourth
         }
         secondBottomDescriptionLabel.do {
-            $0.text = "제가 모아둔 조약돌을 디딤돌 삼아\n한 걸음 한 걸음 미래로 나아가주세요."
+            $0.text = "제가 모아둔 감정돌을 디딤돌 삼아\n한 걸음 한 걸음 미래로 나아가주세요."
             $0.textAlignment = .center
             $0.numberOfLines = 0
             $0.font = FontManager.body3R16.font
