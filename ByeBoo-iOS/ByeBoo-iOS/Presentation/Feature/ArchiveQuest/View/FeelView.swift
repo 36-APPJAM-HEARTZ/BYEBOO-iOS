@@ -12,8 +12,8 @@ import SnapKit
 final class FeelView: BaseView {
 
     private let descriptionView: TextBoxView
-    private let emotionType: String
-    private let descriptionText: String
+    var emotionType: String
+    var descriptionText: String
     
     private let titleTextView = IconOneLineTextView(iconType: .change, text: "퀘스트 완료 후, 이런 감정을 느꼈어요")
     
@@ -55,5 +55,11 @@ final class FeelView: BaseView {
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(24.5.adjustedH)
         }
+    }
+}
+
+extension FeelView {
+    func updateUI(emotionType: String, descriptionText: String) {
+        self.descriptionView.updateEmotionText(emotionType, text: descriptionText)
     }
 }

@@ -17,7 +17,7 @@ final class QuestModalView: BaseView, ModalProtocol {
     private let imageView = UIImageView()
     private let questLabel = UILabel()
     private let titleLabel = UILabel()
-    private let tipButton = UIButton()
+    let tipButton = UIButton()
     
     private var questNumber: Int
     private var quest: String

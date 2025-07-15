@@ -11,7 +11,10 @@ import SnapKit
 import Then
 
 final class QuestTipView: BaseView {
-
+    
+    private let navigationView = UIView()
+    private let titleLabel = UILabel()
+    let closeButton = UIButton()
     private let stepStackView = UIStackView()
     private var stepNum: Int = 0
     private let stepLabel = ByeBooYellowTag(text: "STEP 0")
@@ -23,10 +26,11 @@ final class QuestTipView: BaseView {
     
     override func setUI() {
         addSubviews(
+            navigationView,
             stepStackView,
             title
         )
-        
+        navigationView.addSubviews(closeButton, titleLabel)
         stepStackView.addArrangedSubviews(stepLabel, questLabel)
     }
     
@@ -79,6 +83,22 @@ final class QuestTipView: BaseView {
     }
     
     override func setStyle() {
+        navigationView.do {
+            $0.backgroundColor = .grayscale900
+        }
+        
+        titleLabel.do {
+            $0.text = "퀘스트 작성 TIP"
+            $0.textColor = .white
+            $0.font = FontManager.sub1Sb20.font
+        }
+        
+        closeButton.do { 
+            let image = UIImage.xicon.withRenderingMode(.alwaysTemplate)
+            $0.setImage(image, for: .normal)
+            $0.tintColor = .white
+        }
+        
         stepStackView.do {
             $0.axis = .horizontal
             $0.spacing = 8
@@ -100,8 +120,23 @@ final class QuestTipView: BaseView {
     override func setLayout() {
         backgroundColor = .grayscale900
         
+        navigationView.snp.makeConstraints {
+            $0.top.leading.trailing.equalTo(safeAreaLayoutGuide)
+            $0.height.equalTo(80.adjustedH)
+        }
+        
+        titleLabel.snp.makeConstraints {
+            $0.center.equalTo(navigationView.snp.center)
+        }
+        
+        closeButton.snp.makeConstraints {
+            $0.trailing.equalToSuperview().inset(24)
+            $0.centerY.equalTo(navigationView.snp.centerY)
+            $0.width.height.equalTo(24.adjustedW)
+        }
+        
         stepStackView.snp.makeConstraints {
-            $0.top.equalTo(safeAreaLayoutGuide).offset(12.adjustedH)
+            $0.top.equalTo(navigationView.snp.bottom)
             $0.centerX.equalToSuperview()
         }
         

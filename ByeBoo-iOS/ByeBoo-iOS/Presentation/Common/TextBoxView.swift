@@ -9,8 +9,8 @@ import UIKit
 
 final class TextBoxView: BaseView {
     
-    private let titleLabel = UILabel()
-    private var emotionChip: ByeBooEmotionChip? = nil
+    let titleLabel = UILabel()
+    var emotionChip: ByeBooEmotionChip? = nil
     
     private let title: String
     private let emotionType: ByeBooEmotion?
@@ -21,13 +21,13 @@ final class TextBoxView: BaseView {
     ) {
         self.title = title
         self.emotionType = emotionType
-
+        
         self.titleLabel.text = title
-
+        
         if let emotionType {
             emotionChip = ByeBooEmotionChip(emotionType: emotionType, isPurple: true)
         }
-
+        
         super.init(frame: .zero)
     }
     
@@ -65,9 +65,20 @@ final class TextBoxView: BaseView {
         
         titleLabel.snp.makeConstraints {
             $0.verticalEdges.equalToSuperview().inset(18.adjustedH)
-            $0.centerY.equalToSuperview()
+//            $0.centerY.equalToSuperview()
             $0.leading.equalToSuperview().inset(emotionChip == nil ? 24.adjustedW : 132.adjustedW)
             $0.trailing.equalToSuperview().inset(24.adjustedW)
         }
+    }
+}
+
+extension TextBoxView {
+    func updateText(_ text: String) {
+        titleLabel.text = text
+    }
+    
+    func updateEmotionText(_ emotionState: String, text: String){
+        self.titleLabel.text = text
+        self.emotionChip?.updateEmotion(ByeBooEmotion.toEmotion(text: emotionState))
     }
 }

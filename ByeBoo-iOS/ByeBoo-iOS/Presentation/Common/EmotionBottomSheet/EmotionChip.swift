@@ -11,9 +11,9 @@ import SnapKit
 import Then
 
 final class ByeBooEmotionChip: BaseView {
-    private let emotionImage: UIImageView
-    let emotionTag: ByeBooFilledTag
-    let emotionType: ByeBooEmotion
+    private var emotionImage: UIImageView
+    var emotionTag: ByeBooFilledTag
+    var emotionType: ByeBooEmotion
     
     init(emotionType: ByeBooEmotion, isPurple: Bool = false) {
         self.emotionImage = emotionType.emotionImage
@@ -61,5 +61,13 @@ final class ByeBooEmotionChip: BaseView {
             $0.centerX.equalToSuperview()
             $0.width.equalTo(84.adjustedW)
         }
+    }
+}
+
+extension ByeBooEmotionChip {
+    func updateEmotion(_ emotionType: ByeBooEmotion) {
+        self.emotionType = emotionType
+        self.emotionImage.image = emotionType.emotionImage.image
+        self.emotionTag.textLabel.text = emotionType.emotionText
     }
 }

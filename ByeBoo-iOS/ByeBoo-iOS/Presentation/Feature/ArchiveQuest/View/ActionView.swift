@@ -16,8 +16,8 @@ final class ActionView: BaseView {
     private let descriptionView: TextBoxView?
     private let placeholderView = UIImageView()
     private let thinkTextView =  IconOneLineTextView(iconType: .think,text: "이렇게 완료했어요" )
-    private let descriptionText: String?
-    private let photoURL: String
+    var descriptionText: String?
+    var photoURL: String
     
     init(
         descriptionText: String,
@@ -84,6 +84,16 @@ final class ActionView: BaseView {
                 $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
                 $0.bottom.equalToSuperview().inset(24.5.adjustedH)
             }
+        }
+    }
+}
+
+extension ActionView {
+    func updateUI(description: String, photoURL: String) {
+        self.descriptionText = description
+        self.photoURL = photoURL
+        if let url = URL(string: photoURL) {
+            photoView.kf.setImage(with: url)
         }
     }
 }

@@ -40,14 +40,19 @@ final class QuestCheckViewController: BaseViewController {
         viewModel.action(.questViewWillAppear)
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        bind()
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.navigationBar.isHidden = false
-        self.tabBarController?.tabBar.isHidden = false
     }
     
     override func setDelegate() {
         questsCheckView.questCollectionView.do {
+            $0.delegate = self
             $0.dataSource = self
             $0.register(
                 QuestStateCell.self,
@@ -138,6 +143,74 @@ final class QuestCheckViewController: BaseViewController {
     }
 }
 
+extension QuestCheckViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let quest = questsEntity?.steps[indexPath.section].quests[indexPath.item]
+        let currentStep = questsEntity?.currentStep
+        
+        guard let step = currentStep,
+              let questNumber = quest?.questNumber else {
+            return
+        }
+        
+        guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else { return }
+        
+        if questNumber < step {
+            let archiveQuestViewController = ArchiveQuestViewController(viewModel: viewModel)
+            self.navigationController?.pushViewController(archiveQuestViewController, animated: false)
+            
+        } else if questNumber == step {
+            let onProgressQuest: (() -> Void) = { self.moveWriteQuest(quest: quest) }
+            let modalView = QuestModalView(questNumber: questNumber, quest: quest?.question ?? "")
+            modalView.tipButton.addTarget(self, action: #selector(tipButtonDidTap), for: .touchUpInside)
+            
+            let modalBuilder = ModalBuilder(
+                modalView: modalView,
+                action: onProgressQuest,
+                rootViewController: self
+            )
+            modalBuilder.present()
+        }
+    }
+    
+    private func moveWriteQuest(quest: QuestEntity?) {
+        if quest?.questStyle == QuestStyle.recording.key {
+            guard let viewModel = DIContainer.shared.resolve(type: WriteQuestionTypeViewModel.self),
+                  let questID = quest?.questId else {
+                return
+            }
+            let questionQuestViewController = WriteQuestionTypeQuestViewController(
+                viewModel: viewModel,
+                questID: questID
+            )
+            self.navigationController?.pushViewController(questionQuestViewController, animated: false)
+        } else {
+            guard let viewModel = DIContainer.shared.resolve(type: WriteActiveTypeViewModel.self),
+                  let questID = quest?.questId else {
+                return
+            }
+            let activationQuestViewController = WriteActiveTypeQuestViewController(
+                viewModel: viewModel,
+                questID: questID
+            )
+            self.navigationController?.pushViewController(activationQuestViewController, animated: false)
+        }
+    }
+    
+    @objc
+    private func tipButtonDidTap() {
+        guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self) else {
+            return
+        }
+        let questTipViewController = QuestTipViewController(viewModel: viewModel)
+        
+        questTipViewController.modalPresentationStyle = .fullScreen
+        let topViewController = UIApplication.shared.topViewController()
+        topViewController?.present(questTipViewController, animated: false)
+    }
+}
+
 extension QuestCheckViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -195,5 +268,4 @@ extension QuestCheckViewController: UICollectionViewDataSource {
         
         return headerView
     }
-    
 }

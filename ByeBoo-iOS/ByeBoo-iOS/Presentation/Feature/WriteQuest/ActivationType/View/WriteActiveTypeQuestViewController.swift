@@ -14,7 +14,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private let viewModel: WriteActiveTypeViewModel
     private var cancellables = Set<AnyCancellable>()
     
-    let questID: Int = 0
+    private let questID: Int
     private var answerText: String = ""
     private var emotionState: String = ""
     private var image: UIImage = UIImage()
@@ -25,9 +25,11 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     }
     
     init(
-        viewModel: WriteActiveTypeViewModel
+        viewModel: WriteActiveTypeViewModel,
+        questID: Int
     ){
         self.viewModel = viewModel
+        self.questID = questID
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -47,7 +49,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         setGesture()
         bind()
         presentPhotoPicker()
-        viewModel.action(.viewDidLoad(quesetID: 5))
+        viewModel.action(.viewDidLoad(quesetID: questID))
     }
     
     override func setAddTarget() {
@@ -159,12 +161,11 @@ extension WriteActiveTypeQuestViewController {
 
 extension WriteActiveTypeQuestViewController: BackNavigable {
     func back() {
+        let action: (() -> Void) = { self.navigationController?.popViewController(animated: true) }
+        
         ModalBuilder(
             modalView: QuitModalView(),
-            action: {
-                ByeBooLogger.debug("모달 뜸")
-                // TODO: 퀘스트 조회 뷰로 연결
-            },
+            action: action,
             rootViewController: self
         ).present()
     }
@@ -224,7 +225,10 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
         )
 
         viewModel.action(.questAnswerDidLoad(questID: self.questID))
-        let viewController = CompleteActiveTypeQuestViewController(viewModel: viewModel)
+        let viewController = CompleteActiveTypeQuestViewController(
+            viewModel: viewModel,
+            questID: questID
+        )
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 }

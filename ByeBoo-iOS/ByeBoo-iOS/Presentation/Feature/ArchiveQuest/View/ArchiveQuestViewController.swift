@@ -5,31 +5,80 @@
 //  Created by 최주리 on 7/7/25.
 //
 
+import Combine
 import UIKit
 
 final class ArchiveQuestViewController: BaseViewController {
-    
+        
     private let rootView = ArchiveQuestView(type: .activation)
+    private let viewModel: CompleteQuestViewModel
+    private var cancellables = Set<AnyCancellable>()
+    
+    private let questID: Int = 1
+    private let questType: QuestType = .question
+    
+    init(
+        viewModel: CompleteQuestViewModel
+//        questID: Int,
+//        questType: QuestType
+    ) {
+        self.viewModel = viewModel
+//        self.questID = questID
+//        self.questType = questType
+//        rootView = ArchiveQuestView(type: questType)
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = rootView
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        bind()
+        viewModel.action(.questAnswerDidLoad(questID: questID))
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.navigationItem.hidesBackButton = true
+        
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
             type: .close,
             action: #selector(close)
         )
+        
+        viewModel.action(.questAnswerDidLoad(questID: 1))
+        bind()
     }
-    
+}
+
+extension ArchiveQuestViewController {
+    func bind() {
+        viewModel.output.resultPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let entity):
+                    self?.rootView.updateUI(entity)
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellables)
+    }
 }
 
 extension ArchiveQuestViewController: Dismissible {
     func close() {
-        //
+        
     }
 }
