@@ -39,6 +39,7 @@ final class BottomNavigationViewController: UITabBarController {
     private func setViewControllerAppearance() {
         let appearance = UITabBarAppearance()
         appearance.configureWithTransparentBackground()
+        appearance.backgroundEffect = UIBlurEffect(style: .systemChromeMaterialDark)
         appearance.backgroundColor = .black50
         
         let itemAppearance = UITabBarItemAppearance()
