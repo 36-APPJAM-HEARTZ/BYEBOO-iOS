@@ -132,7 +132,10 @@ extension WriteActiveTypeQuestViewController {
         guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self) else {
             return
         }
-        let viewController = QuestTipViewController(viewModel: viewModel)
+        let viewController = QuestTipViewController(
+            viewModel: viewModel,
+            questID: questID
+        )
         viewController.navigationItem.hidesBackButton = true
         self.navigationController?.pushViewController(viewController, animated: true)
     }
