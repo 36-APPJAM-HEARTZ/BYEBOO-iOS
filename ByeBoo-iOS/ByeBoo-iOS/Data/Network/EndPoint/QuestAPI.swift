@@ -60,8 +60,6 @@ extension QuestAPI: EndPoint {
             let .active(userID, _, _),
             let .tip(userID, _),
             let .images(userID, _),
-            let .answer(userID, _):
-            let .images(userID),
             let .answer(userID, _),
             let .progressingQuests(userID):
             return .withAuth(userID: userID)
