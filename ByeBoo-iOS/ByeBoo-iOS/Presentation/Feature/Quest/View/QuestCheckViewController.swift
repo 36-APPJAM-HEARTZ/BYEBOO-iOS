@@ -36,8 +36,6 @@ final class QuestCheckViewController: BaseViewController {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
         
-        isStartedQuset = false
-        
         bind()
         viewModel.action(.questViewWillAppear)
     }
@@ -95,9 +93,6 @@ final class QuestCheckViewController: BaseViewController {
                 ByeBooLogger.error(ByeBooError.unknownError)
                 
             case (.success(_), .success(_), .failure(_)):
-                guard !self.isStartedQuset else { return }
-                self.isStartedQuset = true
-                
                 guard let startViewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {
                     ByeBooLogger.error(ByeBooError.DIFailedError)
                     fatalError()
