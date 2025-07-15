@@ -12,8 +12,8 @@ import SnapKit
 final class FeelView: BaseView {
 
     private let descriptionView: TextBoxView
-    private let emotionType: String
-    private let descriptionText: String
+    var emotionType: String
+    var descriptionText: String
     
     private let titleTextView = IconOneLineTextView(iconType: .change, text: "퀘스트 완료 후, 이런 감정을 느꼈어요")
     

@@ -18,10 +18,10 @@ enum QuestHeaderType {
 final class ArchiveQuestHeaderView: BaseView {
 
     private let type: QuestHeaderType
-    private let stepLabel = UILabel()
-    private let questNumberLabel = UILabel()
-    private let dateLabel = UILabel()
-    private let questTitleLabel = UILabel()
+    let stepLabel = UILabel()
+    let questNumberLabel = UILabel()
+    let dateLabel = UILabel()
+    let questTitleLabel = UILabel()
     
     private let stepNumber: Int
     private let questNumber: Int
