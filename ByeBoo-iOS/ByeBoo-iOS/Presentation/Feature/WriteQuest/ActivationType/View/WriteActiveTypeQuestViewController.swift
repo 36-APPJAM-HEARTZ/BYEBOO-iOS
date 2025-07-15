@@ -46,7 +46,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         setGesture()
         bind()
         presentPhotoPicker()
-        viewModel.action(.viewDidLoad(quesetID: 1))
+        viewModel.action(.viewDidLoad(quesetID: 5))
     }
     
     override func setAddTarget() {
@@ -96,7 +96,13 @@ extension WriteActiveTypeQuestViewController {
     
     @objc
     private func confirmButtonDidTap() {
-        answerText = rootView.questTextField.textView.text ?? ""
+        if rootView.questTextField.textView.text == rootView.questTextField.placeholder ||
+            rootView.questTextField.textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        {
+            answerText = ""
+        } else {
+            answerText = rootView.questTextField.textView.text
+        }
         
         let viewController = EmotionBottomSheetViewController()
         viewController.previousView = .activation
@@ -201,7 +207,7 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             fatalError()
         }
-        
+
         let uuidKey = UUID().uuidString
         ByeBooLogger.debug("UUID: \(uuidKey)")
         self.viewModel.action(.didTapCompleteButton(
@@ -211,7 +217,8 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
             image: self.image,
             imageKey: uuidKey)
         )
-        
+
+        viewModel.action(.questAnswerDidLoad(questID: self.questID))
         let viewController = CompleteActiveTypeQuestViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(viewController, animated: true)
     }

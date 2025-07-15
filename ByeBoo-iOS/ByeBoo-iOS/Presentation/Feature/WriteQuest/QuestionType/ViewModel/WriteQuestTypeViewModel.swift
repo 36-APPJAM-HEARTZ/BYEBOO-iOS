@@ -64,7 +64,7 @@ extension WriteQuestionTypeViewModel {
     private func getQuestInfo(questID: Int) {
         Task {
             do {
-                let questInfo = try await getQuestInfoUseCase.execute(questID: 31)
+                let questInfo = try await getQuestInfoUseCase.execute(questID: questID)
                 questInfoResultSubject.send(.success(questInfo))
             } catch {
                 guard let error = error as? ByeBooError else {
@@ -78,7 +78,7 @@ extension WriteQuestionTypeViewModel {
     private func postQuestType(questID: Int, answer: String, emotionState: String) {
         Task {
             do {
-                try await saveQuestTypeUseCase.execute(questID: 31, answer: answer, emotionState: emotionState)
+                try await saveQuestTypeUseCase.execute(questID: questID, answer: answer, emotionState: emotionState)
                 didSuccessPostSubject.send(.success(()))
             } catch {
                 guard let error = error as? ByeBooError else {
