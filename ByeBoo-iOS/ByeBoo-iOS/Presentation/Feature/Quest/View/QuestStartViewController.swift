@@ -62,14 +62,8 @@ extension QuestStartViewController: BackNavigable {
     func back() {
         if let presentingVC = self.presentingViewController {
             if let tabBarController = presentingVC as? UITabBarController {
-                // 홈 탭에서 진입
-                if tabBarController.selectedIndex == 0 {
-                    self.dismiss(animated: false)
-                } else {
-                    // 퀘스트 탭에서 진입
-                    self.dismiss(animated: false)
-                    tabBarController.selectedIndex = 0
-                }
+                self.dismiss(animated: false)
+                tabBarController.selectedIndex = 0
             }
         }
     }
@@ -103,13 +97,7 @@ extension QuestStartViewController {
                 switch result {
                 case .success:
                     self.onStartedQuest?()
-                    if let presentingVC = self.presentingViewController {
-                        if let tabBarController = presentingVC as? UITabBarController {
-                            self.dismiss(animated: false) {
-                                tabBarController.selectedIndex = 1
-                            }
-                        }
-                    }
+                    self.dismiss(animated: false)
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }

@@ -57,21 +57,7 @@ final class HomeViewController: BaseViewController {
 extension HomeViewController {
     @objc
     private func headerDidTap() {
-        guard let viewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            fatalError()
-        }
-        
-        switch state {
-        case .beforeJourneyStart:
-            let viewController = QuestStartViewController(viewModel: viewModel)
-            viewController.modalPresentationStyle = .fullScreen
-            self.present(viewController, animated: false)
-        case .beforeQuest:
-            navigationController?.tabBarController?.selectedIndex = 1
-        case .afterJourney, .afterQuest:
-            break
-        }
+        navigationController?.tabBarController?.selectedIndex = 1
     }
 }
 
