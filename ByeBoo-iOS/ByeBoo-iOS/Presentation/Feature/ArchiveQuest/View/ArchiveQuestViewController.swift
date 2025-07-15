@@ -13,6 +13,7 @@ final class ArchiveQuestViewController: BaseViewController {
     private let viewModel: CompleteQuestViewModel
     private var cancellable = Set<AnyCancellable>()
     private let rootView = ArchiveQuestView(type: .activation)
+    var questID: Int = 0
     
     init(viewModel: CompleteQuestViewModel) {
         self.viewModel = viewModel
@@ -26,10 +27,17 @@ final class ArchiveQuestViewController: BaseViewController {
     override func loadView() {
         view = rootView
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        bind()
+        viewModel.action(.questAnswerDidLoad(questID: questID))
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
@@ -43,5 +51,22 @@ final class ArchiveQuestViewController: BaseViewController {
 extension ArchiveQuestViewController: Dismissible {
     func close() {
         //
+    }
+}
+
+extension ArchiveQuestViewController {
+    
+    private func bind() {
+        viewModel.output.resultPublisher
+            .sink { result in
+                switch result {
+                case .success(let entity):
+                    print("엔티티를 받아왔습니다")
+                    self.rootView.updateUI(entity)
+                case .failure:
+                    break
+                }
+            }
+            .store(in: &cancellable)
     }
 }

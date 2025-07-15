@@ -19,7 +19,7 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
     override func loadView() {
         view = rootView
     }
-        
+    
     init(viewModel: CompleteQuestViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -60,8 +60,12 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
 }
 
 extension CompleteActiveTypeQuestViewController: Dismissible {
+    
     func close() {
-        // TODO: - 퀘스트 메인 이동 수정
-        self.navigationController?.popViewController(animated: true)
+        guard let viewModel = DIContainer.shared.resolve(type: QuestsViewModel.self) else {
+            return
+        }
+        let targetVC = QuestCheckViewController(viewModel: viewModel)
+        self.navigationController?.pushViewController(targetVC, animated: true)
     }
 }

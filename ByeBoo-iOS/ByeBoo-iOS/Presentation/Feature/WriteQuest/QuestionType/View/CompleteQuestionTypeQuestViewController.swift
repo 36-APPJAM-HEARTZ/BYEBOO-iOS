@@ -62,7 +62,10 @@ final class CompleteQuestionTypeQuestViewController: BaseViewController {
 
 extension CompleteQuestionTypeQuestViewController: Dismissible {
     func close() {
-        // TODO: 퀘스트 메인 이동
-        self.navigationController?.popViewController(animated: true)
+        guard let viewModel = DIContainer.shared.resolve(type: QuestsViewModel.self) else {
+            return
+        }
+        let targetVC = QuestCheckViewController(viewModel: viewModel)
+        self.navigationController?.pushViewController(targetVC, animated: true)
     }
 }

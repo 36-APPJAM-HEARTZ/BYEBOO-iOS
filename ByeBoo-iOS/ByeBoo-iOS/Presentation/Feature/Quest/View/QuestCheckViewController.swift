@@ -45,7 +45,6 @@ final class QuestCheckViewController: BaseViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.navigationBar.isHidden = false
-        self.tabBarController?.tabBar.isHidden = false
     }
     
     override func setDelegate() {
@@ -155,45 +154,56 @@ extension QuestCheckViewController: UICollectionViewDelegate {
             return
         }
         
+        guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else { return }
+        
         if questNumber < step {
-            let archiveQuestViewController = ArchiveQuestViewController()
+            let archiveQuestViewController = ArchiveQuestViewController(viewModel: viewModel)
             self.navigationController?.pushViewController(archiveQuestViewController, animated: false)
             
         } else if questNumber == step {
             let onProgressQuest: (() -> Void) = { self.moveWriteQuest(quest: quest) }
             let modalView = QuestModalView(questNumber: questNumber, quest: quest?.question ?? "")
             modalView.tipButton.addTarget(self, action: #selector(tipButtonDidTap), for: .touchUpInside)
+            
             let modalBuilder = ModalBuilder(
                 modalView: modalView,
                 action: onProgressQuest,
                 rootViewController: self
             )
             modalBuilder.present()
-        } else {
-            print("안 눌리지")
-            // 안 눌림
         }
     }
     
     private func moveWriteQuest(quest: QuestEntity?) {
         if quest?.questStyle == QuestStyle.recording.key {
-            guard let viewModel = DIContainer.shared.resolve(type: WriteQuestionTypeViewModel.self) else {
+            guard let viewModel = DIContainer.shared.resolve(type: WriteQuestionTypeViewModel.self),
+                  let questID = quest?.questId else {
                 return
             }
-            let questionQuestViewController = WriteQuestionTypeQuestViewController(viewModel: viewModel)
+            let questionQuestViewController = WriteQuestionTypeQuestViewController(
+                viewModel: viewModel,
+                questID: questID
+            )
             self.navigationController?.pushViewController(questionQuestViewController, animated: false)
         } else {
-            guard let viewModel = DIContainer.shared.resolve(type: WriteActiveTypeViewModel.self) else {
+            guard let viewModel = DIContainer.shared.resolve(type: WriteActiveTypeViewModel.self),
+                  let questID = quest?.questId else {
                 return
             }
-            let activationQuestViewController = WriteActiveTypeQuestViewController(viewModel: viewModel)
+            let activationQuestViewController = WriteActiveTypeQuestViewController(
+                viewModel: viewModel,
+                questID: questID
+            )
             self.navigationController?.pushViewController(activationQuestViewController, animated: false)
         }
     }
     
     @objc
     private func tipButtonDidTap() {
-        let questTipViewController = QuestTipViewController()
+        guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self) else {
+            return
+        }
+        let questTipViewController = QuestTipViewController(viewModel: viewModel)
         self.navigationController?.dismiss(animated: false)
         self.navigationController?.pushViewController(questTipViewController, animated: false)
     }

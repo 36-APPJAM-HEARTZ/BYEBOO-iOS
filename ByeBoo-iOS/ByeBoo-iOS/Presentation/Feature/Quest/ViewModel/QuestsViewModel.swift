@@ -14,12 +14,12 @@ final class QuestsViewModel: ViewModelType {
     private let journeySubject = PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never>.init()
     private let questsSubject = PassthroughSubject<Result<ProgressingQuestsEntity, ByeBooError>, Never>.init()
     private(set) var output: Output
-    
+        
     private let progressingQuestsUseCase: GetProgressingQuestsUseCase
     private let getUserIDUseCase: GetUserIDUseCase
     private let getUserNameUseCase: GetUserNameUseCase
     private let fetchUserJourneyUseCase: FetchUserJourneyUseCase
-    
+        
     init(
         progressingQuestsUseCase: GetProgressingQuestsUseCase,
         getUserIDUseCase: GetUserIDUseCase,
