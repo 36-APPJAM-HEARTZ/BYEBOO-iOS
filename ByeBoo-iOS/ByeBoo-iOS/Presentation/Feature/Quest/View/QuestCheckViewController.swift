@@ -50,6 +50,7 @@ final class QuestCheckViewController: BaseViewController {
     
     override func setDelegate() {
         questsCheckView.questCollectionView.do {
+            $0.delegate = self
             $0.dataSource = self
             $0.register(
                 QuestStateCell.self,
@@ -140,6 +141,60 @@ final class QuestCheckViewController: BaseViewController {
                 return
             }
         }
+    }
+}
+
+extension QuestCheckViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let quest = questsEntity?.steps[indexPath.section].quests[indexPath.item]
+        let currentStep = questsEntity?.currentStep
+        
+        guard let step = currentStep,
+              let questNumber = quest?.questNumber else {
+            return
+        }
+        
+        if questNumber < step {
+            let archiveQuestViewController = ArchiveQuestViewController()
+            self.navigationController?.pushViewController(archiveQuestViewController, animated: false)
+        } else if questNumber == step {
+            let onProgressQuest: (() -> Void) = { self.moveWriteQuest(quest: quest) }
+            let modalView = QuestModalView(questNumber: questNumber, quest: quest?.question ?? "")
+            modalView.tipButton.addTarget(self, action: #selector(tipButtonDidTap), for: .touchUpInside)
+            let modalBuilder = ModalBuilder(
+                modalView: modalView,
+                action: onProgressQuest,
+                rootViewController: self
+            )
+            modalBuilder.present()
+        } else {
+            print("안 눌리지")
+            // 안 눌림
+        }
+    }
+    
+    private func moveWriteQuest(quest: QuestEntity?) {
+        if quest?.questStyle == QuestStyle.recording.key {
+            guard let viewModel = DIContainer.shared.resolve(type: WriteQuestionTypeViewModel.self) else {
+                return
+            }
+            let questionQuestViewController = WriteQuestionTypeQuestViewController(viewModel: viewModel)
+            self.navigationController?.pushViewController(questionQuestViewController, animated: false)
+        } else {
+            guard let viewModel = DIContainer.shared.resolve(type: WriteActiveTypeViewModel.self) else {
+                return
+            }
+            let activationQuestViewController = WriteActiveTypeQuestViewController(viewModel: viewModel)
+            self.navigationController?.pushViewController(activationQuestViewController, animated: false)
+        }
+    }
+    
+    @objc
+    private func tipButtonDidTap() {
+        let questTipViewController = QuestTipViewController()
+        self.navigationController?.dismiss(animated: false)
+        self.navigationController?.pushViewController(questTipViewController, animated: false)
     }
 }
 
