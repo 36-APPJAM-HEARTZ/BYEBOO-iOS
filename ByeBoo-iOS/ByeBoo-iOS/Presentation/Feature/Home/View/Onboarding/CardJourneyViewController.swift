@@ -68,7 +68,7 @@ extension CardJourneyViewController {
                 switch result {
                 case .success(let journey):
                     self.rootView.updateJourney(
-                        journeyType: JourneyType(text: journey.title),
+                        journeyType: JourneyType(rawValue: journey.title) ?? .face,
                         journeyDescription: journey.description ?? ""
                     )
                 case .failure(let failure):

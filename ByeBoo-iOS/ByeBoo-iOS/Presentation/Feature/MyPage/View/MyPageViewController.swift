@@ -27,16 +27,16 @@ final class MyPageViewController: BaseViewController {
     override func loadView() {
         view = rootView
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         bind()
         
         ByeBooNavigationBar.makeNavigationBar(
-                navigationItem: self.navigationItem,
-                navigationController: self.navigationController,
-                type: .title("마이페이지")
-            )
+            navigationItem: self.navigationItem,
+            navigationController: self.navigationController,
+            type: .title("마이페이지")
+        )
         
         viewModel.action(.viewDidLoad)
     }

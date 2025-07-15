@@ -11,7 +11,7 @@ import SnapKit
 import Then
 
 final class MyPageView: BaseView {
-
+    
     private let nameView = OneLineTextBoxView(title: "")
     private let divider1 = SectionDividerView()
     let myRecordView = MyRecordView()

@@ -8,7 +8,7 @@
 import UIKit
 
 final class CardJourneyView: BaseView {
-
+    
     private let backgroundImageView = UIImageView()
     private let backgroundView = UIView()
     
@@ -59,7 +59,6 @@ final class CardJourneyView: BaseView {
     }
     
     override func setUI() {
-    
         addSubviews(
             backgroundImageView,
             backgroundView,
