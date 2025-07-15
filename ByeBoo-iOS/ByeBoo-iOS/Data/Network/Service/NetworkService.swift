@@ -15,6 +15,7 @@ protocol NetworkService {
         decodingType: T.Type
     ) async throws -> T
     func request(_ endPoint: EndPoint) async throws
+    func request(image: Data, signedURL: String) async throws
 }
 
 struct DefaultNetworkService: NetworkService {
@@ -104,6 +105,29 @@ struct DefaultNetworkService: NetworkService {
                 }
             }
         }
+    }
+    
+    /// 이미지 처리
+    func request(image: Data, signedURL: String) async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            AF.upload(
+                image,
+                to: signedURL,
+                method: .put,
+                headers: ["Content-Type": "image/jpeg"]
+            )
+                   .validate()
+                   .response { response in
+                       ByeBooLogger.network(response)
+                       if let error = response.error {
+                           ByeBooLogger.error(error)
+                           continuation.resume(throwing: ByeBooError.unknownError)
+                       } else {
+                           ByeBooLogger.debug("이미지 업로드 성공")
+                           continuation.resume()
+                       }
+                   }
+           }
     }
     
     private func requestLogger(_ endPoint: EndPoint) {

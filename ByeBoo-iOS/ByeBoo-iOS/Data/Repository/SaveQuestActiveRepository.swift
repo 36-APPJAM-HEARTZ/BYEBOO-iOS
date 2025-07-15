@@ -21,7 +21,13 @@ struct DefaultSaveActiveQuestRepository: SaveQuestActiveInterface{
         self.userDefaultService = userDefaultService
     }
     
-    func postActiveQuest(questID: Int, answer: String, emotionState: String, image: Data, imageKey: String) async throws {
+    func postActiveQuest(
+        questID: Int,
+        answer: String,
+        emotionState: String,
+        image: Data,
+        imageKey: String
+    ) async throws {
         let userID: Int = userDefaultService.load(key: .userID) ?? 1
 
         let url = try await makeSignedURL(imageKey: imageKey)
@@ -43,23 +49,15 @@ struct DefaultSaveActiveQuestRepository: SaveQuestActiveInterface{
     }
     
     private func putImage(signedURL: String, image: Data) async throws {
-        return try await withCheckedThrowingContinuation { continuation in
-            AF.upload(image, to: signedURL, method: .put, headers: ["Content-Type": "image/jpeg"])
-                   .validate()
-                   .response { response in
-                       
-                       if let error = response.error {
-                           ByeBooLogger.error(error)
-                           continuation.resume(throwing: ByeBooError.unknownError)
-                       } else {
-                           ByeBooLogger.debug("✅ 이미지 업로드 성공")
-                           continuation.resume()
-                       }
-                   }
-           }
+        try await network.request(image: image, signedURL: signedURL)
     }
     
-    private func saveQuest(questID: Int, answer: String, emotionState: String, imageKey: String) async throws {
+    private func saveQuest(
+        questID: Int,
+        answer: String,
+        emotionState: String,
+        imageKey: String
+    ) async throws {
         let userID: Int = userDefaultService.load(key: .userID) ?? 1
         let saveQuestActiveDTO = SaveQuestActiveRequestDTO(
             imageKey: imageKey,
@@ -68,7 +66,7 @@ struct DefaultSaveActiveQuestRepository: SaveQuestActiveInterface{
         )
         
         let _ = try await network.request(
-            QuestAPI.active(userID: 186, questID: 4, request: saveQuestActiveDTO)
+            QuestAPI.active(userID: 186, questID: 6, request: saveQuestActiveDTO)
         )
     }
 }

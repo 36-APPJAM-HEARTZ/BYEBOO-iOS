@@ -91,7 +91,7 @@ extension WriteActiveTypeViewModel {
                     )
                     didSuccessPostSubject.send(.success(()))
                 } else {
-                    print("")
+                    ByeBooLogger.error(ByeBooError.noData)
                 }
             } catch {
                 guard let error = error as? ByeBooError else {
