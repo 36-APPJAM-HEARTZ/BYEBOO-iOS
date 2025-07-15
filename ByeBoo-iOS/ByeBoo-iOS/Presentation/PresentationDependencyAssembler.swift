@@ -123,8 +123,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 fetchUserJourneyUseCase: fetchUserJourneyUseCase
             )
         }
-        
-        
+
         DIContainer.shared.register(type: QuestTipViewModel.self) { container in
             guard let questTipUseCase = container.resolve(type: QuestTipUseCase.self)
             else {
@@ -135,6 +134,10 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             return QuestTipViewModel(
                 useCase: questTipUseCase
             )
+        }
+        
+        DIContainer.shared.register(type: MyPageViewModel.self) { container in
+            return MyPageViewModel(getUserNameUseCase: getUserNameUseCase)
         }
     }
 }

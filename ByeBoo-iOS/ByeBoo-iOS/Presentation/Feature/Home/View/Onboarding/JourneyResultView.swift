@@ -7,9 +7,9 @@
 
 import UIKit
 
-enum JourneyType {
-    case face
-    case process
+enum JourneyType: String {
+    case face = "감정 직면"
+    case process = "감정 정리"
     
     var image: UIImage {
         switch self {
@@ -21,22 +21,24 @@ enum JourneyType {
     }
     
     var description: String {
+        return "\(rawValue) 여정"
+    }
+    
+    var frontImage: UIImage {
         switch self {
         case .face:
-            return "감정 직면 여정"
+                .faceFront
         case .process:
-            return "감정 정리 여정"
+                .processFront
         }
     }
     
-    init(text: String) {
-        switch text {
-        case "감정 직면":
-            self = .face
-        case "감정 정리":
-            self = .process
-        default:
-            self = .face
+    var backImage: UIImage {
+        switch self {
+        case .face:
+                .faceBack
+        case .process:
+                .processBack
         }
     }
 }

@@ -31,7 +31,8 @@ final class LoadingViewController: BaseViewController {
                 fatalError()
             }
             
-            let resultViewController = JourneyResultViewController(viewModel: viewModel)
+//            let resultViewController = JourneyResultViewController(viewModel: viewModel)
+            let resultViewController = CardJourneyViewController(viewModel: viewModel)
             self.navigationController?.navigationBar.isHidden = true
             self.navigationController?.pushViewController(resultViewController, animated: true)
         }
