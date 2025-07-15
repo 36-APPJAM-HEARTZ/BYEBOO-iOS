@@ -67,9 +67,6 @@ extension CompleteQuestionTypeQuestViewController: Dismissible {
             return
         }
         viewModel.action(.questViewWillAppear)
-        self.navigationController?.pushViewController(
-            QuestCheckViewController(viewModel: viewModel),
-            animated: false
-        )
+        self.navigationController?.popToRootViewController(animated: false)
     }
 }
