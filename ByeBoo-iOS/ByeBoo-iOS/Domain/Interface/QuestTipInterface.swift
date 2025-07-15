@@ -6,5 +6,5 @@
 //
 
 protocol QuestTipInterface {
-    func fetchQeustTips(questID: Int) async throws -> QuestTipDataEntity
+    func fetchQuestTips(questID: Int) async throws -> QuestTipDataEntity
 }

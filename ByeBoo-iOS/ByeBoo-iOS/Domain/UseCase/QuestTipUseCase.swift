@@ -19,7 +19,7 @@ struct DefaultQuestTipUseCase: QuestTipUseCase {
     }
     
     func fetchQuestTips(questID: Int) async throws -> QuestTipDataEntity {
-        return try await questTipRepository.fetchQeustTips(questID: questID)
+        return try await questTipRepository.fetchQuestTips(questID: questID)
     }
 }
 

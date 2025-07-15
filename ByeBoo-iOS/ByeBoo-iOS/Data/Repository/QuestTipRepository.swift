@@ -20,7 +20,7 @@ struct DefaultQuestTipRepository: QuestTipInterface {
         self.userDefaultService = userDefaultService
     }
     
-    func fetchQeustTips(questID: Int) async throws -> QuestTipDataEntity {
+    func fetchQuestTips(questID: Int) async throws -> QuestTipDataEntity {
         let userID: Int = userDefaultService.load(key: .userID) ?? 1
         
         let tip = try await network.request(
