@@ -50,7 +50,7 @@ extension CompleteQuestViewModel {
     private func fetchQuestAnswer(questID: Int) {
         Task {
             do {
-                let entity = try await questAnswerUseCase.execute(questID: 31)
+                let entity = try await questAnswerUseCase.execute(questID: questID)
                 resultSubject.send(.success(entity))
             } catch {
                 guard let error = error as? ByeBooError else {

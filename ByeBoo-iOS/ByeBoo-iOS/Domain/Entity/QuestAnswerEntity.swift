@@ -12,7 +12,7 @@ struct QuestAnswerEntity {
     var questNumber: Int
     var createdAt: String
     var question: String
-    var answer: String?
+    var answer: String
     var questEmotionState: String
     var imageUrl: String?
     var emotionDescription: String

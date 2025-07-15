@@ -107,9 +107,8 @@ final class WriteActiveTypeQuestView: BaseView {
         }
         
         contentView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-            $0.height.greaterThanOrEqualToSuperview()
-            $0.bottom.equalTo(confirmButton.snp.bottom).offset(24.adjustedH)
+            $0.edges.equalTo(scrollView.contentLayoutGuide)
+            $0.width.equalTo(scrollView.frameLayoutGuide)
         }
         
         title.snp.makeConstraints {

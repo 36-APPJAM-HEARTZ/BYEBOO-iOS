@@ -18,6 +18,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private var answerText: String = ""
     private var emotionState: String = ""
     private var image: UIImage = UIImage()
+    private var isKeyboardUsed: Bool = false
     
     override func loadView() {
         view = rootView
@@ -46,7 +47,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         setGesture()
         bind()
         presentPhotoPicker()
-        viewModel.action(.viewDidLoad(quesetID: 1))
+        viewModel.action(.viewDidLoad(quesetID: 5))
     }
     
     override func setAddTarget() {
@@ -81,22 +82,32 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
 extension WriteActiveTypeQuestViewController {
     @objc
     private func textViewMoveUp(_ notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            UIView.animate(withDuration: 0.3, animations: {
-                let offsetY = keyboardSize.height
-                self.rootView.transform = CGAffineTransform(translationX: 0, y: -offsetY)
-            })
+        if !self.isKeyboardUsed {
+            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+                UIView.animate(withDuration: 0.3, animations: {
+                    let offsetY = keyboardSize.height
+                    self.rootView.transform = CGAffineTransform(translationX: 0, y: -offsetY)
+                })
+                self.isKeyboardUsed = true
+            }
         }
     }
     
     @objc
     private func textViewMoveDown() {
+        self.isKeyboardUsed = false
         self.view.transform = .identity
     }
     
     @objc
     private func confirmButtonDidTap() {
-        answerText = rootView.questTextField.textView.text ?? ""
+        if rootView.questTextField.textView.text == rootView.questTextField.placeholder ||
+            rootView.questTextField.textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        {
+            answerText = ""
+        } else {
+            answerText = rootView.questTextField.textView.text
+        }
         
         let viewController = EmotionBottomSheetViewController()
         viewController.previousView = .activation
@@ -201,7 +212,7 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             fatalError()
         }
-        
+
         let uuidKey = UUID().uuidString
         ByeBooLogger.debug("UUID: \(uuidKey)")
         self.viewModel.action(.didTapCompleteButton(
@@ -211,7 +222,8 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
             image: self.image,
             imageKey: uuidKey)
         )
-        
+
+        viewModel.action(.questAnswerDidLoad(questID: self.questID))
         let viewController = CompleteActiveTypeQuestViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(viewController, animated: true)
     }
