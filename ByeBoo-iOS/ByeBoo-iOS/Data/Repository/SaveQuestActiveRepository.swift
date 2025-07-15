@@ -28,7 +28,7 @@ struct DefaultSaveActiveQuestRepository: SaveQuestActiveInterface{
         image: Data,
         imageKey: String
     ) async throws {
-        let userID: Int = userDefaultService.load(key: .userID) ?? 1
+//        let userID: Int = userDefaultService.load(key: .userID) ?? 1
 
         let url = try await makeSignedURL(imageKey: imageKey)
 
@@ -41,7 +41,7 @@ struct DefaultSaveActiveQuestRepository: SaveQuestActiveInterface{
         let signedURLRequestDTO = SignedURLRequestDTO(contentType: "image/jpeg", imageKey: imageKey)
         
         let result = try await network.request(
-            QuestAPI.images(userID: 186, request: signedURLRequestDTO),
+            QuestAPI.images(userID: userID, request: signedURLRequestDTO),
             decodingType: SignedURLResponseDTO.self
         )
         

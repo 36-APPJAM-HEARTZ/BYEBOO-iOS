@@ -118,3 +118,31 @@ final class ArchiveQuestView: BaseView {
     }
     
 }
+
+extension ArchiveQuestView {
+    
+    func updateUI(_ entity: QuestAnswerEntity) {
+        DispatchQueue.main.async {
+            self.headerView.do {
+                $0.stepLabel.text = "\(entity.stepNumber)"
+                $0.questNumberLabel.text = "\(entity.questNumber)"
+                $0.dateLabel.text = entity.createdAt
+                $0.questTitleLabel.text = entity.question
+            }
+            self.feelView.do {
+                $0.emotionType = entity.questEmotionState
+                $0.descriptionText = entity.emotionDescription
+            }
+            
+            switch self.type {
+            case .question:
+                self.thinkView?.descriptionText = entity.answer
+            case .activation:
+                self.actionView?.do {
+                    $0.descriptionText = entity.answer
+                    $0.photoURL = entity.imageUrl ?? ""
+                }
+            }
+        }
+    }
+}

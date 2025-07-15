@@ -14,15 +14,17 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     private let viewModel: WriteQuestionTypeViewModel
     private var cancellables = Set<AnyCancellable>()
     
-    let questID: Int = 0
+    private var questID: Int
     private var answerText: String = ""
     private var emotionState: String = ""
     private var isKeyboardUsed: Bool = false
     
     init(
-        viewModel: WriteQuestionTypeViewModel
+        viewModel: WriteQuestionTypeViewModel,
+        questID: Int
     ){
         self.viewModel = viewModel
+        self.questID = questID
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -44,7 +46,7 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
         )
         
         bind()
-        viewModel.action(.viewDidLoad(quesetID: 1))
+        viewModel.action(.viewDidLoad(quesetID: questID))
     }
     
     override func setAddTarget() {
@@ -131,12 +133,11 @@ extension WriteQuestionTypeQuestViewController {
 
 extension WriteQuestionTypeQuestViewController: BackNavigable {
     func back() {
+        let action: (() -> Void) = { self.navigationController?.popViewController(animated: true) }
+        
         ModalBuilder(
             modalView: QuitModalView(),
-            action: {
-                ByeBooLogger.debug("모달 뜸")
-                // TODO: 퀘스트 조회 뷰로 연결
-            },
+            action: action,
             rootViewController: self
         ).present()
     }
@@ -155,6 +156,7 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
         
         ByeBooLogger.debug("text: \(answerText)")
         ByeBooLogger.debug("emtionState: \(emotionState)")
+
         self.viewModel.action(.presentCompleteView(
             questID: self.questID,
             answer: self.answerText,
@@ -162,7 +164,10 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
             )
         )
         
-        let viewController = CompleteQuestionTypeQuestViewController(viewModel: viewModel)
+        let viewController = CompleteQuestionTypeQuestViewController(
+            viewModel: viewModel,
+            questID: questID
+        )
         self.navigationController?.pushViewController(viewController, animated: true)
     }
 }
