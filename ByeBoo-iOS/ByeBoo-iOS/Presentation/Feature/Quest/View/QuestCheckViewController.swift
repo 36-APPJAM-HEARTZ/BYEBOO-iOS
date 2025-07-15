@@ -164,7 +164,13 @@ extension QuestCheckViewController: UICollectionViewDelegate {
         guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else { return }
         
         if questNumber < step {
-            let archiveQuestViewController = ArchiveQuestViewController(viewModel: viewModel)
+            let questType: QuestType = (quest?.questStyle == QuestStyle.recording.key) ? .question : .activation
+            
+            let archiveQuestViewController = ArchiveQuestViewController(
+                viewModel: viewModel,
+                questID: questID ?? 1,
+                questType: questType
+            )
             self.navigationController?.pushViewController(archiveQuestViewController, animated: false)
             
         } else if questNumber == step {

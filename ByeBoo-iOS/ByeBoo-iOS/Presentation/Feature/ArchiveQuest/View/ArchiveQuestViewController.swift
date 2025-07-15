@@ -2,7 +2,7 @@
 //  ArchiveQuestViewController.swift
 //  ByeBoo-iOS
 //
-//  Created by 최주리 on 7/7/25.
+//  Created by 최주리 on 7/7/25.0-
 //
 
 import Combine
@@ -10,22 +10,22 @@ import UIKit
 
 final class ArchiveQuestViewController: BaseViewController {
         
-    private let rootView = ArchiveQuestView(type: .activation)
+    private var rootView = ArchiveQuestView(type: .activation)
     private let viewModel: CompleteQuestViewModel
     private var cancellables = Set<AnyCancellable>()
     
-    private let questID: Int = 1
-    private let questType: QuestType = .question
+    private let questID: Int
+    private let questType: QuestType
     
     init(
-        viewModel: CompleteQuestViewModel
-//        questID: Int,
-//        questType: QuestType
+        viewModel: CompleteQuestViewModel,
+        questID: Int,
+        questType: QuestType
     ) {
         self.viewModel = viewModel
-//        self.questID = questID
-//        self.questType = questType
-//        rootView = ArchiveQuestView(type: questType)
+        self.questID = questID
+        self.questType = questType
+        rootView = ArchiveQuestView(type: questType)
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -56,7 +56,7 @@ final class ArchiveQuestViewController: BaseViewController {
             action: #selector(close)
         )
         
-        viewModel.action(.questAnswerDidLoad(questID: 1))
+        viewModel.action(.questAnswerDidLoad(questID: questID))
         bind()
     }
 }
@@ -79,6 +79,6 @@ extension ArchiveQuestViewController {
 
 extension ArchiveQuestViewController: Dismissible {
     func close() {
-        
+        self.navigationController?.popViewController(animated: false)
     }
 }
