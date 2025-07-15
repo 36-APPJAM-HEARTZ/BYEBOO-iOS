@@ -96,8 +96,7 @@ final class QuestCheckViewController: BaseViewController {
                         self.scrollToCurrentStep()
                     }
                 }
-                ByeBooLogger.error(ByeBooError.unknownError)
-                
+   
             case (.success(_), .success(_), .failure(_)):
                 guard !self.isStartedQuset else { return }
                 self.isStartedQuset = true

@@ -25,6 +25,11 @@ final class CustomModalController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setGesture()
+    }
+    
     override func setView() {
         view.backgroundColor = .black80
         
