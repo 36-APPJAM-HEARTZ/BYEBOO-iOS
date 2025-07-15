@@ -19,7 +19,7 @@ struct DefaultQuestAnswerRepository: QuestAnswerInterface {
         self.userDefaultService = userDefaultService
     }
     
-    func execute(questID: Int) async throws -> QuestAnswerEntity {
+    func fetchQuestAnswer(questID: Int) async throws -> QuestAnswerEntity {
         let userID: Int = userDefaultService.load(key: .userID) ?? 1
         let result = try await network.request(
             QuestAPI.answer(userID: userID, questID: questID),

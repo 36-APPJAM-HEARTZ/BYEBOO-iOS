@@ -14,6 +14,8 @@ final class QuestStartViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     private let rootView = QuestStartView()
     
+    var onStartedQuest: (() -> Void)?
+    
     init(viewModel: QuestStartViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -80,44 +82,31 @@ extension QuestStartViewController {
     }
     
     private func bind() {
-        viewModel.output.nameResult
-            .receive(on: DispatchQueue.main)
-            .sink { result in
-                switch result {
-                case .success(let name):
-                    self.rootView.updateName(name)
-                case .failure(let failure):
-                    ByeBooLogger.error(failure)
-                }
+        Publishers.CombineLatest(
+            viewModel.output.nameResult,
+            viewModel.output.journeyResult
+        )
+        .receive(on: DispatchQueue.main)
+        .sink { name, journey in
+            switch (name, journey) {
+            case let (.success(name), .success(journey)):
+                self.rootView.updateDescription(nickname: name, journey: journey.title)
+            default:
+                break
             }
-            .store(in: &cancellables)
-        
-        viewModel.output.journeyResult
-            .receive(on: DispatchQueue.main)
-            .sink { result in
-                switch result {
-                case .success(let journey):
-                    self.rootView.updateJourney(journey.title)
-                case .failure(let failure):
-                    ByeBooLogger.error(failure)
-                }
-            }
-            .store(in: &cancellables)
+        }
+        .store(in: &cancellables)
         
         viewModel.output.startResult
             .receive(on: DispatchQueue.main)
             .sink { result in
                 switch result {
                 case .success:
+                    self.onStartedQuest?()
                     if let presentingVC = self.presentingViewController {
                         if let tabBarController = presentingVC as? UITabBarController {
-                            // 홈 탭에서 진입
-                            if tabBarController.selectedIndex == 0 {
-                                self.dismiss(animated: false)
+                            self.dismiss(animated: false) {
                                 tabBarController.selectedIndex = 1
-                            } else {
-                                // 퀘스트 탭에서 진입
-                                self.dismiss(animated: false)
                             }
                         }
                     }

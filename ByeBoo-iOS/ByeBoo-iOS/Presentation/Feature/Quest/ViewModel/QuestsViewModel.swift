@@ -9,111 +9,90 @@ import Combine
 
 final class QuestsViewModel: ViewModelType {
     
-    enum InputAction {
-        case handleStartQuestButtonDidTap
+    private let cancellables = Set<AnyCancellable>()
+    private let nameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>.init()
+    private let journeySubject = PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never>.init()
+    private let questsSubject = PassthroughSubject<Result<ProgressingQuestsEntity, ByeBooError>, Never>.init()
+    private(set) var output: Output
+    
+    private let progressingQuestsUseCase: GetProgressingQuestsUseCase
+    private let getUserIDUseCase: GetUserIDUseCase
+    private let getUserNameUseCase: GetUserNameUseCase
+    private let fetchUserJourneyUseCase: FetchUserJourneyUseCase
+    
+    init(
+        progressingQuestsUseCase: GetProgressingQuestsUseCase,
+        getUserIDUseCase: GetUserIDUseCase,
+        getUserNameUseCase: GetUserNameUseCase,
+        fetchUserJourneyUseCase: FetchUserJourneyUseCase
+    ) {
+        self.progressingQuestsUseCase = progressingQuestsUseCase
+        self.getUserIDUseCase = getUserIDUseCase
+        self.getUserNameUseCase = getUserNameUseCase
+        self.fetchUserJourneyUseCase = fetchUserJourneyUseCase
+        
+        self.output = Output(
+            namePublisher: nameSubject.eraseToAnyPublisher(),
+            journeyPublisher: journeySubject.eraseToAnyPublisher(),
+            questsPublisher: questsSubject.eraseToAnyPublisher()
+        )
     }
     
-    struct Output {
-        let questsPublisher: AnyPublisher<Result<QuestsEntity, ByeBooError>, Never>
+    private func getUseName() {
+        let name = getUserNameUseCase.execute()
+        nameSubject.send(.success(name))
     }
     
-    private let questSubject = PassthroughSubject<Result<QuestsEntity, ByeBooError>, Never>.init()
-    lazy var output = Output(questsPublisher: questSubject.eraseToAnyPublisher())
-    
-    func action(_ trigger: InputAction) {
-        switch trigger {
-        case .handleStartQuestButtonDidTap:
-            let questsEntity = fetchQuests()
-            questSubject.send(.success(questsEntity))
+    private func fetchUserJourney() {
+        Task {
+            do {
+                let journeyEntity = try await fetchUserJourneyUseCase.execute()
+                journeySubject.send(.success(journeyEntity))
+            } catch {
+                journeySubject.send(
+                    .failure(
+                        error as? ByeBooError ?? ByeBooError.unknownError
+                    )
+                )
+            }
         }
     }
     
-    private func fetchQuests() -> QuestsEntity {
-        return QuestsEntity(
-            progressPeriod: "8",
-            currentStep: 9,
-            isCompleted: false,
-            steps: [
-                StepEntity(
-                    stepNumber: 1,
-                    step: "감정 쏟아내기",
-                    quests: [
-                        QuestEntity(
-                            questId: 31,
-                            questNumber: 1
-                        ),
-                        QuestEntity(
-                            questId: 32,
-                            questNumber: 2
-                        ),
-                        QuestEntity(
-                            questId: 33,
-                            questNumber: 3
-                        ),
-                        QuestEntity(
-                            questId: 34,
-                            questNumber: 4
-                        ),
-                        QuestEntity(
-                            questId: 35,
-                            questNumber: 5
-                        )
-                    ]
-                ),
-                StepEntity(
-                    stepNumber: 2,
-                    step: "상황 정리하기",
-                    quests: [
-                        QuestEntity(
-                            questId: 36,
-                            questNumber: 6
-                        ),
-                        QuestEntity(
-                            questId: 37,
-                            questNumber: 7
-                        ),
-                        QuestEntity(
-                            questId: 38,
-                            questNumber: 8
-                        ),
-                        QuestEntity(
-                            questId: 39,
-                            questNumber: 9
-                        ),
-                        QuestEntity(
-                            questId: 40,
-                            questNumber: 10
-                        )
-                    ]
-                ),
-                StepEntity(
-                    stepNumber: 3,
-                    step: "내 역할 돌아보기",
-                    quests: [
-                        QuestEntity(
-                            questId: 41,
-                            questNumber: 11
-                        ),
-                        QuestEntity(
-                            questId: 42,
-                            questNumber: 12
-                        ),
-                        QuestEntity(
-                            questId: 43,
-                            questNumber: 13
-                        ),
-                        QuestEntity(
-                            questId: 44,
-                            questNumber: 14
-                        ),
-                        QuestEntity(
-                            questId: 45,
-                            questNumber: 15
-                        )
-                    ]
-                )
-            ]
-        )
+    private func fetchProgressingQuests() {
+        guard let userID = getUserIDUseCase.execute() else {
+            questsSubject.send(.success(.stub()))
+            return
+        }
+        
+        Task {
+            do {
+                let quests = try await progressingQuestsUseCase.execute(userID: userID)
+                questsSubject.send(.success(quests))
+            } catch {
+                questsSubject.send(.failure(error as! ByeBooError))
+            }
+        }
     }
 }
 
+extension QuestsViewModel {
+    
+    enum InputAction {
+        case questViewWillAppear
+    }
+    
+    struct Output {
+        let namePublisher: AnyPublisher<Result<String, ByeBooError>, Never>
+        let journeyPublisher: AnyPublisher<Result<JourneyEntity, ByeBooError>, Never>
+        let questsPublisher: AnyPublisher<Result<ProgressingQuestsEntity, ByeBooError>, Never>
+    }
+    
+    func action(_ trigger: InputAction) {
+        switch trigger {
+        case .questViewWillAppear:
+            getUseName()
+            fetchUserJourney()
+            fetchProgressingQuests()
+        }
+    }
+}

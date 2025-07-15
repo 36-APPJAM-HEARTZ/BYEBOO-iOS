@@ -117,8 +117,10 @@ extension WriteActiveTypeQuestViewController {
     
     @objc
     private func tipTagDidTap() {
-        ByeBooLogger.debug("탭 버튼 터치됨")
-        let viewController = QuestTipViewController()
+        guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self) else {
+            return
+        }
+        let viewController = QuestTipViewController(viewModel: viewModel)
         viewController.navigationItem.hidesBackButton = true
         self.navigationController?.pushViewController(viewController, animated: true)
     }

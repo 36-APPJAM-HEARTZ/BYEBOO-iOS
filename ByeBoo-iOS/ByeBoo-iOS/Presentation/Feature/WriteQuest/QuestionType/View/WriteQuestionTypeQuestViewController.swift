@@ -96,7 +96,10 @@ extension WriteQuestionTypeQuestViewController {
     
     @objc
     private func tipTagDidTap() {
-        let viewController = QuestTipViewController()
+        guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self) else {
+            return
+        }
+        let viewController = QuestTipViewController(viewModel: viewModel)
         viewController.navigationItem.hidesBackButton = true
         self.navigationController?.pushViewController(viewController, animated: false)
     }
