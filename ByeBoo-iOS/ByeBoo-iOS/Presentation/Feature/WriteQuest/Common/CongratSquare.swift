@@ -62,7 +62,7 @@ final class CongratSquare: BaseView {
             $0.top.equalTo(titleLabel.snp.bottom).offset(16.adjustedH)
             $0.width.equalTo(203.adjustedW)
             $0.height.equalTo(181.adjustedH)
-            $0.leading.trailing.equalToSuperview().inset(61.adjustedH)
+            $0.centerX.equalToSuperview()
         }
         
         descriptionLabel.snp.makeConstraints {
