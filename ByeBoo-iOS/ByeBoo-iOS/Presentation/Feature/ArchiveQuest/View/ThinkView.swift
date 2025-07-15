@@ -10,10 +10,9 @@ import UIKit
 import SnapKit
 
 final class ThinkView: BaseView {
-
+    
     private let titleTextView = IconOneLineTextView(iconType: .think, text: "이렇게 생각했어요")
     private let descriptionView: TextBoxView
-    
     var descriptionText: String
     
     init(descriptionText: String) {
@@ -28,7 +27,7 @@ final class ThinkView: BaseView {
     }
     
     override func setStyle() {
-
+        
     }
     
     override func setUI() {
@@ -49,5 +48,11 @@ final class ThinkView: BaseView {
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(24.5.adjustedH)
         }
+    }
+}
+
+extension ThinkView {
+    func updateUI(description: String) {
+        self.descriptionView.updateText(description)
     }
 }

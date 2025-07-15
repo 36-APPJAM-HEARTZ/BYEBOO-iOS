@@ -57,3 +57,9 @@ final class FeelView: BaseView {
         }
     }
 }
+
+extension FeelView {
+    func updateUI(emotionType: String, descriptionText: String) {
+        self.descriptionView.updateEmotionText(emotionType, text: descriptionText)
+    }
+}

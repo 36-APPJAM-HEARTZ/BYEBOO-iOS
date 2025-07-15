@@ -70,7 +70,7 @@ enum ByeBooFilledTagType {
 }
 
 final class ByeBooFilledTag: BaseView {
-    private let textLabel =  UILabel()
+    var textLabel =  UILabel()
     private var tagType: ByeBooFilledTagType
     var isSelected: Bool = false {
         didSet { toggleTagType() }

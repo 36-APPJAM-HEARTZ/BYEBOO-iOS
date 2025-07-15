@@ -88,3 +88,13 @@ final class ActionView: BaseView {
         }
     }
 }
+
+extension ActionView {
+    func updateUI(description: String, photoURL: String) {
+        self.descriptionText = description
+        self.photoURL = photoURL
+        if let url = URL(string: photoURL) {
+            photoView.kf.setImage(with: url)
+        }
+    }
+}

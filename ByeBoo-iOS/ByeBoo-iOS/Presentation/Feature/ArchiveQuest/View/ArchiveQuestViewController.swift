@@ -9,14 +9,24 @@ import Combine
 import UIKit
 
 final class ArchiveQuestViewController: BaseViewController {
-    
-    private let viewModel: CompleteQuestViewModel
-    private var cancellable = Set<AnyCancellable>()
+        
     private let rootView = ArchiveQuestView(type: .activation)
-    var questID: Int = 0
+    private let viewModel: CompleteQuestViewModel
+    private var cancellables = Set<AnyCancellable>()
     
-    init(viewModel: CompleteQuestViewModel) {
+    private let questID: Int = 1
+    private let questType: QuestType = .question
+    
+    init(
+        viewModel: CompleteQuestViewModel
+//        questID: Int,
+//        questType: QuestType
+    ) {
         self.viewModel = viewModel
+//        self.questID = questID
+//        self.questType = questType
+//        rootView = ArchiveQuestView(type: questType)
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -37,6 +47,7 @@ final class ArchiveQuestViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.hidesBackButton = true
         
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
@@ -44,28 +55,30 @@ final class ArchiveQuestViewController: BaseViewController {
             type: .close,
             action: #selector(close)
         )
-    }
-    
-}
-
-extension ArchiveQuestViewController: Dismissible {
-    func close() {
-        //
+        
+        viewModel.action(.questAnswerDidLoad(questID: 1))
+        bind()
     }
 }
 
 extension ArchiveQuestViewController {
-    
-    private func bind() {
+    func bind() {
         viewModel.output.resultPublisher
-            .sink { result in
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
                 switch result {
                 case .success(let entity):
-                    self.rootView.updateUI(entity)
-                case .failure:
-                    break
+                    self?.rootView.updateUI(entity)
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
                 }
             }
-            .store(in: &cancellable)
+            .store(in: &cancellables)
+    }
+}
+
+extension ArchiveQuestViewController: Dismissible {
+    func close() {
+        
     }
 }
