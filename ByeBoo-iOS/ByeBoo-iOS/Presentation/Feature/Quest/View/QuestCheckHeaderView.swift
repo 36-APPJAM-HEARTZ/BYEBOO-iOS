@@ -13,7 +13,7 @@ import Then
 final class QuestCheckHeaderView: BaseView {
     
     private var nickname: String = ""
-    private var journeyType: JourneyType = .face
+    private var journey: String = ""
     
     private var periodTag = ByeBooFilledTag(tagType: .word3Gray, text: "")
     private let titleLabel = UILabel()
@@ -58,15 +58,15 @@ final class QuestCheckHeaderView: BaseView {
         }
     }
     
-    func updateHeader(nickname: String, journeyType: JourneyType) {
+    func updateHeader(nickname: String, journey: String) {
         self.nickname = nickname
-        self.journeyType = journeyType
-        titleLabel.attributedText = "\(nickname)님, 지금\n\(journeyType.description)을 진행 중이에요.".makeTitle(
-            rangedText: journeyType.description
+        self.journey = journey
+        titleLabel.attributedText = "\(nickname)님, 지금\n\(journey) 여정을 진행 중이에요.".makeTitle(
+            rangedText: "\(journey) 여정"
         )
     }
     
-    func updatePeriod(_ period: String) {
+    func updatePeriod(_ period: Int) {
         periodTag.updateText("\(period)일째")
     }
 }

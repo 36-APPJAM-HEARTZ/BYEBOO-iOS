@@ -106,9 +106,36 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 fetchJourneyUseCase: fetchUserJourneyUseCase
             )
         }
-     
-        DIContainer.shared.register(type: MyPageViewModel.self) { container in
+        
+        DIContainer.shared.register(type: QuestsViewModel.self) { container in
+            guard let progressingQuestsUseCase = container.resolve(type: GetProgressingQuestsUseCase.self),
+                  let getUserIDUseCase = container.resolve(type: GetUserIDUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+                                                                 
+            return QuestsViewModel(
+                progressingQuestsUseCase: progressingQuestsUseCase,
+                getUserIDUseCase: getUserIDUseCase,
+                getUserNameUseCase: getUserNameUseCase,
+                fetchUserJourneyUseCase: fetchUserJourneyUseCase
+            )
+        }
+                                                                
+                                                                 
+        DIContainer.shared.register(type: QuestTipViewModel.self) { container in
+            guard let questTipUseCase = container.resolve(type: QuestTipUseCase.self)
+            else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
             
+            return QuestTipViewModel(
+                useCase: questTipUseCase
+            )
+        }
+        
+        DIContainer.shared.register(type: MyPageViewModel.self) { container in
             return MyPageViewModel(getUserNameUseCase: getUserNameUseCase)
         }
     }
