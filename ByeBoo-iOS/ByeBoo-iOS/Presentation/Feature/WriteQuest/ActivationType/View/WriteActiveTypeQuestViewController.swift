@@ -46,7 +46,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         setGesture()
         bind()
         presentPhotoPicker()
-        viewModel.action(.viewDidLoad(quesetID: 1))
+        viewModel.action(.viewDidLoad(quesetID: 5))
     }
     
     override func setAddTarget() {

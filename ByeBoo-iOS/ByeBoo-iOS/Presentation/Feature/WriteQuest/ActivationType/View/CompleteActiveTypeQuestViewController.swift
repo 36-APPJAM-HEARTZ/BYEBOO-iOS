@@ -33,7 +33,7 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
         super.viewDidLoad()
         
         self.navigationItem.hidesBackButton = true
-        viewModel.action(.questAnswerDidLoad(questID: 31))
+        viewModel.action(.questAnswerDidLoad(questID: 5))
         
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
@@ -47,6 +47,7 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
     
     private func bind() {
         viewModel.output.resultPublisher
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 switch result {
                 case .success(let entity):

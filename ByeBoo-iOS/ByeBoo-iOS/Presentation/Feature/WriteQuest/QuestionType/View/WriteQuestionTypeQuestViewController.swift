@@ -151,10 +151,14 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
         
         ByeBooLogger.debug("text: \(answerText)")
         ByeBooLogger.debug("emtionState: \(emotionState)")
-        self.viewModel.action(.presentCompleteView(questID: 31, answer: answerText, emotionState: emotionState))
+        self.viewModel.action(.presentCompleteView(
+            questID: self.questID,
+            answer: self.answerText,
+            emotionState: self.emotionState
+            )
+        )
         
         let viewController = CompleteQuestionTypeQuestViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(viewController, animated: true)
     }
-
 }

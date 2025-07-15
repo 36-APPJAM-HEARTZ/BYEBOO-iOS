@@ -77,7 +77,6 @@ final class CompleteQuestionTypeQuestView: BaseView {
         self.title.text = entity.question
         self.dateText.text = entity.createdAt
         
-        
         let thinkView = ThinkView(descriptionText: entity.answer!)
         let feelView = FeelView(emotionType: entity.questEmotionState, descriptionText: entity.emotionDescription)
         
