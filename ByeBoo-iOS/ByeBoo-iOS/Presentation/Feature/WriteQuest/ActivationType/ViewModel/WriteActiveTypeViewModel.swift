@@ -43,8 +43,20 @@ struct WriteActiveTypeViewModel: ViewModelType {
         switch trigger {
         case .viewDidLoad(let questID):
             getQuestInfo(questID: questID)
-        case .didTapCompleteButton(let questID, let answer, let emotionState, let image, let imageKey):
-            postActiveType(questID: questID, answer: answer, emotionState: emotionState, image: image, imageKey: imageKey)
+        case .didTapCompleteButton(
+            let questID,
+            let answer,
+            let emotionState,
+            let image,
+            let imageKey
+        ):
+            postActiveType(
+                questID: questID,
+                answer: answer,
+                emotionState: emotionState,
+                image: image,
+                imageKey: imageKey
+            )
         }
     }
 }
@@ -52,7 +64,13 @@ struct WriteActiveTypeViewModel: ViewModelType {
 extension WriteActiveTypeViewModel {
     enum Input {
         case viewDidLoad(quesetID: Int)
-        case didTapCompleteButton(questID: Int, answer: String, emotionState: String, image: UIImage, imageKey: String)
+        case didTapCompleteButton(
+            questID: Int,
+            answer: String,
+            emotionState: String,
+            image: UIImage,
+            imageKey: String
+        )
     }
     
     struct Output {
@@ -76,7 +94,13 @@ extension WriteActiveTypeViewModel {
         }
     }
     
-    private func postActiveType(questID: Int, answer: String, emotionState: String, image: UIImage, imageKey: String) {
+    private func postActiveType(
+        questID: Int,
+        answer: String,
+        emotionState: String,
+        image: UIImage,
+        imageKey: String
+    ) {
         Task {
             do {
                 ByeBooLogger.debug("data size: \(image.size)")

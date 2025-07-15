@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SignedURLRequestDTO: Codable {
+struct SignedURLRequestDTO: Encodable {
     var contentType: String
     var imageKey: String
 }

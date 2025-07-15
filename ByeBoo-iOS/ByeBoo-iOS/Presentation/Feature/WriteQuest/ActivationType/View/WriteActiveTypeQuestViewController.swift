@@ -202,7 +202,13 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
         
         let uuidKey = UUID().uuidString
         ByeBooLogger.debug("UUID: \(uuidKey)")
-        self.viewModel.action(.didTapCompleteButton(questID: 186, answer: answerText, emotionState: emotionState, image: image, imageKey: uuidKey))
+        self.viewModel.action(.didTapCompleteButton(
+            questID: self.questID,
+            answer: self.answerText,
+            emotionState: self.emotionState,
+            image: self.image,
+            imageKey: uuidKey)
+        )
         
         let viewController = CompleteActiveTypeQuestViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(viewController, animated: true)
