@@ -201,7 +201,7 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             fatalError()
         }
-        
+
         let uuidKey = UUID().uuidString
         ByeBooLogger.debug("UUID: \(uuidKey)")
         self.viewModel.action(.didTapCompleteButton(
@@ -211,7 +211,8 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
             image: self.image,
             imageKey: uuidKey)
         )
-        
+
+        viewModel.action(.questAnswerDidLoad(questID: self.questID))
         let viewController = CompleteActiveTypeQuestViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(viewController, animated: true)
     }
