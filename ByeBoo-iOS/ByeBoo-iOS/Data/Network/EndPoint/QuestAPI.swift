@@ -16,6 +16,7 @@ enum QuestAPI {
     case images(userID: Int)
     case tip(userID: Int, questID: Int)
     case answer(userID: Int, questID: Int)
+    case progressingQuests(userID: Int)
 }
 
 extension QuestAPI: EndPoint {
@@ -38,12 +39,14 @@ extension QuestAPI: EndPoint {
             return "/\(questID)/tip"
         case .answer(_, let questID):
             return "/answer/\(questID)"
+        case .progressingQuests:
+            return "/all/progress"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .checkQuest, .tip, .answer:
+        case .checkQuest, .tip, .answer, .progressingQuests:
             return .get
         case .recording, .active, .images:
             return .post
@@ -57,14 +60,15 @@ extension QuestAPI: EndPoint {
             let .active(userID, _),
             let .tip(userID, _),
             let .images(userID),
-            let .answer(userID, _):
+            let .answer(userID, _),
+            let .progressingQuests(userID):
             return .withAuth(userID: userID)
         }
     }
     
     var parameterEncoding: any ParameterEncoding {
         switch self {
-        case .checkQuest, .tip, .answer:
+        case .checkQuest, .tip, .answer, .progressingQuests:
             return URLEncoding.default
         case .recording, .active, .images:
             return JSONEncoding.default
@@ -79,7 +83,7 @@ extension QuestAPI: EndPoint {
         switch self {
         case .recording(_, _, let dto):
             return try? dto.toDictionary()
-        case .checkQuest, .active, .tip, .images, .answer:
+        case .checkQuest, .active, .tip, .images, .answer, .progressingQuests:
             return nil
         }
     }

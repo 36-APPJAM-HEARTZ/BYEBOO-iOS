@@ -46,7 +46,7 @@ final class InformationViewModel {
         
         Task {
             do {
-                user = try await sendUserUseCase.execute(
+                try await sendUserUseCase.execute(
                     name: name,
                     feeling: feeling.key,
                     questStyle: questStyle.key

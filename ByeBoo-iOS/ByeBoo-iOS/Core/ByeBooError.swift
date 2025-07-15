@@ -18,6 +18,7 @@ enum ByeBooError: Error, LocalizedError {
     case unknownError
     case notFoundQuest
     case encodingError
+    case beforeJourney
     
     var errorDescription: String? {
         switch self {
@@ -39,6 +40,8 @@ enum ByeBooError: Error, LocalizedError {
             return "인코딩 실패"
         case .notFoundQuest:
             return "진행 중인 퀘스트가 없음"
+        case .beforeJourney:
+            return "여정 시작 전"
         case .unknownError:
             return nil
         }
