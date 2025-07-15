@@ -30,7 +30,7 @@ final class WriteActiveTypeQuestView: BaseView {
     private let textStackView = UIStackView()
     private let grayTag = ByeBooFilledTag(tagType: .smallGray, text: "선택")
     private let thinkTitleLabel = UILabel()
-    private let questTextField = QuestTextField(type: .activation)
+    let questTextField = QuestTextField(type: .activation)
     let confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
     
     override func setUI() {
