@@ -9,15 +9,9 @@ import UIKit
 
 import SnapKit
 
-enum PreviousView {
-    case activation
-    case question
-}
-
 final class EmotionBottomSheetViewController: BaseViewController {
     private let rootView = EmotionBottomSheetView()
     private var selectedChip: ByeBooEmotionChip?
-    var previousView: PreviousView?
     weak var delegate: BottomSheetProtocol?
     
     override func loadView() {
@@ -51,7 +45,6 @@ final class EmotionBottomSheetViewController: BaseViewController {
     @objc
     private func confirmButtonDidTap() {
         ByeBooLogger.debug("컨펌 버튼 터치됨")
-        guard let previousView = previousView else { return }
         guard let selectedEmotion = selectedChip?.emotionType else {
             ByeBooLogger.debug("감정 선택 안됨")
             return
@@ -59,7 +52,7 @@ final class EmotionBottomSheetViewController: BaseViewController {
         
         self.dismiss(animated: true) {
             self.delegate?.saveEmotionState(emotionState: selectedEmotion)
-            self.delegate?.presentNextViewController(from: previousView)
+            self.delegate?.saveQuest()
         }
     }
 }
