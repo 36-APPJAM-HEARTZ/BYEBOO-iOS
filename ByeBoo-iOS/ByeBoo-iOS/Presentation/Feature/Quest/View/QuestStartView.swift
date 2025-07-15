@@ -99,12 +99,4 @@ extension QuestStartView {
                     baseFont: FontManager.body3R16.font
                 )
     }
-    
-//    func updateName(_ nickname: String) {
-//        self.nickname = nickname
-//    }
-//    
-//    func updateJourney(_ journey: String) {
-//        self.journey = journey
-//    }
 }

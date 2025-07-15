@@ -17,7 +17,6 @@ struct QuestTipResponseDTO: Decodable {
 
 struct QuestTipDTO: Decodable {
     var tipStep: Int
-    var tipQuestion: String
     var tipAnswer: String
 }
 
@@ -37,7 +36,6 @@ extension QuestTipDTO {
     func toEntity() -> QuestTipEntity {
         .init(
             tipStep: tipStep,
-            tipQuestion: tipQuestion,
             tipAnswer: tipAnswer)
     }
 }

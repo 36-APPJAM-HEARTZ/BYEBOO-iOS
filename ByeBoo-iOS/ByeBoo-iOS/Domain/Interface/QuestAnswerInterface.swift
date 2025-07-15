@@ -6,6 +6,6 @@
 //
 
 protocol QuestAnswerInterface {
-    func execute(questID: Int) async throws -> QuestAnswerEntity
+    func fetchQuestAnswer(questID: Int) async throws -> QuestAnswerEntity
 }
 

@@ -19,6 +19,8 @@ final class QuestTipView: BaseView {
     private let questLabel = UILabel()
     private let title = UILabel()
     
+    private var tipQuestion: [String] = []
+    
     override func setUI() {
         addSubviews(
             stepStackView,
@@ -35,6 +37,11 @@ final class QuestTipView: BaseView {
         questLabel.text = "\(questNum)번째 퀘스트"
         self.title.text = entity.question
         var previousView: UIView = title
+        tipQuestion = [
+            "\(questNum)번째 퀘스트로 드리는 이유",
+            "이런 걸 생각해보며 작성해 주세요.",
+            "이 퀘스트가 끝나면 어떤 변화가 생길까요?"
+        ]
         
         entity.tips.enumerated().forEach { index, tip in
             let iconType: IconType = {
@@ -46,7 +53,7 @@ final class QuestTipView: BaseView {
                 }
             }()
             
-            let iconTitleLabel = IconOneLineTextView(iconType: iconType, text: tip.tipQuestion)
+            let iconTitleLabel = IconOneLineTextView(iconType: iconType, text: tipQuestion[index])
             let textView = TextBoxView(title: tip.tipAnswer)
             let dividerView = SectionDividerView()
             self.addSubviews(iconTitleLabel, textView, dividerView)
@@ -64,7 +71,7 @@ final class QuestTipView: BaseView {
             
             dividerView.snp.makeConstraints {
                 $0.top.equalTo(textView.snp.bottom).offset(24.5.adjustedH)
-                $0.leading.trailing.equalToSuperview()
+                $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
             }
             
             previousView = dividerView

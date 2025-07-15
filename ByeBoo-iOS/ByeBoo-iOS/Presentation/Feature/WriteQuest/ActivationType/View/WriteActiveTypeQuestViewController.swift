@@ -15,7 +15,9 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     
     let questID: Int = 0
+    private var answerText: String = ""
     private var emotionState: String = ""
+    private var image: UIImage = UIImage()
     
     override func loadView() {
         view = rootView
@@ -94,6 +96,8 @@ extension WriteActiveTypeQuestViewController {
     
     @objc
     private func confirmButtonDidTap() {
+        answerText = rootView.questTextField.textView.text ?? ""
+        
         let viewController = EmotionBottomSheetViewController()
         viewController.previousView = .activation
         viewController.delegate = self
@@ -113,8 +117,10 @@ extension WriteActiveTypeQuestViewController {
     
     @objc
     private func tipTagDidTap() {
-        ByeBooLogger.debug("탭 버튼 터치됨")
-        let viewController = QuestTipViewController()
+        guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self) else {
+            return
+        }
+        let viewController = QuestTipViewController(viewModel: viewModel)
         viewController.navigationItem.hidesBackButton = true
         self.navigationController?.pushViewController(viewController, animated: true)
     }
@@ -179,6 +185,7 @@ extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, U
             rootView.imgCount = 1
             rootView.updateImageCountLabel(count: rootView.imgCount)
             rootView.changeStyle(count: rootView.imgCount)
+            self.image = image
         }
         dismiss(animated: true, completion: nil)
     }
@@ -194,6 +201,17 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             fatalError()
         }
+        
+        let uuidKey = UUID().uuidString
+        ByeBooLogger.debug("UUID: \(uuidKey)")
+        self.viewModel.action(.didTapCompleteButton(
+            questID: self.questID,
+            answer: self.answerText,
+            emotionState: self.emotionState,
+            image: self.image,
+            imageKey: uuidKey)
+        )
+        
         let viewController = CompleteActiveTypeQuestViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(viewController, animated: true)
     }

@@ -79,7 +79,6 @@ extension QuestStartViewController {
     @objc
     func questStartButtonDidTap() {
         viewModel.action(.buttonDidTap)
-        onStartedQuest?()
     }
     
     private func bind() {
@@ -103,6 +102,7 @@ extension QuestStartViewController {
             .sink { result in
                 switch result {
                 case .success:
+                    self.onStartedQuest?()
                     if let presentingVC = self.presentingViewController {
                         if let tabBarController = presentingVC as? UITabBarController {
                             self.dismiss(animated: false) {

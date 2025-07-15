@@ -36,10 +36,20 @@ struct DomainDependencyAssembler: DependencyAssembler {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             return
         }
-        
+ 
+        guard let saveQuestActiveRepository = DIContainer.shared.resolve(type: SaveQuestActiveInterface.self) else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            return
+        }
+
         guard let progressingQuestsRepository = DIContainer.shared.resolve(
             type: GetProgressingQuestsInterface.self
         ) else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            return
+        }
+
+        guard let questTipRepository = DIContainer.shared.resolve(type: QuestTipInterface.self) else {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             return
         }
@@ -84,8 +94,16 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultStartJourneyUseCase(repository: userRepository)
         }
         
+        DIContainer.shared.register(type: SaveQuestActiveUseCase.self) { _ in
+            return DefaultSaveQuestActiveUseCase(questActiveRepository: saveQuestActiveRepository)
+        }
+      
         DIContainer.shared.register(type: GetProgressingQuestsUseCase.self) { _ in
             return DefaultGetProgressingQuestsUseCase(repository: progressingQuestsRepository)
+        }
+                                                                             
+        DIContainer.shared.register(type: QuestTipUseCase.self) { _ in
+            return DefaultQuestTipUseCase(questTipRepository: questTipRepository)
         }
     }
 }

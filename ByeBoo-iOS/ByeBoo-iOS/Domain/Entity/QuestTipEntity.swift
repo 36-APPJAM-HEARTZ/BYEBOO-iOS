@@ -17,6 +17,5 @@ struct QuestTipDataEntity {
 
 struct QuestTipEntity {
     let tipStep: Int
-    let tipQuestion: String
     let tipAnswer: String
 }
