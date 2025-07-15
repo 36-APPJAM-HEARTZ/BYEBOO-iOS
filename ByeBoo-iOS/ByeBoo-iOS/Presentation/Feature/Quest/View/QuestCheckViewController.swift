@@ -42,6 +42,11 @@ final class QuestCheckViewController: BaseViewController {
         viewModel.action(.questViewWillAppear)
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        bind()
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController?.navigationBar.isHidden = false

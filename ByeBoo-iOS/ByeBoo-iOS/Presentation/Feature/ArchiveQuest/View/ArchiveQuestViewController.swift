@@ -61,7 +61,6 @@ extension ArchiveQuestViewController {
             .sink { result in
                 switch result {
                 case .success(let entity):
-                    print("엔티티를 받아왔습니다")
                     self.rootView.updateUI(entity)
                 case .failure:
                     break

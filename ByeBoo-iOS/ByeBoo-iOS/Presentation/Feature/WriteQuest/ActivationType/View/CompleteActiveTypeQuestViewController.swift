@@ -65,7 +65,6 @@ extension CompleteActiveTypeQuestViewController: Dismissible {
         guard let viewModel = DIContainer.shared.resolve(type: QuestsViewModel.self) else {
             return
         }
-        let targetVC = QuestCheckViewController(viewModel: viewModel)
-        self.navigationController?.pushViewController(targetVC, animated: true)
+        viewModel.action(.questViewWillAppear)
     }
 }

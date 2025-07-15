@@ -146,7 +146,7 @@ extension QuestStateCell {
     }
     
     private func bindLayout(state: QuestState) {
-        imageView.snp.makeConstraints {
+        imageView.snp.remakeConstraints {
             if state == .locked {
                 $0.center.equalToSuperview()
                 $0.width.height.equalTo(24.adjustedW)
