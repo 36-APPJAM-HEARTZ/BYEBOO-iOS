@@ -207,8 +207,10 @@ extension QuestCheckViewController: UICollectionViewDelegate {
             return
         }
         let questTipViewController = QuestTipViewController(viewModel: viewModel)
-        self.navigationController?.dismiss(animated: false)
-        self.navigationController?.pushViewController(questTipViewController, animated: false)
+        
+        questTipViewController.modalPresentationStyle = .fullScreen
+        let topViewController = UIApplication.shared.topViewController()
+        topViewController?.present(questTipViewController, animated: false)
     }
 }
 
@@ -269,5 +271,4 @@ extension QuestCheckViewController: UICollectionViewDataSource {
         
         return headerView
     }
-    
 }

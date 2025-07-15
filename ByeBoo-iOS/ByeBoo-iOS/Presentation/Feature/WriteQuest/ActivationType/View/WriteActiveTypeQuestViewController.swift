@@ -176,12 +176,11 @@ extension WriteActiveTypeQuestViewController {
 
 extension WriteActiveTypeQuestViewController: BackNavigable {
     func back() {
+        let action: (() -> Void) = { self.navigationController?.popViewController(animated: true) }
+        
         ModalBuilder(
             modalView: QuitModalView(),
-            action: {
-                ByeBooLogger.debug("모달 뜸")
-                // TODO: 퀘스트 조회 뷰로 연결
-            },
+            action: action,
             rootViewController: self
         ).present()
     }
@@ -227,7 +226,6 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
     func saveQuest() {
         let uuidKey = UUID().uuidString
         ByeBooLogger.debug("UUID: \(uuidKey)")
-        print("퀘스트 ID: \(questID)")
         self.viewModel.action(.didTapCompleteButton(
             questID: self.questID,
             answer: self.answerText,

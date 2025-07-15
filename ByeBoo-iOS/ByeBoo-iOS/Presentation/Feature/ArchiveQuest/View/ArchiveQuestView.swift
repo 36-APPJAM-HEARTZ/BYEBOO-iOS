@@ -136,7 +136,7 @@ extension ArchiveQuestView {
             
             switch self.type {
             case .question:
-                self.thinkView?.descriptionText = entity.answer ?? ""
+                self.thinkView?.descriptionText = entity.answer
             case .activation:
                 self.actionView?.do {
                     $0.descriptionText = entity.answer

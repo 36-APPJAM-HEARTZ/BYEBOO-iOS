@@ -148,12 +148,11 @@ extension WriteQuestionTypeQuestViewController {
 
 extension WriteQuestionTypeQuestViewController: BackNavigable {
     func back() {
+        let action: (() -> Void) = { self.navigationController?.popViewController(animated: true) }
+        
         ModalBuilder(
             modalView: QuitModalView(),
-            action: {
-                ByeBooLogger.debug("모달 뜸")
-                // TODO: 퀘스트 조회 뷰로 연결
-            },
+            action: action,
             rootViewController: self
         ).present()
     }
