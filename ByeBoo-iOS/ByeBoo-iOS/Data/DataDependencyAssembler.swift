@@ -35,6 +35,9 @@ struct DataDependencyAssembler: DependencyAssembler {
                 network: networkService,
                 userDefaultsService: userDefaultService
             )
+                                                                               
+        DIContainer.shared.register(type: QuestTipInterface.self) { _ in
+            return DefaultQuestTipRepository(network: networkService, userDefaultService: userDefaultService)
         }
     }
 }

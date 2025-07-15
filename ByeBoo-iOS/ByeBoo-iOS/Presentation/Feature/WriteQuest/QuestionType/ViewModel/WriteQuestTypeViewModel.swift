@@ -50,10 +50,10 @@ extension WriteQuestionTypeViewModel {
         switch trigger {
         case .viewDidLoad(let questID):
             getQuestInfo(questID: questID)
-        case .presentCompleteView(
-            let questID,
-            let answer,
-            let emotionState
+        case let .presentCompleteView(
+            questID,
+            answer,
+            emotionState
         ):
             postQuestType(questID: questID, answer: answer, emotionState: emotionState)
         }
@@ -78,14 +78,14 @@ extension WriteQuestionTypeViewModel {
     private func postQuestType(questID: Int, answer: String, emotionState: String) {
         Task {
             do {
-                let _ = try await saveQuestTypeUseCase.execute(questID: 31, answer: answer, emotionState: emotionState)
+                try await saveQuestTypeUseCase.execute(questID: 31, answer: answer, emotionState: emotionState)
                 didSuccessPostSubject.send(.success(()))
             } catch {
                 guard let error = error as? ByeBooError else {
                     return
                 }
                 didSuccessPostSubject.send(.failure(error as ByeBooError))
-                ByeBooLogger.debug("네트워크 호출 실패")
+                ByeBooLogger.error(error)
             }
         }
     }

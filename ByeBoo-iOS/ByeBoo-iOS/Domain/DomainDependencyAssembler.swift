@@ -43,6 +43,11 @@ struct DomainDependencyAssembler: DependencyAssembler {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             return
         }
+
+        guard let questTipRepository = DIContainer.shared.resolve(type: QuestTipInterface.self) else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            return
+        }
         
         DIContainer.shared.register(type: FetchUserJourneyUseCase.self) { _ in
             return DefaultFetchUserJourneyUseCase(repository: userRepository)
@@ -86,6 +91,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: GetProgressingQuestsUseCase.self) { _ in
             return DefaultGetProgressingQuestsUseCase(repository: progressingQuestsRepository)
+                                                                             
+        DIContainer.shared.register(type: QuestTipUseCase.self) { _ in
+            return DefaultQuestTipUseCase(questTipRepository: questTipRepository)
         }
     }
 }

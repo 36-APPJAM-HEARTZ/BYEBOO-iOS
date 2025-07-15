@@ -8,7 +8,7 @@
 import Foundation
 
 protocol QuestTipUseCase {
-    func fetchQuestTips() async throws -> QuestTipDataEntity
+    func fetchQuestTips(questID: Int) async throws -> QuestTipDataEntity
 }
 
 struct DefaultQuestTipUseCase: QuestTipUseCase {
@@ -18,8 +18,8 @@ struct DefaultQuestTipUseCase: QuestTipUseCase {
         self.questTipRepository = questTipRepository
     }
     
-    func fetchQuestTips() async throws -> QuestTipDataEntity {
-        return try await questTipRepository.fetchQeustTips()
+    func fetchQuestTips(questID: Int) async throws -> QuestTipDataEntity {
+        return try await questTipRepository.fetchQuestTips(questID: questID)
     }
 }
 
