@@ -29,7 +29,6 @@ extension HomeOnboardingViewController {
     private func setGesture() {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longDidTap))
         rootView.characterImageView.addGestureRecognizer(longPressGesture)
-        rootView.characterImageView.isUserInteractionEnabled = true
     }
     
     @objc

@@ -109,6 +109,7 @@ extension HomeOnboardingView {
                 UIView.animate(withDuration: 0.5, delay: 0.7) {
                     self.descriptionLabel.alpha = 1
                     self.bubbleImageView.alpha = 1
+                    self.characterImageView.isUserInteractionEnabled = true
                 }
             }
         }
