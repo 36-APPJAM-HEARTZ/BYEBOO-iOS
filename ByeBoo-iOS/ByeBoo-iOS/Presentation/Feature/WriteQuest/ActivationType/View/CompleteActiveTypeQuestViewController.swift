@@ -33,7 +33,7 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
         super.viewDidLoad()
         
         self.navigationItem.hidesBackButton = true
-        viewModel.action(.questAnswerDidLoad(questID: 5))
+        viewModel.action(.questAnswerDidLoad(questID: self.questID))
         
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,

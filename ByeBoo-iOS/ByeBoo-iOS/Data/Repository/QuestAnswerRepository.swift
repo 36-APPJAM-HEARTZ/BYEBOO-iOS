@@ -22,7 +22,7 @@ struct DefaultQuestAnswerRepository: QuestAnswerInterface {
     func fetchQuestAnswer(questID: Int) async throws -> QuestAnswerEntity {
         let userID: Int = userDefaultService.load(key: .userID) ?? 1
         let result = try await network.request(
-            QuestAPI.answer(userID: 186, questID: 5),
+            QuestAPI.answer(userID: userID, questID: questID),
             decodingType: QuestAnswerResponseDTO.self
         )
         return result.toEntity()

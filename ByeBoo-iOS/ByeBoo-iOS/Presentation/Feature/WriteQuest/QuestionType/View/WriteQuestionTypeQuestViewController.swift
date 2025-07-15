@@ -80,6 +80,7 @@ extension WriteQuestionTypeQuestViewController {
     
     @objc
     private func confirmButtonDidTap() {
+        answerText = rootView.questTextField.textView.text
         let viewController = EmotionBottomSheetViewController()
         viewController.previousView = .question
         viewController.delegate = self

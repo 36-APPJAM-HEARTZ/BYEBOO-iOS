@@ -66,7 +66,7 @@ struct DefaultSaveActiveQuestRepository: SaveQuestActiveInterface{
         )
         
         let _ = try await network.request(
-            QuestAPI.active(userID: 186, questID: 6, request: saveQuestActiveDTO)
+            QuestAPI.active(userID: userID, questID: questID, request: saveQuestActiveDTO)
         )
     }
 }

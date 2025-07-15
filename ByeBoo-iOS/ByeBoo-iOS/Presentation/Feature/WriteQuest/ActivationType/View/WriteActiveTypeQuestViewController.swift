@@ -96,7 +96,9 @@ extension WriteActiveTypeQuestViewController {
     
     @objc
     private func confirmButtonDidTap() {
-        if rootView.questTextField.textView.text == rootView.questTextField.placeholder {
+        if rootView.questTextField.textView.text == rootView.questTextField.placeholder ||
+            rootView.questTextField.textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        {
             answerText = ""
         } else {
             answerText = rootView.questTextField.textView.text

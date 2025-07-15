@@ -95,7 +95,8 @@ extension WriteQuestionTypeQuestView {
 }
 extension WriteQuestionTypeQuestView: QuestCompleteProtocol {
     func changeStyle(count: Int) {
-        if (count >= 10) {
+        if (count >= 10) &&
+            (!questTextField.textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) {
             confirmButton.updateType(.enabled)
         } else {
             confirmButton.updateType(.disabled)
