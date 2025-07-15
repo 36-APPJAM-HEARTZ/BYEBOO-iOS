@@ -208,8 +208,10 @@ extension QuestCheckViewController: UICollectionViewDelegate {
             return
         }
         let questTipViewController = QuestTipViewController(viewModel: viewModel)
-        self.navigationController?.dismiss(animated: false)
-        self.navigationController?.pushViewController(questTipViewController, animated: false)
+        
+        questTipViewController.modalPresentationStyle = .fullScreen
+        let topViewController = UIApplication.shared.topViewController()
+        topViewController?.present(questTipViewController, animated: false)
     }
 }
 
@@ -271,4 +273,23 @@ extension QuestCheckViewController: UICollectionViewDataSource {
         return headerView
     }
     
+}
+
+extension UIApplication {
+    func topViewController(base: UIViewController? = UIApplication.shared
+        .connectedScenes
+        .compactMap { $0 as? UIWindowScene }
+        .flatMap { $0.windows }
+        .first(where: { $0.isKeyWindow })?
+        .rootViewController
+    ) -> UIViewController? {
+        if let nav = base as? UINavigationController {
+            return topViewController(base: nav.visibleViewController)
+        } else if let tab = base as? UITabBarController {
+            return topViewController(base: tab.selectedViewController)
+        } else if let presented = base?.presentedViewController {
+            return topViewController(base: presented)
+        }
+        return base
+    }
 }

@@ -36,11 +36,15 @@ final class QuestTipViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .titleAndClose("퀘스트 작성 TIP"),
-            action: #selector(close)
+            type: .none
         )
         
+        setAction()
         bind()
+    }
+    
+    private func setAction() {
+        rootView.closeButton.addTarget(self, action: #selector(closeButtonDidTap), for: .touchUpInside)
     }
     
     private func bind() {
@@ -58,8 +62,10 @@ final class QuestTipViewController: BaseViewController {
     }
 }
 
-extension QuestTipViewController: Dismissible {
-    func close() {
-        navigationController?.popViewController(animated: true)
+extension QuestTipViewController {
+    
+    @objc
+    func closeButtonDidTap() {
+        self.dismiss(animated: true)
     }
 }
