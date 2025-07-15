@@ -63,9 +63,6 @@ final class CompleteQuestionTypeQuestViewController: BaseViewController {
 extension CompleteQuestionTypeQuestViewController: Dismissible {
     
     func close() {
-        guard let viewModel = DIContainer.shared.resolve(type: QuestsViewModel.self) else {
-            return
-        }
         self.navigationController?.popToRootViewController(animated: false)
     }
 }
