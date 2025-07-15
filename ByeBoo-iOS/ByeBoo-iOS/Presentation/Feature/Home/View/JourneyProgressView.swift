@@ -81,7 +81,7 @@ extension JourneyProgressView {
     
     func updateName(_ name: String) {
         self.name = name
-        titleLabel.text = "\(name)님의 \(journeyTitle)"
+        titleLabel.text = "\(name)님의 \(journeyTitle) 여정"
     }
     
     func updateJourney(_ journey: String) {

@@ -36,7 +36,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             return
         }
- 
+        
         guard let saveQuestActiveRepository = DIContainer.shared.resolve(type: SaveQuestActiveInterface.self) else {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             return
@@ -49,11 +49,6 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return
         }
 
-        guard let questTipRepository = DIContainer.shared.resolve(type: QuestTipInterface.self) else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            return
-        }
-        
         DIContainer.shared.register(type: FetchUserJourneyUseCase.self) { _ in
             return DefaultFetchUserJourneyUseCase(repository: userRepository)
         }
@@ -62,12 +57,12 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultGetUserNameUseCase(repository: userRepository)
         }
         
-        DIContainer.shared.register(type: GetUserIDUseCase.self) { _ in
-            return DefaultGetUserIDUseCase(repository: userRepository)
-        }
-        
         DIContainer.shared.register(type: GetQuestInfoUseCase.self) { _ in
             return DefaultGetQuestInfoUseCase(questInfoReposiroty: questInfoRepository)
+        }
+        
+        DIContainer.shared.register(type: GetUserIDUseCase.self) { _ in
+            return DefaultGetUserIDUseCase(repository: userRepository)
         }
         
         DIContainer.shared.register(type: SaveQuestTypeUseCase.self) { _ in
@@ -102,8 +97,5 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultGetProgressingQuestsUseCase(repository: progressingQuestsRepository)
         }
                                                                              
-        DIContainer.shared.register(type: QuestTipUseCase.self) { _ in
-            return DefaultQuestTipUseCase(questTipRepository: questTipRepository)
-        }
     }
 }

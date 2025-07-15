@@ -1,19 +1,19 @@
 //
-//  JourneyResultViewController.swift
+//  CardJourneyViewController.swift
 //  ByeBoo-iOS
 //
-//  Created by 최주리 on 7/9/25.
+//  Created by 최주리 on 7/14/25.
 //
 
 import UIKit
 import Combine
 
-final class JourneyResultViewController: BaseViewController {
+final class CardJourneyViewController: BaseViewController {
     
     private let viewModel: JourneyResultViewModel
     private var cancellables = Set<AnyCancellable>()
     
-    private let rootView = JourneyResultView()
+    private let rootView = CardJourneyView()
     
     init(viewModel: JourneyResultViewModel) {
         self.viewModel = viewModel
@@ -31,18 +31,29 @@ final class JourneyResultViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         bind()
+        setGesture()
         
         viewModel.action(.viewDidLoad)
     }
-
-    override func setAddTarget() {
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(confirmLabelDidTap))
-        rootView.confirmLabel.addGestureRecognizer(tapRecognizer)
+    
+    private func setGesture() {
+        let cardTapGesture = UITapGestureRecognizer(target: self, action: #selector(cardDidTap))
+        cardTapGesture.isEnabled = true
+        cardTapGesture.cancelsTouchesInView = false
+        rootView.cardImageView.addGestureRecognizer(cardTapGesture)
+        
+        let confirmLabelTapGesture = UITapGestureRecognizer(target: self, action: #selector(confirmLabelDidTap))
+        rootView.confirmLabel.addGestureRecognizer(confirmLabelTapGesture)
         rootView.confirmLabel.isUserInteractionEnabled = true
     }
 }
 
-extension JourneyResultViewController {
+extension CardJourneyViewController {
+    @objc
+    private func cardDidTap() {
+        rootView.flipCard()
+    }
+    
     @objc
     private func confirmLabelDidTap() {
         let viewController = HomeOnboardingViewController()
@@ -60,18 +71,6 @@ extension JourneyResultViewController {
                         journeyType: JourneyType(rawValue: journey.title) ?? .face,
                         journeyDescription: journey.description ?? ""
                     )
-                case .failure(let failure):
-                    ByeBooLogger.error(failure)
-                }
-            }
-            .store(in: &cancellables)
-        
-        viewModel.output.userResult
-            .receive(on: DispatchQueue.main)
-            .sink { result in
-                switch result {
-                case .success(let name):
-                    self.rootView.updateName(name: name)
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }

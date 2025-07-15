@@ -87,5 +87,10 @@ final class OneLineTextBoxView: BaseView {
             $0.centerY.equalToSuperview()
         }
     }
-    
+}
+
+extension OneLineTextBoxView {
+    func updateTitle(_ text: String) {
+        titleLabel.text = text
+    }
 }
