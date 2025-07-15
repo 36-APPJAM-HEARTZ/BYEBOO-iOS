@@ -17,6 +17,7 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     private var questID: Int
     private var answerText: String = ""
     private var emotionState: String = ""
+    private var isKeyboardUsed: Bool = false
     
     init(
         viewModel: WriteQuestionTypeViewModel,
@@ -67,16 +68,20 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
 extension WriteQuestionTypeQuestViewController {
     @objc
     private func textViewMoveUp(_ notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            UIView.animate(withDuration: 0.3, animations: {
-                let offsetY = keyboardSize.height - self.rootView.safeAreaInsets.bottom * 4
-                self.rootView.transform = CGAffineTransform(translationX: 0, y: -offsetY)
-            })
+        if !self.isKeyboardUsed{
+            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+                UIView.animate(withDuration: 0.3, animations: {
+                    let offsetY = keyboardSize.height - self.rootView.safeAreaInsets.bottom * 4
+                    self.rootView.transform = CGAffineTransform(translationX: 0, y: -offsetY)
+                    self.isKeyboardUsed = true
+                })
+            }
         }
     }
     
     @objc
     private func textViewMoveDown() {
+        isKeyboardUsed = false
         self.rootView.transform = .identity
     }
     
