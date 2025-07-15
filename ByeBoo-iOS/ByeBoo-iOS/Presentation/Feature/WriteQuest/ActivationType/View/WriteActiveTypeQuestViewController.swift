@@ -18,6 +18,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private var answerText: String = ""
     private var emotionState: String = ""
     private var image: UIImage = UIImage()
+    private var isKeyboardUsed: Bool = false
     
     override func loadView() {
         view = rootView
@@ -81,16 +82,20 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
 extension WriteActiveTypeQuestViewController {
     @objc
     private func textViewMoveUp(_ notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            UIView.animate(withDuration: 0.3, animations: {
-                let offsetY = keyboardSize.height
-                self.rootView.transform = CGAffineTransform(translationX: 0, y: -offsetY)
-            })
+        if !self.isKeyboardUsed {
+            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+                UIView.animate(withDuration: 0.3, animations: {
+                    let offsetY = keyboardSize.height
+                    self.rootView.transform = CGAffineTransform(translationX: 0, y: -offsetY)
+                })
+                self.isKeyboardUsed = true
+            }
         }
     }
     
     @objc
     private func textViewMoveDown() {
+        self.isKeyboardUsed = false
         self.view.transform = .identity
     }
     
