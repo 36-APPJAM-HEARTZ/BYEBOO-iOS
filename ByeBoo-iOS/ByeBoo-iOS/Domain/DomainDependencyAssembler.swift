@@ -61,6 +61,10 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultGetQuestInfoUseCase(questInfoReposiroty: questInfoRepository)
         }
         
+        DIContainer.shared.register(type: GetUserIDUseCase.self) { _ in
+            return DefaultGetUserIDUseCase(repository: userRepository)
+        }
+        
         DIContainer.shared.register(type: SaveQuestTypeUseCase.self) { _ in
             return DefaultSaveQuestTypeUseCase(repqository: saveQuestTypeRepository)
         }
