@@ -158,6 +158,7 @@ extension QuestCheckViewController: UICollectionViewDelegate {
         if questNumber < step {
             let archiveQuestViewController = ArchiveQuestViewController()
             self.navigationController?.pushViewController(archiveQuestViewController, animated: false)
+            
         } else if questNumber == step {
             let onProgressQuest: (() -> Void) = { self.moveWriteQuest(quest: quest) }
             let modalView = QuestModalView(questNumber: questNumber, quest: quest?.question ?? "")
