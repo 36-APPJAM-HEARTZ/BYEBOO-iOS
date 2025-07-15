@@ -96,7 +96,6 @@ final class ArchiveQuestHeaderView: BaseView {
         stepLabel.snp.makeConstraints {
             $0.top.equalToSuperview()
             
-            
             switch type {
             case .complete:
                 $0.leading.equalToSuperview().inset(118.adjustedW)
@@ -106,7 +105,7 @@ final class ArchiveQuestHeaderView: BaseView {
         }
         
         questNumberLabel.snp.makeConstraints {
-            $0.top.equalToSuperview()
+            $0.top.equalTo(stepLabel.snp.top)
             $0.leading.equalTo(stepLabel.snp.trailing).offset(8.adjustedW)
         }
         
@@ -126,5 +125,15 @@ final class ArchiveQuestHeaderView: BaseView {
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(9.6.adjustedH)
         }
+    }
+}
+
+
+extension ArchiveQuestHeaderView {
+    func updateUI(stepNumber: Int, questNumber: Int, date: String, title: String ){
+        self.stepLabel.text = "STEP \(stepNumber)"
+        self.questNumberLabel.text = "\(questNumber) 번째 퀘스트"
+        self.dateLabel.text = date
+        self.questTitleLabel.text = title
     }
 }
