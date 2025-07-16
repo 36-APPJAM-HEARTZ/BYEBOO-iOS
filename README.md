@@ -33,6 +33,9 @@
  > 몸을 움직이며 감정을 정리하는 실천 중심의 퀘스트입니다.   
  >간단한 행동을 통해 머릿속을 환기시키고, 무기력에서 벗어나 스스로 일상의 루틴을 되찾을 수 있도록 유도합니다.
 
+<br/>
+<br/>
+
 ## 🍏 iOS Developers
 
 | ![최주리](https://github.com/user-attachments/assets/a1889d8b-f465-4c5a-b661-5ff8a004b3a6) | ![허승준](https://github.com/user-attachments/assets/1377d3a0-1eab-47cb-8a3b-1bcf4aea4e00) | ![이나연](https://github.com/user-attachments/assets/288b7b27-233e-40eb-bccd-0341e81f94bc) |
