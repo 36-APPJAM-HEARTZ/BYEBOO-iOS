@@ -106,6 +106,7 @@ extension QuestTextField: UITextViewDelegate {
         self.layer.borderColor = UIColor.primary300.cgColor
         self.layer.borderWidth = 1
         textCount.textColor = .primary300
+        textView.textColor = .white
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
