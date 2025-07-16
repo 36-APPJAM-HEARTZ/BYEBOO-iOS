@@ -111,7 +111,7 @@ final class HomeStateView: BaseView {
             $0.leading.equalToSuperview().inset(24.adjustedW)
         }
         descriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(8.adjustedH)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(6.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(16.adjustedH)
         }
