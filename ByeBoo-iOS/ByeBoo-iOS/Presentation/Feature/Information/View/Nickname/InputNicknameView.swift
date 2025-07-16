@@ -138,16 +138,14 @@ final class InputNicknameView: BaseView {
             nicknameStateLabel.text = NicknameState.normal.rawValue
             nicknameStateLabel.textColor = .grayscale400
             letterCountLabel.textColor = .grayscale400
-            letterCountLabel.isHidden = false
         case .error:
             nicknameStateLabel.text = NicknameState.normal.rawValue
             nicknameStateLabel.textColor = .error300
             letterCountLabel.textColor = .error300
-            letterCountLabel.isHidden = false
         case .normal:
             nicknameStateLabel.text = NicknameState.complete.rawValue
             nicknameStateLabel.textColor = .primary300
-            letterCountLabel.isHidden = true
+            letterCountLabel.textColor = .grayscale400
         }
     }
 }
