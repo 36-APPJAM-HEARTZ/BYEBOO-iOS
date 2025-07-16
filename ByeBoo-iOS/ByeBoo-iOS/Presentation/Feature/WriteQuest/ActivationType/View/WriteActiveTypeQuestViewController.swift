@@ -137,7 +137,8 @@ extension WriteActiveTypeQuestViewController {
             questID: questID
         )
         viewController.navigationItem.hidesBackButton = true
-        self.navigationController?.pushViewController(viewController, animated: true)
+        viewController.modalPresentationStyle = .fullScreen
+        self.present(viewController, animated: false)
     }
     
     private func bind() {   
