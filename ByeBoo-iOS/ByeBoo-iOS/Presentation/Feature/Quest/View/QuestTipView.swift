@@ -73,12 +73,14 @@ final class QuestTipView: BaseView {
                 $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
             }
             
-            dividerView.snp.makeConstraints {
-                $0.top.equalTo(textView.snp.bottom).offset(24.5.adjustedH)
-                $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
+            if index != tipQuestion.count - 1 {
+                dividerView.snp.makeConstraints {
+                    $0.top.equalTo(textView.snp.bottom).offset(24.5.adjustedH)
+                    $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
+                }
+                previousView = dividerView
             }
             
-            previousView = dividerView
         }
     }
     
