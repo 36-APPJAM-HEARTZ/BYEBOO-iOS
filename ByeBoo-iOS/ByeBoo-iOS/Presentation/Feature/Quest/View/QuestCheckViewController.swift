@@ -172,6 +172,7 @@ extension QuestCheckViewController: UICollectionViewDelegate {
                 questID: questID ?? 1,
                 questType: questType
             )
+            self.tabBarController?.tabBar.isHidden = true
             self.navigationController?.pushViewController(archiveQuestViewController, animated: false)
             
         } else if questNumber == step {
