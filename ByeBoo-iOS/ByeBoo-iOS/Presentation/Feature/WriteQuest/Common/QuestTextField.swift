@@ -146,10 +146,3 @@ extension QuestTextField: UITextViewDelegate {
         delegate?.changeStyle(count: count)
     }
 }
-
-extension String {
-    func canBeRendered(by font: UIFont) -> Bool {
-        let cfFont = CTFontCreateWithName(font.fontName as CFString, font.pointSize, nil)
-        return CTFontGetGlyphWithName(cfFont, self as CFString) != 0
-    }
-}
