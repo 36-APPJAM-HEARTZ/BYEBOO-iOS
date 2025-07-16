@@ -123,9 +123,33 @@ extension QuestTextField: UITextViewDelegate {
         if textView.text.count > limitCount {
             textView.deleteBackward()
         }
+        let fullText = textView.text ?? ""
+        let fallbackFont = UIFont.systemFont(ofSize: 16)
+        
+        let suitFont = FontManager.body3R16.font
+        
+        let white = UIColor.white
+        
+        let attrStr = NSMutableAttributedString(string: fullText)
+        
+        for (index, char) in fullText.enumerated() {
+            let range = NSRange(location: index, length: 1)
+            let fontToUse = String(char).canBeRendered(by: suitFont) ? suitFont : fallbackFont
+            attrStr.addAttribute(.font, value: fontToUse, range: range)
+            attrStr.addAttribute(.foregroundColor, value: white, range: range)
+        }
+        
+        textView.attributedText = attrStr
         
         count = textView.text.count
         textCount.text = "(\(count)/\(limitCount))"
         delegate?.changeStyle(count: count)
+    }
+}
+
+extension String {
+    func canBeRendered(by font: UIFont) -> Bool {
+        let cfFont = CTFontCreateWithName(font.fontName as CFString, font.pointSize, nil)
+        return CTFontGetGlyphWithName(cfFont, self as CFString) != 0
     }
 }
