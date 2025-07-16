@@ -134,7 +134,7 @@ final class ArchiveQuestHeaderView: BaseView {
 extension ArchiveQuestHeaderView {
     func updateUI(stepNumber: Int, questNumber: Int, date: String, title: String ){
         self.stepLabel.text = "STEP \(stepNumber)"
-        self.questNumberLabel.text = "\(questNumber) 번째 퀘스트"
+        self.questNumberLabel.text = "\(questNumber)번째 퀘스트"
         self.dateLabel.text = date.dateFormat()
         self.questTitleLabel.text = title
     }

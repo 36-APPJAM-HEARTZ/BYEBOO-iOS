@@ -54,8 +54,8 @@ final class WriteQuestionTypeQuestView: BaseView {
         title.snp.makeConstraints {
             $0.top.equalTo(self.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview()
-            $0.centerX.equalToSuperview()
-            $0.height.equalTo(200.adjustedH)
+//            $0.centerX.equalToSuperview()
+//            $0.height.equalTo(181.adjustedH)
         }
         
         questTextField.snp.makeConstraints {

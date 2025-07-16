@@ -87,12 +87,12 @@ final class CompleteQuestionTypeQuestView: BaseView {
         feelView.isUserInteractionEnabled = false
         
         thinkView.snp.makeConstraints {
-            $0.top.equalTo(title.snp.bottom).offset(12.adjustedH)
+            $0.top.equalTo(title.snp.bottom)
             $0.leading.trailing.equalToSuperview()
         }
         
         feelView.snp.makeConstraints {
-            $0.top.equalTo(thinkView.snp.bottom).offset(12.adjustedH)
+            $0.top.equalTo(thinkView.snp.bottom)
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
