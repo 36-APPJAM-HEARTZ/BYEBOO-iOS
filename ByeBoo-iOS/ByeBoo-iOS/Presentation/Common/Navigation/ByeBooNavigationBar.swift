@@ -66,6 +66,7 @@ struct ByeBooNavigationBar {
                 $0.configureWithTransparentBackground()
             case .black:
                 $0.backgroundColor = .grayscale900
+                $0.shadowColor = .clear
             }
             $0.titleTextAttributes = [
                 .font: FontManager.sub1Sb20.font,
