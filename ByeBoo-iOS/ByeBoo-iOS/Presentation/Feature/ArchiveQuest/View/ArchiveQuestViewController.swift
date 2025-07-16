@@ -2,7 +2,7 @@
 //  ArchiveQuestViewController.swift
 //  ByeBoo-iOS
 //
-//  Created by 최주리 on 7/7/25.0-
+//  Created by 최주리 on 7/7/25
 //
 
 import Combine
