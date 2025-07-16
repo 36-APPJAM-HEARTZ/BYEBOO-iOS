@@ -127,16 +127,13 @@ extension QuestTextField: UITextViewDelegate {
         let fallbackFont = UIFont.systemFont(ofSize: 16)
         
         let suitFont = FontManager.body3R16.font
-        
-        let white = UIColor.white
-        
         let attrStr = NSMutableAttributedString(string: fullText)
         
         for (index, char) in fullText.enumerated() {
             let range = NSRange(location: index, length: 1)
             let fontToUse = String(char).canBeRendered(by: suitFont) ? suitFont : fallbackFont
             attrStr.addAttribute(.font, value: fontToUse, range: range)
-            attrStr.addAttribute(.foregroundColor, value: white, range: range)
+            attrStr.addAttribute(.foregroundColor, value: UIColor.white, range: range)
         }
         
         textView.attributedText = attrStr
