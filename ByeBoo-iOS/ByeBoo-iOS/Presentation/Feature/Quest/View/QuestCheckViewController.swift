@@ -19,6 +19,8 @@ final class QuestCheckViewController: BaseViewController {
     private var cancellable = Set<AnyCancellable>()
     private var questsEntity: ProgressingQuestsEntity?
     
+    private var questID: Int?
+    
     init(viewModel: QuestsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -95,7 +97,6 @@ final class QuestCheckViewController: BaseViewController {
                         self.scrollToCurrentStep()
                     }
                 }
-                ByeBooLogger.error(ByeBooError.unknownError)
                 
             case (.success(_), .success(_), .failure(_)):
                 guard let startViewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {
@@ -144,10 +145,12 @@ final class QuestCheckViewController: BaseViewController {
 }
 
 extension QuestCheckViewController: UICollectionViewDelegate {
-    
+        
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let quest = questsEntity?.steps[indexPath.section].quests[indexPath.item]
         let currentStep = questsEntity?.currentStep
+        
+        questID = quest?.questId
         
         guard let step = currentStep,
               let questNumber = quest?.questNumber else {
@@ -157,7 +160,13 @@ extension QuestCheckViewController: UICollectionViewDelegate {
         guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else { return }
         
         if questNumber < step {
-            let archiveQuestViewController = ArchiveQuestViewController(viewModel: viewModel)
+            let questType: QuestType = (quest?.questStyle == QuestStyle.recording.key) ? .question : .activation
+            
+            let archiveQuestViewController = ArchiveQuestViewController(
+                viewModel: viewModel,
+                questID: questID ?? 1,
+                questType: questType
+            )
             self.navigationController?.pushViewController(archiveQuestViewController, animated: false)
             
         } else if questNumber == step {
@@ -200,11 +209,14 @@ extension QuestCheckViewController: UICollectionViewDelegate {
     
     @objc
     private func tipButtonDidTap() {
-        guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self) else {
+        guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self),
+              let questID = questID else {
             return
         }
-        let questTipViewController = QuestTipViewController(viewModel: viewModel)
-        
+        let questTipViewController = QuestTipViewController(
+            viewModel: viewModel,
+            questID: questID
+        )
         questTipViewController.modalPresentationStyle = .fullScreen
         let topViewController = UIApplication.shared.topViewController()
         topViewController?.present(questTipViewController, animated: false)

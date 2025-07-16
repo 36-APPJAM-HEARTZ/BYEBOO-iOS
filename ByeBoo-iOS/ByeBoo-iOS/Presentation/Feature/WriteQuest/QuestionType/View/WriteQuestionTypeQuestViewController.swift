@@ -89,7 +89,6 @@ extension WriteQuestionTypeQuestViewController {
     private func confirmButtonDidTap() {
         answerText = rootView.questTextField.textView.text
         let viewController = EmotionBottomSheetViewController()
-        viewController.previousView = .question
         viewController.delegate = self
         if let sheet = viewController.sheetPresentationController{
             sheet.detents = [.custom { _ in 515.adjustedH }]
@@ -105,7 +104,10 @@ extension WriteQuestionTypeQuestViewController {
         guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self) else {
             return
         }
-        let viewController = QuestTipViewController(viewModel: viewModel)
+        let viewController = QuestTipViewController(
+            viewModel: viewModel,
+            questID: questID
+        )
         viewController.navigationItem.hidesBackButton = true
         self.navigationController?.pushViewController(viewController, animated: false)
     }
@@ -123,6 +125,27 @@ extension WriteQuestionTypeQuestViewController {
                         questStyle: quest.questStyle,
                         question: quest.question
                     )
+                case .failure(let failure):
+                    ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.didSuccessPostPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success(()):
+                    guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
+                        ByeBooLogger.error(ByeBooError.DIFailedError)
+                        fatalError()
+                    }
+                    
+                    let viewController = CompleteQuestionTypeQuestViewController(
+                        viewModel: viewModel,
+                        questID: self.questID
+                    )
+                    self.navigationController?.pushViewController(viewController, animated: true)
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }
@@ -148,12 +171,7 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
         self.emotionState = emotionState.key
     }
     
-    func presentNextViewController(from previousView: PreviousView) {
-        guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            fatalError()
-        }
-        
+    func saveQuest() {
         ByeBooLogger.debug("text: \(answerText)")
         ByeBooLogger.debug("emtionState: \(emotionState)")
 
@@ -163,11 +181,5 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
             emotionState: self.emotionState
             )
         )
-        
-        let viewController = CompleteQuestionTypeQuestViewController(
-            viewModel: viewModel,
-            questID: questID
-        )
-        self.navigationController?.pushViewController(viewController, animated: true)
     }
 }
