@@ -50,9 +50,8 @@ final class EmotionBottomSheetViewController: BaseViewController {
             return
         }
         
-        self.dismiss(animated: true) {
-            self.delegate?.saveEmotionState(emotionState: selectedEmotion)
-            self.delegate?.saveQuest()
-        }
+        self.delegate?.saveEmotionState(emotionState: selectedEmotion)
+        self.delegate?.saveQuest()
+        rootView.confirmButton.isEnabled = false
     }
 }

@@ -20,6 +20,8 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private var image: UIImage = UIImage()
     private var isKeyboardUsed: Bool = false
     
+    private let bottomSheetViewController = EmotionBottomSheetViewController()
+    
     override func loadView() {
         view = rootView
     }
@@ -117,15 +119,15 @@ extension WriteActiveTypeQuestViewController {
             answerText = rootView.questTextField.textView.text
         }
         
-        let viewController = EmotionBottomSheetViewController()
-        viewController.delegate = self
-        if let sheet = viewController.sheetPresentationController{
+       
+        bottomSheetViewController.delegate = self
+        if let sheet =  bottomSheetViewController.sheetPresentationController{
             sheet.detents = [.custom { _ in 515.adjustedH }]
             sheet.prefersGrabberVisible = false
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
             sheet.preferredCornerRadius = 8
         }
-        self.present(viewController, animated: true)
+        self.present(bottomSheetViewController, animated: true)
     }
     
     @objc
@@ -181,6 +183,7 @@ extension WriteActiveTypeQuestViewController {
                         viewModel: viewModel,
                         questID: self?.questID ?? 1
                     )
+                    self?.bottomSheetViewController.dismiss(animated: true)
                     self?.navigationController?.pushViewController(viewController, animated: true)
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
