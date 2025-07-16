@@ -25,6 +25,11 @@ final class CustomModalController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setGesture()
+    }
+    
     override func setView() {
         view.backgroundColor = .black80
         
@@ -45,7 +50,7 @@ final class CustomModalController: BaseViewController {
     }
 }
 
-extension CustomModalController {
+extension CustomModalController: UIGestureRecognizerDelegate {
     @objc
     func actionButtonDidTap() {
         if let action {
@@ -71,6 +76,15 @@ extension CustomModalController {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(backgroundDidTap))
         tapGestureRecognizer.isEnabled = true
         tapGestureRecognizer.cancelsTouchesInView = false
+        tapGestureRecognizer.delegate = self
         view.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldReceive touch: UITouch
+    ) -> Bool {
+        let location = touch.location(in: view)
+        return !modalView.frame.contains(location)
     }
 }

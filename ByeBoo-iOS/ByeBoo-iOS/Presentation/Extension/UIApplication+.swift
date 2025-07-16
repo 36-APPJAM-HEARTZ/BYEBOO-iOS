@@ -8,6 +8,7 @@
 import UIKit
 
 extension UIApplication {
+    
     func topViewController(base: UIViewController? = UIApplication.shared
         .connectedScenes
         .compactMap { $0 as? UIWindowScene }

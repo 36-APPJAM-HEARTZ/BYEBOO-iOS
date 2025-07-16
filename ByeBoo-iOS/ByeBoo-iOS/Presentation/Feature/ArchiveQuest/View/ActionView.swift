@@ -44,6 +44,7 @@ final class ActionView: BaseView {
             $0.layer.cornerRadius = 12
             $0.clipsToBounds = true
             $0.backgroundColor = .gray
+            $0.contentMode = .scaleAspectFit
             guard let url = URL(string: photoURL) else {
                 ByeBooLogger.error(ByeBooError.URLError)
                 return
