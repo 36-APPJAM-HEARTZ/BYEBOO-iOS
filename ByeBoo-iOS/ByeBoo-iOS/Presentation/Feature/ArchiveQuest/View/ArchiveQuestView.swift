@@ -92,8 +92,6 @@ final class ArchiveQuestView: BaseView {
             $0.height.equalTo(132.adjustedH)
         }
         
-        
-        
         if let thinkView {
             thinkView.snp.makeConstraints {
                 $0.top.equalTo(headerView.snp.bottom)
@@ -136,7 +134,7 @@ extension ArchiveQuestView {
         case .question:
             self.thinkView?.updateUI(description: entity.answer)
         case .activation:
-            self.actionView?.updateUI(description: entity.answer, photoURL: entity.imageUrl!)
+            self.actionView?.updateUI(description: entity.answer, photoURL: entity.imageUrl ?? "")
             
         }
     }
