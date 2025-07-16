@@ -20,13 +20,13 @@ final class ActionView: BaseView {
     var photoURL: String
     
     init(
-        descriptionText: String? = nil,
+        descriptionText: String,
         photoURL: String
     ) {
         self.descriptionText = descriptionText
         self.photoURL = photoURL
         
-        descriptionView = TextBoxView(title: descriptionText ?? "")
+        descriptionView = TextBoxView(title: descriptionText)
         
         super.init(frame: .zero)
     }
@@ -68,6 +68,9 @@ final class ActionView: BaseView {
             $0.top.equalTo(thinkTextView.snp.bottom).offset(12.adjustedH)
             $0.size.equalTo(327.adjustedW)
             $0.centerX.equalToSuperview()
+            if descriptionText.isEmpty {
+                $0.bottom.equalToSuperview().inset(24.5.adjustedH)
+            }
         }
         
         descriptionView.snp.makeConstraints {
@@ -75,17 +78,6 @@ final class ActionView: BaseView {
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(24.5.adjustedH)
         }
-      
-        if !descriptionText.isEmpty {
-            descriptionView?.snp.makeConstraints {
-                $0.top.equalTo(photoView.snp.bottom).offset(12.adjustedH)
-                $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-                $0.bottom.equalToSuperview().inset(24.5.adjustedH)
-            }
-        } else {
-            photoView.snp.makeConstraints {
-                $0.bottom.equalToSuperview().inset(24.5.adjustedH)
-            }    
     }
 }
 
@@ -93,8 +85,17 @@ extension ActionView {
     func updateUI(description: String, photoURL: String) {
         if description.isEmpty {
             descriptionView.removeFromSuperview()
-            photoView.snp.makeConstraints {
+            photoView.snp.remakeConstraints {
+                $0.top.equalTo(thinkTextView.snp.bottom).offset(12.adjustedH)
+                $0.size.equalTo(327.adjustedW)
+                $0.centerX.equalToSuperview()
                 $0.bottom.equalToSuperview().inset(24.5.adjustedH)
+            }
+        } else {
+            photoView.snp.remakeConstraints {
+                $0.top.equalTo(thinkTextView.snp.bottom).offset(12.adjustedH)
+                $0.size.equalTo(327.adjustedW)
+                $0.centerX.equalToSuperview()
             }
         }
         self.descriptionView.updateText(description)
