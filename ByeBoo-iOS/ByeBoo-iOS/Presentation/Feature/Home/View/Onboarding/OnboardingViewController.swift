@@ -67,6 +67,12 @@ extension OnboardingViewController {
             fatalError()
         }
         let viewController = InformationViewController(viewModel: viewModel)
+        
+        let transition = CATransition()
+        transition.duration = 0.2
+        transition.type = .fade
+        navigationController?.view.layer.add(transition, forKey: nil)
+        
         navigationController?.pushViewController(viewController, animated: false)
     }
 }

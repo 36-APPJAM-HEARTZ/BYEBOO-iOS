@@ -19,6 +19,8 @@ final class QuestCheckViewController: BaseViewController {
     private var cancellable = Set<AnyCancellable>()
     private var questsEntity: ProgressingQuestsEntity?
     
+    private var questID: Int?
+    
     init(viewModel: QuestsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -36,8 +38,7 @@ final class QuestCheckViewController: BaseViewController {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.isHidden = true
         
-        isStartedQuset = false
-        
+        bind()
         viewModel.action(.questViewWillAppear)
     }
     
@@ -78,30 +79,26 @@ final class QuestCheckViewController: BaseViewController {
             viewModel.output.questsPublisher
         )
         .receive(on: DispatchQueue.main)
-        .sink { name, journey, quests in
+        .sink { [weak self] name, journey, quests in
             switch (name, journey, quests) {
             case let (.success(name), .success(journey), .success(quests)):
-                self.isStartedQuset = false
-                self.questsCheckView.questCheckHeaderView.updateHeader(
+                self?.isStartedQuset = false
+                self?.questsCheckView.questCheckHeaderView.updateHeader(
                     nickname: name,
                     journey: journey.title
                 )
-                self.questsEntity = quests
-                self.questsCheckView.questCheckHeaderView.updatePeriod(quests.progressPeriod)
-                self.questsCheckView.questCollectionView.reloadData()
+                self?.questsEntity = quests
+                self?.questsCheckView.questCheckHeaderView.updatePeriod(quests.progressPeriod)
+                self?.questsCheckView.questCollectionView.reloadData()
                 
                 guard let step = quests.steps.first else { return }
                 if quests.currentStep > step.quests.count {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        self.scrollToCurrentStep()
+                        self?.scrollToCurrentStep()
                     }
                 }
-                ByeBooLogger.error(ByeBooError.unknownError)
                 
             case (.success(_), .success(_), .failure(_)):
-                guard !self.isStartedQuset else { return }
-                self.isStartedQuset = true
-                
                 guard let startViewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {
                     ByeBooLogger.error(ByeBooError.DIFailedError)
                     fatalError()
@@ -113,7 +110,7 @@ final class QuestCheckViewController: BaseViewController {
                     self?.viewModel.action(.questViewWillAppear)
                     self?.bind()
                 }
-                self.present(viewController, animated: false)
+                self?.present(viewController, animated: false)
                 
             default:
                 ByeBooLogger.error(ByeBooError.unknownError)
@@ -130,6 +127,11 @@ final class QuestCheckViewController: BaseViewController {
                     $0.questNumber == questsEntity.currentStep
                 }) {
                 let indexPath = IndexPath(item: 0, section: sectionIndex)
+                
+                if step.stepNumber == 5 {
+                    questsCheckView.questCollectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
+                    return
+                }
                 
                 if let attributes = questsCheckView.questCollectionView.layoutAttributesForSupplementaryElement(
                     ofKind: UICollectionView.elementKindSectionHeader,
@@ -148,10 +150,12 @@ final class QuestCheckViewController: BaseViewController {
 }
 
 extension QuestCheckViewController: UICollectionViewDelegate {
-    
+        
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let quest = questsEntity?.steps[indexPath.section].quests[indexPath.item]
         let currentStep = questsEntity?.currentStep
+        
+        questID = quest?.questId
         
         guard let step = currentStep,
               let questNumber = quest?.questNumber else {
@@ -161,7 +165,13 @@ extension QuestCheckViewController: UICollectionViewDelegate {
         guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else { return }
         
         if questNumber < step {
-            let archiveQuestViewController = ArchiveQuestViewController(viewModel: viewModel)
+            let questType: QuestType = (quest?.questStyle == QuestStyle.recording.key) ? .question : .activation
+            
+            let archiveQuestViewController = ArchiveQuestViewController(
+                viewModel: viewModel,
+                questID: questID ?? 1,
+                questType: questType
+            )
             self.navigationController?.pushViewController(archiveQuestViewController, animated: false)
             
         } else if questNumber == step {
@@ -204,11 +214,14 @@ extension QuestCheckViewController: UICollectionViewDelegate {
     
     @objc
     private func tipButtonDidTap() {
-        guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self) else {
+        guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self),
+              let questID = questID else {
             return
         }
-        let questTipViewController = QuestTipViewController(viewModel: viewModel)
-        
+        let questTipViewController = QuestTipViewController(
+            viewModel: viewModel,
+            questID: questID
+        )
         questTipViewController.modalPresentationStyle = .fullScreen
         let topViewController = UIApplication.shared.topViewController()
         topViewController?.present(questTipViewController, animated: false)

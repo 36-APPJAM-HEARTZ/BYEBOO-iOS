@@ -13,13 +13,15 @@ final class QuestTipViewController: BaseViewController {
     private let rootView = QuestTipView()
     private let viewModel: QuestTipViewModel
     private var cancellables = Set<AnyCancellable>()
+    private let questID: Int
     
     override func loadView() {
         view = rootView
     }
     
-    init(viewModel: QuestTipViewModel) {
+    init(viewModel: QuestTipViewModel, questID: Int) {
         self.viewModel = viewModel
+        self.questID = questID
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -31,7 +33,7 @@ final class QuestTipViewController: BaseViewController {
         super.viewDidLoad()
         
         self.navigationItem.hidesBackButton = true
-        viewModel.action(.questTipDidLoad(questID: 1))
+        viewModel.action(.questTipDidLoad(questID: questID))
         
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,

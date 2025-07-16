@@ -13,24 +13,20 @@ import SnapKit
 final class ActionView: BaseView {
 
     private let photoView = UIImageView()
-    private let descriptionView: TextBoxView?
+    private let descriptionView: TextBoxView
     private let placeholderView = UIImageView()
     private let thinkTextView =  IconOneLineTextView(iconType: .think,text: "이렇게 완료했어요" )
     var descriptionText: String
     var photoURL: String
     
     init(
-        descriptionText: String,
+        descriptionText: String? = nil,
         photoURL: String
     ) {
         self.descriptionText = descriptionText
         self.photoURL = photoURL
         
-        if descriptionText != ""  {
-            descriptionView = TextBoxView(title: descriptionText)
-        } else {
-            descriptionView = nil
-        }
+        descriptionView = TextBoxView(title: descriptionText ?? "")
         
         super.init(frame: .zero)
     }
@@ -44,6 +40,7 @@ final class ActionView: BaseView {
             $0.layer.cornerRadius = 12
             $0.clipsToBounds = true
             $0.backgroundColor = .gray
+            $0.contentMode = .scaleAspectFill
             guard let url = URL(string: photoURL) else {
                 ByeBooLogger.error(ByeBooError.URLError)
                 return
@@ -58,9 +55,7 @@ final class ActionView: BaseView {
             thinkTextView
         )
         
-        if let descriptionView {
-            addSubview(descriptionView)
-        }
+        addSubview(descriptionView)
     }
     
     override func setLayout() {
@@ -75,6 +70,12 @@ final class ActionView: BaseView {
             $0.centerX.equalToSuperview()
         }
         
+        descriptionView.snp.makeConstraints {
+            $0.top.equalTo(photoView.snp.bottom).offset(12.adjustedH)
+            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.bottom.equalToSuperview().inset(24.5.adjustedH)
+        }
+      
         if !descriptionText.isEmpty {
             descriptionView?.snp.makeConstraints {
                 $0.top.equalTo(photoView.snp.bottom).offset(12.adjustedH)
@@ -84,14 +85,20 @@ final class ActionView: BaseView {
         } else {
             photoView.snp.makeConstraints {
                 $0.bottom.equalToSuperview().inset(24.5.adjustedH)
-            }
-        }
+            }    
     }
 }
 
 extension ActionView {
     func updateUI(description: String, photoURL: String) {
-        self.descriptionText = description
+        if description.isEmpty {
+            descriptionView.removeFromSuperview()
+            photoView.snp.makeConstraints {
+                $0.bottom.equalToSuperview().inset(24.5.adjustedH)
+            }
+        }
+        self.descriptionView.updateText(description)
+        
         self.photoURL = photoURL
         if let url = URL(string: photoURL) {
             photoView.kf.setImage(with: url)

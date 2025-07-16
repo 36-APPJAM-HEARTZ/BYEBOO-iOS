@@ -46,4 +46,9 @@ extension String {
         return attributedString
     }
     
+    func dateFormat() -> String {
+        let components = self.split(separator: "-")
+        return components.joined(separator: ". ") + "."
+    }
+    
 }

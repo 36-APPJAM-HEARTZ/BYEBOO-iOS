@@ -16,7 +16,7 @@ enum ByeBooEmotion: CaseIterable {
     var key: String {
         switch self {
         case .neutral:
-            return "NEUTRAl"
+            return "NEUTRAL"
         case .sad:
             return "SAD"
         case .selfUnderstanding:

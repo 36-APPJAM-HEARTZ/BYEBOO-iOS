@@ -24,8 +24,7 @@ struct DefaultSaveQuestTypeRepository: SaveQuestTypeInterface {
         let saveQuestRequestDTO: SaveQuestRequestDTO = .init(answer: answer, questEmotionState: emotionState)
         
         let _ = try await network.request(
-            QuestAPI.recording(userID: userID, questID: questID, request: saveQuestRequestDTO),
-            decodingType: BaseResponse<EmptyResponse>.self
+            QuestAPI.recording(userID: userID, questID: questID, request: saveQuestRequestDTO)
         )
     }
 }
