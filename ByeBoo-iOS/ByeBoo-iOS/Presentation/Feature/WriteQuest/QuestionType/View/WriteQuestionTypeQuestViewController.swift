@@ -45,6 +45,7 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
             action: #selector(back)
         )
         
+        tabBarController?.tabBar.isHidden = true
         bind()
         viewModel.action(.viewDidLoad(quesetID: questID))
     }

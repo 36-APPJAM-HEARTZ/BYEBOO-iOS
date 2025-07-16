@@ -63,6 +63,7 @@ final class CompleteQuestionTypeQuestViewController: BaseViewController {
 extension CompleteQuestionTypeQuestViewController: Dismissible {
     
     func close() {
+        tabBarController?.tabBar.isHidden = false
         self.navigationController?.popToRootViewController(animated: false)
     }
 }

@@ -46,6 +46,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
             action: #selector(back)
         )
         
+        tabBarController?.tabBar.isHidden = true
         setGesture()
         bind()
         presentPhotoPicker()
