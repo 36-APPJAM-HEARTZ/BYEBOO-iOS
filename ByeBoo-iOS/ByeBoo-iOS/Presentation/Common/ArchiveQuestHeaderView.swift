@@ -45,7 +45,7 @@ final class ArchiveQuestHeaderView: BaseView {
         super.init(frame: .zero)
         
         stepLabel.text = "STEP \(stepNumber)"
-        questNumberLabel.text = "\(questNumber) 번째 퀘스트"
+        questNumberLabel.text = "\(questNumber)번째 퀘스트"
         dateLabel.text = date.dateFormat()
         questTitleLabel.text = questTitle
     }

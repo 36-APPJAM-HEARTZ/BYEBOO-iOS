@@ -89,7 +89,7 @@ final class ArchiveQuestView: BaseView {
         headerView.snp.makeConstraints {
             $0.top.equalTo(0)
             $0.horizontalEdges.equalToSuperview()
-            $0.height.equalTo(132.adjustedH)
+//            $0.height.equalTo(132.adjustedH)
         }
         
         if let thinkView {
