@@ -106,7 +106,8 @@ extension WriteQuestionTypeQuestViewController {
         }
         let viewController = QuestTipViewController(
             viewModel: viewModel,
-            questID: questID
+            questID: questID,
+            questType: .question
         )
         viewController.navigationItem.hidesBackButton = true
         viewController.modalPresentationStyle = .fullScreen

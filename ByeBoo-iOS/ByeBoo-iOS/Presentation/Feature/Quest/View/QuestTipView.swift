@@ -22,6 +22,7 @@ final class QuestTipView: BaseView {
     private let questLabel = UILabel()
     private let title = UILabel()
     
+    private let questType: QuestType
     private var tipQuestion: [String] = []
     
     override func setUI() {
@@ -34,6 +35,15 @@ final class QuestTipView: BaseView {
         stepStackView.addArrangedSubviews(stepLabel, questLabel)
     }
     
+    init(questType: QuestType) {
+        self.questType = questType
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func bind(with entity: QuestTipDataEntity) {
         self.stepNum = entity.stepNumber
         stepLabel.updateText("STEP \(stepNum)")
@@ -43,7 +53,7 @@ final class QuestTipView: BaseView {
         var previousView: UIView = title
         tipQuestion = [
             "\(questNum)번째 퀘스트로 드리는 이유",
-            "이런 걸 생각해보며 작성해 주세요.",
+            questType == .activation ? "이렇게 해보면 좋아요." : "이런 걸 생각해보며 작성해 주세요.",
             "이 퀘스트가 끝나면 어떤 변화가 생길까요?"
         ]
         
@@ -115,6 +125,7 @@ final class QuestTipView: BaseView {
             $0.font = FontManager.head1Sb24.font
             $0.textColor = .grayscale100
             $0.textAlignment = .center
+            $0.lineBreakMode = .byWordWrapping
             $0.numberOfLines = 0
         }
     }
@@ -144,7 +155,8 @@ final class QuestTipView: BaseView {
         
         title.snp.makeConstraints {
             $0.top.equalTo(stepStackView.snp.bottom).offset(12.adjustedH)
-            $0.width.equalTo(327.adjustedW)
+//            $0.width.equalTo(327.adjustedW)
+            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
             $0.centerX.equalToSuperview()
         }
     }

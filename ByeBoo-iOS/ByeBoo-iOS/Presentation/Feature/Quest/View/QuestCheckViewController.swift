@@ -18,7 +18,7 @@ final class QuestCheckViewController: BaseViewController {
     private let viewModel: QuestsViewModel
     private var cancellable = Set<AnyCancellable>()
     private var questsEntity: ProgressingQuestsEntity?
-    
+    private var quest: QuestEntity?
     private var questID: Int?
     
     init(viewModel: QuestsViewModel) {
@@ -152,7 +152,7 @@ final class QuestCheckViewController: BaseViewController {
 extension QuestCheckViewController: UICollectionViewDelegate {
         
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let quest = questsEntity?.steps[indexPath.section].quests[indexPath.item]
+        quest = questsEntity?.steps[indexPath.section].quests[indexPath.item]
         let currentStep = questsEntity?.currentStep
         
         questID = quest?.questId
@@ -175,7 +175,7 @@ extension QuestCheckViewController: UICollectionViewDelegate {
             self.navigationController?.pushViewController(archiveQuestViewController, animated: false)
             
         } else if questNumber == step {
-            let onProgressQuest: (() -> Void) = { self.moveWriteQuest(quest: quest) }
+            let onProgressQuest: (() -> Void) = { self.moveWriteQuest(quest: self.quest) }
             let modalView = QuestModalView(questNumber: questNumber, quest: quest?.question ?? "")
             modalView.tipButton.addTarget(self, action: #selector(tipButtonDidTap), for: .touchUpInside)
             
@@ -214,13 +214,17 @@ extension QuestCheckViewController: UICollectionViewDelegate {
     
     @objc
     private func tipButtonDidTap() {
+        
         guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self),
               let questID = questID else {
             return
         }
+        
+        let questType: QuestType = (quest?.questStyle == QuestStyle.recording.key) ? .question : .activation
         let questTipViewController = QuestTipViewController(
             viewModel: viewModel,
-            questID: questID
+            questID: questID,
+            questType: questType
         )
         questTipViewController.modalPresentationStyle = .fullScreen
         let topViewController = UIApplication.shared.topViewController()
