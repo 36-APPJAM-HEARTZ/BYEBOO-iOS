@@ -38,7 +38,7 @@ final class QuestTipViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .none
+            type: .none()
         )
         
         setAction()
