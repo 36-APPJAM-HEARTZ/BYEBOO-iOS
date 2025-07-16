@@ -125,7 +125,7 @@ final class QuestTipView: BaseView {
             $0.font = FontManager.head1Sb24.font
             $0.textColor = .grayscale100
             $0.textAlignment = .center
-            $0.lineBreakMode = .byCharWrapping
+            $0.lineBreakMode = .byWordWrapping
             $0.numberOfLines = 0
         }
     }
@@ -155,7 +155,6 @@ final class QuestTipView: BaseView {
         
         title.snp.makeConstraints {
             $0.top.equalTo(stepStackView.snp.bottom).offset(12.adjustedH)
-//            $0.width.equalTo(327.adjustedW)
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
             $0.centerX.equalToSuperview()
         }
