@@ -125,7 +125,7 @@ final class QuestTipView: BaseView {
             $0.font = FontManager.head1Sb24.font
             $0.textColor = .grayscale100
             $0.textAlignment = .center
-            $0.lineBreakMode = .byWordWrapping
+            $0.lineBreakMode = .byCharWrapping
             $0.numberOfLines = 0
         }
     }

@@ -65,6 +65,7 @@ final class CompleteQuestionTypeQuestView: BaseView {
             $0.numberOfLines = 0
             $0.textColor = .grayscale100
             $0.textAlignment = .center
+            $0.lineBreakMode = .byCharWrapping
         }
         
     }

@@ -79,6 +79,7 @@ final class ArchiveQuestHeaderView: BaseView {
             $0.font = FontManager.head1Sb24.font
             $0.textColor = .grayscale100
             $0.numberOfLines = 0
+            $0.lineBreakMode = .byCharWrapping
             
             switch type {
             case .complete:

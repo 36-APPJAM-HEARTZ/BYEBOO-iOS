@@ -62,7 +62,7 @@ final class WriteQuestTitleView: BaseView {
             $0.textColor = .white
             $0.numberOfLines = 0
             $0.textAlignment = .center
-            $0.lineBreakMode = .byWordWrapping
+            $0.lineBreakMode = .byCharWrapping
         }
         
         tipTag.do {
