@@ -74,7 +74,7 @@
 <br/>
 <br/>
 
-## 📑 Structure with Clean Architecure
+## 📑 Structure with Clean Architecture
 <img width="720" src="https://github.com/user-attachments/assets/c5530b4b-23bc-48d9-9392-3c04daed5f45" />
 
 
@@ -118,7 +118,7 @@
 
 ## 📌 Convention
 ### Code Sytle
-[Swift 스타일 쉐어 가이드](https://github.com/StyleShare/swift-style-guide)를 따릅니다
+[Swift 스타일 쉐어 가이드](https://github.com/StyleShare/swift-style-guide)를 따릅니다.
 
 ### Commit
 | 태그       | 설명                                                                 |
