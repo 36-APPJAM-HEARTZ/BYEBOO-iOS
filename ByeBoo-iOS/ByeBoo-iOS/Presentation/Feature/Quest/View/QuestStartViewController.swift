@@ -81,10 +81,10 @@ extension QuestStartViewController {
             viewModel.output.journeyResult
         )
         .receive(on: DispatchQueue.main)
-        .sink { name, journey in
+        .sink { [weak self] name, journey in
             switch (name, journey) {
             case let (.success(name), .success(journey)):
-                self.rootView.updateDescription(nickname: name, journey: journey.title)
+                self?.rootView.updateDescription(nickname: name, journey: journey.title)
             default:
                 break
             }
@@ -93,11 +93,11 @@ extension QuestStartViewController {
         
         viewModel.output.startResult
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case .success:
-                    self.onStartedQuest?()
-                    self.dismiss(animated: false)
+                    self?.onStartedQuest?()
+                    self?.dismiss(animated: false)
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }

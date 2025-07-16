@@ -65,10 +65,10 @@ extension HomeViewController {
     private func bind() {
         viewModel.output.characterResult
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case .success(let text):
-                    self.rootView.updateOnboardingText(text)
+                    self?.rootView.updateOnboardingText(text)
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }
@@ -77,11 +77,11 @@ extension HomeViewController {
         
         viewModel.output.homeStateResult
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case .success(let state):
-                    self.rootView.updateState(state)
-                    self.state = state
+                    self?.rootView.updateState(state)
+                    self?.state = state
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }
@@ -94,13 +94,13 @@ extension HomeViewController {
             viewModel.output.journeyResult
         )
             .receive(on: DispatchQueue.main)
-            .sink {
+            .sink { [weak self]
                 count,
                 name,
                 journey in
                 switch (count, name, journey) {
                 case let (.success(count), .success(name), .success(journey)):
-                    self.rootView.updateProgressView(
+                    self?.rootView.updateProgressView(
                         name: name,
                         progress: count,
                         journey: journey.title

@@ -53,10 +53,10 @@ extension JourneyResultViewController {
     private func bind() {
         viewModel.output.journeyResult
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case .success(let journey):
-                    self.rootView.updateJourney(
+                    self?.rootView.updateJourney(
                         journeyType: JourneyType(rawValue: journey.title) ?? .face,
                         journeyDescription: journey.description ?? ""
                     )
@@ -68,10 +68,10 @@ extension JourneyResultViewController {
         
         viewModel.output.userResult
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case .success(let name):
-                    self.rootView.updateName(name: name)
+                    self?.rootView.updateName(name: name)
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }

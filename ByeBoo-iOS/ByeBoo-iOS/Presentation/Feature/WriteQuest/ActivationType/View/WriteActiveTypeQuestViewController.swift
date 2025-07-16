@@ -143,10 +143,10 @@ extension WriteActiveTypeQuestViewController {
     private func bind() {
         viewModel.output.questInfoResultPublisher
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case .success(let quest):
-                    self.rootView.updateQuestTitle(
+                    self?.rootView.updateQuestTitle(
                         step: quest.step,
                         stepNum: quest.stepNumber,
                         questNumber: quest.questNumber,
@@ -161,7 +161,7 @@ extension WriteActiveTypeQuestViewController {
         
         viewModel.output.didSuccessPostPublisher
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case .success(()):
                     guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
@@ -171,9 +171,9 @@ extension WriteActiveTypeQuestViewController {
                     
                     let viewController = CompleteActiveTypeQuestViewController(
                         viewModel: viewModel,
-                        questID: self.questID
+                        questID: self?.questID ?? 1
                     )
-                    self.navigationController?.pushViewController(viewController, animated: true)
+                    self?.navigationController?.pushViewController(viewController, animated: true)
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }

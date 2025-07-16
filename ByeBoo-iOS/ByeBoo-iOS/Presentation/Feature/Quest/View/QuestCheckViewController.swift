@@ -79,22 +79,22 @@ final class QuestCheckViewController: BaseViewController {
             viewModel.output.questsPublisher
         )
         .receive(on: DispatchQueue.main)
-        .sink { name, journey, quests in
+        .sink { [weak self] name, journey, quests in
             switch (name, journey, quests) {
             case let (.success(name), .success(journey), .success(quests)):
-                self.isStartedQuset = false
-                self.questsCheckView.questCheckHeaderView.updateHeader(
+                self?.isStartedQuset = false
+                self?.questsCheckView.questCheckHeaderView.updateHeader(
                     nickname: name,
                     journey: journey.title
                 )
-                self.questsEntity = quests
-                self.questsCheckView.questCheckHeaderView.updatePeriod(quests.progressPeriod)
-                self.questsCheckView.questCollectionView.reloadData()
+                self?.questsEntity = quests
+                self?.questsCheckView.questCheckHeaderView.updatePeriod(quests.progressPeriod)
+                self?.questsCheckView.questCollectionView.reloadData()
                 
                 guard let step = quests.steps.first else { return }
                 if quests.currentStep > step.quests.count {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        self.scrollToCurrentStep()
+                        self?.scrollToCurrentStep()
                     }
                 }
                 
@@ -110,7 +110,7 @@ final class QuestCheckViewController: BaseViewController {
                     self?.viewModel.action(.questViewWillAppear)
                     self?.bind()
                 }
-                self.present(viewController, animated: false)
+                self?.present(viewController, animated: false)
                 
             default:
                 ByeBooLogger.error(ByeBooError.unknownError)
