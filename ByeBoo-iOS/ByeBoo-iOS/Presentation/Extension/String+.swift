@@ -21,7 +21,7 @@ extension String {
     
     func makeTitle(rangedText: String, font: UIFont? = nil, baseFont: UIFont? = nil) -> NSMutableAttributedString {
         let attributedString = NSMutableAttributedString(string: self)
-
+        
         attributedString.addAttribute(
             .foregroundColor,
             value: UIColor.grayscale50,
@@ -34,7 +34,7 @@ extension String {
                 range: NSRange(location: 0, length: self.count)
             )
         }
-
+        
         let range = (self as NSString).range(of: rangedText)
         if range.location != NSNotFound {
             if let font = font {
@@ -42,7 +42,7 @@ extension String {
             }
             attributedString.addAttribute(.foregroundColor, value: UIColor.primary300, range: range)
         }
-
+        
         return attributedString
     }
     
@@ -51,4 +51,8 @@ extension String {
         return components.joined(separator: ". ") + "."
     }
     
+    func canBeRendered(by font: UIFont) -> Bool {
+        let cfFont = CTFontCreateWithName(font.fontName as CFString, font.pointSize, nil)
+        return CTFontGetGlyphWithName(cfFont, self as CFString) != 0
+    }
 }
