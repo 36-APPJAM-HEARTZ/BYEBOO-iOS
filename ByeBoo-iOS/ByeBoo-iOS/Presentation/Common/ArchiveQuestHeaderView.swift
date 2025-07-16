@@ -18,6 +18,7 @@ enum QuestHeaderType {
 final class ArchiveQuestHeaderView: BaseView {
 
     private let type: QuestHeaderType
+    private let stepStackView = UIStackView()
     let stepLabel = UILabel()
     let questNumberLabel = UILabel()
     let dateLabel = UILabel()
@@ -45,7 +46,7 @@ final class ArchiveQuestHeaderView: BaseView {
         
         stepLabel.text = "STEP \(stepNumber)"
         questNumberLabel.text = "\(questNumber) 번째 퀘스트"
-        dateLabel.text = date
+        dateLabel.text = date.dateFormat()
         questTitleLabel.text = questTitle
     }
     
@@ -54,6 +55,11 @@ final class ArchiveQuestHeaderView: BaseView {
     }
     
     override func setStyle() {
+        stepStackView.do {
+            $0.axis = .horizontal
+            $0.spacing = 8
+            $0.distribution = .equalCentering
+        }
         stepLabel.do {
             $0.font = FontManager.cap1M12.font
             $0.textColor = .secondary300
@@ -85,28 +91,23 @@ final class ArchiveQuestHeaderView: BaseView {
     
     override func setUI() {
         addSubviews(
-            stepLabel,
-            questNumberLabel,
+            stepStackView,
             dateLabel,
             questTitleLabel
         )
+        stepStackView.addArrangedSubviews(stepLabel, questNumberLabel)
     }
     
     override func setLayout() {
-        stepLabel.snp.makeConstraints {
+        stepStackView.snp.makeConstraints {
             $0.top.equalToSuperview()
             
             switch type {
             case .complete:
-                $0.leading.equalToSuperview().inset(118.adjustedW)
+                $0.centerX.equalToSuperview()
             case .archive:
                 $0.leading.equalToSuperview().inset(24.adjustedW)
             }
-        }
-        
-        questNumberLabel.snp.makeConstraints {
-            $0.top.equalTo(stepLabel.snp.top)
-            $0.leading.equalTo(stepLabel.snp.trailing).offset(8.adjustedW)
         }
         
         dateLabel.snp.makeConstraints {
@@ -133,7 +134,7 @@ extension ArchiveQuestHeaderView {
     func updateUI(stepNumber: Int, questNumber: Int, date: String, title: String ){
         self.stepLabel.text = "STEP \(stepNumber)"
         self.questNumberLabel.text = "\(questNumber) 번째 퀘스트"
-        self.dateLabel.text = date
+        self.dateLabel.text = date.dateFormat()
         self.questTitleLabel.text = title
     }
 }

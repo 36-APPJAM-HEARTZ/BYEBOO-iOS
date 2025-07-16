@@ -140,7 +140,7 @@ extension WriteActiveTypeQuestViewController {
         self.navigationController?.pushViewController(viewController, animated: true)
     }
     
-    private func bind() {
+    private func bind() {   
         viewModel.output.questInfoResultPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in

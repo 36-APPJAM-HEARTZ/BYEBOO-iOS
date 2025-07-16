@@ -104,7 +104,7 @@ extension WriteActiveTypeViewModel {
         Task {
             do {
                 ByeBooLogger.debug("data size: \(image.size)")
-                if let jpegImage = image.jpegData(compressionQuality: 0.5) {
+                if let jpegImage = image.jpegData(compressionQuality: 0.1) {
                     
                     try await saveActiveQuestUseCase.execute(
                         questID: questID,

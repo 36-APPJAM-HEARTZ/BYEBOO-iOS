@@ -76,8 +76,6 @@ final class ArchiveQuestView: BaseView {
     }
     
     override func setLayout() {
-        let safeArea = safeAreaLayoutGuide
-        
         scrollView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
@@ -85,7 +83,6 @@ final class ArchiveQuestView: BaseView {
         contentView.snp.makeConstraints {
             $0.edges.equalToSuperview()
             $0.width.equalToSuperview()
-            $0.height.greaterThanOrEqualToSuperview()
             $0.bottom.equalTo(feelView.snp.bottom).offset(24.adjustedH)
         }
         
@@ -94,6 +91,8 @@ final class ArchiveQuestView: BaseView {
             $0.horizontalEdges.equalToSuperview()
             $0.height.equalTo(132.adjustedH)
         }
+        
+        
         
         if let thinkView {
             thinkView.snp.makeConstraints {
@@ -137,7 +136,7 @@ extension ArchiveQuestView {
         case .question:
             self.thinkView?.updateUI(description: entity.answer)
         case .activation:
-                self.actionView?.updateUI(description: entity.answer, photoURL: entity.imageUrl!)
+            self.actionView?.updateUI(description: entity.answer, photoURL: entity.imageUrl!)
             
         }
     }

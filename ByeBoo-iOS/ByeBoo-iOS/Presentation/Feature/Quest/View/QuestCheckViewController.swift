@@ -128,6 +128,11 @@ final class QuestCheckViewController: BaseViewController {
                 }) {
                 let indexPath = IndexPath(item: 0, section: sectionIndex)
                 
+                if step.stepNumber == 5 {
+                    questsCheckView.questCollectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
+                    return
+                }
+                
                 if let attributes = questsCheckView.questCollectionView.layoutAttributesForSupplementaryElement(
                     ofKind: UICollectionView.elementKindSectionHeader,
                     at: indexPath
