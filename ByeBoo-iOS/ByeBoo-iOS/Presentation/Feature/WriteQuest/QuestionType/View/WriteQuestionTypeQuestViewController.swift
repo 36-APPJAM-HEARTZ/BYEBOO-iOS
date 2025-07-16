@@ -71,7 +71,7 @@ extension WriteQuestionTypeQuestViewController {
         if !self.isKeyboardUsed{
             if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
                 UIView.animate(withDuration: 0.3, animations: {
-                    let offsetY = keyboardSize.height - self.rootView.safeAreaInsets.bottom * 4
+                    let offsetY = keyboardSize.height - self.rootView.safeAreaInsets.bottom * 2
                     self.rootView.transform = CGAffineTransform(translationX: 0, y: -offsetY)
                     self.isKeyboardUsed = true
                 })
