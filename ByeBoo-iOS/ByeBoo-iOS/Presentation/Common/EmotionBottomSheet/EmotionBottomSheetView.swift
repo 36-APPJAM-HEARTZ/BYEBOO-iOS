@@ -64,15 +64,6 @@ final class EmotionBottomSheetView: BaseView {
         setBlurEffect()
     }
     
-    private func setBlurEffect() {
-        let blurEffect = UIBlurEffect(style: .dark)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        insertSubview(blurView, at: 0)
-        blurView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
-    }
-    
     override func setLayout() {
         grabber.snp.makeConstraints {
             $0.top.equalToSuperview().offset(32.adjustedH)

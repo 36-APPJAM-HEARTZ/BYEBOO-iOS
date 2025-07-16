@@ -64,10 +64,10 @@ extension CardJourneyViewController {
     private func bind() {
         viewModel.output.journeyResult
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case .success(let journey):
-                    self.rootView.updateJourney(
+                    self?.rootView.updateJourney(
                         journeyType: JourneyType(rawValue: journey.title) ?? .face,
                         journeyDescription: journey.description ?? ""
                     )

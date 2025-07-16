@@ -89,7 +89,7 @@ struct ByeBooLogger {
         let logger = Logger(subsystem: OSLog.subsystem, category: level.category)
         let logMessage = "\(message)"
         let fileName = (file as NSString).lastPathComponent
-        
+    
         switch level {
         case .network:
             logger.log("[🛜 Network] [Date: \(date)] [\(fileName) -> \(function)]: \(logMessage)")

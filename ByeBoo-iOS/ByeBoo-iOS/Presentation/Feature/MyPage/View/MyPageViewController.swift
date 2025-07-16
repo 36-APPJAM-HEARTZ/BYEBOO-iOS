@@ -59,10 +59,10 @@ extension MyPageViewController {
     private func bind() {
         viewModel.output.userResult
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case .success(let name):
-                    self.rootView.updateName(name)
+                    self?.rootView.updateName(name)
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }

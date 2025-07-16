@@ -62,7 +62,7 @@ final class CompleteQuestionTypeQuestView: BaseView {
         
         title.do {
             $0.font = FontManager.head1Sb24.font
-            $0.numberOfLines = 2
+            $0.numberOfLines = 0
             $0.textColor = .grayscale100
             $0.textAlignment = .center
         }
@@ -75,7 +75,7 @@ final class CompleteQuestionTypeQuestView: BaseView {
         self.questNum = entity.questNumber
         self.questLabel.text = "\(questNum)번째 퀘스트"
         self.title.text = entity.question
-        self.dateText.text = entity.createdAt
+        self.dateText.text = entity.createdAt.dateFormat()
         
         let thinkView = ThinkView(descriptionText: entity.answer)
         let feelView = FeelView(emotionType: entity.questEmotionState, descriptionText: entity.emotionDescription)
@@ -115,8 +115,7 @@ final class CompleteQuestionTypeQuestView: BaseView {
         
         stepStackView.snp.makeConstraints {
             $0.top.equalTo(congratSquare.snp.bottom).offset(32.adjustedH)
-            $0.leading.trailing.equalToSuperview().inset(124.5.adjustedW)
-            $0.width.equalTo(70.adjustedW)
+            $0.centerX.equalToSuperview()
         }
         
         dateText.snp.makeConstraints {

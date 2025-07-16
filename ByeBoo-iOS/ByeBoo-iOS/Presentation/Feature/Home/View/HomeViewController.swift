@@ -57,21 +57,7 @@ final class HomeViewController: BaseViewController {
 extension HomeViewController {
     @objc
     private func headerDidTap() {
-        guard let viewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            fatalError()
-        }
-        
-        switch state {
-        case .beforeJourneyStart:
-            let viewController = QuestStartViewController(viewModel: viewModel)
-            viewController.modalPresentationStyle = .fullScreen
-            self.present(viewController, animated: false)
-        case .beforeQuest:
-            navigationController?.tabBarController?.selectedIndex = 1
-        case .afterJourney, .afterQuest:
-            break
-        }
+        navigationController?.tabBarController?.selectedIndex = 1
     }
 }
 
@@ -79,10 +65,10 @@ extension HomeViewController {
     private func bind() {
         viewModel.output.characterResult
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case .success(let text):
-                    self.rootView.updateOnboardingText(text)
+                    self?.rootView.updateOnboardingText(text)
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }
@@ -91,11 +77,11 @@ extension HomeViewController {
         
         viewModel.output.homeStateResult
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case .success(let state):
-                    self.rootView.updateState(state)
-                    self.state = state
+                    self?.rootView.updateState(state)
+                    self?.state = state
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }
@@ -108,13 +94,13 @@ extension HomeViewController {
             viewModel.output.journeyResult
         )
             .receive(on: DispatchQueue.main)
-            .sink {
+            .sink { [weak self]
                 count,
                 name,
                 journey in
                 switch (count, name, journey) {
                 case let (.success(count), .success(name), .success(journey)):
-                    self.rootView.updateProgressView(
+                    self?.rootView.updateProgressView(
                         name: name,
                         progress: count,
                         journey: journey.title

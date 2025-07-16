@@ -23,7 +23,7 @@ final class QuestCheckHeaderView: BaseView {
         backgroundColor = .black50
         titleLabel.do {
             $0.font = FontManager.head1Sb24.font
-            $0.numberOfLines = 2
+            $0.numberOfLines = 0
             $0.textAlignment = .left
         }
         subTitleLabel.do {

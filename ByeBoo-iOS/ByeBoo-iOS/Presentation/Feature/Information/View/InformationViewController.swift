@@ -79,10 +79,10 @@ final class InformationViewController: BaseViewController {
     
     private func bind() {
         viewModel.output.userInformationPublisher
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case .success:
-                    self.bindName()
+                    self?.bindName()
                 case .failure:
                     break
                 }
@@ -93,13 +93,13 @@ final class InformationViewController: BaseViewController {
     private func bindName() {
         viewModel.output.userNamePublisher
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case .success(let userName):
                     let loadingViewController = LoadingViewController()
                     loadingViewController.nickname = userName
                     loadingViewController.navigationItem.hidesBackButton = true
-                    self.navigationController?.pushViewController(loadingViewController, animated: false)
+                    self?.navigationController?.pushViewController(loadingViewController, animated: false)
                 case .failure:
                     break
                 }

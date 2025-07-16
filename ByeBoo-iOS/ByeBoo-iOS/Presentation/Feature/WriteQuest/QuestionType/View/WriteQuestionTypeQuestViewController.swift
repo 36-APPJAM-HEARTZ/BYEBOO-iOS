@@ -115,10 +115,10 @@ extension WriteQuestionTypeQuestViewController {
     private func bind() {
         viewModel.output.questInfoResultPublisher
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case .success(let quest):
-                    self.rootView.updateQuestTitle(
+                    self?.rootView.updateQuestTitle(
                         step: quest.step,
                         stepNum: quest.stepNumber,
                         questNumber: quest.questNumber,
@@ -133,7 +133,7 @@ extension WriteQuestionTypeQuestViewController {
         
         viewModel.output.didSuccessPostPublisher
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case .success(()):
                     guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
@@ -143,9 +143,9 @@ extension WriteQuestionTypeQuestViewController {
                     
                     let viewController = CompleteQuestionTypeQuestViewController(
                         viewModel: viewModel,
-                        questID: self.questID
+                        questID: self?.questID ?? 1
                     )
-                    self.navigationController?.pushViewController(viewController, animated: true)
+                    self?.navigationController?.pushViewController(viewController, animated: true)
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
                 }
@@ -174,11 +174,12 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
     func saveQuest() {
         ByeBooLogger.debug("text: \(answerText)")
         ByeBooLogger.debug("emtionState: \(emotionState)")
-
-        self.viewModel.action(.presentCompleteView(
-            questID: self.questID,
-            answer: self.answerText,
-            emotionState: self.emotionState
+        ByeBooLogger.debug("questID: \(questID)")
+        
+        viewModel.action(.presentCompleteView(
+            questID: questID,
+            answer: answerText,
+            emotionState: emotionState
             )
         )
     }

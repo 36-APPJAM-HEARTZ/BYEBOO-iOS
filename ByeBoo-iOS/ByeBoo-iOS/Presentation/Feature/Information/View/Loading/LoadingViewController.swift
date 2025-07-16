@@ -25,16 +25,15 @@ final class LoadingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             guard let viewModel = DIContainer.shared.resolve(type: JourneyResultViewModel.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 fatalError()
             }
             
-//            let resultViewController = JourneyResultViewController(viewModel: viewModel)
             let resultViewController = CardJourneyViewController(viewModel: viewModel)
             self.navigationController?.navigationBar.isHidden = true
-            self.navigationController?.pushViewController(resultViewController, animated: true)
+            self.navigationController?.pushViewController(resultViewController, animated: false)
         }
     }
 }
