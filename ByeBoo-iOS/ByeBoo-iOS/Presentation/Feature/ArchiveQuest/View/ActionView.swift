@@ -16,7 +16,7 @@ final class ActionView: BaseView {
     private let descriptionView: TextBoxView?
     private let placeholderView = UIImageView()
     private let thinkTextView =  IconOneLineTextView(iconType: .think,text: "이렇게 완료했어요" )
-    var descriptionText: String?
+    var descriptionText: String
     var photoURL: String
     
     init(
@@ -73,15 +73,16 @@ final class ActionView: BaseView {
             $0.top.equalTo(thinkTextView.snp.bottom).offset(12.adjustedH)
             $0.size.equalTo(327.adjustedW)
             $0.centerX.equalToSuperview()
-            if descriptionView == nil {
-                $0.bottom.equalToSuperview().inset(24.5.adjustedH)
-            }
         }
         
-        if let descriptionView {
-            descriptionView.snp.makeConstraints {
+        if !descriptionText.isEmpty {
+            descriptionView?.snp.makeConstraints {
                 $0.top.equalTo(photoView.snp.bottom).offset(12.adjustedH)
                 $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+                $0.bottom.equalToSuperview().inset(24.5.adjustedH)
+            }
+        } else {
+            photoView.snp.makeConstraints {
                 $0.bottom.equalToSuperview().inset(24.5.adjustedH)
             }
         }
