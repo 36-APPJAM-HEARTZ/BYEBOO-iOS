@@ -32,7 +32,7 @@ final class SelectQuestView: BaseView {
         titleLabel.do {
             $0.attributedText = "퀘스트 방식을 골라주세요".makeTitle(rangedText: "퀘스트 방식")
             $0.textAlignment = .left
-            $0.font = FontManager.head1Sb24.font
+            $0.font = FontManager.head1M24.font
         }
         
         subTitleLabel.do {

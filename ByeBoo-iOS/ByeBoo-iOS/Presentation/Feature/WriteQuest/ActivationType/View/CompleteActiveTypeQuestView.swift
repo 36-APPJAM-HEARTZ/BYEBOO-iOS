@@ -62,7 +62,7 @@ final class CompleteActiveTypeQuestView: BaseView {
         }
         
         title.do {
-            $0.font = FontManager.head1Sb24.font
+            $0.font = FontManager.head1M24.font
             $0.numberOfLines = 0
             $0.textColor = .grayscale100
             $0.textAlignment = .center

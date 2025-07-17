@@ -34,7 +34,7 @@ final class InputNicknameView: BaseView {
         titleLabel.do {
             $0.attributedText = "닉네임을 입력해주세요".makeTitle(rangedText: "닉네임")
             $0.textAlignment = .left
-            $0.font = FontManager.head1Sb24.font
+            $0.font = FontManager.head1M24.font
         }
         
         subTitleLabel.do {
