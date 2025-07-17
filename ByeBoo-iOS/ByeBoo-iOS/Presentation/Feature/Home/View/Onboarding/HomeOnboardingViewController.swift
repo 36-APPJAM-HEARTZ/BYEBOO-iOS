@@ -50,7 +50,7 @@ extension HomeOnboardingViewController {
             
             let duration = Date().timeIntervalSince(start)
             
-            if duration >= 0.5 {
+            if duration >= 0.3 {
                 let tabBarController = BottomNavigationViewController()
                 
                 if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
