@@ -15,12 +15,22 @@ final class QuestCheckHeaderView: BaseView {
     private var nickname: String = ""
     private var journey: String = ""
     
-    private var periodTag = ByeBooFilledTag(tagType: .word3Gray, text: "")
+    private var periodTag = ByeBooFilledTag(tagType: .smallGray, text: "")
     private let titleLabel = UILabel()
     private let subTitleLabel = UILabel()
     
     override func setStyle() {
         backgroundColor = .black50
+        
+        let blurEffect = UIBlurEffect(style: .systemChromeMaterialDark)
+        let blurView = UIVisualEffectView(effect: blurEffect)
+        blurView.backgroundColor = .black
+        insertSubview(blurView, at: 0)
+
+        blurView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
         titleLabel.do {
             $0.font = FontManager.head1Sb24.font
             $0.numberOfLines = 0
@@ -61,7 +71,7 @@ final class QuestCheckHeaderView: BaseView {
     func updateHeader(nickname: String, journey: String) {
         self.nickname = nickname
         self.journey = journey
-        titleLabel.attributedText = "\(nickname)님, 지금\n\(journey) 여정을 진행 중이에요.".makeTitle(
+        titleLabel.attributedText = "\(nickname)님, 지금\n\(journey) 여정을 진행 중이에요".makeTitle(
             rangedText: "\(journey) 여정"
         )
     }
