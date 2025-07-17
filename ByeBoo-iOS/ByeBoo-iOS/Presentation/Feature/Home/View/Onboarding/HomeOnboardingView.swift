@@ -100,13 +100,13 @@ final class HomeOnboardingView: BaseView {
 extension HomeOnboardingView {
     func startAnimation() {
         
-        UIView.animate(withDuration: 0.3, delay: 0.2) {
+        UIView.animate(withDuration: 0.4, delay: 0.3) {
             self.welcomeView.alpha = 1
         } completion: { _ in
-            UIView.animate(withDuration: 0.3, delay: 0.2) {
+            UIView.animate(withDuration: 0.4, delay: 0.3) {
                 self.introduceView.alpha = 1
             } completion: { _ in
-                UIView.animate(withDuration: 0.3, delay: 0.2) {
+                UIView.animate(withDuration: 0.4, delay: 0.2) {
                     self.descriptionLabel.alpha = 1
                     self.bubbleImageView.alpha = 1
                     self.characterImageView.isUserInteractionEnabled = true
