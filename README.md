@@ -117,7 +117,7 @@
 ```
 
 ## 📌 Convention
-### Code Sytle
+### Code Style
 [Swift 스타일 쉐어 가이드](https://github.com/StyleShare/swift-style-guide)를 따릅니다.
 
 ### Commit

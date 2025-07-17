@@ -7,7 +7,7 @@
 
 import Combine
 
-final class QuestsViewModel: ViewModelType {
+final class QuestsViewModel {
     
     private let cancellables = Set<AnyCancellable>()
     private let nameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>.init()
@@ -84,10 +84,11 @@ final class QuestsViewModel: ViewModelType {
     }
 }
 
-extension QuestsViewModel {
+extension QuestsViewModel: ViewModelType {
     
-    enum InputAction {
+    enum Input {
         case questViewWillAppear
+        case questLoadView
     }
     
     struct Output {
@@ -97,13 +98,14 @@ extension QuestsViewModel {
         let loadingPublisher: AnyPublisher<Bool, Never>
     }
     
-    func action(_ trigger: InputAction) {
+    func action(_ trigger: Input) {
         switch trigger {
         case .questViewWillAppear:
-            loadingSubject.send(true)
             getUseName()
             fetchUserJourney()
             fetchProgressingQuests()
+        case .questLoadView:
+            loadingSubject.send(true)
         }
     }
 }

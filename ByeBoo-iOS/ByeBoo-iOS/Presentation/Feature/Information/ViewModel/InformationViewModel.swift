@@ -66,7 +66,7 @@ final class InformationViewModel {
 
 extension InformationViewModel: ViewModelType {
     
-    enum InputAction {
+    enum Input {
         case nicknameButtonDidTap(String)
         case feelingButtonDidTap(Feeling)
         case questButtonDidTap(QuestStyle)
@@ -77,7 +77,7 @@ extension InformationViewModel: ViewModelType {
         let userNamePublisher: AnyPublisher<Result<String, ByeBooError>, Never>
     }
     
-    func action(_ trigger: InputAction) {
+    func action(_ trigger: Input) {
         switch trigger {
         case .nicknameButtonDidTap(let nickname):
             currentNickname = nickname

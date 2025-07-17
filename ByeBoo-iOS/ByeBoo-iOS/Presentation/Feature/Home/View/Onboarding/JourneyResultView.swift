@@ -7,42 +7,6 @@
 
 import UIKit
 
-enum JourneyType: String {
-    case face = "감정 직면"
-    case process = "감정 정리"
-    
-    var image: UIImage {
-        switch self {
-        case .face:
-                .faceEmotion
-        case .process:
-                .processEmotion
-        }
-    }
-    
-    var description: String {
-        return "\(rawValue) 여정"
-    }
-    
-    var frontImage: UIImage {
-        switch self {
-        case .face:
-                .faceFront
-        case .process:
-                .processFront
-        }
-    }
-    
-    var backImage: UIImage {
-        switch self {
-        case .face:
-                .faceBack
-        case .process:
-                .processBack
-        }
-    }
-}
-
 final class JourneyResultView: BaseView {
 
     private let backgroundImageView = UIImageView()

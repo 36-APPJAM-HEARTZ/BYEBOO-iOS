@@ -12,9 +12,9 @@ protocol QuestTipUseCase {
 }
 
 struct DefaultQuestTipUseCase: QuestTipUseCase {
-    private let questTipRepository: QuestTipInterface
+    private let questTipRepository: QuestsInterface
     
-    init(questTipRepository: QuestTipInterface) {
+    init(questTipRepository: QuestsInterface) {
         self.questTipRepository = questTipRepository
     }
     

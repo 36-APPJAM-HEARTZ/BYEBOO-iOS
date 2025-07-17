@@ -12,13 +12,13 @@ protocol GetQuestInfoUseCase {
 }
 
 struct DefaultGetQuestInfoUseCase: GetQuestInfoUseCase {
-    private let questInfoReposiroty: GetQuestInfoInterface
+    private let questInfoReposiroty: QuestsInterface
     
-    init(questInfoReposiroty: GetQuestInfoInterface) {
+    init(questInfoReposiroty: QuestsInterface) {
         self.questInfoReposiroty = questInfoReposiroty
     }
     
     func execute(questID: Int) async throws -> QuestInfoEntity {
-        try await questInfoReposiroty.execute(questID: questID)
+        try await questInfoReposiroty.getQuestInfo(questID: questID)
     }
 }
