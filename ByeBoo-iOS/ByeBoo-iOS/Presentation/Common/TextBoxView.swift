@@ -66,7 +66,6 @@ final class TextBoxView: BaseView {
         
         titleLabel.snp.makeConstraints {
             $0.verticalEdges.equalToSuperview().inset(18.adjustedH)
-            //            $0.centerY.equalToSuperview()
             $0.leading.equalToSuperview().inset(emotionChip == nil ? 24.adjustedW : 132.adjustedW)
             $0.trailing.equalToSuperview().inset(24.adjustedW)
         }
