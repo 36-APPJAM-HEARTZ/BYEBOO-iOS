@@ -57,7 +57,7 @@ final class WriteQuestionTypeQuestView: BaseView {
         }
         
         questTextField.snp.makeConstraints {
-            $0.top.equalTo(title.snp.bottom).offset(24.adjustedH)
+            $0.top.equalTo(title.snp.bottom).offset(8.adjustedH)
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
             $0.height.equalTo(290.adjustedH)
         }

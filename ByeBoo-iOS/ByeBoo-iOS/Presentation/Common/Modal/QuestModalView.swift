@@ -33,8 +33,10 @@ final class QuestModalView: BaseView, ModalProtocol {
     }
     
     override func setStyle() {
-        backgroundColor = .grayscale90080
-        layer.cornerRadius = 12.adjustedW
+        self.do {
+            $0.backgroundColor = .grayscale90080
+            $0.layer.cornerRadius = 12.adjustedW
+        }
         
         imageView.do {
             $0.backgroundColor = .clear
@@ -57,13 +59,11 @@ final class QuestModalView: BaseView, ModalProtocol {
             $0.numberOfLines = 0
             $0.lineBreakMode = .byWordWrapping
             $0.font = FontManager.sub2Sb18.font
-            $0.setContentHuggingPriority(.required, for: .horizontal)
-            $0.setContentCompressionResistancePriority(.required, for: .horizontal)
         }
         
         tipButton.do {
             $0.setTitle("작성 TIP", for: .normal)
-            $0.titleLabel?.font = FontManager.body4Sb14.font
+            $0.titleLabel?.font = FontManager.body5R14.font
             $0.backgroundColor = .clear
             $0.setTitleColor(.grayscale300, for: .normal)
             $0.layer.cornerRadius = 12.adjustedW
@@ -84,10 +84,6 @@ final class QuestModalView: BaseView, ModalProtocol {
     }
     
     override func setLayout() {
-        self.snp.makeConstraints {
-            $0.height.equalTo(301.adjustedH)
-        }
-        
         imageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(24.adjustedH)
             $0.centerX.equalToSuperview()
@@ -105,8 +101,7 @@ final class QuestModalView: BaseView, ModalProtocol {
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(questLabel.snp.bottom).offset(8.adjustedH)
             $0.centerX.equalToSuperview()
-            $0.leading.greaterThanOrEqualToSuperview().inset(16.adjustedW)
-            $0.trailing.lessThanOrEqualToSuperview().inset(16.adjustedW)
+            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
         
         tipButton.snp.makeConstraints {
@@ -119,9 +114,9 @@ final class QuestModalView: BaseView, ModalProtocol {
         actionButton.snp.makeConstraints {
             $0.top.equalTo(tipButton.snp.bottom).offset(17.5.adjustedH)
             $0.centerX.equalToSuperview()
-            $0.width.greaterThanOrEqualTo(titleLabel.snp.width).offset(16.adjustedW)
+            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.height.equalTo(53.adjustedH)
-            $0.bottom.equalToSuperview().inset(20.adjustedH)
+            $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
     }
 }

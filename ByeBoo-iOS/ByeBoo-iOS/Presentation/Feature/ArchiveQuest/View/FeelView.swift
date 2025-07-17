@@ -33,10 +33,6 @@ final class FeelView: BaseView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func setStyle() {
-        
-    }
-    
     override func setUI() {
         addSubviews(
             titleTextView,
@@ -46,7 +42,7 @@ final class FeelView: BaseView {
     
     override func setLayout() {
         titleTextView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(24.5.adjustedH)
+            $0.top.equalToSuperview()
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
         }
        
