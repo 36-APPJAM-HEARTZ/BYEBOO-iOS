@@ -40,7 +40,6 @@ final class QuestCheckViewController: BaseViewController {
         
         bind()
         viewModel.action(.questViewWillAppear)
-        CustomLoadingView.shared.show()
     }
     
     override func viewDidLoad() {
@@ -50,7 +49,6 @@ final class QuestCheckViewController: BaseViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        CustomLoadingView.shared.hide()
         self.navigationController?.navigationBar.isHidden = false
     }
     
@@ -99,7 +97,6 @@ final class QuestCheckViewController: BaseViewController {
                         self?.scrollToCurrentStep()
                     }
                 }
-                CustomLoadingView.shared.hide()
             case (.success(_), .success(_), .failure(_)):
                 guard let startViewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {
                     ByeBooLogger.error(ByeBooError.DIFailedError)
@@ -112,15 +109,25 @@ final class QuestCheckViewController: BaseViewController {
                     self?.viewModel.action(.questViewWillAppear)
                     self?.bind()
                 }
-                CustomLoadingView.shared.hide()
                 self?.present(viewController, animated: false)
                 
             default:
-                CustomLoadingView.shared.hide()
                 ByeBooLogger.error(ByeBooError.unknownError)
             }
         }
         .store(in: &cancellable)
+        
+        viewModel.output.loadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case true:
+                    CustomLoadingView.shared.show()
+                case false:
+                    CustomLoadingView.shared.hide()
+                }
+            }
+            .store(in: &cancellable)
     }
     
     private func scrollToCurrentStep() {

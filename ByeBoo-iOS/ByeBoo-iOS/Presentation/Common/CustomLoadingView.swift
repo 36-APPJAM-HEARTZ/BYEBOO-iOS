@@ -39,15 +39,13 @@ final class CustomLoadingView: UIView {
     }
     
     func show() {
-        guard let scene = UIApplication.shared.connectedScenes.first else { return }
-        guard let delegate = scene.delegate as? SceneDelegate else { return }
-        guard let window = delegate.window else { return }
-        
         if self.superview != nil { return }
-        
-        window.addSubview(self)
-        self.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first {
+            window.addSubview(self)
+            self.snp.makeConstraints {
+                $0.edges.equalToSuperview()
+            }
         }
     }
     
