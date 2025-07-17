@@ -200,6 +200,7 @@ extension QuestCheckViewController: UICollectionViewDelegate {
                 viewModel: viewModel,
                 questID: questID
             )
+            self.tabBarController?.tabBar.isHidden = true
             self.navigationController?.pushViewController(questionQuestViewController, animated: false)
         } else {
             guard let viewModel = DIContainer.shared.resolve(type: WriteActiveTypeViewModel.self),
@@ -210,6 +211,7 @@ extension QuestCheckViewController: UICollectionViewDelegate {
                 viewModel: viewModel,
                 questID: questID
             )
+            self.tabBarController?.tabBar.isHidden = true
             self.navigationController?.pushViewController(activationQuestViewController, animated: false)
         }
     }
