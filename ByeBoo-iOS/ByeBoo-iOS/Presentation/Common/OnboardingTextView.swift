@@ -29,7 +29,7 @@ final class OnboardingTextView: BaseView {
         
         titleLabel.do {
             $0.text = text
-            $0.font = FontManager.body4Sb14.font
+            $0.font = FontManager.body5R14.font
             $0.textColor = .primary400
         }
     }
