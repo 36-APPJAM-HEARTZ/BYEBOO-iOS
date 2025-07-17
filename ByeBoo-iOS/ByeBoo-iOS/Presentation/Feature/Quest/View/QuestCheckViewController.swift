@@ -13,6 +13,7 @@ import SnapKit
 final class QuestCheckViewController: BaseViewController {
     
     private var isStartedQuset = false
+    private var allCompleted = false
     
     let questsCheckView = QuestsCheckView()
     private let viewModel: QuestsViewModel
@@ -65,7 +66,7 @@ final class QuestCheckViewController: BaseViewController {
                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                 withReuseIdentifier: QuestStepHeaderView.identifier
             )
-            $0.backgroundColor = .black
+            $0.backgroundColor = .grayscale900
         }
     }
     
@@ -94,7 +95,7 @@ final class QuestCheckViewController: BaseViewController {
                 guard let step = quests.steps.first else { return }
                 if quests.currentStep > step.quests.count {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self?.scrollToCurrentStep()
+                        self?.scrollToStep()
                     }
                 }
             case (.success(_), .success(_), .failure(_)):
@@ -130,31 +131,31 @@ final class QuestCheckViewController: BaseViewController {
             .store(in: &cancellable)
     }
     
-    private func scrollToCurrentStep() {
+    private func scrollToStep() {
         guard let questsEntity = questsEntity else { return }
         for (sectionIndex, step) in questsEntity.steps.enumerated() {
-            if let _ = step.quests.firstIndex(
-                where: {
-                    $0.questNumber == questsEntity.currentStep
-                }) {
-                var indexPath = IndexPath(item: 0, section: sectionIndex)
-                
-                if step.stepNumber == 5 {
-                    indexPath = IndexPath(item: step.quests.count - 1, section: sectionIndex)
-                    questsCheckView.questCollectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
+            let collectionView = questsCheckView.questCollectionView
+            
+            if let _ = step.quests.firstIndex(where: { $0.questNumber == questsEntity.currentStep }) {
+                // MARK: - 마지막 퀘스트 완료 시 STEP 1으로 스크롤
+                if quest?.questNumber == 30 && allCompleted {
+                    collectionView.scrollToHeader(at: 0)
                     return
                 }
                 
-                if let attributes = questsCheckView.questCollectionView.layoutAttributesForSupplementaryElement(
-                    ofKind: UICollectionView.elementKindSectionHeader,
-                    at: indexPath
-                ) {
-                    let offsetY = attributes.frame.origin.y - questsCheckView.questCollectionView.contentInset.top
-                    questsCheckView.questCollectionView.setContentOffset(
-                        CGPoint(x: 0, y: offsetY.adjustedH),
-                        animated: true
+                // MARK: - 마지막 스텝 진입 시 맨 아래로 스크롤
+                if step.stepNumber == 5 {
+                    let maxOffsetY = collectionView.contentSize.height - collectionView.bounds.height + 30
+                    let bottomOffset = CGPoint(
+                        x: 0,
+                        y: max(maxOffsetY, 0)
                     )
+                    collectionView.setContentOffset(bottomOffset, animated: true)
+                    return
                 }
+                
+                // MARK: - 다음 스텝으로 넘어간 경우 해당 STEP으로 스크롤
+                collectionView.scrollToHeader(at: sectionIndex)
                 return
             }
         }
@@ -162,7 +163,7 @@ final class QuestCheckViewController: BaseViewController {
 }
 
 extension QuestCheckViewController: UICollectionViewDelegate {
-        
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         quest = questsEntity?.steps[indexPath.section].quests[indexPath.item]
         let currentStep = questsEntity?.currentStep
@@ -178,7 +179,6 @@ extension QuestCheckViewController: UICollectionViewDelegate {
         
         if questNumber < step {
             let questType: QuestType = (quest?.questStyle == QuestStyle.recording.key) ? .question : .activation
-            
             let archiveQuestViewController = ArchiveQuestViewController(
                 viewModel: viewModel,
                 questID: questID ?? 1,
@@ -202,6 +202,10 @@ extension QuestCheckViewController: UICollectionViewDelegate {
     }
     
     private func moveWriteQuest(quest: QuestEntity?) {
+        if quest?.questNumber == 30 {
+            allCompleted = true
+        }
+        
         if quest?.questStyle == QuestStyle.recording.key {
             guard let viewModel = DIContainer.shared.resolve(type: WriteQuestionTypeViewModel.self),
                   let questID = quest?.questId else {
