@@ -200,7 +200,7 @@ extension WriteActiveTypeQuestViewController {
 
 extension WriteActiveTypeQuestViewController: BackNavigable {
     func back() {
-        tabBarController?.tabBar.isHidden = false
+        tabBarController?.tabBar.isHidden = true
         
         let action: (() -> Void) = { self.navigationController?.popViewController(animated: true) }
         

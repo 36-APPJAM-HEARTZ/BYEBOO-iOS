@@ -38,7 +38,7 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
         view = rootView
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(textViewMoveUp),
@@ -172,7 +172,7 @@ extension WriteQuestionTypeQuestViewController {
 
 extension WriteQuestionTypeQuestViewController: BackNavigable {
     func back() {
-        tabBarController?.tabBar.isHidden = false
+        tabBarController?.tabBar.isHidden = true
         
         let action: (() -> Void) = { self.navigationController?.popViewController(animated: true) }
         
