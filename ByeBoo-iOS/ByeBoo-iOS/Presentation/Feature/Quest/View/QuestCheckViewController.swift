@@ -93,7 +93,7 @@ final class QuestCheckViewController: BaseViewController {
                 
                 guard let step = quests.steps.first else { return }
                 if quests.currentStep > step.quests.count {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         self?.scrollToCurrentStep()
                     }
                 }
@@ -126,9 +126,10 @@ final class QuestCheckViewController: BaseViewController {
                 where: {
                     $0.questNumber == questsEntity.currentStep
                 }) {
-                let indexPath = IndexPath(item: 0, section: sectionIndex)
+                var indexPath = IndexPath(item: 0, section: sectionIndex)
                 
                 if step.stepNumber == 5 {
+                    indexPath = IndexPath(item: step.quests.count - 1, section: sectionIndex)
                     questsCheckView.questCollectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
                     return
                 }
