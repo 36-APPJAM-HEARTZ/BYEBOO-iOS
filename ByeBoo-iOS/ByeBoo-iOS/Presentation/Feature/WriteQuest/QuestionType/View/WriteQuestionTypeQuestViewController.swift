@@ -19,6 +19,8 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     private var emotionState: String = ""
     private var isKeyboardUsed: Bool = false
     
+    private let bottomSheetViewController = EmotionBottomSheetViewController()
+    
     init(
         viewModel: WriteQuestionTypeViewModel,
         questID: Int
@@ -36,6 +38,19 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
         view = rootView
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(textViewMoveUp),
+            name: UIResponder.keyboardWillShowNotification, object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(textViewMoveDown),
+            name: UIResponder.keyboardWillHideNotification, object: nil
+        )
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         ByeBooNavigationBar.makeNavigationBar(
@@ -50,8 +65,6 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     }
     
     override func setAddTarget() {
-        NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveUp), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveDown), name: UIResponder.keyboardWillHideNotification, object: nil)
         rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
         
         let tipTagGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tipTagDidTap))
@@ -71,7 +84,7 @@ extension WriteQuestionTypeQuestViewController {
         if !self.isKeyboardUsed{
             if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
                 UIView.animate(withDuration: 0.3, animations: {
-                    let offsetY = keyboardSize.height - self.rootView.safeAreaInsets.bottom * 2
+                    let offsetY = keyboardSize.height - self.rootView.safeAreaInsets.bottom * 4
                     self.rootView.transform = CGAffineTransform(translationX: 0, y: -offsetY)
                     self.isKeyboardUsed = true
                 })
@@ -88,15 +101,15 @@ extension WriteQuestionTypeQuestViewController {
     @objc
     private func confirmButtonDidTap() {
         answerText = rootView.questTextField.textView.text
-        let viewController = EmotionBottomSheetViewController()
-        viewController.delegate = self
-        if let sheet = viewController.sheetPresentationController{
+        
+        bottomSheetViewController.delegate = self
+        if let sheet = bottomSheetViewController.sheetPresentationController{
             sheet.detents = [.custom { _ in 515.adjustedH }]
             sheet.prefersGrabberVisible = false
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
             sheet.preferredCornerRadius = 8
         }
-        self.present(viewController, animated: true)
+        self.present(bottomSheetViewController, animated: true)
     }
     
     @objc
@@ -106,10 +119,12 @@ extension WriteQuestionTypeQuestViewController {
         }
         let viewController = QuestTipViewController(
             viewModel: viewModel,
-            questID: questID
+            questID: questID,
+            questType: .question
         )
         viewController.navigationItem.hidesBackButton = true
-        self.navigationController?.pushViewController(viewController, animated: false)
+        viewController.modalPresentationStyle = .fullScreen
+        self.present(viewController, animated: false)
     }
     
     private func bind() {
@@ -141,6 +156,7 @@ extension WriteQuestionTypeQuestViewController {
                         fatalError()
                     }
                     
+                    self?.bottomSheetViewController.dismiss(animated: true)
                     let viewController = CompleteQuestionTypeQuestViewController(
                         viewModel: viewModel,
                         questID: self?.questID ?? 1
@@ -156,6 +172,8 @@ extension WriteQuestionTypeQuestViewController {
 
 extension WriteQuestionTypeQuestViewController: BackNavigable {
     func back() {
+        tabBarController?.tabBar.isHidden = false
+        
         let action: (() -> Void) = { self.navigationController?.popViewController(animated: true) }
         
         ModalBuilder(

@@ -69,6 +69,8 @@ final class QuestModalView: BaseView, ModalProtocol {
             $0.layer.cornerRadius = 12.adjustedW
             $0.setUnderLine()
         }
+        
+        setBlurEffect()
     }
     
     override func setUI() {

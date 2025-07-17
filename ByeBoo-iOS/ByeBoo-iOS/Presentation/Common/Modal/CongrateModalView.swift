@@ -47,6 +47,8 @@ final class CongrateModalView: BaseView, ModalProtocol {
             $0.textColor = .grayscale400
             $0.font = FontManager.body2M16.font
         }
+        
+        setBlurEffect()
     }
     
     override func setUI() {

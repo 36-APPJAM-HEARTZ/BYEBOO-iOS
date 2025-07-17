@@ -52,6 +52,8 @@ final class QuitModalView: BaseView, ModalProtocol {
             $0.axis = .horizontal
             $0.spacing = 16
         }
+        
+        setBlurEffect()
     }
     
     override func setLayout() {

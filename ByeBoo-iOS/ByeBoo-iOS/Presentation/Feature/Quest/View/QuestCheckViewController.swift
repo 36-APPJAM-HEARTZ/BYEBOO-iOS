@@ -18,7 +18,7 @@ final class QuestCheckViewController: BaseViewController {
     private let viewModel: QuestsViewModel
     private var cancellable = Set<AnyCancellable>()
     private var questsEntity: ProgressingQuestsEntity?
-    
+    private var quest: QuestEntity?
     private var questID: Int?
     
     init(viewModel: QuestsViewModel) {
@@ -40,6 +40,7 @@ final class QuestCheckViewController: BaseViewController {
         
         bind()
         viewModel.action(.questViewWillAppear)
+        CustomLoadingView.shared.show()
     }
     
     override func viewDidLoad() {
@@ -49,6 +50,7 @@ final class QuestCheckViewController: BaseViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        CustomLoadingView.shared.hide()
         self.navigationController?.navigationBar.isHidden = false
     }
     
@@ -97,7 +99,7 @@ final class QuestCheckViewController: BaseViewController {
                         self?.scrollToCurrentStep()
                     }
                 }
-                
+                CustomLoadingView.shared.hide()
             case (.success(_), .success(_), .failure(_)):
                 guard let startViewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {
                     ByeBooLogger.error(ByeBooError.DIFailedError)
@@ -110,9 +112,11 @@ final class QuestCheckViewController: BaseViewController {
                     self?.viewModel.action(.questViewWillAppear)
                     self?.bind()
                 }
+                CustomLoadingView.shared.hide()
                 self?.present(viewController, animated: false)
                 
             default:
+                CustomLoadingView.shared.hide()
                 ByeBooLogger.error(ByeBooError.unknownError)
             }
         }
@@ -153,7 +157,7 @@ final class QuestCheckViewController: BaseViewController {
 extension QuestCheckViewController: UICollectionViewDelegate {
         
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let quest = questsEntity?.steps[indexPath.section].quests[indexPath.item]
+        quest = questsEntity?.steps[indexPath.section].quests[indexPath.item]
         let currentStep = questsEntity?.currentStep
         
         questID = quest?.questId
@@ -177,7 +181,7 @@ extension QuestCheckViewController: UICollectionViewDelegate {
             self.navigationController?.pushViewController(archiveQuestViewController, animated: false)
             
         } else if questNumber == step {
-            let onProgressQuest: (() -> Void) = { self.moveWriteQuest(quest: quest) }
+            let onProgressQuest: (() -> Void) = { self.moveWriteQuest(quest: self.quest) }
             let modalView = QuestModalView(questNumber: questNumber, quest: quest?.question ?? "")
             modalView.tipButton.addTarget(self, action: #selector(tipButtonDidTap), for: .touchUpInside)
             
@@ -218,13 +222,17 @@ extension QuestCheckViewController: UICollectionViewDelegate {
     
     @objc
     private func tipButtonDidTap() {
+        
         guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self),
               let questID = questID else {
             return
         }
+        
+        let questType: QuestType = (quest?.questStyle == QuestStyle.recording.key) ? .question : .activation
         let questTipViewController = QuestTipViewController(
             viewModel: viewModel,
-            questID: questID
+            questID: questID,
+            questType: questType
         )
         questTipViewController.modalPresentationStyle = .fullScreen
         let topViewController = UIApplication.shared.topViewController()

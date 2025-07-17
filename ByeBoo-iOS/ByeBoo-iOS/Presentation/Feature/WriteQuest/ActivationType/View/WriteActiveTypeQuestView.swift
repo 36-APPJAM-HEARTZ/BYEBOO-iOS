@@ -114,13 +114,13 @@ final class WriteActiveTypeQuestView: BaseView {
         title.snp.makeConstraints {
             $0.top.equalTo(0)
             $0.leading.trailing.equalToSuperview()
-            $0.centerX.equalToSuperview()
-            $0.height.equalTo(200.adjustedH)
+//            $0.centerX.equalToSuperview()
+//            $0.height.equalTo(181.adjustedH)
         }
         
         imgStackView.snp.makeConstraints {
-            $0.top.equalTo(title.snp.bottom).offset(24.adjustedH)
-            $0.width.equalTo(165.adjustedW)
+            $0.top.equalTo(title.snp.bottom).offset(8.adjustedH)
+            $0.width.equalTo(157.adjustedW)
             $0.height.equalTo(24.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedW)
         }
