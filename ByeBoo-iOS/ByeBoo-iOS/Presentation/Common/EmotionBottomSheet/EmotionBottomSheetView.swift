@@ -50,7 +50,7 @@ final class EmotionBottomSheetView: BaseView {
         titleLabel.do {
             $0.text = "퀘스트를 완료한 후,\n어떤 감정이 느껴지시나요?"
             $0.numberOfLines = 2
-            $0.font = FontManager.head1Sb24.font
+            $0.font = FontManager.head1M24.font
             $0.textColor = .grayscale50
             $0.textAlignment = .center
         }

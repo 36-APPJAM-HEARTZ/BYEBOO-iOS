@@ -32,7 +32,7 @@ final class SelectEmotionView: BaseView {
         titleLabel.do {
             $0.attributedText = "감정 상태를 알려주세요".makeTitle(rangedText: "감정 상태")
             $0.textAlignment = .left
-            $0.font = FontManager.head1Sb24.font
+            $0.font = FontManager.head1M24.font
         }
         
         subTitleLabel.do {

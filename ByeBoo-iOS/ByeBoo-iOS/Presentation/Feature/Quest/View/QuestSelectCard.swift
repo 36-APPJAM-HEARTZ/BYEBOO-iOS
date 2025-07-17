@@ -58,7 +58,7 @@ final class QuestSelectCard: BaseView {
         titleLabel.do {
             $0.text = type.title
             $0.numberOfLines = 2
-            $0.font = FontManager.head1Sb24.font
+            $0.font = FontManager.head1M24.font
             $0.textColor = .grayscale50
         }
         characterImageView.do {

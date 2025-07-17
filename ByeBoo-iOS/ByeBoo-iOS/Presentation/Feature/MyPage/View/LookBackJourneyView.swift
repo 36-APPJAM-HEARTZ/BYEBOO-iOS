@@ -30,7 +30,7 @@ final class LookBackJourneyView: BaseView {
         backgroundColor = .grayscale900
         titleLabel.do {
             $0.text = "내가 완료한 여정이에요."
-            $0.font = FontManager.head1Sb24.font
+            $0.font = FontManager.head1M24.font
             $0.textColor = .grayscale50
         }
     }

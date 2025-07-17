@@ -30,7 +30,7 @@ final class QuestStartView: BaseView {
         titleLabel.do {
             $0.attributedText = "QUEST JOURNEY\nSTART!".makeTitle(rangedText: "QUEST JOURNEY")
             $0.textAlignment = .center
-            $0.font = FontManager.head1Sb24.font
+            $0.font = FontManager.head1M24.font
             $0.numberOfLines = 2
         }
         cloverImageView.do {

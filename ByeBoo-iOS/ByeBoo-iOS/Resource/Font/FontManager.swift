@@ -15,7 +15,7 @@ public struct FontProperty {
 }
 
 public enum FontManager {
-    case head1Sb24
+    case head1M24
     case head2M22
     
     case sub1Sb20
@@ -34,8 +34,8 @@ public enum FontManager {
     
     public var fontProperty: FontProperty {
         switch self {
-        case .head1Sb24:
-            return FontProperty(font: .semibold, size: 24, lineHeight: 130, kern: -1)
+        case .head1M24:
+            return FontProperty(font: .medium, size: 24, lineHeight: 130, kern: -1)
         case .head2M22:
             return FontProperty(font: .medium, size: 22, lineHeight: 120, kern: -1)
             
