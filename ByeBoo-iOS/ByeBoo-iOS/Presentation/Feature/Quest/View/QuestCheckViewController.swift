@@ -204,6 +204,10 @@ extension QuestCheckViewController: UICollectionViewDelegate {
     private func moveWriteQuest(quest: QuestEntity?) {
         if quest?.questNumber == 30 {
             allCompleted = true
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.questsCheckView.questCollectionView.scrollToHeader(at: 0)
+            }
         }
         
         if quest?.questStyle == QuestStyle.recording.key {
