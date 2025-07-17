@@ -30,6 +30,7 @@ final class JourneyProgressView: BaseView {
             $0.axis = .horizontal
             $0.spacing = 8
             $0.alignment = .center
+            
         }
         progressView.do {
             $0.progress = 0
@@ -60,13 +61,13 @@ final class JourneyProgressView: BaseView {
             $0.leading.equalToSuperview().inset(24.adjustedW)
         }
         progressStackView.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(10.adjustedH)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(8.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.width.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(16.adjustedH)
-            $0.height.equalTo(16.adjustedH)
         }
         progressView.snp.makeConstraints {
-            $0.width.equalTo(230.adjustedW)
+//            $0.width.equalTo(230.adjustedW)
             $0.height.equalTo(6.adjustedH)
         }
         
