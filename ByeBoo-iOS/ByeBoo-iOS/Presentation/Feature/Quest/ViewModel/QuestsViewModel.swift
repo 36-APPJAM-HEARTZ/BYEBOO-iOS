@@ -88,7 +88,6 @@ extension QuestsViewModel: ViewModelType {
     
     enum Input {
         case questViewWillAppear
-        case questViewDidLoad
     }
     
     struct Output {
@@ -101,11 +100,10 @@ extension QuestsViewModel: ViewModelType {
     func action(_ trigger: Input) {
         switch trigger {
         case .questViewWillAppear:
+            loadingSubject.send(true)
             getUseName()
             fetchUserJourney()
             fetchProgressingQuests()
-        case .questViewDidLoad:
-            loadingSubject.send(true)
         }
     }
 }
