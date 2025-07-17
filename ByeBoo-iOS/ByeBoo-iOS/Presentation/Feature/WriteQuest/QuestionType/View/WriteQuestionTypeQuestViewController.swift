@@ -39,8 +39,16 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveUp), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveDown), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(textViewMoveUp),
+            name: UIResponder.keyboardWillShowNotification, object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(textViewMoveDown),
+            name: UIResponder.keyboardWillHideNotification, object: nil
+        )
     }
     
     override func viewDidLoad() {
@@ -52,7 +60,6 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
             action: #selector(back)
         )
         
-        tabBarController?.tabBar.isHidden = true
         bind()
         viewModel.action(.viewDidLoad(quesetID: questID))
     }
@@ -165,6 +172,8 @@ extension WriteQuestionTypeQuestViewController {
 
 extension WriteQuestionTypeQuestViewController: BackNavigable {
     func back() {
+        tabBarController?.tabBar.isHidden = false
+        
         let action: (() -> Void) = { self.navigationController?.popViewController(animated: true) }
         
         ModalBuilder(

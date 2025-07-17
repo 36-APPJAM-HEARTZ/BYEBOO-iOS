@@ -40,8 +40,16 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveUp), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveDown), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(textViewMoveUp),
+            name: UIResponder.keyboardWillShowNotification, object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(textViewMoveDown),
+            name: UIResponder.keyboardWillHideNotification, object: nil
+        )
     }
     
     override func viewDidLoad() {
@@ -53,7 +61,6 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
             action: #selector(back)
         )
         
-        tabBarController?.tabBar.isHidden = true
         setGesture()
         bind()
         presentPhotoPicker()
@@ -61,8 +68,6 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     }
     
     override func setAddTarget() {
-        NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveUp), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveDown), name: UIResponder.keyboardWillHideNotification, object: nil)
         rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
     }
     
@@ -195,6 +200,8 @@ extension WriteActiveTypeQuestViewController {
 
 extension WriteActiveTypeQuestViewController: BackNavigable {
     func back() {
+        tabBarController?.tabBar.isHidden = false
+        
         let action: (() -> Void) = { self.navigationController?.popViewController(animated: true) }
         
         ModalBuilder(
