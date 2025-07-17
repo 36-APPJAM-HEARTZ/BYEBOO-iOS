@@ -13,6 +13,9 @@ final class QuestsViewModel: ViewModelType {
     private let nameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>.init()
     private let journeySubject = PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never>.init()
     private let questsSubject = PassthroughSubject<Result<ProgressingQuestsEntity, ByeBooError>, Never>.init()
+    
+    private let loadingSubject = PassthroughSubject<Bool, Never>.init()
+    
     private(set) var output: Output
     
     private let progressingQuestsUseCase: GetProgressingQuestsUseCase
@@ -34,7 +37,8 @@ final class QuestsViewModel: ViewModelType {
         self.output = Output(
             namePublisher: nameSubject.eraseToAnyPublisher(),
             journeyPublisher: journeySubject.eraseToAnyPublisher(),
-            questsPublisher: questsSubject.eraseToAnyPublisher()
+            questsPublisher: questsSubject.eraseToAnyPublisher(),
+            loadingPublisher: loadingSubject.eraseToAnyPublisher()
         )
     }
     
@@ -48,18 +52,21 @@ final class QuestsViewModel: ViewModelType {
             do {
                 let journeyEntity = try await fetchUserJourneyUseCase.execute()
                 journeySubject.send(.success(journeyEntity))
+                loadingSubject.send(false)
             } catch {
                 journeySubject.send(
                     .failure(
                         error as? ByeBooError ?? ByeBooError.unknownError
                     )
                 )
+                loadingSubject.send(false)
             }
         }
     }
     
     private func fetchProgressingQuests() {
         guard let userID = getUserIDUseCase.execute() else {
+            loadingSubject.send(false)
             questsSubject.send(.success(.stub()))
             return
         }
@@ -68,8 +75,10 @@ final class QuestsViewModel: ViewModelType {
             do {
                 let quests = try await progressingQuestsUseCase.execute(userID: userID)
                 questsSubject.send(.success(quests))
+                loadingSubject.send(false)
             } catch {
                 questsSubject.send(.failure(error as! ByeBooError))
+                loadingSubject.send(false)
             }
         }
     }
@@ -85,11 +94,13 @@ extension QuestsViewModel {
         let namePublisher: AnyPublisher<Result<String, ByeBooError>, Never>
         let journeyPublisher: AnyPublisher<Result<JourneyEntity, ByeBooError>, Never>
         let questsPublisher: AnyPublisher<Result<ProgressingQuestsEntity, ByeBooError>, Never>
+        let loadingPublisher: AnyPublisher<Bool, Never>
     }
     
     func action(_ trigger: InputAction) {
         switch trigger {
         case .questViewWillAppear:
+            loadingSubject.send(true)
             getUseName()
             fetchUserJourney()
             fetchProgressingQuests()
