@@ -37,7 +37,6 @@ final class QuestModalView: BaseView, ModalProtocol {
         layer.cornerRadius = 12.adjustedW
         
         imageView.do {
-            $0.backgroundColor = .grayscale90080
             $0.image = .banner1
             $0.contentMode = .scaleAspectFit
             $0.layer.cornerRadius = 12.adjustedW
@@ -67,6 +66,8 @@ final class QuestModalView: BaseView, ModalProtocol {
             $0.layer.cornerRadius = 12.adjustedW
             $0.setUnderLine()
         }
+        
+        setBlurEffect()
     }
     
     override func setUI() {

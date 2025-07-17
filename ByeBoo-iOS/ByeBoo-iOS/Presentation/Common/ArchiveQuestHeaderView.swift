@@ -45,7 +45,7 @@ final class ArchiveQuestHeaderView: BaseView {
         super.init(frame: .zero)
         
         stepLabel.text = "STEP \(stepNumber)"
-        questNumberLabel.text = "\(questNumber) 번째 퀘스트"
+        questNumberLabel.text = "\(questNumber)번째 퀘스트"
         dateLabel.text = date.dateFormat()
         questTitleLabel.text = questTitle
     }
@@ -79,6 +79,7 @@ final class ArchiveQuestHeaderView: BaseView {
             $0.font = FontManager.head1Sb24.font
             $0.textColor = .grayscale100
             $0.numberOfLines = 0
+            $0.lineBreakMode = .byWordWrapping
             
             switch type {
             case .complete:
@@ -133,7 +134,7 @@ final class ArchiveQuestHeaderView: BaseView {
 extension ArchiveQuestHeaderView {
     func updateUI(stepNumber: Int, questNumber: Int, date: String, title: String ){
         self.stepLabel.text = "STEP \(stepNumber)"
-        self.questNumberLabel.text = "\(questNumber) 번째 퀘스트"
+        self.questNumberLabel.text = "\(questNumber)번째 퀘스트"
         self.dateLabel.text = date.dateFormat()
         self.questTitleLabel.text = title
     }

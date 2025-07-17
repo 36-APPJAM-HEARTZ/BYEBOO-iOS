@@ -10,18 +10,21 @@ import UIKit
 
 final class QuestTipViewController: BaseViewController {
     
-    private let rootView = QuestTipView()
+    private let rootView: QuestTipView
     private let viewModel: QuestTipViewModel
     private var cancellables = Set<AnyCancellable>()
     private let questID: Int
+    private let questType: QuestType
     
     override func loadView() {
         view = rootView
     }
     
-    init(viewModel: QuestTipViewModel, questID: Int) {
+    init(viewModel: QuestTipViewModel, questID: Int, questType: QuestType) {
         self.viewModel = viewModel
         self.questID = questID
+        self.questType = questType
+        rootView = QuestTipView(questType: questType)
         super.init(nibName: nil, bundle: nil)
     }
     

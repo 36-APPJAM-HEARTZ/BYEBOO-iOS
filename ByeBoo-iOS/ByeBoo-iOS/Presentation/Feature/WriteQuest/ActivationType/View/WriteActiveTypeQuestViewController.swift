@@ -20,6 +20,8 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private var image: UIImage = UIImage()
     private var isKeyboardUsed: Bool = false
     
+    private let bottomSheetViewController = EmotionBottomSheetViewController()
+    
     override func loadView() {
         view = rootView
     }
@@ -35,6 +37,19 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(textViewMoveUp),
+            name: UIResponder.keyboardWillShowNotification, object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(textViewMoveDown),
+            name: UIResponder.keyboardWillHideNotification, object: nil
+        )
     }
     
     override func viewDidLoad() {
@@ -53,8 +68,6 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     }
     
     override func setAddTarget() {
-        NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveUp), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(textViewMoveDown), name: UIResponder.keyboardWillHideNotification, object: nil)
         rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
     }
     
@@ -111,15 +124,15 @@ extension WriteActiveTypeQuestViewController {
             answerText = rootView.questTextField.textView.text
         }
         
-        let viewController = EmotionBottomSheetViewController()
-        viewController.delegate = self
-        if let sheet = viewController.sheetPresentationController{
+       
+        bottomSheetViewController.delegate = self
+        if let sheet =  bottomSheetViewController.sheetPresentationController{
             sheet.detents = [.custom { _ in 515.adjustedH }]
             sheet.prefersGrabberVisible = false
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
             sheet.preferredCornerRadius = 8
         }
-        self.present(viewController, animated: true)
+        self.present(bottomSheetViewController, animated: true)
     }
     
     @objc
@@ -134,10 +147,12 @@ extension WriteActiveTypeQuestViewController {
         }
         let viewController = QuestTipViewController(
             viewModel: viewModel,
-            questID: questID
+            questID: questID,
+            questType: QuestType.activation
         )
         viewController.navigationItem.hidesBackButton = true
-        self.navigationController?.pushViewController(viewController, animated: true)
+        viewController.modalPresentationStyle = .fullScreen
+        self.present(viewController, animated: false)
     }
     
     private func bind() {   
@@ -173,6 +188,7 @@ extension WriteActiveTypeQuestViewController {
                         viewModel: viewModel,
                         questID: self?.questID ?? 1
                     )
+                    self?.bottomSheetViewController.dismiss(animated: true)
                     self?.navigationController?.pushViewController(viewController, animated: true)
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
@@ -184,6 +200,8 @@ extension WriteActiveTypeQuestViewController {
 
 extension WriteActiveTypeQuestViewController: BackNavigable {
     func back() {
+        tabBarController?.tabBar.isHidden = false
+        
         let action: (() -> Void) = { self.navigationController?.popViewController(animated: true) }
         
         ModalBuilder(

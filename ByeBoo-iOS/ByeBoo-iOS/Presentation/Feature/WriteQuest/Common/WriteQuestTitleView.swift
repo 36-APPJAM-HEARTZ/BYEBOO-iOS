@@ -16,7 +16,7 @@ final class WriteQuestTitleView: BaseView {
     private let stepTitle = UILabel()
     
     private var questNum: Int
-    private let questNumLabel: ByeBooYellowTag
+    private let questNumLabel =  UILabel()
     
     private let titleLabel = UILabel()
     let tipTag = ByeBooFilledTag(tagType: .word3Purple, text: "작성 TIP")
@@ -27,7 +27,7 @@ final class WriteQuestTitleView: BaseView {
         self.stepTitle.text = stepTitle
         self.questNum = questNum
         self.titleLabel.text = title
-        questNumLabel = .init(text: "\(questNum)번째 퀘스트")
+        self.questNumLabel.text = "\(questNum)번째 퀘스트"
         super.init(frame: .zero)
     }
     
@@ -57,6 +57,11 @@ final class WriteQuestTitleView: BaseView {
             $0.textColor = .grayscale500
         }
         
+        questNumLabel.do {
+            $0.font = FontManager.body5R14.font
+            $0.textColor = .secondary300
+        }
+        
         titleLabel.do {
             $0.font = FontManager.head1Sb24.font
             $0.textColor = .white
@@ -83,15 +88,16 @@ final class WriteQuestTitleView: BaseView {
         
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(questNumLabel.snp.bottom).offset(12.adjustedH)
+            $0.leading.trailing.equalToSuperview().inset(24.adjustedH)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(327.adjustedW)
         }
         
         tipTag.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(25.5.adjustedH)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(16.adjustedH)
             $0.width.equalTo(76.adjustedW)
             $0.height.equalTo(24.adjustedH)
             $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(16.adjustedH)
         }
     }
 }
