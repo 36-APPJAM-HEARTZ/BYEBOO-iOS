@@ -150,7 +150,7 @@ extension QuestStateCell {
             if state == .locked {
                 $0.center.equalToSuperview()
                 $0.width.height.equalTo(24.adjustedW)
-            } else {
+            } else if state == .completed {
                 $0.centerX.equalToSuperview()
                 $0.width.height.equalTo(80.adjustedW)
                 $0.edges.equalToSuperview().inset(
@@ -161,6 +161,9 @@ extension QuestStateCell {
                         right: 3.adjustedW
                     )
                 )
+            } else {
+                $0.centerX.equalToSuperview()
+                $0.width.height.equalTo(80.adjustedW)
             }
         }
     }
