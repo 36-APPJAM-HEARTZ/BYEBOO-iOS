@@ -88,6 +88,7 @@ extension QuestsViewModel {
     
     enum InputAction {
         case questViewWillAppear
+        case questLoadView
     }
     
     struct Output {
@@ -100,10 +101,11 @@ extension QuestsViewModel {
     func action(_ trigger: InputAction) {
         switch trigger {
         case .questViewWillAppear:
-            loadingSubject.send(true)
             getUseName()
             fetchUserJourney()
             fetchProgressingQuests()
+        case .questLoadView:
+            loadingSubject.send(true)
         }
     }
 }
