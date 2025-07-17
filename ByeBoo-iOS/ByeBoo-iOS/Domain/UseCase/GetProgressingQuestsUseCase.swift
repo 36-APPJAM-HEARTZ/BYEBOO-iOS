@@ -11,9 +11,9 @@ protocol GetProgressingQuestsUseCase {
 
 struct DefaultGetProgressingQuestsUseCase: GetProgressingQuestsUseCase {
     
-    private let repository: GetProgressingQuestsInterface
+    private let repository: QuestsInterface
     
-    init(repository: GetProgressingQuestsInterface) {
+    init(repository: QuestsInterface) {
         self.repository = repository
     }
     

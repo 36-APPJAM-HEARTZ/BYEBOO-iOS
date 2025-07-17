@@ -14,3 +14,15 @@ struct QuestInfoEntity {
     var questStyle: String
     var question: String
 }
+
+extension QuestInfoEntity {
+    static func stub() -> QuestInfoEntity {
+        return .init(
+            step: "1",
+            stepNumber: 1,
+            questNumber: 1,
+            questStyle: "quest style",
+            question: "question"
+        )
+    }
+}

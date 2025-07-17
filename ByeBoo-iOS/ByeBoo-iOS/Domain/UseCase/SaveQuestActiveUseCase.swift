@@ -12,9 +12,9 @@ protocol SaveQuestActiveUseCase {
 }
 
 struct DefaultSaveQuestActiveUseCase: SaveQuestActiveUseCase {
-    private let questActiveRepository: SaveQuestActiveInterface
+    private let questActiveRepository: QuestsInterface
     
-    init(questActiveRepository: SaveQuestActiveInterface) {
+    init(questActiveRepository: QuestsInterface) {
         self.questActiveRepository = questActiveRepository
     }
     

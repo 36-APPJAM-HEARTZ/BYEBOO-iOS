@@ -12,9 +12,9 @@ protocol QuestAnswerUseCase {
 }
 
 struct DefaultQuestAnswerUseCase: QuestAnswerUseCase {
-    private let questAnswerRepository: QuestAnswerInterface
+    private let questAnswerRepository: QuestsInterface
     
-    init(questAnswerRepository: QuestAnswerInterface) {
+    init(questAnswerRepository: QuestsInterface) {
         self.questAnswerRepository = questAnswerRepository
     }
     

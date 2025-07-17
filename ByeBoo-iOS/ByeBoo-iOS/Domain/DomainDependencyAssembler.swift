@@ -17,43 +17,12 @@ struct DomainDependencyAssembler: DependencyAssembler {
     func assemble() {
         preAssembler.assemble()
         
-        guard let userRepository = DIContainer.shared.resolve(type: UsersInterface.self) else {
+        guard let userRepository = DIContainer.shared.resolve(type: UsersInterface.self),
+              let questRepository = DIContainer.shared.resolve(type: QuestsInterface.self) else {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             return
         }
         
-        guard let questInfoRepository = DIContainer.shared.resolve(type: GetQuestInfoInterface.self) else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            return
-        }
-        
-        guard let saveQuestTypeRepository = DIContainer.shared.resolve(type: SaveQuestTypeInterface.self) else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            return
-        }
-        
-        guard let questAnswerRepository = DIContainer.shared.resolve(type: QuestAnswerInterface.self) else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            return
-        }
-        
-        guard let saveQuestActiveRepository = DIContainer.shared.resolve(type: SaveQuestActiveInterface.self) else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            return
-        }
-
-        guard let progressingQuestsRepository = DIContainer.shared.resolve(
-            type: GetProgressingQuestsInterface.self
-        ) else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            return
-        }
-        
-        guard let questTipRepository = DIContainer.shared.resolve(type: QuestTipInterface.self) else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            return
-        }
-
         DIContainer.shared.register(type: FetchUserJourneyUseCase.self) { _ in
             return DefaultFetchUserJourneyUseCase(repository: userRepository)
         }
@@ -63,7 +32,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: GetQuestInfoUseCase.self) { _ in
-            return DefaultGetQuestInfoUseCase(questInfoReposiroty: questInfoRepository)
+            return DefaultGetQuestInfoUseCase(questInfoReposiroty: questRepository)
         }
         
         DIContainer.shared.register(type: GetUserIDUseCase.self) { _ in
@@ -71,7 +40,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: SaveQuestTypeUseCase.self) { _ in
-            return DefaultSaveQuestTypeUseCase(repqository: saveQuestTypeRepository)
+            return DefaultSaveQuestTypeUseCase(repqository: questRepository)
         }
       
         DIContainer.shared.register(type: SendUserUseCase.self) { _ in
@@ -79,7 +48,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
         }
 
         DIContainer.shared.register(type: QuestAnswerUseCase.self) { _ in
-            return DefaultQuestAnswerUseCase(questAnswerRepository: questAnswerRepository)
+            return DefaultQuestAnswerUseCase(questAnswerRepository: questRepository)
         }
       
         DIContainer.shared.register(type: FetchCharacterDialogueUseCase.self) { _ in
@@ -95,15 +64,15 @@ struct DomainDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: SaveQuestActiveUseCase.self) { _ in
-            return DefaultSaveQuestActiveUseCase(questActiveRepository: saveQuestActiveRepository)
+            return DefaultSaveQuestActiveUseCase(questActiveRepository: questRepository)
         }
       
         DIContainer.shared.register(type: GetProgressingQuestsUseCase.self) { _ in
-            return DefaultGetProgressingQuestsUseCase(repository: progressingQuestsRepository)
+            return DefaultGetProgressingQuestsUseCase(repository: questRepository)
         }
         
         DIContainer.shared.register(type: QuestTipUseCase.self) { _ in
-            return DefaultQuestTipUseCase(questTipRepository: questTipRepository)
+            return DefaultQuestTipUseCase(questTipRepository: questRepository)
         }
                                                                         
     }

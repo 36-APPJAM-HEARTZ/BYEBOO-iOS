@@ -19,3 +19,21 @@ struct QuestTipEntity {
     let tipStep: Int
     let tipAnswer: String
 }
+
+extension QuestTipDataEntity {
+    static func stub() -> QuestTipDataEntity {
+        return .init(
+            step: "1",
+            stepNumber: 1,
+            questNumber: 1,
+            question: "question",
+            tips: [.stub()]
+        )
+    }
+}
+
+extension QuestTipEntity {
+    static func stub() -> QuestTipEntity {
+        return .init(tipStep: 1, tipAnswer: "tip answer")
+    }
+}
