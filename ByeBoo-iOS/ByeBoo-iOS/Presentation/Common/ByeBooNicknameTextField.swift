@@ -73,6 +73,7 @@ final class ByeBooNicknameTextField: BaseView {
             $0.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 24.adjustedW, height: 0))
             $0.leftViewMode = .always
             $0.textColor = .grayscale300
+            $0.tintColor = .white
         }
         
         errorIcon.do {
