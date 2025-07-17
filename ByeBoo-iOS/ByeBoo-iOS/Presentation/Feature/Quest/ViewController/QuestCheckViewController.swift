@@ -33,7 +33,12 @@ final class QuestCheckViewController: BaseViewController {
     
     override func loadView() {
         view = questsCheckView
-        viewModel.action(.questLoadView)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        bind()
+        viewModel.action(.questViewDidLoad)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -42,11 +47,6 @@ final class QuestCheckViewController: BaseViewController {
         
         bind()
         viewModel.action(.questViewWillAppear)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        bind()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
