@@ -34,7 +34,9 @@ final class ProgressBarView: BaseView {
     }
     
     override func setStyle() {
-        progressGroupView.backgroundColor = .clear
+        progressGroupView.do {
+            $0.backgroundColor = .clear
+        }
         progressStackView.do {
             $0.axis = .horizontal
             $0.spacing = 10
@@ -55,25 +57,21 @@ final class ProgressBarView: BaseView {
     override func setLayout() {
         progressGroupView.snp.makeConstraints {
             $0.width.equalTo(375.adjustedW)
-            $0.height.equalTo(32.adjustedH)
         }
-        
         progressStackView.snp.makeConstraints {
             $0.center.equalToSuperview()
             $0.width.equalTo(325.adjustedW)
-            $0.height.equalTo(6.adjustedH)
+            $0.top.equalToSuperview().inset(13.adjustedH)
+            $0.bottom.equalToSuperview().inset(13.adjustedH)
         }
-        
         firstProgressView.snp.makeConstraints {
             $0.width.equalTo(105.adjustedW)
             $0.height.equalTo(6.adjustedH)
         }
-        
         secondProgressView.snp.makeConstraints {
             $0.width.equalTo(105.adjustedW)
             $0.height.equalTo(6.adjustedH)
         }
-        
         thirdProgressView.snp.makeConstraints {
             $0.width.equalTo(105.adjustedW)
             $0.height.equalTo(6.adjustedH)

@@ -57,7 +57,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .back,
+            type: .back(header: .black),
             action: #selector(back)
         )
         

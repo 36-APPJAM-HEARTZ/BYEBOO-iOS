@@ -38,7 +38,7 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .close,
+            type: .close(header: .black),
             action: #selector(close)
         )
         

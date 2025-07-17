@@ -29,8 +29,8 @@ final class CustomLoadingView: UIView {
         }
         loading.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.width.equalTo(76.68.adjustedW)
-            $0.height.equalTo(19.adjustedH)
+            $0.width.equalTo(200.adjustedW)
+            $0.height.equalTo(50.adjustedH)
         }
     }
     

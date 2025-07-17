@@ -21,7 +21,7 @@ final class NewJourneySelectViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .back,
+            type: .back(),
             action: #selector(back)
         )
     }

@@ -93,7 +93,7 @@ final class QuestCheckViewController: BaseViewController {
                 
                 guard let step = quests.steps.first else { return }
                 if quests.currentStep > step.quests.count {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         self?.scrollToCurrentStep()
                     }
                 }
@@ -137,9 +137,10 @@ final class QuestCheckViewController: BaseViewController {
                 where: {
                     $0.questNumber == questsEntity.currentStep
                 }) {
-                let indexPath = IndexPath(item: 0, section: sectionIndex)
+                var indexPath = IndexPath(item: 0, section: sectionIndex)
                 
                 if step.stepNumber == 5 {
+                    indexPath = IndexPath(item: step.quests.count - 1, section: sectionIndex)
                     questsCheckView.questCollectionView.scrollToItem(at: indexPath, at: .bottom, animated: true)
                     return
                 }
@@ -183,6 +184,7 @@ extension QuestCheckViewController: UICollectionViewDelegate {
                 questID: questID ?? 1,
                 questType: questType
             )
+            self.tabBarController?.tabBar.isHidden = true
             self.navigationController?.pushViewController(archiveQuestViewController, animated: false)
             
         } else if questNumber == step {
@@ -209,6 +211,7 @@ extension QuestCheckViewController: UICollectionViewDelegate {
                 viewModel: viewModel,
                 questID: questID
             )
+            self.tabBarController?.tabBar.isHidden = true
             self.navigationController?.pushViewController(questionQuestViewController, animated: false)
         } else {
             guard let viewModel = DIContainer.shared.resolve(type: WriteActiveTypeViewModel.self),
@@ -219,6 +222,7 @@ extension QuestCheckViewController: UICollectionViewDelegate {
                 viewModel: viewModel,
                 questID: questID
             )
+            self.tabBarController?.tabBar.isHidden = true
             self.navigationController?.pushViewController(activationQuestViewController, animated: false)
         }
     }

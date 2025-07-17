@@ -35,6 +35,7 @@ final class EmotionCardsView: BaseView {
         emotionStackView.do {
             $0.axis = .horizontal
             $0.spacing = 11
+            $0.distribution = .equalSpacing
         }
     }
     

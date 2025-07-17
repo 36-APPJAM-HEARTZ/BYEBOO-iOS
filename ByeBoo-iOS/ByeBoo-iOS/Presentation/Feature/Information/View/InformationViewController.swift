@@ -48,7 +48,7 @@ final class InformationViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setTopNavigationBar(type: .none)
+        setTopNavigationBar(type: .none())
         setAddTarget(informationBaseView: informationBaseView)
         bind()
     }
@@ -65,7 +65,7 @@ final class InformationViewController: BaseViewController {
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
             type: type,
-            action: type == .none ? nil : #selector(back)
+            action: type == .none() ? nil : #selector(back)
         )
     }
     
@@ -131,9 +131,9 @@ extension InformationViewController {
                 selectQuestView.resetSelected()
                 maxStep = .first
             }
-            setTopNavigationBar(type: .none)
+            setTopNavigationBar(type: .none())
         default:
-            setTopNavigationBar(type: .back)
+            setTopNavigationBar(type: .back())
         }
     }
 }

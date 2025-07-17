@@ -9,12 +9,17 @@ import UIKit
 
 import SnapKit
 
+enum NavigationHeaderType {
+    case clear
+    case black
+}
+
 enum NavigationBarType: Equatable {
-    case back
-    case title(String)
-    case close
-    case titleAndClose(String)
-    case none
+    case back(header: NavigationHeaderType = .clear)
+    case title(String, header: NavigationHeaderType = .clear)
+    case close(header: NavigationHeaderType = .clear)
+    case titleAndClose(String, header: NavigationHeaderType = .clear)
+    case none(header: NavigationHeaderType = .clear)
 }
 
 struct ByeBooNavigationBar {
@@ -26,7 +31,7 @@ struct ByeBooNavigationBar {
         action: Selector? = nil
     ) {
         
-        let barAppearance = makeBasicBarAppearance()
+        let barAppearance = makeBasicBarAppearance(type: type)
         
         guard let topViewController = navigationController?.topViewController as? BaseViewController else {
             return
@@ -42,10 +47,27 @@ struct ByeBooNavigationBar {
         registerBarAppearance(barAppearance, to: navigationController)
     }
     
-    private static func makeBasicBarAppearance() -> UINavigationBarAppearance {
+    private static func makeBasicBarAppearance(type: NavigationBarType) -> UINavigationBarAppearance {
         let barAppearance = UINavigationBarAppearance()
+        
+        let headerType: NavigationHeaderType
+        switch type {
+        case .back(let header), 
+             .close(let header),
+             .none(let header),
+             .title(_, let header),
+             .titleAndClose(_, let header):
+            headerType = header
+        }
+        
         barAppearance.do {
-            $0.configureWithTransparentBackground()
+            switch headerType {
+            case .clear:
+                $0.configureWithTransparentBackground()
+            case .black:
+                $0.backgroundColor = .grayscale900
+                $0.shadowColor = .clear
+            }
             $0.titleTextAttributes = [
                 .font: FontManager.sub1Sb20.font,
                 .foregroundColor: UIColor.white
@@ -69,7 +91,7 @@ struct ByeBooNavigationBar {
             )
             navigationItem.leftBarButtonItem = backButtonItem
             
-        case .title(let string):
+        case .title(let string, _):
             navigationItem.title = string
             
         case .close:
@@ -80,7 +102,7 @@ struct ByeBooNavigationBar {
                 action: action
             )
             
-        case .titleAndClose(let string):
+        case .titleAndClose(let string, _):
             makeCloseButtonItem(
                 image: .xicon,
                 target: topViewController,

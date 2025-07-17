@@ -52,7 +52,7 @@ final class ArchiveQuestViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .close,
+            type: .close(header: .black),
             action: #selector(close)
         )
         
@@ -79,6 +79,7 @@ extension ArchiveQuestViewController {
 
 extension ArchiveQuestViewController: Dismissible {
     func close() {
+        self.tabBarController?.tabBar.isHidden = false
         self.navigationController?.popViewController(animated: false)
     }
 }
