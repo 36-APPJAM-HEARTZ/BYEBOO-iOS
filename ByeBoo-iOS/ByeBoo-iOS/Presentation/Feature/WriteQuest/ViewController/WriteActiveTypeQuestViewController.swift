@@ -40,7 +40,6 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        tabBarController?.tabBar.isHidden = true
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(textViewMoveUp),

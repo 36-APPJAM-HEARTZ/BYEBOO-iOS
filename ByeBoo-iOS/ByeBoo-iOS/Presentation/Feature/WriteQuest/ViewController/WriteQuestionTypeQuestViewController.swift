@@ -38,9 +38,7 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
         view = rootView
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        tabBarController?.tabBar.isHidden = true
-        
+    override func viewWillAppear(_ animated: Bool) {        
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(textViewMoveUp),
