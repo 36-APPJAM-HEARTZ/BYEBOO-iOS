@@ -43,10 +43,12 @@ enum ByeBooFilledTagType {
     
     var font: UIFont {
         switch self {
-        case .largePurple, .largeGray:
+        case .largePurple:
             return FontManager.body4Sb14.font
+        case .largeGray:
+            return FontManager.body5R14.font
         case .word3Purple, .word3Gray, .smallPurple, .smallGray, .yelloFilled:
-            return FontManager.cap1M12.font
+            return FontManager.cap2R12.font
         }
     }
     

@@ -80,7 +80,7 @@ final class ByeBooButton: UIButton {
         
         self.setTitle(titleText, for: .normal)
         self.setTitleColor(type.textColor, for: .normal)
-        self.titleLabel?.font = FontManager.body1Sb16.font
+        self.titleLabel?.font = FontManager.body3R16.font
         self.backgroundColor = type.backgroundColor
         self.layer.borderWidth = 1
         self.layer.borderColor = type.borderColor

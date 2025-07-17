@@ -28,7 +28,7 @@ final class CongrateModalView: BaseView, ModalProtocol {
             $0.text = "축하드려요!"
             $0.textAlignment = .center
             $0.textColor = .grayscale400
-            $0.font = FontManager.body2M16.font
+            $0.font = FontManager.body3R16.font
         }
         titleLabel.do {
             $0.text = "감정 직면 여정을\n모두 마무리 했어요"
@@ -45,7 +45,7 @@ final class CongrateModalView: BaseView, ModalProtocol {
             $0.numberOfLines = 2
             $0.textAlignment = .center
             $0.textColor = .grayscale400
-            $0.font = FontManager.body2M16.font
+            $0.font = FontManager.body3R16.font
         }
         
         setBlurEffect()

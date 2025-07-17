@@ -49,7 +49,7 @@ final class QuestModalView: BaseView, ModalProtocol {
             $0.text = "\(questNumber)번째 퀘스트"
             $0.textColor = .grayscale400
             $0.textAlignment = .center
-            $0.font = FontManager.body2M16.font
+            $0.font = FontManager.body3R16.font
         }
         
         titleLabel.do {
@@ -58,7 +58,7 @@ final class QuestModalView: BaseView, ModalProtocol {
             $0.textAlignment = .center
             $0.numberOfLines = 0
             $0.lineBreakMode = .byWordWrapping
-            $0.font = FontManager.sub2Sb18.font
+            $0.font = FontManager.sub3M18.font
         }
         
         tipButton.do {

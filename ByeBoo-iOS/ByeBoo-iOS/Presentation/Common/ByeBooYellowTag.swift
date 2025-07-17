@@ -13,7 +13,7 @@ final class ByeBooYellowTag: UILabel {
     init(text: String) {
         super.init(frame: .zero)
         self.text = text
-        self.font = FontManager.cap1M12.font
+        self.font = FontManager.cap2R12.font
         self.textColor = .secondary300
         self.textAlignment = .left
     }
