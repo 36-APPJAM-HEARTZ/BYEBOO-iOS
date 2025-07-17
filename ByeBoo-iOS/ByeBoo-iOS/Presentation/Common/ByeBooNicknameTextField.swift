@@ -103,8 +103,7 @@ final class ByeBooNicknameTextField: BaseView {
         errorIcon.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(24.adjustedW)
             $0.centerY.equalToSuperview()
-            $0.width.equalTo(18.adjustedW)
-            $0.height.equalTo(18.adjustedH)
+            $0.width.height.equalTo(24.adjustedW)
         }
     }
     
