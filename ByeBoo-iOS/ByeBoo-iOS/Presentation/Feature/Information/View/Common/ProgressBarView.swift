@@ -34,7 +34,10 @@ final class ProgressBarView: BaseView {
     }
     
     override func setStyle() {
-        progressGroupView.backgroundColor = .clear
+        progressGroupView.do {
+            $0.backgroundColor = .clear
+            $0.layoutMargins = UIEdgeInsets(top: 13, left: 0, bottom: 13, right: 0)
+        }
         progressStackView.do {
             $0.axis = .horizontal
             $0.spacing = 10
@@ -54,8 +57,9 @@ final class ProgressBarView: BaseView {
     
     override func setLayout() {
         progressGroupView.snp.makeConstraints {
+            $0.top.equalTo(progressGroupView.layoutMarginsGuide.snp.top)
+            $0.bottom.equalTo(progressGroupView.layoutMarginsGuide.snp.bottom)
             $0.width.equalTo(375.adjustedW)
-            $0.height.equalTo(32.adjustedH)
         }
         
         progressStackView.snp.makeConstraints {
