@@ -87,9 +87,13 @@ final class CardJourneyView: BaseView {
         }
         cardImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
+            $0.width.equalTo(290.adjustedW)
+            $0.height.equalTo(420.adjustedH)
         }
         descriptionImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
+            $0.width.equalTo(290.adjustedW)
+            $0.height.equalTo(420.adjustedH)
         }
         descriptionLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(139.adjustedH)

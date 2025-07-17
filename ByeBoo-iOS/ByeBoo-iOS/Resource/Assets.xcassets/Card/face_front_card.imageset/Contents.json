@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "face_back.png",
+      "filename" : "face_front_card.png",
       "idiom" : "universal",
       "scale" : "1x"
     },

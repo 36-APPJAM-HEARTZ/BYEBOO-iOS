@@ -27,18 +27,18 @@ enum JourneyType: String {
     var frontImage: UIImage {
         switch self {
         case .face:
-                .faceFront
+                .faceFrontCard
         case .process:
-                .processFront
+                .processFrontCard
         }
     }
     
     var backImage: UIImage {
         switch self {
         case .face:
-                .faceBack
+                .faceBackCard
         case .process:
-                .processBack
+                .processBackCard
         }
     }
 }
