@@ -73,6 +73,7 @@ final class ByeBooNicknameTextField: BaseView {
             $0.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 24.adjustedW, height: 0))
             $0.leftViewMode = .always
             $0.textColor = .grayscale300
+            $0.tintColor = .white
         }
         
         errorIcon.do {
@@ -102,8 +103,7 @@ final class ByeBooNicknameTextField: BaseView {
         errorIcon.snp.makeConstraints {
             $0.trailing.equalToSuperview().inset(24.adjustedW)
             $0.centerY.equalToSuperview()
-            $0.width.equalTo(18.adjustedW)
-            $0.height.equalTo(18.adjustedH)
+            $0.width.height.equalTo(24.adjustedW)
         }
     }
     

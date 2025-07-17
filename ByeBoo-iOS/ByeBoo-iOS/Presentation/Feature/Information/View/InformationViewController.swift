@@ -143,8 +143,10 @@ extension InformationViewController: BackNavigable {
     func back() {
         switch informationViewType {
         case .selectEmotion:
+            selectEmotionView.resetSelected()
             move(viewType: inputNicknameType, progress: .first)
         case .selectQuest:
+            selectQuestView.resetSelected()
             move(viewType: selectEmotionType, progress: .second)
         default:
             break

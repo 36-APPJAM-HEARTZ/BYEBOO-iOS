@@ -20,16 +20,7 @@ final class QuestCheckHeaderView: BaseView {
     private let subTitleLabel = UILabel()
     
     override func setStyle() {
-        backgroundColor = .black50
-        
-        let blurEffect = UIBlurEffect(style: .systemChromeMaterialDark)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.backgroundColor = .black
-        insertSubview(blurView, at: 0)
-
-        blurView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
+        backgroundColor = .grayscale900
         
         titleLabel.do {
             $0.font = FontManager.head1M24.font

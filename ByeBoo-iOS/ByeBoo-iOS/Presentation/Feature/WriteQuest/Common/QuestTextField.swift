@@ -68,6 +68,7 @@ final class QuestTextField: BaseView {
             $0.textColor = .grayscale300
             $0.text = placeholder
             $0.font = FontManager.body3R16.font
+            $0.tintColor = .white
         }
         
         textCount.do {

@@ -18,10 +18,6 @@ final class QuestsCheckView: BaseView {
         collectionViewLayout: CollectionViewFactory.createLayout()
     )
     
-    override func setStyle() {
-        backgroundColor = .grayscale900
-    }
-    
     override func setUI() {
         addSubviews(
             questCheckHeaderView,

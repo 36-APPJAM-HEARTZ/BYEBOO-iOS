@@ -53,6 +53,8 @@ final class ByeBooEmotionChip: BaseView {
             $0.width.equalTo(84.adjustedW)
             $0.height.equalTo(76.adjustedH)
             $0.top.equalToSuperview()
+            $0.leading.trailing.equalToSuperview().inset(8)
+            $0.bottom.equalTo(emotionTag.snp.top).offset(-8)
             $0.centerX.equalToSuperview()
         }
         
