@@ -20,7 +20,7 @@ final class WriteActiveTypeQuestView: BaseView {
         title: ""
     )
     
-    private let imgStackView = UIStackView()
+    private let imgTitleContainerView = UIView()
     private let yellowTag = ByeBooFilledTag(tagType: .yelloFilled, text: "필수")
     private let imgTitleLabel = UILabel()
     private let imgCountLabel = UILabel()
@@ -39,14 +39,14 @@ final class WriteActiveTypeQuestView: BaseView {
         
         contentView.addSubviews(
             title,
-            imgStackView,
+            imgTitleContainerView,
             textStackView,
             imageContainer,
             questTextField,
             confirmButton
         )
         
-        imgStackView.addArrangedSubviews(
+        imgTitleContainerView.addSubviews(
             yellowTag, imgTitleLabel, imgCountLabel
         )
         
@@ -68,12 +68,6 @@ final class WriteActiveTypeQuestView: BaseView {
         contentView.do {
             $0.backgroundColor = .grayscale900
             $0.isUserInteractionEnabled = true
-        }
-        
-        imgStackView.do {
-            $0.axis = .horizontal
-            $0.spacing = 8
-            $0.alignment = .center
         }
         
         imgTitleLabel.do {
@@ -114,19 +108,34 @@ final class WriteActiveTypeQuestView: BaseView {
         title.snp.makeConstraints {
             $0.top.equalTo(0)
             $0.leading.trailing.equalToSuperview()
-//            $0.centerX.equalToSuperview()
-//            $0.height.equalTo(181.adjustedH)
         }
         
-        imgStackView.snp.makeConstraints {
+        imgTitleContainerView.snp.makeConstraints {
             $0.top.equalTo(title.snp.bottom).offset(8.adjustedH)
-            $0.width.equalTo(157.adjustedW)
             $0.height.equalTo(24.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedW)
         }
         
+        yellowTag.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.leading.equalToSuperview()
+            $0.centerY.equalToSuperview()
+        }
+        
+        imgTitleLabel.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.leading.equalTo(yellowTag.snp.trailing).offset(8.adjustedH)
+            $0.centerY.equalToSuperview()
+        }
+        
+        imgCountLabel.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.leading.equalTo(imgTitleLabel.snp.trailing).offset(8.adjustedH)
+            $0.centerY.equalToSuperview()
+        }
+        
         imageContainer.snp.makeConstraints {
-            $0.top.equalTo(imgStackView.snp.bottom).offset(8.adjustedH)
+            $0.top.equalTo(imgTitleContainerView.snp.bottom).offset(8.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedW)
             $0.width.height.equalTo(96.adjustedW)
         }
