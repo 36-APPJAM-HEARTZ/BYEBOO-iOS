@@ -9,15 +9,14 @@ import UIKit
 
 extension UIFont {
     enum FontType: String {
-        case bold = "SUIT-Bold"
-        case extrabold = "SUIT-ExtraBold"
-        case extralight = "SUIT-ExtraLight"
-        case heavy = "SUIT-Heavy"
-        case light = "SUIT-Light"
-        case medium = "SUIT-Medium"
-        case regular = "SUIT-Regular"
-        case semibold = "SUIT-Semibold"
-        case thin = "SUIT-Thin"
+        case bold = "PretendardT-Bold"
+        case extrabold = "Pretendard-ExtraBold"
+        case extralight = "Pretendard-ExtraLight"
+        case light = "Pretendard-Light"
+        case medium = "Pretendard-Medium"
+        case regular = "Pretendard-Regular"
+        case semibold = "Pretendard-Semibold"
+        case thin = "Pretendard-Thin"
         
         var name: String {
             return self.rawValue
