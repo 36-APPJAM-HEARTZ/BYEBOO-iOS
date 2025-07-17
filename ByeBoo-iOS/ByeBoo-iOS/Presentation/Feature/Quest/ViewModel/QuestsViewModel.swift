@@ -88,7 +88,7 @@ extension QuestsViewModel: ViewModelType {
     
     enum Input {
         case questViewWillAppear
-        case questLoadView
+        case questViewDidLoad
     }
     
     struct Output {
@@ -104,7 +104,7 @@ extension QuestsViewModel: ViewModelType {
             getUseName()
             fetchUserJourney()
             fetchProgressingQuests()
-        case .questLoadView:
+        case .questViewDidLoad:
             loadingSubject.send(true)
         }
     }
