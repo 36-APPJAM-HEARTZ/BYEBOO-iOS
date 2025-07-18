@@ -24,8 +24,6 @@ final class HomeViewModel {
     private let fetchUserJourneyUseCase: FetchUserJourneyUseCase
     private let getUserNameUseCase: GetUserNameUseCase
     
-    private var homeSate: HomeState = .beforeJourneyStart(journey: .stub())
-    
     init(
         fetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase,
         fetchCompleteQuestCountUseCase: FetchCompleteQuestCountUseCase,
