@@ -57,6 +57,19 @@ final class CompleteQuestionTypeQuestViewController: BaseViewController {
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.output.loadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                if result {
+                    self?.view.alpha = 0
+                } else {
+                    UIView.animate(withDuration: 0.2) {
+                        self?.view.alpha = 1
+                    }
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 

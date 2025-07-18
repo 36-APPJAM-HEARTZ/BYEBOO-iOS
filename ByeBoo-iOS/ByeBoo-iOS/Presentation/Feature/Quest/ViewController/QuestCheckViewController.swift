@@ -38,11 +38,12 @@ final class QuestCheckViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         bind()
-        viewModel.action(.questViewDidLoad)
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        view.alpha = 0
         super.viewWillAppear(animated)
+        
         self.navigationController?.navigationBar.isHidden = true
         
         bind()
@@ -121,12 +122,14 @@ final class QuestCheckViewController: BaseViewController {
         
         viewModel.output.loadingPublisher
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
                 switch result {
                 case true:
-                    CustomLoadingView.shared.show()
+                    self?.view.alpha = 0
                 case false:
-                    CustomLoadingView.shared.hide()
+                    UIView.animate(withDuration: 0.1) {
+                        self?.view?.alpha = 1
+                    }
                 }
             }
             .store(in: &cancellable)

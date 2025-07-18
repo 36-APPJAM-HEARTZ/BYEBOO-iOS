@@ -74,6 +74,20 @@ extension ArchiveQuestViewController {
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.output.loadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case true:
+                    self?.view.alpha = 0
+                case false:
+                    UIView.animate(withDuration: 0.1) {
+                        self?.view?.alpha = 1
+                    }
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 

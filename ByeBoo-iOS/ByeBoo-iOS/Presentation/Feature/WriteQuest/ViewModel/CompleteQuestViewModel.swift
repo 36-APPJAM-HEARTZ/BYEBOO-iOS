@@ -16,7 +16,9 @@ final class CompleteQuestViewModel: ViewModelType {
     
     private let questAnswerUseCase: QuestAnswerUseCase
     
-    private var resultSubject: PassthroughSubject<Result<QuestAnswerEntity, ByeBooError>, Never> = .init()
+    private var resultSubject = PassthroughSubject<Result<QuestAnswerEntity, ByeBooError>, Never>()
+    private var loadingSubject = PassthroughSubject<
+        Bool, Never>()
     
     init(
         questAnswerCase: QuestAnswerUseCase
@@ -24,7 +26,8 @@ final class CompleteQuestViewModel: ViewModelType {
         self.questAnswerUseCase = questAnswerCase
         
         output = Output(
-            resultPublisher: resultSubject.eraseToAnyPublisher()
+            resultPublisher: resultSubject.eraseToAnyPublisher(),
+            loadingPublisher: loadingSubject.eraseToAnyPublisher()
         )
     }
 }
@@ -36,6 +39,7 @@ extension CompleteQuestViewModel {
     
     struct Output {
         let resultPublisher: AnyPublisher<Result<QuestAnswerEntity, ByeBooError>, Never>
+        let loadingPublisher: AnyPublisher<Bool, Never>
     }
     
     func action(_ trigger: Input) {
@@ -50,13 +54,16 @@ extension CompleteQuestViewModel {
     private func fetchQuestAnswer(questID: Int) {
         Task {
             do {
+                loadingSubject.send(true)
                 let entity = try await questAnswerUseCase.execute(questID: questID)
                 resultSubject.send(.success(entity))
+                loadingSubject.send(false)
             } catch {
                 guard let error = error as? ByeBooError else {
                     return
                 }
                 resultSubject.send(.failure(error))
+                loadingSubject.send(false)
             }
         }
     }
