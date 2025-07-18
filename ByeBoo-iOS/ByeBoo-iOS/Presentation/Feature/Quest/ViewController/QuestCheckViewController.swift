@@ -12,7 +12,6 @@ import SnapKit
 
 final class QuestCheckViewController: BaseViewController {
     
-    private var isStartedQuset = false
     private var allCompleted = false
     
     let questsCheckView = QuestsCheckView()
@@ -85,7 +84,6 @@ final class QuestCheckViewController: BaseViewController {
         .sink { [weak self] name, journey, quests in
             switch (name, journey, quests) {
             case let (.success(name), .success(journey), .success(quests)):
-                self?.isStartedQuset = false
                 self?.questsCheckView.questCheckHeaderView.updateHeader(
                     nickname: name,
                     journey: journey.title

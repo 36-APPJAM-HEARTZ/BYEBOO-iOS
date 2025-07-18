@@ -36,7 +36,7 @@
 <br/>
 <br/>
 
-## 🍏 iOS Developers
+## <img width="50" src ="https://github.com/user-attachments/assets/829cf299-89ce-4e66-b764-654238115207" /> iOS Developers
 
 | ![최주리](https://github.com/user-attachments/assets/a1889d8b-f465-4c5a-b661-5ff8a004b3a6) | ![허승준](https://github.com/user-attachments/assets/1377d3a0-1eab-47cb-8a3b-1bcf4aea4e00) | ![이나연](https://github.com/user-attachments/assets/288b7b27-233e-40eb-bccd-0341e81f94bc) |
 |:---:|:---:|:---:|
@@ -48,6 +48,14 @@
 
 ## 🔨 Tech Stack
 ### UIKit
+
+`1. 성숙도와 안정성`   
+UIKit은 iOS 초기부터 사용되던 프레임워크로, **높은 안정성**을 자랑하며 다양한 기기와 iOS 버전을 아우르는 **호환성**이 우수하다는 장점이 있습니다.
+
+`2. 예측 가능한 UI 레이아웃 작업`   
+SwiftUI는 예측하지 못한 동작으로 인해 기대와는 다른 UI가 제작될 우려가 있어, 서비스의 완성도가 중요한 앱잼 프로젝트에서 채택하기에 리스크가 있다고 판단했습니다.
+반면, UIKit은 개발자가 UI 구성 과정을 직접 **명령형**으로 제어할 수 있어, 예측 가능한 방식으로 UI를 구현할 수 있습니다. 오류가 발생해도 디버깅이 수월해, 서비스의 안정성을 높이는 데 도움이 되었습니다.
+
 ### CleanArchitecture
 
 - 각 계층의 책임 분리를 명확하게 함으로써 앱의 확장성과 유지보수성을 높이기 위함
@@ -143,8 +151,26 @@ feat: #1 로그인 기능 구현
 
 add: #2 이미지 에셋 추가
 ```
+<br/>
+<br/>
 
 
+##  <img width="50" src="https://github.com/user-attachments/assets/1c7377d3-09d5-44be-aa3b-92c40c3ceaeb" /> 시연 영상 
+| 온보딩  | 정보 입력 | 사용자 맞춤 여정 결과 확인 |
+| -------| ---------| ------------------- |
+| <img src = "https://github.com/user-attachments/assets/3cb6b646-620e-4e21-801a-ad2bdf575150" /> | <img src ="https://github.com/user-attachments/assets/7281e42e-3e80-471d-bb3b-9f37f49d5248" />  | <img src = "https://github.com/user-attachments/assets/df10384d-8e8a-4fdb-b812-8242c4a93cdf" /> | 
 
+|퀘스트 조회 | 퀘스트 작성 -> 퀘스트 팁 조회 | 행동형 퀘스트 작성 -> 작성 완료 확인 |
+| --------| --------| ---------------|
+| <img src ="https://github.com/user-attachments/assets/bb13254b-1623-40fd-8323-b8150fbc39e1" />  | <img src = "https://github.com/user-attachments/assets/7aa3bfbb-d3a7-4239-abe1-5657779f61a0" /> | ![바이부 시연영상](https://github.com/user-attachments/assets/03ab9547-fb7f-4bdc-873d-9108e6a58096)
+|
+
+| 퀘스트 시작 모달 -> 퀘스트 팁 조회 | 질문형 퀘스트 작성 -> 작성 완료 확인 |
+| ----------------------------| -----------------------------| 
+| <img src ="https://github.com/user-attachments/assets/ff53ab6a-9448-4845-8af8-2a30b50bdc4d"/> | <img src ="https://github.com/user-attachments/assets/ecceddd4-2e7c-482f-8123-97738750a9ef" /> |
+
+| 퀘스트 조회 -> 완료한 행동형 퀘스트 확인 | 퀘스트 조회 -> 완료한 질문형 퀘스트 확인 |
+| ----------------------------| -----------------------------| 
+|<img src ="https://github.com/user-attachments/assets/d36d11f2-35ad-4057-8b18-2a61946a5dff" width = "250" /> | <img src="https://github.com/user-attachments/assets/bf79eba1-97cd-4183-9848-17fe377a07f6" width ="250"/> |
 
 
