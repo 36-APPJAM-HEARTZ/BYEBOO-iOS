@@ -52,7 +52,7 @@ final class OnboardingContentView: BaseView {
             $0.image = .second
         }
         firstBottomDescriptionLable.do {
-            $0.text = "이별 후 걸림돌 같은 감정들을 털어놔주시면\n제 안에서 감정돌이 되어 쌓여요."
+            $0.text = "이별 후 걸림돌 같은 감정들을 털어놔 주시면\n제 안에서 감정돌이 되어 쌓여요."
             $0.textAlignment = .center
             $0.numberOfLines = 0
             $0.font = FontManager.body3R16.font
