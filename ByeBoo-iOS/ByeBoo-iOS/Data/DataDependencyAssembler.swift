@@ -8,7 +8,7 @@
 import Foundation
 
 struct DataDependencyAssembler: DependencyAssembler {
-    private let networkService: NetworkService = DefaultNetworkService()
+    private let networkService2: NetworkService = DefaultNetworkService()
     private let keychainService: KeychainService = DefaultKeychainService()
     private let userDefaultService: UserDefaultService = DefaultUserDefaultService()
     
