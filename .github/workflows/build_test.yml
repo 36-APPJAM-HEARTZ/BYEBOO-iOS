@@ -1,0 +1,35 @@
+name: iOS build test
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Generate xcconfig
+        run: |
+          mkdir -p ByeBoo-iOS/Data/Config
+          echo "BASE_URL = ${BASE_URL}" > ByeBoo-iOS/Data/Config/Config.xcconfig
+        env:
+          BASE_URL: ${{ secrets.BASE_URL }}
+
+      - name: Build with xcodebuild
+        run: |
+          set -o pipefail
+          xcodebuild \
+            -project ByeBoo-iOS/ByeBoo-iOS.xcodeproj \
+            -scheme ByeBoo-iOS \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.2' \
+            clean build | xcpretty
+
