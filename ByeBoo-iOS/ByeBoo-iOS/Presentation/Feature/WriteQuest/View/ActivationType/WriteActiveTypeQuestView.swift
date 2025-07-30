@@ -11,9 +11,9 @@ import SnapKit
 import Then
 
 final class WriteActiveTypeQuestView: BaseView {
-    let scrollView = UIScrollView()
-    let contentView = UIView()
-    let title = WriteQuestTitleView(
+    private(set) var scrollView = UIScrollView()
+    private(set) var contentView = UIView()
+    private(set) var title = WriteQuestTitleView(
         stepNum: "",
         stepTitle: "",
         questNum: 0,
@@ -25,13 +25,13 @@ final class WriteActiveTypeQuestView: BaseView {
     private let imgTitleLabel = UILabel()
     private let imgCountLabel = UILabel()
     var imgCount: Int = 0
-    let imageContainer = ImagePickerContainer()
+    private(set) var imageContainer = ImagePickerContainer()
     
     private let textStackView = UIStackView()
     private let grayTag = ByeBooFilledTag(tagType: .smallGray, text: "선택")
     private let thinkTitleLabel = UILabel()
-    let questTextField = QuestTextField(type: .activation)
-    let confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
+    private(set) var questTextField = QuestTextField(type: .activation)
+    private(set) var confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
     
     override func setUI() {
         addSubviews(scrollView)
