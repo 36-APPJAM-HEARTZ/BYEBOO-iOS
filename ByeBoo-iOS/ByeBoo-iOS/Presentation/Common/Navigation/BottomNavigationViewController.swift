@@ -7,8 +7,6 @@
 
 import UIKit
 
-
-
 final class BottomNavigationViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +24,11 @@ final class BottomNavigationViewController: UITabBarController {
               let questViewModel = DIContainer.shared.resolve(type: QuestsViewModel.self)
         else {
             ByeBooLogger.error(ByeBooError.DIFailedError)
-            fatalError()
+            
+            let viewController = OnboardingViewController()
+            navigationController?.pushViewController(viewController, animated: false)
+            
+            return
         }
         
         self.viewControllers = [
