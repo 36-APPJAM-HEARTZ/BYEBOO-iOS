@@ -15,6 +15,7 @@ final class EmotionBottomSheetView: BaseView {
     private let titleLabel = UILabel()
     private let emotionChipFirstStackView = UIStackView()
     private let emotionChipSecondStackView = UIStackView()
+    private let dividerNum = 2
     
     let confirmButton = ByeBooButton(titleText: "완료", type: .disabled)
     var emotionChips: [ByeBooEmotionChip] = []
@@ -28,14 +29,16 @@ final class EmotionBottomSheetView: BaseView {
             confirmButton
         )
         
-        ByeBooEmotion.allCases.enumerated().forEach { index, emotion in
+        ByeBooEmotion.allCases.prefix(dividerNum).forEach { emotion in
             let chip = ByeBooEmotionChip(emotionType: emotion)
             emotionChips.append(chip)
-            if index < 2 {
-                emotionChipFirstStackView.addArrangedSubview(chip)
-            } else {
-                emotionChipSecondStackView.addArrangedSubview(chip)
-            }
+            emotionChipFirstStackView.addArrangedSubview(chip)
+        }
+        
+        ByeBooEmotion.allCases.suffix(dividerNum).forEach { emotion in
+            let chip = ByeBooEmotionChip(emotionType: emotion)
+            emotionChips.append(chip)
+            emotionChipSecondStackView.addArrangedSubview(chip)
         }
     }
     
