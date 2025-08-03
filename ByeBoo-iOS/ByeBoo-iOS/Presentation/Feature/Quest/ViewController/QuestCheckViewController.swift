@@ -140,13 +140,13 @@ final class QuestCheckViewController: BaseViewController {
             
             if let _ = step.quests.firstIndex(where: { $0.questNumber == questsEntity.currentStep }) {
                 // MARK: - 마지막 퀘스트 완료 시 STEP 1으로 스크롤
-                if quest?.questNumber == 30 && allCompleted {
+                if quest?.questNumber == QuestInformation.totalCount.rawValue && allCompleted {
                     collectionView.scrollToHeader(at: 0)
                     return
                 }
                 
                 // MARK: - 마지막 스텝 진입 시 맨 아래로 스크롤
-                if step.stepNumber == 5 {
+                if step.stepNumber == QuestInformation.lastStep.rawValue {
                     let maxOffsetY = collectionView.contentSize.height - collectionView.bounds.height + 30
                     let bottomOffset = CGPoint(
                         x: 0,
