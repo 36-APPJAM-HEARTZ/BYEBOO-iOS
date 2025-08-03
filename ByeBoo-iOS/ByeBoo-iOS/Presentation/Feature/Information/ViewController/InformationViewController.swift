@@ -159,30 +159,37 @@ extension InformationViewController {
     @objc
     private func nextButtonDidTap() {
         switch informationViewType {
-        case .inputNickname:
-            if let nickname = inputNicknameView.nicknameTextField.nicknameField.text,
-               !nickname.isEmpty {
-                viewModel.action(.nicknameButtonDidTap(nickname))
+        case .inputNickname: saveNickname()
+        case .selectEmotion: saveEmotion()
+        case .selectQuest: saveQuest()
+        }
+    }
+    
+    private func saveNickname() {
+        if let nickname = inputNicknameView.nicknameTextField.nicknameField.text,
+           !nickname.isEmpty {
+            viewModel.action(.nicknameButtonDidTap(nickname))
+        }
+        move(viewType: selectEmotionType, progress: .second)
+    }
+    
+    private func saveEmotion() {
+        let emotionCards = selectEmotionView.emotionCardsView.emotionCards
+        for (index, emotionCard) in emotionCards.enumerated() where emotionCard.isSelected {
+            if Feeling.allCases.indices.contains(index) {
+                let feeling = Feeling.allCases[index]
+                viewModel.action(.feelingButtonDidTap(feeling))
             }
-            move(viewType: selectEmotionType, progress: .second)
-            
-        case .selectEmotion:
-            let emotionCards = selectEmotionView.emotionCardsView.emotionCards
-            for (index, emotionCard) in emotionCards.enumerated() where emotionCard.isSelected {
-                if Feeling.allCases.indices.contains(index) {
-                    let feeling = Feeling.allCases[index]
-                    viewModel.action(.feelingButtonDidTap(feeling))
-                }
-            }
-            move(viewType: selectQuestType, progress: .third)
-            
-        case .selectQuest:
-            let questCards = selectQuestView.questCardsView.questCards
-            for (index, questCard) in questCards.enumerated() where questCard.isSelected {
-                if QuestStyle.allCases.indices.contains(index) {
-                    let quest = QuestStyle.allCases[index]
-                    viewModel.action(.questButtonDidTap(quest))
-                }
+        }
+        move(viewType: selectQuestType, progress: .third)
+    }
+    
+    private func saveQuest() {
+        let questCards = selectQuestView.questCardsView.questCards
+        for (index, questCard) in questCards.enumerated() where questCard.isSelected {
+            if QuestStyle.allCases.indices.contains(index) {
+                let quest = QuestStyle.allCases[index]
+                viewModel.action(.questButtonDidTap(quest))
             }
         }
     }
