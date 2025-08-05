@@ -19,9 +19,9 @@ final class ArchiveQuestHeaderView: BaseView {
 
     private let type: QuestHeaderType
     private let stepStackView = UIStackView()
-    private(set) var stepLabel = UILabel()
-    private(set) var questNumberLabel = UILabel()
-    private(set) var dateLabel = UILabel()
+    private let stepLabel = UILabel()
+    private let questNumberLabel = UILabel()
+    private let dateLabel = UILabel()
     private(set) var questTitleLabel = UILabel()
     
     private let stepNumber: Int

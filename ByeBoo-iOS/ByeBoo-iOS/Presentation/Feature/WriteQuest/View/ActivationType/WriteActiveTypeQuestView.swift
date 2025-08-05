@@ -12,7 +12,7 @@ import Then
 
 final class WriteActiveTypeQuestView: BaseView {
     private(set) var scrollView = UIScrollView()
-    private(set) var contentView = UIView()
+    private let contentView = UIView()
     private(set) var title = WriteQuestTitleView(
         stepNum: "",
         stepTitle: "",
