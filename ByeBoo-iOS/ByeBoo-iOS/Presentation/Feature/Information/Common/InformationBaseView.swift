@@ -15,7 +15,7 @@ final class InformationBaseView: BaseView {
     private let backgroundImageView = UIImageView()
     private var progressBarType: ProgressBarType
     private lazy var progressView = ProgressBarView(type: progressBarType)
-    let informationView: BaseView
+    var informationView: BaseView
     var nextButton = ByeBooButton(titleText: "다음으로", type: .disabled2)
     
     init(informationViewType: InformationViewType, progressBarType: ProgressBarType) {
@@ -72,6 +72,22 @@ final class InformationBaseView: BaseView {
             $0.width.equalTo(326.adjustedH)
             $0.height.equalTo(53.adjustedH)
         }
+    }
+}
+
+extension InformationBaseView {
+    
+    func replace(informationViewType: InformationViewType, progressBarType: ProgressBarType) {
+        self.informationView.removeFromSuperview()
+        self.progressView.removeFromSuperview()
+        
+        self.informationView = informationViewType.view
+        self.progressBarType = progressBarType
+        self.progressView = ProgressBarView(type: self.progressBarType)
+        
+        setStyle()
+        setUI()
+        setLayout()
     }
     
     private func updateNicknameViewNextButton(view: InputNicknameView) {

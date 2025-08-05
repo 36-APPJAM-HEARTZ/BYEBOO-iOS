@@ -116,12 +116,8 @@ extension InformationViewController {
         }
         
         self.informationViewType = viewType
-        let newBaseView = InformationBaseView(
-            informationViewType: viewType,
-            progressBarType: progress
-        )
-        self.view = newBaseView
-        setAddTarget(informationBaseView: newBaseView)
+        self.informationBaseView.replace(informationViewType: viewType, progressBarType: progress)
+        setAddTarget(informationBaseView: informationBaseView)
         
         switch viewType {
         case .inputNickname:
