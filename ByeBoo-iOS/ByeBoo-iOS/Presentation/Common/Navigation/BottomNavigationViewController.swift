@@ -25,8 +25,18 @@ final class BottomNavigationViewController: UITabBarController {
         else {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             
-            let viewController = OnboardingViewController()
-            navigationController?.pushViewController(viewController, animated: false)
+            //TODO: Login으로 변경
+            let tempViewController = OnboardingViewController()
+            
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                
+                ViewControllerUtils.setRootViewController(
+                    window: window,
+                    viewController: tempViewController,
+                    withAnimation: true
+                )
+            }
             
             return
         }
