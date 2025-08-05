@@ -129,6 +129,8 @@ extension InformationBaseView {
     private func updateButtonWhenBack(condition: Bool) {
         if condition {
             self.nextButton.updateType(.enabled)
+            return
         }
+        self.nextButton.updateType(.disabled2)
     }
 }

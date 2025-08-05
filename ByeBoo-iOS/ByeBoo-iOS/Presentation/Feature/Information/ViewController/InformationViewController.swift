@@ -13,7 +13,6 @@ final class InformationViewController: BaseViewController {
     private let inputNicknameView: InputNicknameView
     private var informationViewType: InformationViewType
     private var informationBaseView: InformationBaseView
-    private var maxStep: ProgressBarType
     
     private let selectEmotionView = SelectEmotionView(emotionCardsView: EmotionCardsView())
     private let selectQuestView = SelectQuestView(questCardsView: QuestCardsView())
@@ -33,7 +32,6 @@ final class InformationViewController: BaseViewController {
             progressBarType: .first
         )
         self.viewModel = viewModel
-        self.maxStep = .first
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -111,22 +109,12 @@ final class InformationViewController: BaseViewController {
 extension InformationViewController {
     
     private func move(viewType: InformationViewType, progress: ProgressBarType) {
-        if progress.rawValue > maxStep.rawValue {
-            maxStep = progress
-        }
-        
         self.informationViewType = viewType
         self.informationBaseView.replace(informationViewType: viewType, progressBarType: progress)
         setAddTarget(informationBaseView: informationBaseView)
         
         switch viewType {
         case .inputNickname:
-            if maxStep == .third {
-                viewModel.resetData()
-                selectEmotionView.resetSelected()
-                selectQuestView.resetSelected()
-                maxStep = .first
-            }
             setTopNavigationBar(type: .none())
         default:
             setTopNavigationBar(type: .back())
