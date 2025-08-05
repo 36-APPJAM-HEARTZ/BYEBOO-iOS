@@ -9,7 +9,7 @@ import Combine
 import UIKit
 
 final class InformationViewController: BaseViewController {
-        
+    
     private let inputNicknameView = InputNicknameView()
     private let selectEmotionView = SelectEmotionView(emotionCardsView: EmotionCardsView())
     private let selectQuestView = SelectQuestView(questCardsView: QuestCardsView())
@@ -103,11 +103,11 @@ extension InformationViewController {
         self.informationBaseView.replace(informationView: view, progressBarType: progress)
         setAddTarget(informationBaseView: informationBaseView)
         
-        if view is InputNicknameView {
-            setTopNavigationBar(type: .none())
-            return
+        switch view {
+        case is InputNicknameView: setTopNavigationBar(type: .none())
+        case is SelectEmotionView, is SelectQuestView: setTopNavigationBar(type: .back())
+        default: break
         }
-        setTopNavigationBar(type: .back())
     }
 }
 
