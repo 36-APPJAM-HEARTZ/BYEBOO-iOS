@@ -9,28 +9,19 @@ import Combine
 import UIKit
 
 final class InformationViewController: BaseViewController {
-    
-    private let inputNicknameView: InputNicknameView
-    private var informationViewType: InformationViewType
-    private var informationBaseView: InformationBaseView
-    
+        
+    private let inputNicknameView = InputNicknameView()
     private let selectEmotionView = SelectEmotionView(emotionCardsView: EmotionCardsView())
     private let selectQuestView = SelectQuestView(questCardsView: QuestCardsView())
-    
-    private lazy var inputNicknameType = InformationViewType.inputNickname(inputNicknameView)
-    private lazy var selectEmotionType = InformationViewType.selectEmotion(selectEmotionView)
-    private lazy var selectQuestType = InformationViewType.selectQuest(selectQuestView)
+    private lazy var informationBaseView = InformationBaseView(
+        informationView: inputNicknameView,
+        progressBarType: .first
+    )
     
     private var viewModel: InformationViewModel
     private var cancellables = Set<AnyCancellable>()
     
     init(viewModel: InformationViewModel) {
-        self.inputNicknameView = InputNicknameView()
-        self.informationViewType = .inputNickname(self.inputNicknameView)
-        self.informationBaseView = InformationBaseView(
-            informationViewType: self.informationViewType,
-            progressBarType: .first
-        )
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -108,30 +99,28 @@ final class InformationViewController: BaseViewController {
 
 extension InformationViewController {
     
-    private func move(viewType: InformationViewType, progress: ProgressBarType) {
-        self.informationViewType = viewType
-        self.informationBaseView.replace(informationViewType: viewType, progressBarType: progress)
+    private func move(view: BaseView, progress: ProgressBarType) {
+        self.informationBaseView.replace(informationView: view, progressBarType: progress)
         setAddTarget(informationBaseView: informationBaseView)
         
-        switch viewType {
-        case .inputNickname:
+        if view is InputNicknameView {
             setTopNavigationBar(type: .none())
-        default:
-            setTopNavigationBar(type: .back())
+            return
         }
+        setTopNavigationBar(type: .back())
     }
 }
 
 extension InformationViewController: BackNavigable {
     
     func back() {
-        switch informationViewType {
-        case .selectEmotion:
+        switch informationBaseView.informationView {
+        case is SelectEmotionView:
             selectEmotionView.resetSelected()
-            move(viewType: inputNicknameType, progress: .first)
-        case .selectQuest:
+            move(view: inputNicknameView, progress: .first)
+        case is SelectQuestView:
             selectQuestView.resetSelected()
-            move(viewType: selectEmotionType, progress: .second)
+            move(view: selectEmotionView, progress: .second)
         default:
             break
         }
@@ -142,10 +131,11 @@ extension InformationViewController {
     
     @objc
     private func nextButtonDidTap() {
-        switch informationViewType {
-        case .inputNickname: saveNickname()
-        case .selectEmotion: saveEmotion()
-        case .selectQuest: saveQuest()
+        switch informationBaseView.informationView {
+        case is InputNicknameView: saveNickname()
+        case is SelectEmotionView: saveEmotion()
+        case is SelectQuestView: saveQuest()
+        default: break
         }
     }
     
@@ -154,7 +144,7 @@ extension InformationViewController {
            !nickname.isEmpty {
             viewModel.action(.nicknameButtonDidTap(nickname))
         }
-        move(viewType: selectEmotionType, progress: .second)
+        move(view: selectEmotionView, progress: .second)
     }
     
     private func saveEmotion() {
@@ -165,7 +155,7 @@ extension InformationViewController {
                 viewModel.action(.feelingButtonDidTap(feeling))
             }
         }
-        move(viewType: selectQuestType, progress: .third)
+        move(view: selectQuestView, progress: .third)
     }
     
     private func saveQuest() {

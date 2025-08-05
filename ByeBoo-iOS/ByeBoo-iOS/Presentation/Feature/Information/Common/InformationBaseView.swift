@@ -18,8 +18,8 @@ final class InformationBaseView: BaseView {
     var informationView: BaseView
     var nextButton = ByeBooButton(titleText: "다음으로", type: .disabled2)
     
-    init(informationViewType: InformationViewType, progressBarType: ProgressBarType) {
-        self.informationView = informationViewType.view
+    init(informationView: BaseView, progressBarType: ProgressBarType) {
+        self.informationView = informationView
         self.progressBarType = progressBarType
         super.init(frame: .zero)
     }
@@ -77,11 +77,11 @@ final class InformationBaseView: BaseView {
 
 extension InformationBaseView {
     
-    func replace(informationViewType: InformationViewType, progressBarType: ProgressBarType) {
+    func replace(informationView: BaseView, progressBarType: ProgressBarType) {
         self.informationView.removeFromSuperview()
         self.progressView.removeFromSuperview()
         
-        self.informationView = informationViewType.view
+        self.informationView = informationView
         self.progressBarType = progressBarType
         self.progressView = ProgressBarView(type: self.progressBarType)
         
