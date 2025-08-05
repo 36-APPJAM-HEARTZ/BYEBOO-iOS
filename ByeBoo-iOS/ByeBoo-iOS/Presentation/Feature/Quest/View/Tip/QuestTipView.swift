@@ -58,6 +58,7 @@ final class QuestTipView: BaseView {
         ]
         
         let tips = entity.tips
+        
         tips.enumerated().forEach { index, tip in
             
             guard tips[safe: index] != nil else { return }
