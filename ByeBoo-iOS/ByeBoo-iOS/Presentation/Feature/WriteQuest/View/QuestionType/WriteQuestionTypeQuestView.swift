@@ -11,15 +11,15 @@ import SnapKit
 import Then
 
 final class WriteQuestionTypeQuestView: BaseView {
-    let title = WriteQuestTitleView(
+    private(set) var title = WriteQuestTitleView(
         stepNum: "",
         stepTitle: "",
         questNum: 0,
         title: ""
     )
-    let questTextField = QuestTextField(type: .question)
+    private(set) var questTextField = QuestTextField(type: .question)
     private let descriptionLabel = UILabel()
-    let confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
+    private(set) var confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
     
     override func setUI() {
         addSubviews(

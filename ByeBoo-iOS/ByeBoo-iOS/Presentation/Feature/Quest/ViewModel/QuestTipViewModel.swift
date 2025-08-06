@@ -10,7 +10,6 @@ import Foundation
 
 final class QuestTipViewModel: ViewModelType {
     
-    
     private var questTipSubject: PassthroughSubject<Result<QuestTipDataEntity, ByeBooError>, Never> = .init()
      
     var output: Output {

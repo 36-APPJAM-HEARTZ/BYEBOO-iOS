@@ -13,7 +13,7 @@ final class ThinkView: BaseView {
     
     private let titleTextView = IconOneLineTextView(iconType: .think, text: "이렇게 생각했어요")
     private let descriptionView: TextBoxView
-    var descriptionText: String
+    private let descriptionText: String
     
     init(descriptionText: String) {
         self.descriptionText = descriptionText

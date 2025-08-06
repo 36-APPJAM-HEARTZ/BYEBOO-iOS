@@ -14,7 +14,7 @@ struct DataDependencyAssembler: DependencyAssembler {
     
     func assemble() {
         DIContainer.shared.register(type: UsersInterface.self) { _ in
-            return DefaultUsersRepository(network: networkService, userDefatulsService: userDefaultService)
+            return DefaultUsersRepository(network: networkService, userDefaultsService: userDefaultService)
         }
         
         DIContainer.shared.register(type: QuestsInterface.self) { _ in

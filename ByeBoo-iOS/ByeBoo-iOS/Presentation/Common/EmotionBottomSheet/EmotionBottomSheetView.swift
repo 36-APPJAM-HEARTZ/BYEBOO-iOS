@@ -28,12 +28,14 @@ final class EmotionBottomSheetView: BaseView {
             confirmButton
         )
         
-        ByeBooEmotion.allCases.enumerated().forEach { index, emotion in
+        ByeBooEmotion.allCases.enumerated().forEach { _, emotion in
             let chip = ByeBooEmotionChip(emotionType: emotion)
             emotionChips.append(chip)
-            if index < 2 {
+            
+            switch emotion {
+            case .neutral, .sad:
                 emotionChipFirstStackView.addArrangedSubview(chip)
-            } else {
+            case .selfUnderstanding, .relieved:
                 emotionChipSecondStackView.addArrangedSubview(chip)
             }
         }

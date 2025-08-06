@@ -14,7 +14,7 @@ final class QuestTipView: BaseView {
     
     private let navigationView = UIView()
     private let titleLabel = UILabel()
-    let closeButton = UIButton()
+    private(set) var closeButton = UIButton()
     private let stepStackView = UIStackView()
     private var stepNum: Int = 0
     private let stepLabel = ByeBooYellowTag(text: "STEP 0")
@@ -57,17 +57,15 @@ final class QuestTipView: BaseView {
             "이 퀘스트가 끝나면 어떤 변화가 생길까요?"
         ]
         
-        entity.tips.enumerated().forEach { index, tip in
-            let iconType: IconType = {
-                switch index {
-                case 0: return .write
-                case 1: return .think
-                case 2: return .change
-                default: return .write
-                }
-            }()
+        let tips = entity.tips
+        
+        tips.enumerated().forEach { index, tip in
             
-            let iconTitleLabel = IconOneLineTextView(iconType: iconType, text: tipQuestion[index])
+            guard tips[safe: index] != nil else { return }
+            
+            let iconType: [IconType] = [.write, .think, .change]
+            
+            let iconTitleLabel = IconOneLineTextView(iconType: iconType[index], text: tipQuestion[index])
             let textView = TextBoxView(title: tip.tipAnswer)
             let dividerView = SectionDividerView()
             self.addSubviews(iconTitleLabel, textView, dividerView)

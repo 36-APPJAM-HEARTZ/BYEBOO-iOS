@@ -15,13 +15,13 @@ final class CompleteActiveTypeQuestView: BaseView {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let congratSquare = CongratSquare()
-    private let stepStackView = UIStackView()
-    private var stepNum: Int = 0
-    private let stepLabel = ByeBooYellowTag(text: "STEP 0")
-    private var questNum: Int = 0
-    private let questLabel = UILabel()
-    private let dateText = UILabel()
-    private let title = UILabel()
+    private var headerView = ArchiveQuestHeaderView(
+        type: .complete,
+        stepNumber: 0,
+        questNumber: 0,
+        date: "",
+        questTitle:""
+    )
     
     override func setUI() {
         addSubviews(scrollView)
@@ -29,12 +29,8 @@ final class CompleteActiveTypeQuestView: BaseView {
         
         contentView.addSubviews(
             congratSquare,
-            stepStackView,
-            dateText,
-            title
+            headerView
         )
-        
-        stepStackView.addArrangedSubviews(stepLabel, questLabel)
     }
     
     override func setStyle() {
@@ -43,40 +39,15 @@ final class CompleteActiveTypeQuestView: BaseView {
         contentView.do {
             $0.backgroundColor = .grayscale900
         }
-        
-        stepStackView.do {
-            $0.axis = .horizontal
-            $0.spacing = 8
-            $0.distribution = .equalCentering
-        }
-        
-        questLabel.do {
-            $0.font = FontManager.body5R14.font
-            $0.textColor = .grayscale400
-        }
-        
-        dateText.do {
-            $0.font = FontManager.body5R14.font
-            $0.textColor = .grayscale400
-            $0.textAlignment = .center
-        }
-        
-        title.do {
-            $0.font = FontManager.head1M24.font
-            $0.numberOfLines = 0
-            $0.textColor = .grayscale100
-            $0.textAlignment = .center
-            $0.lineBreakMode = .byWordWrapping
-        }
     }
     
     func bind(with entity: QuestAnswerEntity) {
-        self.stepNum = entity.stepNumber
-        stepLabel.updateText("STEP \(stepNum)")
-        self.questNum = entity.questNumber
-        self.questLabel.text = "\(questNum)번째 퀘스트"
-        self.title.text = entity.question
-        self.dateText.text = entity.createdAt.dateFormat()
+        headerView.updateUI(
+            stepNumber: entity.stepNumber,
+            questNumber: entity.questNumber,
+            date: entity.createdAt,
+            title: entity.question
+        )
         
         let actionView = ActionView(descriptionText: entity.answer, photoURL: entity.imageUrl!)
         let feelView = FeelView(
@@ -87,7 +58,7 @@ final class CompleteActiveTypeQuestView: BaseView {
         contentView.addSubviews(actionView, feelView)
 
         actionView.snp.makeConstraints {
-            $0.top.equalTo(title.snp.bottom)
+            $0.top.equalTo(headerView.questTitleLabel.snp.bottom)
             $0.leading.trailing.equalToSuperview()
         }
         
@@ -114,19 +85,9 @@ final class CompleteActiveTypeQuestView: BaseView {
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
         }
         
-        stepStackView.snp.makeConstraints {
+        headerView.snp.makeConstraints {
             $0.top.equalTo(congratSquare.snp.bottom).offset(32.adjustedH)
-            $0.centerX.equalToSuperview()
-        }
-        
-        dateText.snp.makeConstraints {
-            $0.top.equalTo(stepStackView.snp.bottom).offset(12.adjustedH)
-            $0.leading.trailing.equalToSuperview().inset(147.5.adjustedW)
-        }
-        
-        title.snp.makeConstraints {
-            $0.top.equalTo(dateText.snp.bottom).offset(12.adjustedH)
-            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
+            $0.horizontalEdges.equalToSuperview()
         }
     }
 }
