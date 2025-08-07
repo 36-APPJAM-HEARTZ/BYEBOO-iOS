@@ -33,9 +33,9 @@ final class EmotionBottomSheetView: BaseView {
             emotionChips.append(chip)
             
             switch emotion {
-            case .neutral, .sad:
+            case .neutral, .selfUnderstanding:
                 emotionChipFirstStackView.addArrangedSubview(chip)
-            case .selfUnderstanding, .relieved:
+            case .sad, .relieved:
                 emotionChipSecondStackView.addArrangedSubview(chip)
             }
         }
