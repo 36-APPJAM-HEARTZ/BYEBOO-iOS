@@ -58,7 +58,7 @@ final class WriteQuestTitleView: BaseView {
         }
         
         questNumLabel.do {
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
             $0.textColor = .secondary300
         }
         

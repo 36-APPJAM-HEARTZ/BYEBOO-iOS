@@ -39,7 +39,7 @@ final class SelectEmotionView: BaseView {
             $0.text = "이별 후, 어떤 감정으로 하루를 보내고 계신가요?"
             $0.textColor = .grayscale400
             $0.textAlignment = .left
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
         }
         
         emotionCardsView.backgroundColor = .clear

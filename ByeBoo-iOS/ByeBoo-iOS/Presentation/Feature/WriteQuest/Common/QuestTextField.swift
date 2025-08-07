@@ -50,7 +50,7 @@ final class QuestTextField: BaseView {
         
         textCount.do {
             $0.text = "(\(count)/\(limitCount))"
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
             $0.textColor = .grayscale300
         }
     }

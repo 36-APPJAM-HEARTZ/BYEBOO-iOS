@@ -39,7 +39,7 @@ final class SelectQuestView: BaseView {
             $0.text = "나에게 맞는 방식으로 퀘스트를 받아볼 수 있어요."
             $0.textColor = .grayscale400
             $0.textAlignment = .left
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
         }
         
         questCardsView.backgroundColor = .clear

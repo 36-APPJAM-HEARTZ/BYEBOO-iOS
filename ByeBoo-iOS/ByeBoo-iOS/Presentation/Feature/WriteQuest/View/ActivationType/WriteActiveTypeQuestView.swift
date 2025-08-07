@@ -78,7 +78,7 @@ final class WriteActiveTypeQuestView: BaseView {
         
         imgCountLabel.do {
             $0.text = "(\(imgCount)/1)"
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
             $0.textColor = .grayscale400
         }
         

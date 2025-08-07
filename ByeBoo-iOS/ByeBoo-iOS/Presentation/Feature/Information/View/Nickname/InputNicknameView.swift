@@ -41,7 +41,7 @@ final class InputNicknameView: BaseView {
             $0.text = "어떤 이름으로 불러드릴까요?"
             $0.textColor = .grayscale400
             $0.textAlignment = .left
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
         }
         
         nicknameFieldView.backgroundColor = .clear

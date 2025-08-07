@@ -49,7 +49,9 @@ final class CompleteActiveTypeQuestView: BaseView {
             title: entity.question
         )
         
-        let actionView = ActionView(descriptionText: entity.answer, photoURL: entity.imageUrl!)
+        guard let imageUrl = entity.imageUrl else { return }
+        let actionView = ActionView(descriptionText: entity.answer, photoURL: imageUrl)
+        
         let feelView = FeelView(
             emotionType: entity.questEmotionState,
             descriptionText: entity.emotionDescription

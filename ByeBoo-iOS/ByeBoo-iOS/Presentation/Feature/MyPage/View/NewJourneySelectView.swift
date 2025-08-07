@@ -46,7 +46,7 @@ final class NewJourneySelectView: BaseView {
         }
         descriptionLabel.do {
             $0.text = "각 여정 당 30개의 퀘스트를 제공해드려요"
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
             $0.textColor = .grayscale400
         }
     }
