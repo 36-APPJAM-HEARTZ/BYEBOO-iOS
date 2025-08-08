@@ -19,7 +19,7 @@ final class ArchiveQuestHeaderView: BaseView {
 
     private let type: QuestHeaderType
     private let stepStackView = UIStackView()
-    private let stepLabel = UILabel()
+    private let stepLabel = ByeBooTextTag(type: .gray, text: "STEP 0")
     private let questNumberLabel = UILabel()
     private let dateLabel = UILabel()
     private(set) var questTitleLabel = UILabel()
@@ -41,10 +41,9 @@ final class ArchiveQuestHeaderView: BaseView {
         self.questNumber = questNumber
         self.date = date
         self.questTitle = questTitle
-        
+
         super.init(frame: .zero)
         
-        stepLabel.text = "STEP \(stepNumber)"
         questNumberLabel.text = "\(questNumber)번째 퀘스트"
         dateLabel.text = date.dateFormat()
         questTitleLabel.text = questTitle
@@ -59,10 +58,6 @@ final class ArchiveQuestHeaderView: BaseView {
             $0.axis = .horizontal
             $0.spacing = 8
             $0.distribution = .equalCentering
-        }
-        stepLabel.do {
-            $0.font = FontManager.cap1M12.font
-            $0.textColor = .secondary300
         }
         
         questNumberLabel.do {
@@ -133,7 +128,7 @@ final class ArchiveQuestHeaderView: BaseView {
 
 extension ArchiveQuestHeaderView {
     func updateUI(stepNumber: Int, questNumber: Int, date: String, title: String ){
-        self.stepLabel.text = "STEP \(stepNumber)"
+        self.stepLabel.updateText("STEP \(stepNumber)")
         self.questNumberLabel.text = "\(questNumber)번째 퀘스트"
         self.dateLabel.text = date.dateFormat()
         self.questTitleLabel.text = title

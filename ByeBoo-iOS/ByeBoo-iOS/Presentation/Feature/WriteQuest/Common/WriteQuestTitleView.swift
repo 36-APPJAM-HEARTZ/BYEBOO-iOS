@@ -12,7 +12,7 @@ import Then
 
 final class WriteQuestTitleView: BaseView {
     private let stepStackView = UIStackView()
-    private let stepNum = UILabel()
+    private let stepNum = ByeBooTextTag(type: .gray, text: "STEP 0")
     private let stepTitle = UILabel()
     
     private var questNum: Int
@@ -23,7 +23,6 @@ final class WriteQuestTitleView: BaseView {
     
         
     init(stepNum: String, stepTitle: String, questNum: Int, title: String) {
-        self.stepNum.text = "STEP \(stepNum)"
         self.stepTitle.text = stepTitle
         self.questNum = questNum
         self.titleLabel.text = title
@@ -45,13 +44,7 @@ final class WriteQuestTitleView: BaseView {
             $0.axis = .horizontal
             $0.spacing = 8.adjustedW
         }
-        
-        stepNum.do {
-            $0.font = FontManager.cap1M12.font
-            $0.textColor = .grayscale300
-            $0.textAlignment = .center
-        }
-        
+                
         stepTitle.do {
             $0.font = FontManager.body2M16.font
             $0.textColor = .grayscale500
@@ -59,7 +52,7 @@ final class WriteQuestTitleView: BaseView {
         
         questNumLabel.do {
             $0.font = FontManager.body6R14.font
-            $0.textColor = .secondary300
+            $0.textColor = .grayscale500
         }
         
         titleLabel.do {
@@ -104,7 +97,7 @@ final class WriteQuestTitleView: BaseView {
 
 extension WriteQuestTitleView {
     func bind(stepNum: String, stepTitle: String, questNum: Int, title: String) {
-        self.stepNum.text = "STEP \(stepNum)"
+        self.stepNum.updateText("STEP \(stepNum)")
         self.stepTitle.text = stepTitle
         self.questNum = questNum
         self.titleLabel.text = title

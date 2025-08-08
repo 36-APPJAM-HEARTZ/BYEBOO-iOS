@@ -17,7 +17,7 @@ final class QuestTipView: BaseView {
     private(set) var closeButton = UIButton()
     private let stepStackView = UIStackView()
     private var stepNum: Int = 0
-    private let stepLabel = ByeBooYellowTag(text: "STEP 0")
+    private let stepLabel = ByeBooTextTag(type: .gray, text: "STEP 0")
     private var questNum: Int = 0
     private let questLabel = UILabel()
     private let title = UILabel()
