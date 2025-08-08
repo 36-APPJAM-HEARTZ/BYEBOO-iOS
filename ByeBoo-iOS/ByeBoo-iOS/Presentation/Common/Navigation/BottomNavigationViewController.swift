@@ -58,13 +58,13 @@ final class BottomNavigationViewController: UITabBarController {
         itemAppearance.normal.iconColor = .grayscale400
         itemAppearance.normal.titleTextAttributes = [
             .foregroundColor: UIColor.grayscale400,
-            .font: FontManager.body5R14.font
+            .font: FontManager.body6R14.font
         ]
         
         itemAppearance.selected.iconColor = .primary300
         itemAppearance.selected.titleTextAttributes = [
             .foregroundColor: UIColor.primary300,
-            .font: FontManager.body5R14.font
+            .font: FontManager.body6R14.font
         ]
         
         appearance.stackedLayoutAppearance = itemAppearance

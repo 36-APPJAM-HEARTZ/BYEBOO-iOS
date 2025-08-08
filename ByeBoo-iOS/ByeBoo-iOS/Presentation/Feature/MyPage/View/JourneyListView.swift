@@ -74,7 +74,7 @@ final class JourneyListView: BaseView {
         }
         prepareTitleLabel.do {
             $0.text = "준비 중"
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
             $0.textColor = .grayscale600
         }
     }

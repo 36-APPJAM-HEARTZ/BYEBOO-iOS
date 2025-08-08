@@ -44,7 +44,7 @@ final class FinishJourneyView: BaseView {
             또 다른 새로운 여정을 시작해볼까요?
             """
             $0.numberOfLines = 0
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
             $0.textColor = .secondary100
             $0.textAlignment = .center
         }

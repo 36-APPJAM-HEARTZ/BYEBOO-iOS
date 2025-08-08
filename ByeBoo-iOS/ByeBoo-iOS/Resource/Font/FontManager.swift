@@ -27,7 +27,8 @@ public enum FontManager {
     case body2M16
     case body3R16
     case body4Sb14
-    case body5R14
+    case body5M14
+    case body6R14
     
     case cap1M12
     case cap2R12
@@ -56,7 +57,9 @@ public enum FontManager {
             return FontProperty(font: .regular, size: 16, lineHeight: 130, kern: -1)
         case .body4Sb14:
             return FontProperty(font: .semibold, size: 14, lineHeight: 130, kern: -1)
-        case .body5R14:
+        case .body5M14:
+            return FontProperty(font: .medium, size: 14, lineHeight: 130, kern: -1)
+        case .body6R14:
             return FontProperty(font: .regular, size: 14, lineHeight: 130, kern: -1)
             
         case .cap1M12:

@@ -41,7 +41,7 @@ final class TextBoxView: BaseView {
         
         titleLabel.do {
             $0.numberOfLines = 0
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
             $0.textColor = .grayscale300
             $0.lineBreakMode = .byCharWrapping
         }

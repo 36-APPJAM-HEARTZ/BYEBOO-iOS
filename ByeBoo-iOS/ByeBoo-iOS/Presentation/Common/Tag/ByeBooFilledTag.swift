@@ -46,7 +46,7 @@ enum ByeBooFilledTagType {
         case .largePurple:
             return FontManager.body4Sb14.font
         case .largeGray:
-            return FontManager.body5R14.font
+            return FontManager.body6R14.font
         case .word3Purple, .word3Gray, .smallPurple, .smallGray, .yelloFilled:
             return FontManager.cap2R12.font
         }
