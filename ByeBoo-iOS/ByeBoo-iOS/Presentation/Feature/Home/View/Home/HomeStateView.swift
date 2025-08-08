@@ -37,7 +37,7 @@ final class HomeStateView: BaseView {
         }
         descriptionLabel.do {
             $0.text = state.description
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
             $0.textColor = .grayscale300
         }
         arrowImageView.do {

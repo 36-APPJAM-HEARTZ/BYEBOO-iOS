@@ -23,7 +23,7 @@ final class OnboardingHeaderView: BaseView {
     override func setStyle() {
         stepLabel.do {
             $0.text = "\(step.rawValue)/3"
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
             $0.textColor = .primary300
         }
         skipStackView.do {
@@ -35,7 +35,7 @@ final class OnboardingHeaderView: BaseView {
         skipLabel.do {
             $0.text = "SKIP"
             $0.underLine(text: $0.text ?? "")
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
             $0.textColor = .primary300
         }
         

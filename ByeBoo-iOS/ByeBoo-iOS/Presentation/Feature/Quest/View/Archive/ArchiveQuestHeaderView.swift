@@ -66,12 +66,12 @@ final class ArchiveQuestHeaderView: BaseView {
         }
         
         questNumberLabel.do {
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
             $0.textColor = .grayscale400
         }
         
         dateLabel.do {
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
             $0.textColor = .grayscale400
         }
         
