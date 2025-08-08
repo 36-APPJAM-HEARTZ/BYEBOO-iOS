@@ -72,6 +72,8 @@ extension FinishJourneyViewController {
             ByeBooLogger.error(ByeBooError.navigationControllerMissing)
             return
         }
+        
+        guard tabBarController?.viewControllers?[safe: 0] != nil else { return }
         navigationController.tabBarController?.selectedIndex = 0
     }
 }
