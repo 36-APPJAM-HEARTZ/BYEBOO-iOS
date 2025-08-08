@@ -33,14 +33,13 @@ extension HomeOnboardingViewController {
     
     @objc
     private func longDidTap(_ gesture: UILongPressGestureRecognizer) {
-        
-        
+                
         switch gesture.state {
         case .began:
             ByeBooLogger.debug("꾹 누르기 시작")
             pressStartTime = Date()
             rootView.startPressAnimation()
-        case .ended:
+        case .ended, .failed, .cancelled:
             ByeBooLogger.debug("꾹 누르기 종료")
             guard let start = pressStartTime else {
                 rootView.revertPressAnimation()
@@ -66,9 +65,8 @@ extension HomeOnboardingViewController {
                 }
             } else {
                 rootView.revertPressAnimation()
-                pressStartTime = nil
             }
-            
+            pressStartTime = nil
         default:
             break
         }
