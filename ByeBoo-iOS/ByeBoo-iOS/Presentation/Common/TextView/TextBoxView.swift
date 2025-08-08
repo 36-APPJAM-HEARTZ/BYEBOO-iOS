@@ -9,8 +9,8 @@ import UIKit
 
 final class TextBoxView: BaseView {
     
-    let titleLabel = UILabel()
-    var emotionChip: ByeBooEmotionChip? = nil
+    private let titleLabel = UILabel()
+    private var emotionChip: ByeBooEmotionChip? = nil
     
     private let title: String
     private let emotionType: ByeBooEmotion?

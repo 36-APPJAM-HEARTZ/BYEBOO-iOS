@@ -13,7 +13,6 @@ final class OneLineTextBoxView: BaseView {
     
     private let title: String
     private let tagTitle: String?
-    // TODO: 컴포넌트 변경되면 고치기
     private let tagType: ByeBooFilledTagType?
     private let isHighlighted: Bool
     

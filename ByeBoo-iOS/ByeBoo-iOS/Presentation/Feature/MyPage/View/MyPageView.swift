@@ -14,7 +14,7 @@ final class MyPageView: BaseView {
     
     private let nameView = OneLineTextBoxView(title: "")
     private let divider1 = SectionDividerView()
-    let myRecordView = MyRecordView()
+    private(set) var myRecordView = MyRecordView()
     
     override func setStyle() {
         backgroundColor = .grayscale900

@@ -16,8 +16,8 @@ final class ActionView: BaseView {
     private let descriptionView: TextBoxView
     private let placeholderView = UIImageView()
     private let thinkTextView =  IconOneLineTextView(iconType: .think,text: "이렇게 완료했어요" )
-    var descriptionText: String
-    var photoURL: String
+    private let descriptionText: String
+    private let photoURL: String
     
     init(
         descriptionText: String,
@@ -100,7 +100,6 @@ extension ActionView {
         }
         self.descriptionView.updateText(description)
         
-        self.photoURL = photoURL
         if let url = URL(string: photoURL) {
             photoView.kf.setImage(with: url)
         }

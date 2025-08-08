@@ -14,12 +14,12 @@ final class CardJourneyView: BaseView {
     
     private let containerView = UIView()
     private let tipDescriptionLabel = UILabel()
-    let cardImageView = UIImageView()
+    private(set) var cardImageView = UIImageView()
     
     private let descriptionImageView = UIImageView()
     private let descriptionLabel = UILabel()
     
-    let confirmLabel = UILabel()
+    private(set) var confirmLabel = UILabel()
     
     override func setStyle() {
         backgroundImageView.do {

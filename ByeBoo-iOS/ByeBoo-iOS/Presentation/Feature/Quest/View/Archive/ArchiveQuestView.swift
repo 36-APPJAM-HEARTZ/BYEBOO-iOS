@@ -14,7 +14,7 @@ final class ArchiveQuestView: BaseView {
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    private var headerView = ArchiveQuestHeaderView(
+    private let headerView = ArchiveQuestHeaderView(
         type: .archive,
         stepNumber: 0,
         questNumber: 0,
@@ -23,7 +23,7 @@ final class ArchiveQuestView: BaseView {
     )
     private let thinkView: ThinkView?
     private let actionView: ActionView?
-    private var feelView = FeelView(emotionType: "", descriptionText: "")
+    private let feelView = FeelView(emotionType: "", descriptionText: "")
     
     private let type: QuestType
     

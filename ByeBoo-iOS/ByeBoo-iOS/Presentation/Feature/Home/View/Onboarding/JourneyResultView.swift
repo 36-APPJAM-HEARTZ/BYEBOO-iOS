@@ -14,7 +14,7 @@ final class JourneyResultView: BaseView {
     private let titleLabel = UILabel()
     private let imageView = UIImageView()
     private let descriptionLabel = UILabel()
-    let confirmLabel = UILabel()
+    private(set) var confirmLabel = UILabel()
     
     override func setStyle() {
         backgroundImageView.do {

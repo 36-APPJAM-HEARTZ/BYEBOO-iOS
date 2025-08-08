@@ -15,11 +15,11 @@ final class QuestStartView: BaseView {
     private var nickname: String?
     private var journey: String?
     
-    let backButton = UIImageView()
+    private(set) var backButton = UIImageView()
     private let titleLabel = UILabel()
     private let cloverImageView = UIImageView()
     private let descriptionLabel = UILabel()
-    let confirmButton = ByeBooButton(titleText: "시작하기", type: .enabled)
+    private(set) var confirmButton = ByeBooButton(titleText: "시작하기", type: .enabled)
     
     override func setStyle() {
         backgroundColor = .grayscale900
