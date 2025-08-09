@@ -13,7 +13,6 @@ final class QuestsViewModel {
     private let nameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>.init()
     private let journeySubject = PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never>.init()
     private let questsSubject = PassthroughSubject<Result<ProgressingQuestsEntity, ByeBooError>, Never>.init()
-    
     private let loadingSubject = PassthroughSubject<Bool, Never>.init()
     
     private(set) var output: Output
