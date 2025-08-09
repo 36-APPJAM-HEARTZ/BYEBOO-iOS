@@ -16,6 +16,7 @@ final class QuestCheckViewController: BaseViewController {
     
     let questsCheckView = QuestsCheckView()
     private let viewModel: QuestsViewModel
+    private lazy var coordinator: QuestCheckCoordinating = QuestCheckCoordinator(rootViewController: self)
     private var cancellable = Set<AnyCancellable>()
     private var questsEntity: ProgressingQuestsEntity?
     private var quest: QuestEntity?
@@ -71,7 +72,7 @@ final class QuestCheckViewController: BaseViewController {
         }
     }
     
-    private func bind() {
+    func bind() {
         cancellable.forEach { $0.cancel() }
         cancellable.removeAll()
         
@@ -91,7 +92,7 @@ final class QuestCheckViewController: BaseViewController {
             case let (.success(name), .success(journey), .success(quests)):
                 self?.updateQuestMainUI(name: name, journey: journey, quests: quests)
             case (.success(_), .success(_), .failure(_)):
-                self?.moveToQuestStart()
+                self?.coordinator.moveQuestStart(viewModel: self?.viewModel)
             default:
                 ByeBooLogger.error(ByeBooError.unknownError)
             }
@@ -132,21 +133,6 @@ final class QuestCheckViewController: BaseViewController {
         }
     }
     
-    private func moveToQuestStart() {
-        guard let startViewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            fatalError()
-        }
-        
-        let viewController = QuestStartViewController(viewModel: startViewModel)
-        viewController.modalPresentationStyle = .fullScreen
-        viewController.onStartedQuest = { [weak self] in
-            self?.viewModel.action(.questViewWillAppear)
-            self?.bind()
-        }
-        self.present(viewController, animated: false)
-    }
-    
     private func scrollToStep() {
         guard let questsEntity = questsEntity else { return }
         for (sectionIndex, step) in questsEntity.steps.enumerated() {
@@ -182,92 +168,29 @@ extension QuestCheckViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         quest = questsEntity?.steps[indexPath.section].quests[indexPath.item]
-        let currentStep = questsEntity?.currentStep
-        
         questID = quest?.questId
         
-        guard let step = currentStep,
+        guard let currentStep = questsEntity?.currentStep,
               let questNumber = quest?.questNumber else {
             return
         }
         
-        guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else { return }
-        
-        if questNumber < step {
-            let questType: QuestType = (quest?.questStyle == QuestStyle.recording.key) ? .question : .activation
-            let archiveQuestViewController = ArchiveQuestViewController(
-                viewModel: viewModel,
-                questID: questID ?? 1,
-                questType: questType
-            )
-            self.tabBarController?.tabBar.isHidden = true
-            self.navigationController?.pushViewController(archiveQuestViewController, animated: false)
-            
-        } else if questNumber == step {
-            let onProgressQuest: (() -> Void) = { self.moveWriteQuest(quest: self.quest) }
-            let modalView = QuestModalView(questNumber: questNumber, quest: quest?.question ?? "")
-            modalView.tipButton.addTarget(self, action: #selector(tipButtonDidTap), for: .touchUpInside)
-            
-            let modalBuilder = ModalBuilder(
-                modalView: modalView,
-                action: onProgressQuest,
-                rootViewController: self
-            )
-            modalBuilder.present()
+        if questNumber < currentStep {
+            coordinator.moveArchive(quest: quest)
+        }
+        if questNumber == currentStep {
+            coordinator.presentQuestModal(quest: quest)
         }
     }
     
-    private func moveWriteQuest(quest: QuestEntity?) {
-        if quest?.questNumber == 30 {
+    func checkQuestAllCompleted(questNumber: Int) {
+        if questNumber == QuestInformation.totalCount.rawValue {
             allCompleted = true
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.questsCheckView.questCollectionView.scrollToHeader(at: 0)
             }
         }
-        
-        if quest?.questStyle == QuestStyle.recording.key {
-            guard let viewModel = DIContainer.shared.resolve(type: WriteQuestionTypeViewModel.self),
-                  let questID = quest?.questId else {
-                return
-            }
-            let questionQuestViewController = WriteQuestionTypeQuestViewController(
-                viewModel: viewModel,
-                questID: questID
-            )
-            self.tabBarController?.tabBar.isHidden = true
-            self.navigationController?.pushViewController(questionQuestViewController, animated: false)
-        } else {
-            guard let viewModel = DIContainer.shared.resolve(type: WriteActiveTypeViewModel.self),
-                  let questID = quest?.questId else {
-                return
-            }
-            let activationQuestViewController = WriteActiveTypeQuestViewController(
-                viewModel: viewModel,
-                questID: questID
-            )
-            self.tabBarController?.tabBar.isHidden = true
-            self.navigationController?.pushViewController(activationQuestViewController, animated: false)
-        }
-    }
-    
-    @objc
-    private func tipButtonDidTap() {
-        
-        guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self),
-              let questID = questID else {
-            return
-        }
-        
-        let questType: QuestType = (quest?.questStyle == QuestStyle.recording.key) ? .question : .activation
-        let questTipViewController = QuestTipViewController(
-            viewModel: viewModel,
-            questID: questID,
-            questType: questType
-        )
-        questTipViewController.modalPresentationStyle = .fullScreen
-        let topViewController = UIApplication.shared.topViewController()
-        topViewController?.present(questTipViewController, animated: false)
     }
 }
 
@@ -292,17 +215,19 @@ extension QuestCheckViewController: UICollectionViewDataSource {
             return UICollectionViewCell()
         }
         
-        let state: QuestState
-        if quest.questNumber < currentStep {
-            state = .completed
-        } else if quest.questNumber == currentStep {
-            state = .ongoing
-        } else {
-            state = .locked
-        }
-        
+        let state = getQuestState(questNumber: quest.questNumber, currentStep: currentStep)
         cell.bind(state: state, questNumber: quest.questNumber)
         return cell
+    }
+    
+    private func getQuestState(questNumber: Int, currentStep: Int) -> QuestState {
+        if questNumber < currentStep {
+            return .completed
+        } else if questNumber == currentStep {
+            return .ongoing
+        } else {
+            return .locked
+        }
     }
     
     func collectionView(
