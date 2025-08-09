@@ -10,8 +10,7 @@ import UIKit
 final class OnboardingTextView: BaseView {
 
     private let titleLabel = UILabel()
-    
-    var text: String
+    private let text: String
     
     init(text: String) {
         self.text = text

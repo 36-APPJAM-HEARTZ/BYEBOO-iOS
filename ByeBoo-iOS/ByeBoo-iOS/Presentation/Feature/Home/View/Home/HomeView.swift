@@ -12,7 +12,7 @@ import Lottie
 final class HomeView: BaseView {
 
     private let backgroundImageView = LottieAnimationView(name: "Bori_home8")
-    let headerView = HomeHeaderView()
+    private(set) var headerView = HomeHeaderView()
     
     override func setStyle() {
         backgroundImageView.do {
