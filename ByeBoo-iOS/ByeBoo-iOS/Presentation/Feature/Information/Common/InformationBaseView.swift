@@ -16,7 +16,7 @@ final class InformationBaseView: BaseView {
     private var progressBarType: ProgressBarType
     private lazy var progressView = ProgressBarView(type: progressBarType)
     var informationView: BaseView
-    var nextButton = ByeBooButton(titleText: "다음으로", type: .disabled2)
+    private(set) var nextButton = ByeBooButton(titleText: "다음으로", type: .disabled2)
     
     init(informationView: BaseView, progressBarType: ProgressBarType) {
         self.informationView = informationView

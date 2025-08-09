@@ -12,8 +12,8 @@ import Then
 
 final class QuestsCheckView: BaseView {
     
-    let questCheckHeaderView = QuestCheckHeaderView()
-    let questCollectionView = UICollectionView(
+    private(set) var questCheckHeaderView = QuestCheckHeaderView()
+    private(set) var questCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: CollectionViewFactory.createLayout()
     )

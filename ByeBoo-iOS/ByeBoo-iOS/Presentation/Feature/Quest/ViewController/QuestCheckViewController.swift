@@ -14,13 +14,12 @@ final class QuestCheckViewController: BaseViewController {
     
     private var allCompleted = false
     
-    let questsCheckView = QuestsCheckView()
+    private let questsCheckView = QuestsCheckView()
     private let viewModel: QuestsViewModel
     private lazy var coordinator: QuestCheckCoordinating = QuestCheckCoordinator(rootViewController: self)
     private var cancellable = Set<AnyCancellable>()
     private var questsEntity: ProgressingQuestsEntity?
     private var quest: QuestEntity?
-    private var questID: Int?
     
     init(viewModel: QuestsViewModel) {
         self.viewModel = viewModel
@@ -163,7 +162,6 @@ extension QuestCheckViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         quest = questsEntity?.steps[indexPath.section].quests[indexPath.item]
-        questID = quest?.questId
         
         guard let currentStep = questsEntity?.currentStep,
               let questNumber = quest?.questNumber else {
