@@ -7,8 +7,6 @@
 
 import UIKit
 
-
-
 final class BottomNavigationViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +24,21 @@ final class BottomNavigationViewController: UITabBarController {
               let questViewModel = DIContainer.shared.resolve(type: QuestsViewModel.self)
         else {
             ByeBooLogger.error(ByeBooError.DIFailedError)
-            fatalError()
+            
+            //TODO: Login으로 변경
+            let tempViewController = OnboardingViewController()
+            
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                
+                ViewControllerUtils.setRootViewController(
+                    window: window,
+                    viewController: tempViewController,
+                    withAnimation: true
+                )
+            }
+            
+            return
         }
         
         self.viewControllers = [
@@ -46,13 +58,13 @@ final class BottomNavigationViewController: UITabBarController {
         itemAppearance.normal.iconColor = .grayscale400
         itemAppearance.normal.titleTextAttributes = [
             .foregroundColor: UIColor.grayscale400,
-            .font: FontManager.body5R14.font
+            .font: FontManager.body6R14.font
         ]
         
         itemAppearance.selected.iconColor = .primary300
         itemAppearance.selected.titleTextAttributes = [
             .foregroundColor: UIColor.primary300,
-            .font: FontManager.body5R14.font
+            .font: FontManager.body6R14.font
         ]
         
         appearance.stackedLayoutAppearance = itemAppearance

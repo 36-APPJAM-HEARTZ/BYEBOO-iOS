@@ -19,10 +19,10 @@ final class ArchiveQuestHeaderView: BaseView {
 
     private let type: QuestHeaderType
     private let stepStackView = UIStackView()
-    let stepLabel = UILabel()
-    let questNumberLabel = UILabel()
-    let dateLabel = UILabel()
-    let questTitleLabel = UILabel()
+    private let stepLabel = UILabel()
+    private let questNumberLabel = UILabel()
+    private let dateLabel = UILabel()
+    private(set) var questTitleLabel = UILabel()
     
     private let stepNumber: Int
     private let questNumber: Int
@@ -66,12 +66,12 @@ final class ArchiveQuestHeaderView: BaseView {
         }
         
         questNumberLabel.do {
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
             $0.textColor = .grayscale400
         }
         
         dateLabel.do {
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
             $0.textColor = .grayscale400
         }
         

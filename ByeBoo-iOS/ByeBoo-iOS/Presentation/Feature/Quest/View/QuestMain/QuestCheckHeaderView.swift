@@ -31,7 +31,7 @@ final class QuestCheckHeaderView: BaseView {
             $0.text = "오늘도 한 걸음 나아가볼까요?"
             $0.textColor = .grayscale400
             $0.textAlignment = .left
-            $0.font = FontManager.body5R14.font
+            $0.font = FontManager.body6R14.font
         }
     }
     

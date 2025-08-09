@@ -63,7 +63,7 @@ final class QuestModalView: BaseView, ModalProtocol {
         
         tipButton.do {
             $0.setTitle("작성 TIP", for: .normal)
-            $0.titleLabel?.font = FontManager.body5R14.font
+            $0.titleLabel?.font = FontManager.body6R14.font
             $0.backgroundColor = .clear
             $0.setTitleColor(.grayscale300, for: .normal)
             $0.layer.cornerRadius = 12.adjustedW

@@ -13,10 +13,10 @@ struct DefaultUsersRepository: UsersInterface {
     
     init(
         network: NetworkService,
-        userDefatulsService: UserDefaultService
+        userDefaultsService: UserDefaultService
     ) {
         self.network = network
-        self.userDefaultsService = userDefatulsService
+        self.userDefaultsService = userDefaultsService
     }
     
     // MARK: Network

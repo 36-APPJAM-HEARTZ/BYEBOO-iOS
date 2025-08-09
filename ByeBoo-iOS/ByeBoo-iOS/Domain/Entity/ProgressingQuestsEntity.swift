@@ -32,30 +32,43 @@ extension ProgressingQuestsEntity {
         return .init(
             progressPeriod: 1,
             currentStep: 1,
-            steps: [StepEntity.stub()]
+            steps: (1...5).map { StepEntity.stub(stepNumber: $0) }
         )
     }
 }
 
 extension StepEntity {
     
-    static func stub() -> Self {
+    static func stub(stepNumber: Int) -> Self {
         return .init(
-            stepNumber: 1,
-            step: "감정 쏟아내기",
-            quests: [QuestEntity.stub()]
+            stepNumber: stepNumber,
+            step: stepName(for: stepNumber),
+            quests: (1...6).map { _ in
+                QuestEntity.stub(index: (stepNumber))
+            }
         )
+    }
+    
+    private static func stepName(for number: Int) -> String {
+        switch number {
+        case 1: return "마음 깨우기"
+        case 2: return "혼자 있는 힘 기르기"
+        case 3: return "감정에 이름 붙이기"
+        case 4: return "혼자 있는 힘 기르기"
+        case 5: return "스스로에게 대접하기"
+        default: return "단계 \(number)"
+        }
     }
 }
 
 extension QuestEntity {
     
-    static func stub() -> Self {
+    static func stub(index: Int) -> Self {
         return .init(
-            questId: 31,
+            questId: 30 + index,
             question: "무슨 일이 있었나요?",
             questStyle: "RECORDING",
-            questNumber: 1
+            questNumber: index
         )
     }
 }
