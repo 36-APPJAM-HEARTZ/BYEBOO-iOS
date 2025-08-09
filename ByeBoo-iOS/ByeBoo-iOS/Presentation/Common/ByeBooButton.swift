@@ -66,7 +66,7 @@ enum ByeBooButtonType {
 }
 
 final class ByeBooButton: UIButton {
-    private var titleText: String
+    private let titleText: String
     private var type: ByeBooButtonType
     
     init(
@@ -107,7 +107,6 @@ final class ByeBooButton: UIButton {
     }
     
     func updateTitle(_ title: String) {
-        self.titleText = title
         self.setTitle(titleText, for: .normal)
     }
 }

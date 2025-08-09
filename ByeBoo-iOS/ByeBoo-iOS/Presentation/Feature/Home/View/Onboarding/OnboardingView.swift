@@ -10,9 +10,9 @@ import UIKit
 final class OnboardingView: BaseView {
 
     private let backgroundImageView = UIImageView()
-    let headerView = OnboardingHeaderView()
+    private(set) var headerView = OnboardingHeaderView()
     private let contentView = OnboardingContentView()
-    let nextButton = ByeBooButton(titleText: "다음으로", type: .enabled)
+    private(set) var nextButton = ByeBooButton(titleText: "다음으로", type: .enabled)
     
     var step: OnboardingStep = .first {
         didSet {

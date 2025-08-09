@@ -9,10 +9,11 @@ import UIKit
 
 final class HomeHeaderView: BaseView {
 
+    private(set) var homeStateView: HomeStateView = HomeStateView(state: .beforeJourneyStart(journey: .stub()))
+    
     private let stackView = UIStackView()
-    let homeStateView: HomeStateView = HomeStateView(state: .beforeJourneyStart(journey: .stub()))
     private var journeyProgressView: JourneyProgressView? = nil
-    let textBox: OnboardingTextView = OnboardingTextView(text: "안녕")
+    private let textBox: OnboardingTextView = OnboardingTextView(text: "안녕")
     
     private let state: HomeState = .afterJourney
     

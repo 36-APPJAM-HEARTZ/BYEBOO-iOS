@@ -22,7 +22,7 @@ final class JourneyProgressView: BaseView {
         layer.cornerRadius = 12
         
         titleLabel.do {
-            $0.text = "\(name)님의 \(journeyTitle)"
+            $0.text = "\(name)님의 \(journeyTitle) 여정"
             $0.font = FontManager.sub2Sb18.font
             $0.textColor = .grayscale50
         }
@@ -67,7 +67,6 @@ final class JourneyProgressView: BaseView {
             $0.bottom.equalToSuperview().inset(16.adjustedH)
         }
         progressView.snp.makeConstraints {
-//            $0.width.equalTo(230.adjustedW)
             $0.height.equalTo(6.adjustedH)
         }
         

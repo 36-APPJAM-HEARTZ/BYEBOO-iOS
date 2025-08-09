@@ -57,6 +57,7 @@ final class HomeViewController: BaseViewController {
 extension HomeViewController {
     @objc
     private func headerDidTap() {
+        guard tabBarController?.viewControllers?[safe: 1] != nil else { return }
         navigationController?.tabBarController?.selectedIndex = 1
     }
 }
