@@ -25,7 +25,7 @@ final class TextBoxView: BaseView {
         self.titleLabel.text = title
         
         if let emotionType {
-            emotionChip = ByeBooEmotionChip(emotionType: emotionType, isPurple: true)
+            emotionChip = ByeBooEmotionChip(emotionType: emotionType)
         }
         
         super.init(frame: .zero)
