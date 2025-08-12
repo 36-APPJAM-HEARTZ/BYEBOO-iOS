@@ -12,11 +12,13 @@ import SnapKit
 
 final class QuestCheckViewController: BaseViewController {
     
+    private static let totalQuestCount = 30
+    private static let lastStep = 5
     private var allCompleted = false
     
     private let questsCheckView = QuestsCheckView()
     private let viewModel: QuestsViewModel
-    private lazy var coordinator: QuestCheckCoordinating = QuestCheckCoordinator(rootViewController: self)
+    var coordinator: QuestCheckCoordinating?
     private var cancellable = Set<AnyCancellable>()
     private var questsEntity: ProgressingQuestsEntity?
     private var quest: QuestEntity?
@@ -86,7 +88,7 @@ final class QuestCheckViewController: BaseViewController {
             case let (.success(name), .success(journey), .success(quests)):
                 self?.updateQuestMainUI(name: name, journey: journey, quests: quests)
             case (.success(_), .success(_), .failure(_)):
-                self?.coordinator.moveQuestStart(viewModel: self?.viewModel)
+                self?.coordinator?.moveQuestStart(viewModel: self?.viewModel)
             default:
                 ByeBooLogger.error(ByeBooError.unknownError)
             }

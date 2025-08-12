@@ -41,10 +41,24 @@ final class BottomNavigationViewController: UITabBarController {
             return
         }
         
+        let questCheckViewController = QuestCheckViewController(viewModel: questViewModel)
+        questCheckViewController.coordinator = QuestCheckCoordinator(rootViewController: questCheckViewController)
         self.viewControllers = [
-            createViewController(for: HomeViewController(viewModel: homeViewModel), title: "홈", imageName: .homeOff),
-            createViewController(for: QuestCheckViewController(viewModel: questViewModel), title: "퀘스트", imageName: .questOff),
-            createViewController(for: MyPageViewController(viewModel: myPageViewModel), title: "내 정보", imageName: .userOff)
+            createViewController(
+                for: HomeViewController(viewModel: homeViewModel),
+                title: "홈",
+                imageName: .homeOff
+            ),
+            createViewController(
+                for: questCheckViewController,
+                title: "퀘스트",
+                imageName: .questOff
+            ),
+            createViewController(
+                for: MyPageViewController(viewModel: myPageViewModel),
+                title: "내 정보",
+                imageName: .userOff
+            )
         ]
     }
     

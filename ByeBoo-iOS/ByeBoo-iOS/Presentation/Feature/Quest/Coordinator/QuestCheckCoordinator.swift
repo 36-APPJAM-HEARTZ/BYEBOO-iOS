@@ -9,7 +9,7 @@ import UIKit
 
 final class QuestCheckCoordinator: QuestCheckCoordinating {
     
-    private let rootViewController: QuestCheckViewController
+    private weak var rootViewController: QuestCheckViewController?
     
     init(rootViewController: QuestCheckViewController) {
         self.rootViewController = rootViewController
@@ -26,9 +26,9 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
         viewController.modalPresentationStyle = .fullScreen
         viewController.onStartedQuest = { [weak self] in
             questsViewModel.action(.questViewWillAppear)
-            self?.rootViewController.bind()
+            self?.rootViewController?.bind()
         }
-        rootViewController.present(viewController, animated: false)
+        rootViewController?.present(viewController, animated: false)
     }
     
     func moveArchive(quest: QuestEntity?) {
@@ -40,15 +40,15 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
             questID: quest?.questId ?? 1,
             questType: questType
         )
-        rootViewController.tabBarController?.tabBar.isHidden = true
-        rootViewController.navigationController?.pushViewController(archiveQuestViewController, animated: false)
+        rootViewController?.tabBarController?.tabBar.isHidden = true
+        rootViewController?.navigationController?.pushViewController(archiveQuestViewController, animated: false)
     }
     
     func presentQuestModal(quest: QuestEntity?) {
         guard let quest = quest else { return }
 
         let onProgressQuest: (() -> Void) = {
-            self.rootViewController.checkQuestAllCompleted(questNumber: quest.questNumber)
+            self.rootViewController?.checkQuestAllCompleted(questNumber: quest.questNumber)
             self.moveWriteQuest(quest: quest)
         }
         let modalView = QuestModalView(questNumber: quest.questNumber, quest: quest.question)
@@ -56,6 +56,7 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
             self?.moveQuestTip(quest: quest)
         }, for: .touchUpInside)
         
+        guard let rootViewController = rootViewController else { return }
         let modalBuilder = ModalBuilder(
             modalView: modalView,
             action: onProgressQuest,
@@ -97,8 +98,8 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
             viewModel: viewModel,
             questID: questID
         )
-        rootViewController.tabBarController?.tabBar.isHidden = true
-        rootViewController.navigationController?.pushViewController(questionQuestViewController, animated: false)
+        rootViewController?.tabBarController?.tabBar.isHidden = true
+        rootViewController?.navigationController?.pushViewController(questionQuestViewController, animated: false)
     }
     
     private func moveToWriteActivity(questID: Int) {
@@ -109,7 +110,7 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
             viewModel: viewModel,
             questID: questID
         )
-        rootViewController.tabBarController?.tabBar.isHidden = true
-        rootViewController.navigationController?.pushViewController(activationQuestViewController, animated: false)
+        rootViewController?.tabBarController?.tabBar.isHidden = true
+        rootViewController?.navigationController?.pushViewController(activationQuestViewController, animated: false)
     }
 }
