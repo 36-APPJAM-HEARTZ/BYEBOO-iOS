@@ -77,6 +77,7 @@ final class ByeBooEmotionChip: BaseView {
     
     override func setStyle() {
         self.do {
+            $0.backgroundColor = chipState.backgroundColor
             $0.layer.opacity = chipState.backgroundOpacity
             $0.layer.borderColor = chipState.borderColor.cgColor
             $0.layer.cornerRadius = 12.adjustedH
