@@ -15,10 +15,8 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
         self.rootViewController = rootViewController
     }
     
-    func moveQuestStart(viewModel: QuestsViewModel?) {
-        guard let startViewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self),
-              let questsViewModel = viewModel else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
+    func moveQuestStart() {
+        guard let startViewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {            ByeBooLogger.error(ByeBooError.DIFailedError)
             fatalError()
         }
         

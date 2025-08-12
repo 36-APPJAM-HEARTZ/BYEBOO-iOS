@@ -7,7 +7,7 @@
 
 protocol QuestCheckCoordinating {
     
-    func moveQuestStart(viewModel: QuestsViewModel?)
+    func moveQuestStart()
     func moveArchive(quest: QuestEntity?)
     func presentQuestModal(quest: QuestEntity?)
     func moveQuestTip(quest: QuestEntity?)
