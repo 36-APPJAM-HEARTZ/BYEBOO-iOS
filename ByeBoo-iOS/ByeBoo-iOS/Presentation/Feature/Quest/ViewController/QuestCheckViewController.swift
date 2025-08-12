@@ -134,13 +134,13 @@ final class QuestCheckViewController: BaseViewController {
             
             if let _ = step.quests.firstIndex(where: { $0.questNumber == questsEntity.currentStep }) {
                 // MARK: - 마지막 퀘스트 완료 시 STEP 1으로 스크롤
-                if quest?.questNumber == QuestInformation.totalCount.rawValue && allCompleted {
+                if quest?.questNumber == QuestCheckViewController.totalQuestCount && allCompleted {
                     collectionView.scrollToHeader(at: 0)
                     return
                 }
                 
                 // MARK: - 마지막 스텝 진입 시 맨 아래로 스크롤
-                if step.stepNumber == QuestInformation.lastStep.rawValue {
+                if step.stepNumber == QuestCheckViewController.lastStep {
                     let maxOffsetY = collectionView.contentSize.height - collectionView.bounds.height + 30
                     let bottomOffset = CGPoint(
                         x: 0,
@@ -169,15 +169,15 @@ extension QuestCheckViewController: UICollectionViewDelegate {
         }
         
         if questNumber < currentStep {
-            coordinator.moveArchive(quest: quest)
+            coordinator?.moveArchive(quest: quest)
         }
         if questNumber == currentStep {
-            coordinator.presentQuestModal(quest: quest)
+            coordinator?.presentQuestModal(quest: quest)
         }
     }
     
     func checkQuestAllCompleted(questNumber: Int) {
-        if questNumber == QuestInformation.totalCount.rawValue {
+        if questNumber == QuestCheckViewController.totalQuestCount {
             allCompleted = true
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
