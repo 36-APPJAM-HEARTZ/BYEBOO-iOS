@@ -24,10 +24,6 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
         
         let viewController = QuestStartViewController(viewModel: startViewModel)
         viewController.modalPresentationStyle = .fullScreen
-        viewController.onStartedQuest = { [weak self] in
-            questsViewModel.action(.questViewWillAppear)
-            self?.rootViewController?.bind()
-        }
         rootViewController?.present(viewController, animated: false)
     }
     
