@@ -33,7 +33,7 @@ final class EmotionBottomSheetViewController: BaseViewController {
         isFirstTouch = false
         selectedChip = nil
         rootView.emotionChips.forEach {
-            $0.chipState = .defaultState
+            $0.updateChipState(.defaultState)
             $0.updateChipUI()
         }
     }
@@ -45,17 +45,17 @@ final class EmotionBottomSheetViewController: BaseViewController {
         if !isFirstTouch {
             isFirstTouch = true
             rootView.emotionChips.forEach {
-                $0.chipState = .unselected
+                $0.updateChipState(.defaultState)
                 $0.updateChipUI()
             }
         }
         
         if selectedChip === chip { return }
         
-        selectedChip?.chipState = .unselected
+        selectedChip?.updateChipState(.unselected)
         selectedChip?.updateChipUI()
         
-        chip.chipState = .selected
+        chip.updateChipState(.selected)
         chip.updateChipUI()
          
         selectedChip = chip

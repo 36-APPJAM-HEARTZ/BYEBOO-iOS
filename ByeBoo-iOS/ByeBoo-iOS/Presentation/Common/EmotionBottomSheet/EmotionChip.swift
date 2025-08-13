@@ -55,10 +55,10 @@ enum EmotionChipState {
 }
 
 final class ByeBooEmotionChip: BaseView {
-    var chipState: EmotionChipState = .defaultState
+    private(set) var chipState: EmotionChipState = .defaultState
     private var emotionImage: UIImageView
-    var emotionTag = UILabel()
-    var emotionType: ByeBooEmotion
+    private(set) var emotionTag = UILabel()
+    private(set) var emotionType: ByeBooEmotion
     
     init(emotionType: ByeBooEmotion) {
         self.emotionImage = emotionType.emotionImage
@@ -119,6 +119,10 @@ final class ByeBooEmotionChip: BaseView {
 }
 
 extension ByeBooEmotionChip {
+    func updateChipState(_ chipState: EmotionChipState) {
+        self.chipState = chipState
+    }
+    
     func updateEmotion(_ emotionType: ByeBooEmotion) {
         self.emotionType = emotionType
         self.emotionImage.image = emotionType.emotionImage.image
