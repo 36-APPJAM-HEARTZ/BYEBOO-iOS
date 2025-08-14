@@ -42,7 +42,6 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
         guard let quest = quest else { return }
 
         let onProgressQuest: (() -> Void) = {
-            self.rootViewController?.checkQuestAllCompleted(questNumber: quest.questNumber)
             self.moveWriteQuest(quest: quest)
         }
         let modalView = QuestModalView(questNumber: quest.questNumber, quest: quest.question)

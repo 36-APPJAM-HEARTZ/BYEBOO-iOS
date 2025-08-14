@@ -12,9 +12,7 @@ import SnapKit
 
 final class QuestCheckViewController: BaseViewController {
     
-    private static let totalQuestCount = 30
     private static let lastStep = 5
-    private var allCompleted = false
     
     private let questsCheckView = QuestsCheckView()
     private let viewModel: QuestsViewModel
@@ -89,7 +87,7 @@ final class QuestCheckViewController: BaseViewController {
             case let (.success(name), .success(journey), .success(quests)):
                 self?.updateQuestMainUI(name: name, journey: journey, quests: quests)
             case (.success(_), .success(_), .failure(_)):
-                self?.coordinator?.moveQuestStart(viewModel: self?.viewModel)
+                self?.coordinator?.moveQuestStart()
             default:
                 ByeBooLogger.error(ByeBooError.unknownError)
             }
@@ -136,12 +134,6 @@ final class QuestCheckViewController: BaseViewController {
             let collectionView = questsCheckView.questCollectionView
             
             if let _ = step.quests.firstIndex(where: { $0.questNumber == questsEntity.currentStep }) {
-                // MARK: - 마지막 퀘스트 완료 시 STEP 1으로 스크롤
-                if quest?.questNumber == QuestCheckViewController.totalQuestCount && allCompleted {
-                    collectionView.scrollToHeader(at: 0)
-                    return
-                }
-                
                 // MARK: - 마지막 스텝 진입 시 맨 아래로 스크롤
                 if step.stepNumber == QuestCheckViewController.lastStep {
                     let maxOffsetY = collectionView.contentSize.height - collectionView.bounds.height + 30
@@ -176,16 +168,6 @@ extension QuestCheckViewController: UICollectionViewDelegate {
         }
         if questNumber == currentStep {
             coordinator?.presentQuestModal(quest: quest)
-        }
-    }
-    
-    func checkQuestAllCompleted(questNumber: Int) {
-        if questNumber == QuestCheckViewController.totalQuestCount {
-            allCompleted = true
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.questsCheckView.questCollectionView.scrollToHeader(at: 0)
-            }
         }
     }
 }
