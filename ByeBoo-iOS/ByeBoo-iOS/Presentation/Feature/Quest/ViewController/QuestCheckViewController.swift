@@ -26,6 +26,7 @@ final class QuestCheckViewController: BaseViewController {
     init(viewModel: QuestsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
+        self.coordinator = QuestCheckCoordinator(rootViewController: self)
     }
     
     required init?(coder: NSCoder) {
