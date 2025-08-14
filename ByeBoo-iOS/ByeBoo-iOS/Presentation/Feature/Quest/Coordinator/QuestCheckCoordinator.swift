@@ -44,18 +44,22 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
         let onProgressQuest: (() -> Void) = {
             self.moveWriteQuest(quest: quest)
         }
-        let modalView = QuestModalView(questNumber: quest.questNumber, quest: quest.question)
-        modalView.tipButton.addAction(UIAction { [weak self] _ in
-            self?.moveQuestTip(quest: quest)
-        }, for: .touchUpInside)
         
         guard let rootViewController = rootViewController else { return }
         let modalBuilder = ModalBuilder(
-            modalView: modalView,
+            modalView: createQuestModalView(quest: quest),
             action: onProgressQuest,
             rootViewController: rootViewController
         )
         modalBuilder.present()
+    }
+    
+    private func createQuestModalView(quest: QuestEntity) -> BaseView & ModalProtocol {
+        let modalView = QuestModalView(questNumber: quest.questNumber, quest: quest.question)
+        modalView.tipButton.addAction(UIAction { [weak self] _ in
+            self?.moveQuestTip(quest: quest)
+        }, for: .touchUpInside)
+        return modalView
     }
     
     func moveQuestTip(quest: QuestEntity?) {
