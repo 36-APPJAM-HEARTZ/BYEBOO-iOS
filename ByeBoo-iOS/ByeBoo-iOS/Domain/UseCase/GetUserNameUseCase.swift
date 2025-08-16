@@ -22,3 +22,9 @@ struct DefaultGetUserNameUseCase: GetUserNameUseCase {
         return repository.getUserName() ?? "이름"
     }
 }
+
+struct MockGetUserNameUseCase: GetUserNameUseCase {
+    func execute() -> String {
+        return "하츠핑"
+    }
+}
