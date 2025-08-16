@@ -22,22 +22,11 @@ jobs:
 
       - name: Build with xcodebuild
         run: |
-          # 사용 가능한 iPhone 시뮬레이터 선택
-          DEVICE=$(xcrun simctl list devices available | grep "iPhone 15" | head -n 1 | awk -F '(' '{print $1}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-          echo "Using simulator: $DEVICE"
-
-          # 해당 기기에 사용 가능한 iOS 버전들 중에서 선택
-          DEVICE_WITH_OS=$(xcrun simctl list devices available | grep "$DEVICE" | head -n 1 | awk -F '(' '{print $1}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-          AVAILABLE_OS=$(echo "$DEVICE_WITH_OS" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-          
-          echo "Device with OS info: $DEVICE_WITH_OS"
-          echo "Extracted iOS version: $AVAILABLE_OS"
-          
           set -o pipefail
           xcodebuild \
             -project ByeBoo-iOS/ByeBoo-iOS.xcodeproj \
             -scheme ByeBoo-iOS \
             -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,name=${DEVICE}, OS=${AVAILABLE_OS}" \
+            -destination "platform=iOS Simulator,name=iPhone 15,OS=17.2" \
             clean build | xcpretty
 
