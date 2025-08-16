@@ -19,8 +19,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         DIContainer.shared.dependencyInject()
+        
+        guard let viewModel = DIContainer.shared.resolve(type: InformationViewModel.self) else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            fatalError()
+        }
+        let viewController = InformationViewController(viewModel: viewModel)
 
-        let viewController = OnboardingViewController()
         let navigationController = UINavigationController(rootViewController: viewController)
         
         let window = UIWindow(windowScene: windowScene)
