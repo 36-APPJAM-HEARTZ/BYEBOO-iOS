@@ -12,8 +12,7 @@ final class HomeOnboardingView: BaseView {
     private let backgroundImageView = UIImageView()
     private let backgroundView = UIView()
     private let descriptionLabel = UILabel()
-    private let bubbleImageView = UIImageView()
-    private let speechLabel = UILabel()
+    private let speechBoxView = SpeechTextBoxView(title: "")
     let characterImageView = UIImageView()
     private let foregroundView = UIView()
     
@@ -31,14 +30,6 @@ final class HomeOnboardingView: BaseView {
             $0.textAlignment = .center
             $0.alpha = 0
         }
-        bubbleImageView.do {
-            $0.image = .speechBubble
-        }
-        speechLabel.do {
-            $0.font = FontManager.body2M16.font
-            $0.textColor = .primary50
-            $0.textAlignment = .center
-        }
         characterImageView.do {
             $0.image = .newborn
         }
@@ -53,8 +44,7 @@ final class HomeOnboardingView: BaseView {
             backgroundImageView,
             backgroundView,
             descriptionLabel,
-            bubbleImageView,
-            speechLabel,
+            speechBoxView,
             characterImageView,
             foregroundView
         )
@@ -68,16 +58,12 @@ final class HomeOnboardingView: BaseView {
             $0.edges.equalToSuperview()
         }
         descriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(bubbleImageView.snp.top)
+            $0.top.equalTo(speechBoxView.snp.top)
             $0.centerX.equalToSuperview()
         }
-        bubbleImageView.snp.makeConstraints {
-            $0.bottom.equalTo(characterImageView.snp.top).offset(-36.adjustedH)
-            $0.centerX.equalToSuperview()
-        }
-        speechLabel.snp.makeConstraints {
-            $0.top.equalTo(bubbleImageView.snp.top).inset(14.adjustedH)
-            $0.centerX.equalToSuperview()
+        speechBoxView.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(316.adjustedH)
+            $0.horizontalEdges.equalToSuperview()
         }
         characterImageView.snp.makeConstraints {
             $0.bottom.equalToSuperview().inset(143.adjustedH)
@@ -91,15 +77,15 @@ final class HomeOnboardingView: BaseView {
 
 extension HomeOnboardingView {
     func startAnimation() {
-        UIView.transition(with: self.speechLabel, duration: 0.5, options: .transitionCrossDissolve) {
-            self.speechLabel.text = "바이부에 오신 걸 환영해요!"
+        UIView.transition(with: self.speechBoxView, duration: 0.5, options: .transitionCrossDissolve) {
+            self.speechBoxView.updateText("바이부에 오신 걸 환영해요!")
         } completion: { _ in
-            UIView.transition(with: self.speechLabel, duration: 0.5, options: .transitionCrossDissolve) {
-                self.speechLabel.text = "저는 보리라고 해요."
+            UIView.transition(with: self.speechBoxView, duration: 0.5, options: .transitionCrossDissolve) {
+                self.speechBoxView.updateText("저는 보리라고 해요.")
             } completion: { _ in
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                    UIView.transition(with: self.speechLabel, duration: 1, options: .transitionCrossDissolve) {
-                        self.speechLabel.text = "여정을 시작하러 가볼까요?"
+                    UIView.transition(with: self.speechBoxView, duration: 1, options: .transitionCrossDissolve) {
+                        self.speechBoxView.updateText("여정을 시작하러 가볼까요?")
                         
                         self.descriptionLabel.alpha = 1
                         self.descriptionLabel.transform = CGAffineTransform(translationX: 0, y: -37.adjustedH)
