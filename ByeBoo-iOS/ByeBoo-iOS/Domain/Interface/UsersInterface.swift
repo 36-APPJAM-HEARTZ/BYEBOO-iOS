@@ -10,6 +10,8 @@ import Foundation
 protocol UsersInterface {
     func getUserName() -> String?
     func getUserID() -> Int?
+    func setHelperShown()
+    func getIsHelperShown() -> Bool?
     func fetchJourney() async throws -> JourneyEntity
     func sendUser(name: String, feeling: String, questStyle: String) async throws -> UserEntity
     func fetchCharacterDialogue() async throws -> String

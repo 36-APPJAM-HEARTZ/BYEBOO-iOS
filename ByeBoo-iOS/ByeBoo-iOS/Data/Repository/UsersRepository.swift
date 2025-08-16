@@ -80,6 +80,14 @@ struct DefaultUsersRepository: UsersInterface {
     func getUserID() -> Int? {
         userDefaultsService.load(key: .userID)
     }
+    
+    func setHelperShown() {
+        _ = userDefaultsService.save(true, key: .isHelperShown)
+    }
+    
+    func getIsHelperShown() -> Bool? {
+        userDefaultsService.load(key: .isHelperShown)
+    }
 }
 
 struct MockUserRepository: UsersInterface {
@@ -89,6 +97,12 @@ struct MockUserRepository: UsersInterface {
     
     func getUserID() -> Int? {
         1
+    }
+    
+    func setHelperShown() { }
+    
+    func getIsHelperShown() -> Bool? {
+        false
     }
     
     func fetchJourney() async throws -> JourneyEntity {

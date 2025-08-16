@@ -74,6 +74,13 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: QuestTipUseCase.self) { _ in
             return DefaultQuestTipUseCase(questTipRepository: questRepository)
         }
-                                                                        
+            
+        DIContainer.shared.register(type: SetHelperUseCase.self) { _ in
+            return DefaultSetHelperUseCase(repository: userRepository)
+        }
+        
+        DIContainer.shared.register(type: GetHelperUseCase.self) { _ in
+            return DefaultGetHelperUseCase(repository: userRepository)
+        }
     }
 }
