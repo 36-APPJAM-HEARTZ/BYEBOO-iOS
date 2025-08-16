@@ -27,8 +27,8 @@ jobs:
           echo "Using simulator: $DEVICE"
 
           # 해당 기기에 사용 가능한 iOS 버전들 중에서 선택
-          DEVICE_WITH_OS=$(xcrun simctl list devices available | grep "$DEVICE" | head -n 1)
-          AVAILABLE_OS=$(echo "$DEVICE_WITH_OS" | sed 's/.*iOS \([0-9.]*\).*/\1/')
+          DEVICE_WITH_OS=$(xcrun simctl list devices available | grep "$DEVICE" | head -n 1 | awk -F '(' '{print $1}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+          AVAILABLE_OS=$(echo "$DEVICE_WITH_OS" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
           
           echo "Device with OS info: $DEVICE_WITH_OS"
           echo "Extracted iOS version: $AVAILABLE_OS"
