@@ -12,13 +12,14 @@ extension UIView {
         views.forEach { self.addSubview($0) }
     }
     
-    func setBlurEffect() {
+    func setBlurEffect(alpha: CGFloat = 1) {
         let blurEffect = UIBlurEffect(style: .dark)
         let blurView = UIVisualEffectView(effect: blurEffect)
         insertSubview(blurView, at: 0)
         blurView.do {
             $0.layer.cornerRadius = 12
             $0.clipsToBounds = true
+            $0.alpha = alpha
         }
         blurView.snp.makeConstraints {
             $0.edges.equalToSuperview()
