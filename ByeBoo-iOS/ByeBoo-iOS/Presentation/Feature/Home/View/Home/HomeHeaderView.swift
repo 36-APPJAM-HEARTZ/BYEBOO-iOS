@@ -13,7 +13,6 @@ final class HomeHeaderView: BaseView {
     
     private let stackView = UIStackView()
     private var journeyProgressView: JourneyProgressView? = nil
-    private let textBox: OnboardingTextView = OnboardingTextView(text: "안녕")
     
     private let state: HomeState = .afterJourney
     
@@ -30,8 +29,7 @@ final class HomeHeaderView: BaseView {
         addSubview(stackView)
     
         stackView.addArrangedSubviews(
-            homeStateView,
-            textBox
+            homeStateView
         )
     }
     
@@ -45,10 +43,6 @@ final class HomeHeaderView: BaseView {
 }
 
 extension HomeHeaderView {
-    func updateTextBox(_ text: String) {
-        textBox.updateText(text)
-    }
-    
     func updateProgress(_ progress: Int) {
         journeyProgressView?.updateProgress(progress)
     }
@@ -73,8 +67,7 @@ extension HomeHeaderView {
             
             stackView.addArrangedSubviews(
                 homeStateView,
-                journeyProgressView,
-                textBox
+                journeyProgressView
             )
         }
         
