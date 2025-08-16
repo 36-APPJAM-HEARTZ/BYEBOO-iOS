@@ -13,6 +13,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set stable Xcode version
+        run: |
+          # 안정적인 Xcode 버전 찾아서 설정
+          if [ -d "/Applications/Xcode_15.4.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+            echo "Using Xcode 15.4"
+          elif [ -d "/Applications/Xcode_15.3.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_15.3.app/Contents/Developer
+            echo "Using Xcode 15.3"
+          elif [ -d "/Applications/Xcode_15.2.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
+            echo "Using Xcode 15.2"
+          else
+            echo "Using default Xcode (may cause iOS runtime issues)"
+          fi
+          
       - name: Generate xcconfig
         run: |
           mkdir -p ByeBoo-iOS/Data/Config
@@ -22,7 +38,7 @@ jobs:
 
       - name: Build with xcodebuild
         run: |
-          DEVICE=$(xcrun simctl list devices available | grep "iPhone" | head -n 1 | awk -F '(' '{print $1}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+          DEVICE=$(xcrun simctl list devices available | grep "iPhone (1[4-5])" | head -n 1 | awk -F '(' '{print $1}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
           echo "Using simulator: $DEVICE"
           set -o pipefail
           xcodebuild \
