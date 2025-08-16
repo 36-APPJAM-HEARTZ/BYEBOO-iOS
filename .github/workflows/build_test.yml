@@ -38,7 +38,7 @@ jobs:
 
       - name: Build with xcodebuild
         run: |
-          DEVICE=$(xcrun simctl list devices available | grep "iPhone (1[4-5])" | head -n 1 | awk -F '(' '{print $1}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+          DEVICE=$(xcrun simctl list devices available | grep "iPhone 15" | head -n 1 | awk -F '(' '{print $1}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
           echo "Using simulator: $DEVICE"
           set -o pipefail
           xcodebuild \
