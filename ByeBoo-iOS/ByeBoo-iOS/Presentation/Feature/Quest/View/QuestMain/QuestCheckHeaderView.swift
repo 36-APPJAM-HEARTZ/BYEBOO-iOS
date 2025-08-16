@@ -26,9 +26,10 @@ final class QuestCheckHeaderView: BaseView {
             $0.font = FontManager.head1M24.font
             $0.numberOfLines = 0
             $0.textAlignment = .left
+            $0.textColor = .grayscale50
         }
         subTitleLabel.do {
-            $0.text = "오늘도 한 걸음 나아가볼까요?"
+            $0.text = "오늘도 한 걸음 나아가 볼까요?"
             $0.textColor = .grayscale400
             $0.textAlignment = .left
             $0.font = FontManager.body6R14.font
@@ -62,9 +63,7 @@ final class QuestCheckHeaderView: BaseView {
     func updateHeader(nickname: String, journey: String) {
         self.nickname = nickname
         self.journey = journey
-        titleLabel.attributedText = "\(nickname)님, 지금\n\(journey) 여정을 진행 중이에요".makeTitle(
-            rangedText: "\(journey) 여정"
-        )
+        titleLabel.text = "\(nickname)님, 지금\n\(journey) 여정을 진행 중이에요"
     }
     
     func updatePeriod(_ period: Int) {
