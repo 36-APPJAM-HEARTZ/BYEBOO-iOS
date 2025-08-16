@@ -39,6 +39,7 @@ final class HomeView: BaseView {
         headerView.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.horizontalEdges.equalToSuperview()
+            $0.height.equalTo(268.adjustedH)
         }
         speechBoxView.snp.makeConstraints {
             $0.top.equalToSuperview().offset(316.adjustedH)
@@ -64,5 +65,9 @@ extension HomeView {
     
     func updateState(_ state: HomeState) {
         headerView.updateState(state)
+    }
+    
+    func helperDidTap() {
+        headerView.helperDidTap()
     }
 }

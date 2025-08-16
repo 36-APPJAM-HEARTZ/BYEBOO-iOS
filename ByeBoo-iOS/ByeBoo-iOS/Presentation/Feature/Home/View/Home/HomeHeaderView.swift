@@ -13,6 +13,9 @@ final class HomeHeaderView: BaseView {
     
     private let stackView = UIStackView()
     private var journeyProgressView: JourneyProgressView? = nil
+    private let helperButtonImage = UIImageView()
+    let helperButton = UIButton()
+    private let helperImageView = UIImageView()
     
     private let state: HomeState = .afterJourney
     
@@ -23,10 +26,24 @@ final class HomeHeaderView: BaseView {
             $0.axis = .vertical
             $0.spacing = 16
         }
+        helperButton.do {
+            var configuration = UIButton.Configuration.plain()
+            configuration.image = .questionMark
+            configuration.contentInsets = .zero
+            $0.configuration = configuration
+        }
+        helperImageView.do {
+            $0.image = .helper
+            $0.alpha = 0
+        }
     }
     
     override func setUI() {
-        addSubview(stackView)
+        addSubviews(
+            stackView,
+            helperButton,
+            helperImageView
+        )
     
         stackView.addArrangedSubviews(
             homeStateView
@@ -37,7 +54,15 @@ final class HomeHeaderView: BaseView {
         stackView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(72.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-            $0.bottom.equalToSuperview()
+        }
+        helperButton.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(170.adjustedH)
+            $0.trailing.equalToSuperview().inset(24.adjustedW)
+            $0.size.equalTo(44.adjustedW)
+        }
+        helperImageView.snp.makeConstraints {
+            $0.top.equalTo(helperButton.snp.bottom).offset(8.5.adjustedH)
+            $0.trailing.equalToSuperview().inset(24.adjustedW)
         }
     }
 }
@@ -69,8 +94,28 @@ extension HomeHeaderView {
                 homeStateView,
                 journeyProgressView
             )
+            
+            stackView.snp.updateConstraints {
+                $0.bottom.equalToSuperview()
+            }
+            
+            helperButton.alpha = 0
+        } else {
+            helperButton.alpha = 1
         }
         
         homeStateView.updateState(state)
+    }
+    
+    func startHelperAnimation() {
+        if !state.hasProgress {
+            UIView.animate(withDuration: 0.3, delay: 0.3) {
+                self.helperImageView.alpha = 1
+            }
+        }
+    }
+    
+    func helperDidTap() {
+        helperImageView.alpha = 0
     }
 }

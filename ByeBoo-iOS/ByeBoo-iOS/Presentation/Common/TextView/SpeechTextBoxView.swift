@@ -49,6 +49,7 @@ final class SpeechTextBoxView: BaseView {
         image.snp.makeConstraints {
             $0.width.equalTo(327.adjustedW)
             $0.centerX.equalToSuperview()
+            $0.height.equalTo(62.adjustedH)
         }
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(image.snp.top).offset(14.adjustedH)

@@ -46,11 +46,19 @@ final class HomeViewController: BaseViewController {
         viewModel.action(.viewWillAppear)
     }
     
+    override func setAddTarget() {
+        rootView.headerView.helperButton.addTarget(self, action: #selector(helperDidTap), for: .touchUpInside)
+    }
+    
     private func setGesture() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(headerDidTap))
         tapGestureRecognizer.isEnabled = true
         tapGestureRecognizer.cancelsTouchesInView = false
         rootView.headerView.homeStateView.addGestureRecognizer(tapGestureRecognizer)
+    }
+    
+    private func startAnimation() {
+        rootView.headerView.startHelperAnimation()
     }
 }
 
@@ -59,6 +67,12 @@ extension HomeViewController {
     private func headerDidTap() {
         guard tabBarController?.viewControllers?[safe: 1] != nil else { return }
         navigationController?.tabBarController?.selectedIndex = 1
+    }
+    
+    @objc
+    private func helperDidTap() {
+        viewModel.action(.helperTapped)
+        rootView.helperDidTap()
     }
 }
 
@@ -100,7 +114,7 @@ extension HomeViewController {
                 name,
                 journey in
                 switch (count, name, journey) {
-                case let (.success(count), .success(name), .success(journey)):
+                case let (.success(count), name, .success(journey)):
                     self?.rootView.updateProgressView(
                         name: name,
                         progress: count,
@@ -108,6 +122,15 @@ extension HomeViewController {
                     )
                 default:
                     ByeBooLogger.error(ByeBooError.unknownError)
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.helperResult
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                if !result {
+                    self?.rootView.headerView.startHelperAnimation()
                 }
             }
             .store(in: &cancellables)

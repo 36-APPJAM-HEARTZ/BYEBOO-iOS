@@ -32,6 +32,7 @@ final class HomeOnboardingView: BaseView {
         }
         characterImageView.do {
             $0.image = .newborn
+            $0.isUserInteractionEnabled = true
         }
         foregroundView.do {
             $0.backgroundColor = .black
