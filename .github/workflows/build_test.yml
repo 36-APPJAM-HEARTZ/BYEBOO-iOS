@@ -25,13 +25,11 @@ jobs:
 
       - name: Build with xcodebuild
         run: |
-          DEVICE=$(xcrun simctl list devices available | grep "iPhone" | head -n 1 | awk -F '(' '{print $1}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-          echo "Using simulator: $DEVICE"
           set -o pipefail
           xcodebuild \
             -project ByeBoo-iOS/ByeBoo-iOS.xcodeproj \
             -scheme ByeBoo-iOS \
             -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,name=${DEVICE}" \
+            -destination "platform=iOS Simulator,name=iPhone 15" \
             clean build | xcpretty
 
