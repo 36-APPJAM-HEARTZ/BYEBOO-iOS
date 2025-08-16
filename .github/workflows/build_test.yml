@@ -12,22 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Set stable Xcode version
-        run: |
-          # 안정적인 Xcode 버전 찾아서 설정
-          if [ -d "/Applications/Xcode_15.4.app" ]; then
-            sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
-            echo "Using Xcode 15.4"
-          elif [ -d "/Applications/Xcode_15.3.app" ]; then
-            sudo xcode-select -s /Applications/Xcode_15.3.app/Contents/Developer
-            echo "Using Xcode 15.3"
-          elif [ -d "/Applications/Xcode_15.2.app" ]; then
-            sudo xcode-select -s /Applications/Xcode_15.2.app/Contents/Developer
-            echo "Using Xcode 15.2"
-          else
-            echo "Using default Xcode (may cause iOS runtime issues)"
-          fi
           
       - name: Generate xcconfig
         run: |
@@ -38,13 +22,22 @@ jobs:
 
       - name: Build with xcodebuild
         run: |
+          # 사용 가능한 iPhone 시뮬레이터 선택
           DEVICE=$(xcrun simctl list devices available | grep "iPhone 15" | head -n 1 | awk -F '(' '{print $1}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
           echo "Using simulator: $DEVICE"
+
+          # 해당 기기에 사용 가능한 iOS 버전들 중에서 선택
+          DEVICE_WITH_OS=$(xcrun simctl list devices available | grep "$DEVICE" | head -n 1)
+          AVAILABLE_OS=$(echo "$DEVICE_WITH_OS" | sed 's/.*iOS \([0-9.]*\).*/\1/')
+          
+          echo "Device with OS info: $DEVICE_WITH_OS"
+          echo "Extracted iOS version: $AVAILABLE_OS"
+          
           set -o pipefail
           xcodebuild \
             -project ByeBoo-iOS/ByeBoo-iOS.xcodeproj \
             -scheme ByeBoo-iOS \
             -sdk iphonesimulator \
-            -destination "platform=iOS Simulator,name=${DEVICE}" \
+            -destination "platform=iOS Simulator,name=${DEVICE}, OS=${AVAILABLE_OS}" \
             clean build | xcpretty
 
