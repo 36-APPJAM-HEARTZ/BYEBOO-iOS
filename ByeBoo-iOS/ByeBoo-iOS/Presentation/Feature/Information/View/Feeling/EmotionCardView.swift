@@ -79,13 +79,17 @@ final class EmotionCardView: BaseView {
         
         if isSelected {
             stateLabel.textColor = .primary200
-            backgroundView.backgroundColor = .primary30020
-            backgroundView.layer.borderWidth = 2
-            backgroundView.layer.borderColor = UIColor.primary300.cgColor
+            backgroundView.do {
+                $0.backgroundColor = .primary30020
+                $0.layer.borderWidth = 2
+                $0.layer.borderColor = UIColor.primary300.cgColor
+            }
         } else {
             stateLabel.textColor = .grayscale300
-            backgroundView.backgroundColor = .white10
-            backgroundView.layer.borderWidth = 0
+            backgroundView.do {
+                $0.backgroundColor = .white10
+                $0.layer.borderWidth = 0
+            }
         }
     }
 }
