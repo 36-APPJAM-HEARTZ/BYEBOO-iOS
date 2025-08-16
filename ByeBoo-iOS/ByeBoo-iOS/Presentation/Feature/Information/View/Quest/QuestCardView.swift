@@ -38,26 +38,22 @@ final class QuestCardView: BaseView {
         backgroundView.do {
             $0.backgroundColor = .white10
             $0.layer.cornerRadius = 12
+            setBlurEffect(alpha: 0.5)
         }
-        
         cardImageView.do {
             $0.backgroundColor = .clear
         }
-        
         titleLabel.do {
             $0.textColor = .grayscale300
             $0.textAlignment = .center
             $0.font = FontManager.sub3M18.font
         }
-        
         subTitleLabel.do {
             $0.textColor = .grayscale300
             $0.textAlignment = .center
             $0.font = FontManager.body6R14.font
             $0.numberOfLines = 3
         }
-        
-        setBlurEffect()
     }
     
     override func setUI() {
@@ -97,13 +93,15 @@ final class QuestCardView: BaseView {
         onSelected?()
         
         if isSelected {
-            titleLabel.textColor = .primary300
+            titleLabel.textColor = .primary200
             subTitleLabel.textColor = .primary200
+            backgroundView.backgroundColor = .primary30020
             backgroundView.layer.borderWidth = 2
             backgroundView.layer.borderColor = UIColor.primary300.cgColor
         } else {
             titleLabel.textColor = .grayscale300
             subTitleLabel.textColor = .grayscale300
+            backgroundView.backgroundColor = .white10
             backgroundView.layer.borderWidth = 0
         }
     }
