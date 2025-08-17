@@ -12,6 +12,7 @@ import SnapKit
 final class EmotionBottomSheetViewController: BaseViewController {
     private let rootView = EmotionBottomSheetView()
     private var selectedChip: ByeBooEmotionChip?
+    private var isFirstTouch: Bool = false
     weak var delegate: BottomSheetProtocol?
     
     override func loadView() {
@@ -28,16 +29,38 @@ final class EmotionBottomSheetViewController: BaseViewController {
         rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        isFirstTouch = false
+        selectedChip = nil
+        rootView.emotionChips.forEach {
+            $0.updateChipState(.defaultState)
+            $0.updateChipUI()
+        }
+    }
+    
     @objc
     private func emotionChipDidTap(_ tapRecognizer: UITapGestureRecognizer) {
         guard let chip = tapRecognizer.view as? ByeBooEmotionChip else { return }
+        
+        if !isFirstTouch {
+            isFirstTouch = true
+            rootView.emotionChips.forEach {
+                $0.updateChipState(.defaultState)
+                $0.updateChipUI()
+            }
+        }
+        
         if selectedChip === chip { return }
-        selectedChip?.emotionTag.isSelected = false
-        chip.emotionTag.isSelected = true
+        
+        selectedChip?.updateChipState(.unselected)
+        selectedChip?.updateChipUI()
+        
+        chip.updateChipState(.selected)
+        chip.updateChipUI()
+         
         selectedChip = chip
         
         let emotion = chip.emotionType
-        chip.emotionTag.toggleTagType()
         rootView.confirmButton.updateType(.enabled)
         ByeBooLogger.debug("터치된 감정: \(emotion)")
     }

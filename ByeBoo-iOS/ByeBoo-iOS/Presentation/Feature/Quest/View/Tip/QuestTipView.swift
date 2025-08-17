@@ -17,7 +17,7 @@ final class QuestTipView: BaseView {
     private(set) var closeButton = UIButton()
     private let stepStackView = UIStackView()
     private var stepNum: Int = 0
-    private let stepLabel = ByeBooYellowTag(text: "STEP 0")
+    private let stepLabel = ByeBooTextTag(type: .gray, text: "STEP 0")
     private var questNum: Int = 0
     private let questLabel = UILabel()
     private let title = UILabel()
@@ -53,7 +53,7 @@ final class QuestTipView: BaseView {
         var previousView: UIView = title
         tipQuestion = [
             "\(questNum)번째 퀘스트로 드리는 이유",
-            questType == .activation ? "이렇게 해보면 좋아요." : "이런 걸 생각해보며 작성해 주세요.",
+            questType == .activation ? "이렇게 해보면 좋아요." : "이런 걸 생각해 보며 작성해 주세요.",
             "이 퀘스트가 끝나면 어떤 변화가 생길까요?"
         ]
         
