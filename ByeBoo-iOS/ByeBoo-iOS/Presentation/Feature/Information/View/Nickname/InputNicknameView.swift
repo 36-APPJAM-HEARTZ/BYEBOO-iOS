@@ -163,7 +163,9 @@ extension InputNicknameView {
             nicknameStateLabel.textColor = .primary300
             letterCountLabel.textColor = .primary300
             errorIconImageView.isHidden = true
-            errorIconImageView.snp.removeConstraints()
+            errorIconImageView.snp.updateConstraints {
+                $0.size.equalTo(0)
+            }
         }
     }
     
