@@ -11,10 +11,8 @@ final class HomeOnboardingView: BaseView {
 
     private let backgroundImageView = UIImageView()
     private let backgroundView = UIView()
-    private let welcomeView = OnboardingTextView(text: "BYE BOO에 오신 걸 환영해요 :)")
-    private let introduceView = OnboardingTextView(text: "저는 보리라고 해요.")
     private let descriptionLabel = UILabel()
-    private let bubbleImageView = UIImageView()
+    private let speechBoxView = SpeechTextBoxView(title: "")
     let characterImageView = UIImageView()
     private let foregroundView = UIView()
     
@@ -25,12 +23,6 @@ final class HomeOnboardingView: BaseView {
         backgroundView.do {
             $0.backgroundColor = .black80
         }
-        welcomeView.do {
-            $0.alpha = 0
-        }
-        introduceView.do {
-            $0.alpha = 0
-        }
         descriptionLabel.do {
             $0.text = "보리를 꾹 눌러주세요!"
             $0.font = FontManager.body3R16.font
@@ -38,12 +30,9 @@ final class HomeOnboardingView: BaseView {
             $0.textAlignment = .center
             $0.alpha = 0
         }
-        bubbleImageView.do {
-            $0.image = .speechBubble
-            $0.alpha = 0
-        }
         characterImageView.do {
             $0.image = .newborn
+            $0.isUserInteractionEnabled = true
         }
         foregroundView.do {
             $0.backgroundColor = .black
@@ -55,10 +44,8 @@ final class HomeOnboardingView: BaseView {
         addSubviews(
             backgroundImageView,
             backgroundView,
-            welcomeView,
-            introduceView,
             descriptionLabel,
-            bubbleImageView,
+            speechBoxView,
             characterImageView,
             foregroundView
         )
@@ -71,24 +58,16 @@ final class HomeOnboardingView: BaseView {
         backgroundView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        welcomeView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(72.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-        }
-        introduceView.snp.makeConstraints {
-            $0.top.equalTo(welcomeView.snp.bottom).offset(16.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-        }
         descriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(introduceView.snp.bottom).offset(119.adjustedH)
+            $0.top.equalTo(speechBoxView.snp.top)
             $0.centerX.equalToSuperview()
         }
-        bubbleImageView.snp.makeConstraints {
-            $0.top.equalTo(descriptionLabel.snp.bottom).offset(16.adjustedH)
-            $0.centerX.equalToSuperview()
+        speechBoxView.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(316.adjustedH)
+            $0.horizontalEdges.equalToSuperview()
         }
         characterImageView.snp.makeConstraints {
-            $0.top.equalTo(bubbleImageView.snp.bottom).offset(19.adjustedH)
+            $0.bottom.equalToSuperview().inset(143.adjustedH)
             $0.centerX.equalToSuperview()
         }
         foregroundView.snp.makeConstraints {
@@ -99,17 +78,19 @@ final class HomeOnboardingView: BaseView {
 
 extension HomeOnboardingView {
     func startAnimation() {
-        
-        UIView.animate(withDuration: 0.4, delay: 0.3) {
-            self.welcomeView.alpha = 1
+        UIView.transition(with: self.speechBoxView, duration: 0.5, options: .transitionCrossDissolve) {
+            self.speechBoxView.updateText("바이부에 오신 걸 환영해요!")
         } completion: { _ in
-            UIView.animate(withDuration: 0.4, delay: 0.3) {
-                self.introduceView.alpha = 1
+            UIView.transition(with: self.speechBoxView, duration: 0.5, options: .transitionCrossDissolve) {
+                self.speechBoxView.updateText("저는 보리라고 해요.")
             } completion: { _ in
-                UIView.animate(withDuration: 0.4, delay: 0.2) {
-                    self.descriptionLabel.alpha = 1
-                    self.bubbleImageView.alpha = 1
-                    self.characterImageView.isUserInteractionEnabled = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    UIView.transition(with: self.speechBoxView, duration: 1, options: .transitionCrossDissolve) {
+                        self.speechBoxView.updateText("여정을 시작하러 가볼까요?")
+                        
+                        self.descriptionLabel.alpha = 1
+                        self.descriptionLabel.transform = CGAffineTransform(translationX: 0, y: -37.adjustedH)
+                    }
                 }
             }
         }

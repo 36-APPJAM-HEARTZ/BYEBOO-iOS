@@ -15,7 +15,8 @@ final class HomeViewModel {
     private(set) var output: Output
     private var characterResultSubject = PassthroughSubject<Result<String, ByeBooError>, Never>()
     private var countResultSubject = PassthroughSubject<Result<Int, ByeBooError>, Never>()
-    private var userResultSubject = PassthroughSubject<Result<String, ByeBooError>, Never>()
+    private var userResultSubject = CurrentValueSubject<String, Never>("하츠핑")
+    private var isHelperShownResultSubject = CurrentValueSubject<Bool, Never>(true)
     private var homeStateResultSubject = PassthroughSubject<Result<HomeState, ByeBooError>, Never>()
     private var journeyResultSubject = PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never>()
 
@@ -23,22 +24,29 @@ final class HomeViewModel {
     private let fetchCompleteQuestCountUseCase: FetchCompleteQuestCountUseCase
     private let fetchUserJourneyUseCase: FetchUserJourneyUseCase
     private let getUserNameUseCase: GetUserNameUseCase
+    private let setHelperUseCase: SetHelperUseCase
+    private let getHelperUseCase: GetHelperUseCase
     
     init(
         fetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase,
         fetchCompleteQuestCountUseCase: FetchCompleteQuestCountUseCase,
         fetchUserJourneyUseCase: FetchUserJourneyUseCase,
-        getUserNameUseCase: GetUserNameUseCase
+        getUserNameUseCase: GetUserNameUseCase,
+        setHelperUseCase: SetHelperUseCase,
+        getHelperUseCase: GetHelperUseCase
     ) {
         self.fetchCharacterDialogueUseCase = fetchCharacterDialogueUseCase
         self.fetchCompleteQuestCountUseCase = fetchCompleteQuestCountUseCase
         self.fetchUserJourneyUseCase = fetchUserJourneyUseCase
         self.getUserNameUseCase = getUserNameUseCase
+        self.setHelperUseCase = setHelperUseCase
+        self.getHelperUseCase = getHelperUseCase
         
         output = Output(
             characterResult: characterResultSubject.eraseToAnyPublisher(),
             countResult: countResultSubject.eraseToAnyPublisher(),
             userResult: userResultSubject.eraseToAnyPublisher(),
+            helperResult: isHelperShownResultSubject.eraseToAnyPublisher(),
             homeStateResult: homeStateResultSubject.eraseToAnyPublisher(),
             journeyResult: journeyResultSubject.eraseToAnyPublisher()
         )
@@ -48,12 +56,14 @@ final class HomeViewModel {
 extension HomeViewModel: ViewModelType {
     enum Input {
         case viewWillAppear
+        case helperTapped
     }
     
     struct Output {
         let characterResult: AnyPublisher<Result<String, ByeBooError>, Never>
         let countResult: AnyPublisher<Result<Int, ByeBooError>, Never>
-        let userResult: AnyPublisher<Result<String, ByeBooError>, Never>
+        let userResult: AnyPublisher<String, Never>
+        let helperResult: AnyPublisher<Bool, Never>
         let homeStateResult: AnyPublisher<Result<HomeState, ByeBooError>, Never>
         let journeyResult: AnyPublisher<Result<JourneyEntity, ByeBooError>, Never>
     }
@@ -64,7 +74,9 @@ extension HomeViewModel: ViewModelType {
             // TODO: 구조적 동시성 반영
             fetchDialogue()
             fetchCount()
-            getUserName()
+            getUserResult()
+        case .helperTapped:
+            setHelperShown()
         }
     }
 }
@@ -125,8 +137,15 @@ extension HomeViewModel {
         }
     }
     
-    private func getUserName() {
+    private func getUserResult() {
         let name = getUserNameUseCase.execute()
-        userResultSubject.send(.success(name))
+        let isHelperShown = getHelperUseCase.execute()
+        ByeBooLogger.debug("isHelperShown: \(isHelperShown)")
+        userResultSubject.send(name)
+        isHelperShownResultSubject.send(isHelperShown)
+    }
+    
+    private func setHelperShown() {
+        setHelperUseCase.execute()
     }
 }

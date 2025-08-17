@@ -13,6 +13,7 @@ final class HomeView: BaseView {
 
     private let backgroundImageView = LottieAnimationView(name: "Bori_home8")
     private(set) var headerView = HomeHeaderView()
+    private let speechBoxView = SpeechTextBoxView(title: "")
     
     override func setStyle() {
         backgroundImageView.do {
@@ -25,7 +26,8 @@ final class HomeView: BaseView {
     override func setUI() {
         addSubviews(
             backgroundImageView,
-            headerView
+            headerView,
+            speechBoxView
         )
     }
     
@@ -37,13 +39,18 @@ final class HomeView: BaseView {
         headerView.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.horizontalEdges.equalToSuperview()
+            $0.height.equalTo(268.adjustedH)
+        }
+        speechBoxView.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(316.adjustedH)
+            $0.horizontalEdges.equalToSuperview()
         }
     }
 }
 
 extension HomeView {
     func updateOnboardingText(_ text: String) {
-        headerView.updateTextBox(text)
+        speechBoxView.updateText(text)
     }
     
     func updateProgressView(
@@ -58,5 +65,9 @@ extension HomeView {
     
     func updateState(_ state: HomeState) {
         headerView.updateState(state)
+    }
+    
+    func helperDidTap() {
+        headerView.helperDidTap()
     }
 }

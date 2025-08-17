@@ -81,7 +81,9 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: HomeViewModel.self) { container in
             guard let characterUseCase = container.resolve(type: FetchCharacterDialogueUseCase.self),
-                  let countUseCase = container.resolve(type: FetchCompleteQuestCountUseCase.self)
+                  let countUseCase = container.resolve(type: FetchCompleteQuestCountUseCase.self),
+                  let setHelperUseCase = container.resolve(type: SetHelperUseCase.self),
+                  let getHelperUseCase = container.resolve(type: GetHelperUseCase.self)
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -91,7 +93,9 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 fetchCharacterDialogueUseCase: characterUseCase,
                 fetchCompleteQuestCountUseCase: countUseCase,
                 fetchUserJourneyUseCase: fetchUserJourneyUseCase,
-                getUserNameUseCase: getUserNameUseCase
+                getUserNameUseCase: getUserNameUseCase,
+                setHelperUseCase: setHelperUseCase,
+                getHelperUseCase: getHelperUseCase
             )
         }
         

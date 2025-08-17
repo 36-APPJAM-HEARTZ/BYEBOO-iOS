@@ -24,8 +24,9 @@ struct DefaultFetchCompleteQuestCountUseCase: FetchCompleteQuestCountUseCase {
     }
 }
 
-struct MockFetchCompleteQuestCountUseCase {
+struct MockFetchCompleteQuestCountUseCase: FetchCompleteQuestCountUseCase {
     func execute() async throws -> Int {
-        return 1
+//        return 3
+        throw ByeBooError.notFoundQuest
     }
 }
