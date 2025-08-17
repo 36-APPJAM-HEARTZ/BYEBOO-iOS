@@ -24,5 +24,6 @@ extension UIView {
         blurView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
+        blurView.alpha = alpha
     }
 }
