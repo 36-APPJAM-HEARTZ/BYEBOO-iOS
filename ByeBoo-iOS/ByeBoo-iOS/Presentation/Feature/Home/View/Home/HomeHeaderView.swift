@@ -56,12 +56,12 @@ final class HomeHeaderView: BaseView {
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
         helperButton.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(170.adjustedH)
+            $0.top.equalTo(stackView.snp.bottom).offset(20.5.adjustedH)
             $0.trailing.equalToSuperview().inset(24.adjustedW)
-            $0.size.equalTo(44.adjustedW)
+            $0.size.equalTo(36.adjustedW)
         }
         helperImageView.snp.makeConstraints {
-            $0.top.equalTo(helperButton.snp.bottom).offset(8.5.adjustedH)
+            $0.top.equalTo(helperButton.snp.bottom).offset(4.adjustedH)
             $0.trailing.equalToSuperview().inset(24.adjustedW)
         }
     }
@@ -95,7 +95,9 @@ extension HomeHeaderView {
                 journeyProgressView
             )
             
-            stackView.snp.updateConstraints {
+            stackView.snp.remakeConstraints {
+                $0.top.equalToSuperview().inset(72.adjustedH)
+                $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
                 $0.bottom.equalToSuperview()
             }
             
@@ -109,8 +111,15 @@ extension HomeHeaderView {
     
     func startHelperAnimation() {
         if !state.hasProgress {
-            UIView.animate(withDuration: 0.3, delay: 0.3) {
+            helperImageView.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+            UIView.animate(
+                withDuration: 1,
+                delay: 0.3,
+                usingSpringWithDamping: 0.4,
+                initialSpringVelocity: 0.6
+            ) {
                 self.helperImageView.alpha = 1
+                self.helperImageView.transform = .identity
             }
         }
     }

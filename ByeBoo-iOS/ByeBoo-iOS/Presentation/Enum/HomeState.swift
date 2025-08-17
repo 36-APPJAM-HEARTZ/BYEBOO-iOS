@@ -18,7 +18,7 @@ enum HomeState {
         case .beforeJourneyStart(let journey):
             "\(journey.title) 여정 시작하기"
         case .beforeQuest:
-            "오늘의 퀘스트 하러가기"
+            "오늘의 퀘스트 하러 가기"
         case .afterQuest:
             "오늘의 퀘스트 완료!"
         case .afterJourney:
