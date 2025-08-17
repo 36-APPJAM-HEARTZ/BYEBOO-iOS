@@ -14,7 +14,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set Xcode version
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app
 
       - name: Generate xcconfig
         run: |
@@ -27,6 +27,7 @@ jobs:
         run: |
           DEVICE=$(xcrun simctl list devices available | grep "iPhone" | head -n 1 | awk -F '(' '{print $1}' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
           echo "Using simulator: $DEVICE"
+          
           set -o pipefail
           xcodebuild \
             -project ByeBoo-iOS/ByeBoo-iOS.xcodeproj \
