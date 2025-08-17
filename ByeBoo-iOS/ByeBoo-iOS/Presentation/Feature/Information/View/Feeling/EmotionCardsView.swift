@@ -12,7 +12,7 @@ import Then
 
 final class EmotionCardsView: BaseView {
     
-    let emotionCards = [
+    private(set) var emotionCards = [
         EmotionCardView(state: "너무 힘들어요", image: .sad),
         EmotionCardView(state: "극복 중이에요", image: .soso),
         EmotionCardView(state: "꽤 극복했어요", image: .good)

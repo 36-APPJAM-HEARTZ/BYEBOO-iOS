@@ -45,8 +45,8 @@ enum NicknameFieldType {
 
 final class ByeBooNicknameTextField: BaseView {
     
-    let nicknameField = UITextField()
-    let errorIcon = UIImageView()
+    private(set) var nicknameField = UITextField()
+    private var errorIcon = UIImageView()
     
     var onTextChange: ((String) -> Void)?
     var onRegex: ((Bool) -> Void)?

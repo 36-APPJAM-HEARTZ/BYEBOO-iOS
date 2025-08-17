@@ -15,7 +15,7 @@ final class SelectEmotionView: BaseView {
     private let titleView = UIView()
     private let titleLabel = UILabel()
     private let subTitleLabel = UILabel()
-    let emotionCardsView: EmotionCardsView
+    private(set) var emotionCardsView: EmotionCardsView
     
     init(emotionCardsView: EmotionCardsView) {
         self.emotionCardsView = emotionCardsView

@@ -15,11 +15,11 @@ final class InformationBaseView: BaseView {
     private let backgroundImageView = UIImageView()
     private var progressBarType: ProgressBarType
     private lazy var progressView = ProgressBarView(type: progressBarType)
-    let informationView: BaseView
-    var nextButton = ByeBooButton(titleText: "다음으로", type: .disabled2)
+    var informationView: BaseView
+    private(set) var nextButton = ByeBooButton(titleText: "다음으로", type: .disabled2)
     
-    init(informationViewType: InformationViewType, progressBarType: ProgressBarType) {
-        self.informationView = informationViewType.view
+    init(informationView: BaseView, progressBarType: ProgressBarType) {
+        self.informationView = informationView
         self.progressBarType = progressBarType
         super.init(frame: .zero)
     }
@@ -73,6 +73,21 @@ final class InformationBaseView: BaseView {
             $0.height.equalTo(53.adjustedH)
         }
     }
+}
+
+extension InformationBaseView {
+    
+    func replace(informationView: BaseView, progressBarType: ProgressBarType) {
+        self.informationView.removeFromSuperview()
+        self.progressView.removeFromSuperview()
+        
+        self.informationView = informationView
+        self.progressBarType = progressBarType
+        self.progressView = ProgressBarView(type: self.progressBarType)
+        
+        setUI()
+        setLayout()
+    }
     
     private func updateNicknameViewNextButton(view: InputNicknameView) {
         view.nicknameTextField.onRegex = { [weak self] condition in
@@ -113,6 +128,8 @@ final class InformationBaseView: BaseView {
     private func updateButtonWhenBack(condition: Bool) {
         if condition {
             self.nextButton.updateType(.enabled)
+            return
         }
+        self.nextButton.updateType(.disabled2)
     }
 }
