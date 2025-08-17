@@ -22,7 +22,7 @@ final class InputNicknameView: BaseView {
     private let subTitleLabel = UILabel()
     
     private let nicknameFieldView = UIView()
-    let nicknameTextField = ByeBooNicknameTextField(.onBeginEditing)
+    private(set) var nicknameTextField = ByeBooNicknameTextField(.onBeginEditing)
     
     private let nicknameStateView = UIView()
     private let errorIconImageView = UIImageView()

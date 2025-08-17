@@ -10,30 +10,19 @@ import UIKit
 
 final class InformationViewController: BaseViewController {
     
-    private let inputNicknameView: InputNicknameView
-    private var informationViewType: InformationViewType
-    private var informationBaseView: InformationBaseView
-    private var maxStep: ProgressBarType
-    
+    private let inputNicknameView = InputNicknameView()
     private let selectEmotionView = SelectEmotionView(emotionCardsView: EmotionCardsView())
     private let selectQuestView = SelectQuestView(questCardsView: QuestCardsView())
-    
-    private lazy var inputNicknameType = InformationViewType.inputNickname(inputNicknameView)
-    private lazy var selectEmotionType = InformationViewType.selectEmotion(selectEmotionView)
-    private lazy var selectQuestType = InformationViewType.selectQuest(selectQuestView)
+    private lazy var informationBaseView = InformationBaseView(
+        informationView: inputNicknameView,
+        progressBarType: .first
+    )
     
     private var viewModel: InformationViewModel
     private var cancellables = Set<AnyCancellable>()
     
     init(viewModel: InformationViewModel) {
-        self.inputNicknameView = InputNicknameView()
-        self.informationViewType = .inputNickname(self.inputNicknameView)
-        self.informationBaseView = InformationBaseView(
-            informationViewType: self.informationViewType,
-            progressBarType: .first
-        )
         self.viewModel = viewModel
-        self.maxStep = .first
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -110,30 +99,14 @@ final class InformationViewController: BaseViewController {
 
 extension InformationViewController {
     
-    private func move(viewType: InformationViewType, progress: ProgressBarType) {
-        if progress.rawValue > maxStep.rawValue {
-            maxStep = progress
-        }
+    private func move(view: BaseView, progress: ProgressBarType) {
+        self.informationBaseView.replace(informationView: view, progressBarType: progress)
+        setAddTarget(informationBaseView: informationBaseView)
         
-        self.informationViewType = viewType
-        let newBaseView = InformationBaseView(
-            informationViewType: viewType,
-            progressBarType: progress
-        )
-        self.view = newBaseView
-        setAddTarget(informationBaseView: newBaseView)
-        
-        switch viewType {
-        case .inputNickname:
-            if maxStep == .third {
-                viewModel.resetData()
-                selectEmotionView.resetSelected()
-                selectQuestView.resetSelected()
-                maxStep = .first
-            }
-            setTopNavigationBar(type: .none())
-        default:
-            setTopNavigationBar(type: .back())
+        switch view {
+        case is InputNicknameView: setTopNavigationBar(type: .none())
+        case is SelectEmotionView, is SelectQuestView: setTopNavigationBar(type: .back())
+        default: break
         }
     }
 }
@@ -141,13 +114,13 @@ extension InformationViewController {
 extension InformationViewController: BackNavigable {
     
     func back() {
-        switch informationViewType {
-        case .selectEmotion:
+        switch informationBaseView.informationView {
+        case is SelectEmotionView:
             selectEmotionView.resetSelected()
-            move(viewType: inputNicknameType, progress: .first)
-        case .selectQuest:
+            move(view: inputNicknameView, progress: .first)
+        case is SelectQuestView:
             selectQuestView.resetSelected()
-            move(viewType: selectEmotionType, progress: .second)
+            move(view: selectEmotionView, progress: .second)
         default:
             break
         }
@@ -158,31 +131,39 @@ extension InformationViewController {
     
     @objc
     private func nextButtonDidTap() {
-        switch informationViewType {
-        case .inputNickname:
-            if let nickname = inputNicknameView.nicknameTextField.nicknameField.text,
-               !nickname.isEmpty {
-                viewModel.action(.nicknameButtonDidTap(nickname))
+        switch informationBaseView.informationView {
+        case is InputNicknameView: saveNickname()
+        case is SelectEmotionView: saveEmotion()
+        case is SelectQuestView: saveQuest()
+        default: break
+        }
+    }
+    
+    private func saveNickname() {
+        if let nickname = inputNicknameView.nicknameTextField.nicknameField.text,
+           !nickname.isEmpty {
+            viewModel.action(.nicknameButtonDidTap(nickname))
+        }
+        move(view: selectEmotionView, progress: .second)
+    }
+    
+    private func saveEmotion() {
+        let emotionCards = selectEmotionView.emotionCardsView.emotionCards
+        for (index, emotionCard) in emotionCards.enumerated() where emotionCard.isSelected {
+            if Feeling.allCases.indices.contains(index) {
+                let feeling = Feeling.allCases[index]
+                viewModel.action(.feelingButtonDidTap(feeling))
             }
-            move(viewType: selectEmotionType, progress: .second)
-            
-        case .selectEmotion:
-            let emotionCards = selectEmotionView.emotionCardsView.emotionCards
-            for (index, emotionCard) in emotionCards.enumerated() where emotionCard.isSelected {
-                if Feeling.allCases.indices.contains(index) {
-                    let feeling = Feeling.allCases[index]
-                    viewModel.action(.feelingButtonDidTap(feeling))
-                }
-            }
-            move(viewType: selectQuestType, progress: .third)
-            
-        case .selectQuest:
-            let questCards = selectQuestView.questCardsView.questCards
-            for (index, questCard) in questCards.enumerated() where questCard.isSelected {
-                if QuestStyle.allCases.indices.contains(index) {
-                    let quest = QuestStyle.allCases[index]
-                    viewModel.action(.questButtonDidTap(quest))
-                }
+        }
+        move(view: selectQuestView, progress: .third)
+    }
+    
+    private func saveQuest() {
+        let questCards = selectQuestView.questCardsView.questCards
+        for (index, questCard) in questCards.enumerated() where questCard.isSelected {
+            if QuestStyle.allCases.indices.contains(index) {
+                let quest = QuestStyle.allCases[index]
+                viewModel.action(.questButtonDidTap(quest))
             }
         }
     }

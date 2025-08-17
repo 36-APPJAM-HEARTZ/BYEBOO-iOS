@@ -15,7 +15,7 @@ final class SelectQuestView: BaseView {
     private let titleView = UIView()
     private let titleLabel = UILabel()
     private let subTitleLabel = UILabel()
-    let questCardsView: QuestCardsView
+    private(set) var questCardsView: QuestCardsView
     
     init(questCardsView: QuestCardsView) {
         self.questCardsView = questCardsView

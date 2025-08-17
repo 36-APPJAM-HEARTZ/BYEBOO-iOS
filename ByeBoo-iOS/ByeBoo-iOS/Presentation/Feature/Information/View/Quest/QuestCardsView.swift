@@ -12,7 +12,7 @@ import Then
 
 final class QuestCardsView: BaseView {
     
-    let questCards = [
+    private(set) var questCards = [
         QuestCardView(
             title: "질문에 답하기",
             subTitle: "질문을 통해\n상황과 감정을\n정리해요",
