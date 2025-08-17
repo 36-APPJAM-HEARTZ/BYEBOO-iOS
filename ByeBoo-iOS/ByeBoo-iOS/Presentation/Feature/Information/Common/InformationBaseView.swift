@@ -78,15 +78,24 @@ final class InformationBaseView: BaseView {
 extension InformationBaseView {
     
     func replace(informationView: BaseView, progressBarType: ProgressBarType) {
-        self.informationView.removeFromSuperview()
-        self.progressView.removeFromSuperview()
         
-        self.informationView = informationView
-        self.progressBarType = progressBarType
-        self.progressView = ProgressBarView(type: self.progressBarType)
-        
-        setUI()
-        setLayout()
+        UIView.animate(withDuration: 0.2, animations: {
+            self.informationView.alpha = 0
+        }, completion: { _ in
+            self.informationView.removeFromSuperview()
+            self.progressView.removeFromSuperview()
+            
+            self.informationView = informationView
+            self.progressBarType = progressBarType
+            self.progressView = ProgressBarView(type: self.progressBarType)
+            
+            self.setUI()
+            self.setLayout()
+            
+            UIView.animate(withDuration: 0.2) {
+                self.informationView.alpha = 1
+            }
+        })
     }
     
     private func updateNicknameViewNextButton(view: InputNicknameView) {
