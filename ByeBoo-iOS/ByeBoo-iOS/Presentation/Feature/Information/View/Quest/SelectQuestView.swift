@@ -30,7 +30,8 @@ final class SelectQuestView: BaseView {
         titleView.backgroundColor = .clear
         
         titleLabel.do {
-            $0.attributedText = "퀘스트 방식을 골라주세요".makeTitle(rangedText: "퀘스트 방식")
+            $0.text = "퀘스트 방식을 골라주세요"
+            $0.textColor = .grayscale50
             $0.textAlignment = .left
             $0.font = FontManager.head1M24.font
         }

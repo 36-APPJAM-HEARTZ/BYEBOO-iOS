@@ -38,26 +38,22 @@ final class QuestCardView: BaseView {
         backgroundView.do {
             $0.backgroundColor = .white10
             $0.layer.cornerRadius = 12
+            setBlurEffect(alpha: 0.5)
         }
-        
         cardImageView.do {
             $0.backgroundColor = .clear
         }
-        
         titleLabel.do {
             $0.textColor = .grayscale300
             $0.textAlignment = .center
             $0.font = FontManager.sub3M18.font
         }
-        
         subTitleLabel.do {
             $0.textColor = .grayscale300
             $0.textAlignment = .center
             $0.font = FontManager.body6R14.font
             $0.numberOfLines = 3
         }
-        
-        setBlurEffect()
     }
     
     override func setUI() {
@@ -97,14 +93,32 @@ final class QuestCardView: BaseView {
         onSelected?()
         
         if isSelected {
-            titleLabel.textColor = .primary300
-            subTitleLabel.textColor = .primary200
-            backgroundView.layer.borderWidth = 2
-            backgroundView.layer.borderColor = UIColor.primary300.cgColor
+            titleLabel.do {
+                $0.textColor = .primary200
+                $0.font = FontManager.sub2Sb18.font
+            }
+            subTitleLabel.do {
+                $0.textColor = .primary200
+                $0.font = FontManager.body5M14.font
+            }
+            backgroundView.do {
+                $0.backgroundColor = .primary30020
+                $0.layer.borderWidth = 2
+                $0.layer.borderColor = UIColor.primary300.cgColor
+            }
         } else {
-            titleLabel.textColor = .grayscale300
-            subTitleLabel.textColor = .grayscale300
-            backgroundView.layer.borderWidth = 0
+            titleLabel.do {
+                $0.textColor = .grayscale300
+                $0.font = FontManager.sub3M18.font
+            }
+            subTitleLabel.do {
+                $0.textColor = .grayscale300
+                $0.font = FontManager.body6R14.font
+            }
+            backgroundView.do {
+                $0.backgroundColor = .white10
+                $0.layer.borderWidth = 0
+            }
         }
     }
 }

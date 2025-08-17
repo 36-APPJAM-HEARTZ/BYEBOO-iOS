@@ -30,7 +30,8 @@ final class SelectEmotionView: BaseView {
         titleView.backgroundColor = .clear
         
         titleLabel.do {
-            $0.attributedText = "감정 상태를 알려주세요".makeTitle(rangedText: "감정 상태")
+            $0.text = "감정 상태를 알려주세요"
+            $0.textColor = .grayscale50
             $0.textAlignment = .left
             $0.font = FontManager.head1M24.font
         }

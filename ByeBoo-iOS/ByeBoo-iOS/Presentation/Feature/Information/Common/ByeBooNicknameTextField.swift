@@ -33,20 +33,22 @@ enum NicknameFieldType {
         }
     }
     
-    var isOccuredError: Bool {
+    var errorImage: UIImage? {
         switch self {
+        case .onBeginEditing:
+            return .error
+        case .normal:
+            return nil
         case .error:
-            return false
-        default:
-            return true
+            return .errorRed
         }
     }
 }
 
 final class ByeBooNicknameTextField: BaseView {
     
-    private(set) var nicknameField = UITextField()
-    private var errorIcon = UIImageView()
+    let nicknameField = UITextField()
+    let deleteAllTextButton = UIButton()
     
     var onTextChange: ((String) -> Void)?
     var onRegex: ((Bool) -> Void)?
@@ -74,19 +76,39 @@ final class ByeBooNicknameTextField: BaseView {
             $0.leftViewMode = .always
             $0.textColor = .grayscale300
             $0.tintColor = .white
+            $0.autocapitalizationType = .none
         }
-        
-        errorIcon.do {
-            $0.image = .errorRed
-            $0.clipsToBounds = true
-            $0.layer.cornerRadius = 9.adjustedW
-            $0.tintColor = .grayscale600
+        deleteAllTextButton.do {
+            $0.backgroundColor = .white10
+            $0.setImage(.union.withTintColor(.white).resize(newWidth: 10.adjustedW), for: .normal)
+            $0.layer.cornerRadius = 9
+            $0.isHidden = true
         }
     }
     
+    private func setAction() {
+        nicknameField.addTarget(
+            self,
+            action: #selector(nicknameFieldDidTap),
+            for: .editingDidBegin
+        )
+        nicknameField.addTarget(
+            self,
+            action: #selector(nicknameFieldDidChange),
+            for: .editingChanged
+        )
+        deleteAllTextButton.addTarget(
+            self,
+            action: #selector(deleteAllTextButtonDidTap),
+            for: .touchUpInside
+        )
+    }
+    
     override func setUI() {
-        nicknameField.addSubview(errorIcon)
-        addSubview(nicknameField)
+        addSubviews(
+            nicknameField,
+            deleteAllTextButton
+        )
     }
     
     override func setLayout() {
@@ -100,25 +122,20 @@ final class ByeBooNicknameTextField: BaseView {
             $0.width.height.equalToSuperview()
         }
         
-        errorIcon.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(24.adjustedW)
-            $0.centerY.equalToSuperview()
-            $0.width.height.equalTo(24.adjustedW)
+        deleteAllTextButton.snp.makeConstraints {
+            $0.trailing.equalTo(nicknameField.snp.trailing).offset(-24.adjustedW)
+            $0.centerY.equalTo(nicknameField.snp.centerY)
+            $0.width.height.equalTo(18.adjustedW)
         }
     }
+}
+extension ByeBooNicknameTextField {
     
     func setTextFieldStyle(_ type: NicknameFieldType) {
         nicknameField.do {
             $0.layer.borderWidth = type.borderWidth
             $0.layer.borderColor = type.borderColor
         }
-        
-        errorIcon.isHidden = type.isOccuredError
-    }
-    
-    private func setAction() {
-        nicknameField.addTarget(self, action: #selector(nicknameFieldDidTap), for: .editingDidBegin)
-        nicknameField.addTarget(self, action: #selector(nicknameFieldDidChange), for: .editingChanged)
     }
     
     @objc
@@ -139,6 +156,13 @@ final class ByeBooNicknameTextField: BaseView {
             
             changeNicknameState(text: trimmedText)
         }
+    }
+    
+    @objc
+    private func deleteAllTextButtonDidTap() {
+        let blank = ""
+        nicknameField.text = blank
+        changeNicknameState(text: blank)
     }
     
     private func trimText(_ text: String?) -> String {
@@ -163,8 +187,17 @@ final class ByeBooNicknameTextField: BaseView {
             currentType = .normal
         }
         
-        self.setTextFieldStyle(currentType)
-        self.onRegex?(currentType == .normal)
-        self.onStateChange?(currentType)
+        setTextFieldStyle(currentType)
+        onRegex?(currentType == .normal)
+        onStateChange?(currentType)
+        updateDeleteAllTextButton(currentType)
+    }
+    
+    private func updateDeleteAllTextButton(_ currentType: NicknameFieldType) {
+        if currentType != .onBeginEditing {
+            deleteAllTextButton.isHidden = false
+            return
+        }
+        deleteAllTextButton.isHidden = true
     }
 }

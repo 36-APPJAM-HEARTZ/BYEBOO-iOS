@@ -36,19 +36,17 @@ final class EmotionCardView: BaseView {
         backgroundView.do {
             $0.backgroundColor = .white10
             $0.layer.cornerRadius = 12
+            setBlurEffect(alpha: 0.5)
         }
-        
         cardImageView.do {
             $0.contentMode = .scaleAspectFit
             $0.backgroundColor = .clear
         }
-        
         stateLabel.do {
             $0.textColor = .grayscale300
             $0.textAlignment = .center
             $0.font = FontManager.body6R14.font
         }
-        
         setBlurEffect()
     }
     
@@ -62,14 +60,12 @@ final class EmotionCardView: BaseView {
             $0.width.equalTo(101.adjustedW)
             $0.height.equalTo(152.adjustedH)
         }
-        
         cardImageView.snp.makeConstraints {
             $0.top.equalTo(backgroundView.snp.top).offset(15.adjustedH)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(73.adjustedW)
             $0.height.equalTo(100.adjustedH)
         }
-        
         stateLabel.snp.makeConstraints {
             $0.top.equalTo(cardImageView.snp.bottom).offset(4.adjustedH)
             $0.centerX.equalToSuperview()
@@ -82,12 +78,18 @@ final class EmotionCardView: BaseView {
         onSelected?()
         
         if isSelected {
-            stateLabel.textColor = .primary300
-            backgroundView.layer.borderWidth = 2
-            backgroundView.layer.borderColor = UIColor.primary300.cgColor
+            stateLabel.textColor = .primary200
+            backgroundView.do {
+                $0.backgroundColor = .primary30020
+                $0.layer.borderWidth = 2
+                $0.layer.borderColor = UIColor.primary300.cgColor
+            }
         } else {
             stateLabel.textColor = .grayscale300
-            backgroundView.layer.borderWidth = 0
+            backgroundView.do {
+                $0.backgroundColor = .white10
+                $0.layer.borderWidth = 0
+            }
         }
     }
 }
