@@ -63,7 +63,7 @@ extension TermsViewController {
     
     @objc
     private func detailCheckButtonDidTap(_ sender: UIButton) {
-        guard let detailAgreeView = sender.superview as? DetailAgreeView else { return }
+        guard let detailAgreeView = sender.superview as? DetailTermsView else { return }
         detailAgreeView.isChecked.toggle()
         rootView.updateAllAgreeState()
     }

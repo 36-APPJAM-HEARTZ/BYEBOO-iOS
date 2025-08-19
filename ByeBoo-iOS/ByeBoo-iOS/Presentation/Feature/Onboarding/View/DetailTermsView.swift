@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class DetailAgreeView: BaseView {
+final class DetailTermsView: BaseView {
     
     private(set) var checkButton = UIButton()
     private let contentLabel = UILabel()
@@ -73,7 +73,7 @@ final class DetailAgreeView: BaseView {
     }
 }
 
-extension DetailAgreeView {
+extension DetailTermsView {
     
     private func updateUI() {
         checkButton.setImage(

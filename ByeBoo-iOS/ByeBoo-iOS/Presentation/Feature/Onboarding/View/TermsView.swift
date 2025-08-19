@@ -15,9 +15,9 @@ final class TermsView: BaseView {
     private let allAgreeView = UIView()
     private(set) var allCheckButton = UIButton()
     private let allAgreeLabel = UILabel()
-    private(set) var serviceAgreeView = DetailAgreeView(title: "서비스 이용약관 동의", isHiddenViewMore: false)
-    private(set) var privacyAgreeView = DetailAgreeView(title: "개인정보 수집·이용 동의", isHiddenViewMore: false)
-    private(set) var ageAgreeView = DetailAgreeView(title: "만 14세 이상입니다", isHiddenViewMore: true)
+    private(set) var serviceAgreeView = DetailTermsView(title: "서비스 이용약관 동의", isHiddenViewMore: false)
+    private(set) var privacyAgreeView = DetailTermsView(title: "개인정보 수집·이용 동의", isHiddenViewMore: false)
+    private(set) var ageAgreeView = DetailTermsView(title: "만 14세 이상입니다", isHiddenViewMore: true)
     private(set) var moveNextButton = ByeBooButton(titleText: "다음으로", type: .disabled2)
     
     private var isAllChecked: Bool = false
