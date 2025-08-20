@@ -41,12 +41,14 @@ extension QuestAPI: EndPoint {
             return "/answer/\(questID)"
         case .progressingQuests:
             return "/all/progress"
+        case .journey:
+            return "/journey"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .checkQuest, .tip, .answer, .progressingQuests:
+        case .checkQuest, .tip, .answer, .progressingQuests, .journey:
             return .get
         case .recording, .active, .images:
             return .post
@@ -62,7 +64,7 @@ extension QuestAPI: EndPoint {
     
     var parameterEncoding: any ParameterEncoding {
         switch self {
-        case .checkQuest, .tip, .answer, .progressingQuests:
+        case .checkQuest, .tip, .answer, .progressingQuests, .journey:
             return URLEncoding.default
         case .recording, .active, .images:
             return JSONEncoding.default
@@ -81,7 +83,7 @@ extension QuestAPI: EndPoint {
             return try? dto.toDictionary()
         case let .images(dto):
             return try? dto.toDictionary()
-        case .checkQuest, .tip, .answer, .progressingQuests:
+        case .checkQuest, .tip, .answer, .progressingQuests, .journey:
             return nil
         }
     }
