@@ -17,4 +17,27 @@ enum QuestStyle: CaseIterable {
             return "ACTIVE"
         }
     }
+    
+    var text: String {
+        switch self {
+        case .recording:
+            return "질문형"
+        case .active:
+            return "행동형"
+        }
+    }
+}
+
+
+extension QuestStyle {
+    static func toString(questType: String) -> String {
+        switch questType {
+        case QuestStyle.recording.key:
+            return QuestStyle.recording.text
+        case QuestStyle.active.key:
+            return QuestStyle.active.text
+        default:
+            return ""
+        }
+    }
 }
