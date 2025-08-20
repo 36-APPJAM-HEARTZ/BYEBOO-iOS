@@ -26,8 +26,8 @@ final class NewJourneySelectView: BaseView {
         self.unCompleteJourneyList = unCompleteJourneyList
         self.completeJourneyList = completeJourneyList
         
-        unCompleteListView = JourneyListView(isFinished: false, journeyList: unCompleteJourneyList)
-        completeListView = JourneyListView(isFinished: true, journeyList: completeJourneyList)
+        unCompleteListView = JourneyListView(isFinished: false, journeyList: [])
+        completeListView = JourneyListView(isFinished: true, journeyList: [])
         
         super.init(frame: .zero)
     }
@@ -91,4 +91,15 @@ final class NewJourneySelectView: BaseView {
         }
     }
 
+}
+
+
+extension NewJourneySelectView {
+    func bind(with entity: LookBackJourneyEntity) {
+        unCompleteListView.updateUI(journeyList: entity.inCompletedJourneys)
+        unCompleteListView.updateCountLabel(count: entity.inCompletedCount)
+        
+        completeListView.updateUI(journeyList: entity.completedJourneys)
+        completeListView.updateCountLabel(count: entity.completedCount)
+    }
 }
