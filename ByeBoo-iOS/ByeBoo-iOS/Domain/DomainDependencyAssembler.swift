@@ -82,5 +82,13 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: GetHelperUseCase.self) { _ in
             return DefaultGetHelperUseCase(repository: userRepository)
         }
+        
+        DIContainer.shared.register(type: GetLookBackJourneyUseCase.self) { _ in
+            return DefaultGetLookBackJourneyUseCase(lookBackJourneyRepository: questRepository)
+        }
+        
+        DIContainer.shared.register(type: GetNewJourneyUseCase.self) { _ in
+            return DefaultGetNewJourneyUseCase(lookBackJourneyRepository: questRepository)
+        }
     }
 }

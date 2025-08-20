@@ -127,7 +127,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 fetchUserJourneyUseCase: fetchUserJourneyUseCase
             )
         }
-
+        
         DIContainer.shared.register(type: QuestTipViewModel.self) { container in
             guard let questTipUseCase = container.resolve(type: QuestTipUseCase.self)
             else {
@@ -143,5 +143,30 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: MyPageViewModel.self) { container in
             return MyPageViewModel(getUserNameUseCase: getUserNameUseCase)
         }
+        
+        DIContainer.shared.register(type: LookBackJourneyViewModel.self) { container in
+            guard let getLookBackJourneyUseCase = container.resolve(type: GetLookBackJourneyUseCase.self)
+            else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return LookBackJourneyViewModel(
+                useCase: getLookBackJourneyUseCase
+            )
+        }
+        
+        DIContainer.shared.register(type: NewJourneyViewModel.self) { container in
+            guard let getNewJourneyCase = container.resolve(type: GetNewJourneyUseCase.self)
+            else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return NewJourneyViewModel(
+                useCase: getNewJourneyCase
+            )
+        }
+        
     }
 }
