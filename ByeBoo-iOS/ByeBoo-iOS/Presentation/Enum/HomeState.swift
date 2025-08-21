@@ -8,10 +8,10 @@
 import UIKit
 
 enum HomeState {
-    case beforeJourneyStart(journey: JourneyEntity)
-    case beforeQuest
-    case afterQuest
-    case afterJourney
+    case beforeJourneyStart(journey: JourneyEntity) // 여정을 시작하지 않은 경우
+    case beforeQuest // 퀘스트 완료 전
+    case afterQuest // 퀘스트 완료 후
+    case afterJourney // 여정 완료 후 & 새로운 여정 시작 전
     
     var title: String {
         switch self {
