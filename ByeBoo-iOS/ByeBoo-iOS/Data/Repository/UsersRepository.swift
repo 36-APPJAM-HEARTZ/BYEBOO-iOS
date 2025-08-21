@@ -60,7 +60,7 @@ struct DefaultUsersRepository: UsersInterface {
         let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
             UsersAPI.count(userID: userID),
-            decodingType: CompleteQuestCountResponseDTO.self
+            decodingType: UserQuestStatusResponseDTO.self
         )
         
         return result.count
