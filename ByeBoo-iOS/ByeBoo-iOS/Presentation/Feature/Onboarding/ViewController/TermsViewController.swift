@@ -5,6 +5,7 @@
 //  Created by APPLE on 8/18/25.
 //
 
+import SafariServices
 import UIKit
 
 final class TermsViewController: BaseViewController {
@@ -83,11 +84,9 @@ extension TermsViewController {
             ByeBooLogger.error(ByeBooError.URLError)
             return
         }
-        UIApplication.shared.open(url) { isSucceed in
-            if !isSucceed {
-                ByeBooLogger.error(ByeBooError.cannotOpenPage)
-            }
-        }
+        let safariVC = SFSafariViewController(url: url)
+        safariVC.modalPresentationStyle = .fullScreen
+        self.present(safariVC, animated: true)
     }
     
     @objc
