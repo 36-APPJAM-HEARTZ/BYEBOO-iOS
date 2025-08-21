@@ -63,8 +63,8 @@ extension HomeView {
         headerView.updateJourney(journey)
     }
     
-    func updateState(_ state: HomeState) {
-        headerView.updateState(state)
+    func updateState(_ state: HomeState, _ journeyTitle: String? = nil) {
+        headerView.updateState(state, journeyTitle)
     }
     
     func helperDidTap() {

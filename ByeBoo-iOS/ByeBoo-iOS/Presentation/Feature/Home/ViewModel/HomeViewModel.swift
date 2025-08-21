@@ -120,7 +120,7 @@ extension HomeViewModel {
         Task {
             do {
                 let journey = try await fetchUserJourneyUseCase.execute()
-                homeStateResultSubject.send(.success(.beforeJourneyStart(journey: journey)))
+                homeStateResultSubject.send(.success(.beforeJourneyStart))
                 journeyResultSubject.send(.success(journey))
             } catch {
                 homeStateResultSubject.send(

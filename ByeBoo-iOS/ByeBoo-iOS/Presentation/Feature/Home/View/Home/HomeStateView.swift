@@ -72,9 +72,9 @@ final class HomeStateView: BaseView {
 }
 
 extension HomeStateView {
-    func updateState(_ state: HomeState) {
+    func updateState(_ state: HomeState, _ journeyTitle: String? = nil) {
         layer.borderColor = state.borderColor.cgColor
-        titleLabel.text = state.title
+        titleLabel.text = (journeyTitle ?? "") + " " + state.title
         descriptionLabel.text = state.description
     }
 }
