@@ -20,7 +20,7 @@ final class TermsView: BaseView {
     private(set) var ageAgreeView = DetailTermsView(title: "만 14세 이상입니다", isHiddenViewMore: true)
     private(set) var moveNextButton = ByeBooButton(titleText: "다음으로", type: .disabled2)
     
-    private var isAllChecked: Bool = false
+    private var isAllAgreeButtonDidTap: Bool = false
     
     override func setStyle() {
         backgroundImageView.do {
@@ -116,29 +116,29 @@ final class TermsView: BaseView {
 
 extension TermsView {
     
-    var isAllAgree: Bool {
+    private var isAllAgree: Bool {
         serviceAgreeView.isChecked && privacyAgreeView.isChecked && ageAgreeView.isChecked
     }
     
     func toggleAllAgree() {
-        isAllChecked.toggle()
+        isAllAgreeButtonDidTap.toggle()
         updateUI()
-        [serviceAgreeView, privacyAgreeView, ageAgreeView].forEach { $0.isChecked = isAllChecked }
+        [serviceAgreeView, privacyAgreeView, ageAgreeView].forEach { $0.isChecked = isAllAgreeButtonDidTap }
     }
     
     func updateAllAgreeState() {
-        isAllChecked = isAllAgree
+        isAllAgreeButtonDidTap = isAllAgree
         updateUI()
     }
     
     private func updateUI() {
         allAgreeView.do {
-            $0.backgroundColor = isAllChecked ? .primary30020 : .white10
-            $0.layer.borderWidth = isAllChecked ? 1 : 0
+            $0.backgroundColor = isAllAgreeButtonDidTap ? .primary30020 : .white10
+            $0.layer.borderWidth = isAllAgreeButtonDidTap ? 1 : 0
             $0.layer.borderColor = UIColor.primary300.cgColor
         }
-        allCheckButton.setImage(isAllChecked ? .checkAll : .checkRound, for: .normal)
-        allAgreeLabel.textColor = isAllChecked ? .primary50 : .grayscale300
-        moveNextButton.updateType(isAllChecked ? .enabled : .disabled2)
+        allCheckButton.setImage(isAllAgreeButtonDidTap ? .checkAll : .checkRound, for: .normal)
+        allAgreeLabel.textColor = isAllAgreeButtonDidTap ? .primary50 : .grayscale300
+        moveNextButton.updateType(isAllAgreeButtonDidTap ? .enabled : .disabled2)
     }
 }
