@@ -18,11 +18,18 @@ final class FinishJourneyViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationItem.hidesBackButton = true
+        
+        ByeBooNavigationBar.makeNavigationBar(
+            navigationItem: self.navigationItem,
+            navigationController: self.navigationController,
+            type: .close(header: .clear),
+            action: #selector(close)
+        )
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: false)
         tabBarController?.tabBar.isHidden = true
     }
     
@@ -43,6 +50,12 @@ final class FinishJourneyViewController: BaseViewController {
 }
 
 extension FinishJourneyViewController {
+    
+    @objc
+    private func close() {
+        
+    }
+    
     @objc
     private func startButtonDidTap() {
         ByeBooLogger.debug("starbuttontapped")

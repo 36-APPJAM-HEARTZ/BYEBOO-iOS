@@ -23,7 +23,7 @@ final class FinishJourneyView: BaseView {
             $0.image = .bgLight
         }
         backgroundView.do {
-            $0.backgroundColor = .black50
+            $0.backgroundColor = .black80
         }
         titleLabel.do {
             $0.text = "🎉감정 직면 여정을 완료했어요!🎉"
@@ -45,18 +45,11 @@ final class FinishJourneyView: BaseView {
             """
             $0.numberOfLines = 0
             $0.font = FontManager.body6R14.font
-            $0.textColor = .secondary100
+            $0.textColor = .secondary50
             $0.textAlignment = .center
         }
         characterImageView.do {
             $0.image = .cake
-        }
-        backHomeLabel.do {
-            $0.text = "홈으로 돌아가기"
-            $0.textAlignment = .center
-            $0.font = FontManager.body1Sb16.font
-            $0.textColor = .primary50
-            $0.underLine(text: $0.text ?? "")
         }
     }
     
@@ -68,8 +61,7 @@ final class FinishJourneyView: BaseView {
             descriptionLabel,
             characterImageView,
             startButton,
-            lookBackButton,
-            backHomeLabel
+            lookBackButton
         )
     }
 
@@ -83,7 +75,7 @@ final class FinishJourneyView: BaseView {
             $0.edges.equalToSuperview()
         }
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(safeArea).offset(45.adjustedH)
+            $0.top.equalTo(safeArea).offset(18.adjustedH)
             $0.centerX.equalToSuperview()
         }
         descriptionLabel.snp.makeConstraints {
@@ -101,10 +93,6 @@ final class FinishJourneyView: BaseView {
         lookBackButton.snp.makeConstraints {
             $0.top.equalTo(startButton.snp.bottom).offset(16.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-        }
-        backHomeLabel.snp.makeConstraints {
-            $0.top.equalTo(lookBackButton.snp.bottom).offset(16.adjustedH)
-            $0.centerX.equalToSuperview()
         }
     }
 }
