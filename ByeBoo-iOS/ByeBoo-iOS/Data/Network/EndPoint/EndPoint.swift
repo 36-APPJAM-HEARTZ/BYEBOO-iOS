@@ -63,16 +63,16 @@ extension EndPoint {
 
 enum HeaderType {
     case basic
-    case withAuth(userID: Int)
+    case withAuth(acessToken: String)
     
     var value: HTTPHeaders {
         switch self {
         case .basic:
             return ["Content-Type": "application/json"]
-        case .withAuth(let userID):
+        case .withAuth(let acessToken):
             return [
                 "Content-Type": "application/json",
-                "userId": "\(userID)"
+                "Authorization": "Bearer \(acessToken)"
             ]
         }
     }
