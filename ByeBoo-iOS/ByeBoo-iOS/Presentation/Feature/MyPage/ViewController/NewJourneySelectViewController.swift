@@ -20,7 +20,7 @@ final class NewJourneySelectViewController: BaseViewController {
 
     init(viewModel: NewJourneyViewModel) {
         self.viewModel = viewModel
-        rootView = NewJourneySelectView(unCompleteJourneyList: [], completeJourneyList: [])
+        rootView = NewJourneySelectView(unCompleteJourneyList: [])
         super.init(nibName: nil, bundle: nil)
     }
     

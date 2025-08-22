@@ -13,21 +13,13 @@ final class NewJourneySelectView: BaseView {
     private let descriptionLabel = UILabel()
     private let divider1 = SectionDividerView()
     private let unCompleteListView: JourneyListView
-    private let divider2 = SectionDividerView()
-    private let completeListView: JourneyListView
     
     private let unCompleteJourneyList: [JourneyEntity]
-    private let completeJourneyList: [JourneyEntity]
-    
     init(
-        unCompleteJourneyList: [JourneyEntity],
-        completeJourneyList: [JourneyEntity]
+        unCompleteJourneyList: [JourneyEntity]
     ) {
         self.unCompleteJourneyList = unCompleteJourneyList
-        self.completeJourneyList = completeJourneyList
-        
         unCompleteListView = JourneyListView(isFinished: false, journeyList: [])
-        completeListView = JourneyListView(isFinished: true, journeyList: [])
         
         super.init(frame: .zero)
     }
@@ -56,9 +48,7 @@ final class NewJourneySelectView: BaseView {
             titleLabel,
             descriptionLabel,
             divider1,
-            unCompleteListView,
-            divider2,
-            completeListView
+            unCompleteListView
         )
     }
     
@@ -81,14 +71,6 @@ final class NewJourneySelectView: BaseView {
             $0.top.equalTo(divider1.snp.bottom).offset(8.adjustedH)
             $0.horizontalEdges.equalToSuperview()
         }
-        divider2.snp.makeConstraints {
-            $0.top.equalTo(unCompleteListView.snp.bottom).offset(8.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-        }
-        completeListView.snp.makeConstraints {
-            $0.top.equalTo(divider2.snp.bottom).offset(8.adjustedH)
-            $0.horizontalEdges.equalToSuperview()
-        }
     }
 
 }
@@ -98,8 +80,5 @@ extension NewJourneySelectView {
     func bind(with entity: LookBackJourneyEntity) {
         unCompleteListView.updateUI(journeyList: entity.inCompletedJourneys)
         unCompleteListView.updateCountLabel(count: entity.inCompletedCount)
-        
-        completeListView.updateUI(journeyList: entity.completedJourneys)
-        completeListView.updateCountLabel(count: entity.completedCount)
     }
 }
