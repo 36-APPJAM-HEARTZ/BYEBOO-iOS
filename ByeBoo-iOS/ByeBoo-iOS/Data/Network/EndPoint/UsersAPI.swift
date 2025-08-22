@@ -53,8 +53,8 @@ extension UsersAPI: EndPoint {
         case .journey, .sendUser, .character, .count, .start:
             return .withAuth(acessToken: Bundle.main.infoDictionary?["MASTER_TOKEN"] as! String)
         }
-        
     }
+    
     var parameterEncoding: ParameterEncoding {
         switch self {
         case .journey, .character, .count, .start:
