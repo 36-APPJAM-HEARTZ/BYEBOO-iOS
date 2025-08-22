@@ -10,11 +10,11 @@ import Foundation
 import Alamofire
 
 enum UsersAPI {
-    case journey(userID: Int)
+    case journey
     case sendUser(requestDTO: UserRequestDTO)
-    case character(userID: Int)
-    case count(userID: Int)
-    case start(userID: Int)
+    case character
+    case count
+    case start
 }
 
 extension UsersAPI: EndPoint {
@@ -42,7 +42,7 @@ extension UsersAPI: EndPoint {
         case .journey, .character, .count:
             return .get
         case .sendUser:
-            return .post
+            return .patch
         case .start:
             return .patch
         }
@@ -50,13 +50,11 @@ extension UsersAPI: EndPoint {
     
     var headers: HeaderType {
         switch self {
-        case .journey(let userID), .character(let userID), .count(let userID), .start(let userID):
-            return .withAuth(userID: userID)
-        case .sendUser:
-            return .basic
+        case .journey, .sendUser, .character, .count, .start:
+            return .withAuth(acessToken: Bundle.main.infoDictionary?["MASTER_TOKEN"] as! String)
         }
+        
     }
-    
     var parameterEncoding: ParameterEncoding {
         switch self {
         case .journey, .character, .count, .start:
@@ -79,3 +77,4 @@ extension UsersAPI: EndPoint {
         }
     }
 }
+
