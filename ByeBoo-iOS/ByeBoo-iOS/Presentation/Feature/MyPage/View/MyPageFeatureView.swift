@@ -17,6 +17,14 @@ final class MyPageFeatureView: BaseView {
         titleLabel.text = title
         super.init(frame: .zero)
 
+        setFeatureButtons(features: features)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setFeatureButtons(features: [MyPageDetailFeatureType]) {
         features.forEach { [weak self] feature in
             let featureButton = UIButton()
             featureButton.do {
@@ -28,10 +36,6 @@ final class MyPageFeatureView: BaseView {
             self?.featureButtons.append(featureButton)
             self?.featureStackView.addArrangedSubview(featureButton)
         }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     override func setStyle() {
