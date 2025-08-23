@@ -119,7 +119,7 @@ extension HomeViewController {
         viewModel.output.helperResult
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
-                if result {
+                if !result {
                     self?.rootView.headerView.startHelperAnimation()
                 }
             }

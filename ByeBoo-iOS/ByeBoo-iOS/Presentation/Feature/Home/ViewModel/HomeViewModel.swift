@@ -15,7 +15,7 @@ final class HomeViewModel {
     private(set) var output: Output
     private var characterResultSubject = PassthroughSubject<Result<String, ByeBooError>, Never>()
     private var userResultSubject = CurrentValueSubject<String, Never>("하츠핑")
-    private var isHelperShownResultSubject = CurrentValueSubject<Bool, Never>(false)
+    private var isHelperShownResultSubject = CurrentValueSubject<Bool, Never>(true)
     private var homeStateResultSubject = PassthroughSubject<Result<UserQuestStatusEntity, ByeBooError>, Never>()
     private var journeyResultSubject = PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never>()
 
@@ -132,10 +132,11 @@ extension HomeViewModel {
     }
     
     private func isHelperShown(state: HomeState) {
-        if getHelperUseCase.execute() && state == .beforeJourneyStart {
-            isHelperShownResultSubject.send(true)
-        } else {
+        
+        if !getHelperUseCase.execute() && state == .beforeJourneyStart {
             isHelperShownResultSubject.send(false)
+        } else {
+            isHelperShownResultSubject.send(true)
         }
     }
     
