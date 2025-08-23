@@ -99,37 +99,16 @@ extension MyPageViewController {
     @objc
     private func moveButtonDidTap() {
         let modifyNicknameViewController = ModifyNicknameViewController()
-        modifyNicknameViewController.deliverName(self.name)
+        modifyNicknameViewController.updateName(self.name)
         self.navigationController?.pushViewController(modifyNicknameViewController, animated: false)
     }
     
     @objc
     private func featureButtonDidTap(_ sender: UIButton) {
-        guard let title = sender.titleLabel?.text else { return }
-        
-        switch title {
-        case MyPageFeatureType.inquire.rawValue:
-            break
-        case MyPageFeatureType.makeService.rawValue:
-            break
-        case MyPageFeatureType.privacyPolicy.rawValue:
-            break
-        case MyPageFeatureType.serviceTerm.rawValue:
-            break
-        case MyPageFeatureType.logout.rawValue:
-            ModalBuilder(
-                modalView: LogoutModalView(),
-                action: nil,
-                rootViewController: self
-            ).present()
-        case MyPageFeatureType.cancel.rawValue:
-            ModalBuilder(
-                modalView: CancelModalView(),
-                action: nil,
-                rootViewController: self
-            ).present()
-        default:
-            break
+        guard let title = sender.titleLabel?.text,
+              let type = MyPageDetailFeatureType(rawValue: title) else {
+            return
         }
+        type.action(for: self)
     }
 }

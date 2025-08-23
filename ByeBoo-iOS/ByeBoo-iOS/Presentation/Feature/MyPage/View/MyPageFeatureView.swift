@@ -13,14 +13,14 @@ final class MyPageFeatureView: BaseView {
     private let featureStackView = UIStackView()
     private(set) var featureButtons: [UIButton] = []
     
-    init(title: String, features: String...) {
+    init(title: String, features: [MyPageDetailFeatureType]) {
         titleLabel.text = title
         super.init(frame: .zero)
 
         features.forEach { [weak self] feature in
             let featureButton = UIButton()
             featureButton.do {
-                $0.setTitle(feature, for: .normal)
+                $0.setTitle(feature.rawValue, for: .normal)
                 $0.titleLabel?.font = FontManager.body3R16.font
                 $0.setTitleColor(.grayscale50, for: .normal)
                 $0.backgroundColor = .clear

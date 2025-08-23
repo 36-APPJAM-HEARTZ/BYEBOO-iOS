@@ -21,16 +21,16 @@ final class MyPageView: BaseView {
     private let worldView = ByeBooWorldView()
     private let divider2 = SectionDividerView()
     private(set) var inquireView = MyPageFeatureView(
-        title: "문의하기",
-        features: MyPageFeatureType.inquire.rawValue, MyPageFeatureType.makeService.rawValue
+        title: MyPageFeatureType.inquire.rawValue,
+        features: MyPageFeatureType.inquire.features
     )
     private(set) var termAndPolicyView = MyPageFeatureView(
-        title: "약관 및 정책",
-        features: MyPageFeatureType.privacyPolicy.rawValue, MyPageFeatureType.serviceTerm.rawValue
+        title: MyPageFeatureType.termAndPolicy.rawValue,
+        features: MyPageFeatureType.termAndPolicy.features
     )
     private(set) var accountView = MyPageFeatureView(
-        title: "계정",
-        features:MyPageFeatureType.logout.rawValue, MyPageFeatureType.cancel.rawValue
+        title: MyPageFeatureType.account.rawValue,
+        features: MyPageFeatureType.account.features
     )
     
     override func setStyle() {
