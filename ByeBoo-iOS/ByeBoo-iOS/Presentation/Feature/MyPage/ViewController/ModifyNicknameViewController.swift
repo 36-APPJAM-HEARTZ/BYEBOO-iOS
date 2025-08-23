@@ -42,8 +42,8 @@ extension ModifyNicknameViewController: BackNavigable {
 
 extension ModifyNicknameViewController {
     
-    func deliverName(_ name: String?) {
+    func updateName(_ name: String?) {
         guard let name = name else { return }
-        rootView.updateName(name)
+        rootView.setName(name)
     }
 }
