@@ -22,7 +22,7 @@ struct DefaultQuestRepository: QuestsInterface {
     
     func fetchProgressingQuests(userID: Int) async throws -> ProgressingQuestsEntity {
         let result = try await network.request(
-            QuestAPI.progressingQuests(userID: userID),
+            QuestAPI.progressingQuests,
             decodingType: ProgressingQuestsResponseDTO.self
         )
         return result.toEntity()
@@ -31,7 +31,7 @@ struct DefaultQuestRepository: QuestsInterface {
     func getQuestInfo(questID: Int) async throws -> QuestInfoEntity {
         let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
-            QuestAPI.checkQuest(userID: userID, questID: questID),
+            QuestAPI.checkQuest(questID: questID),
             decodingType: QuestInfoResponseDTO.self
         )
         return result.toEntity()
@@ -40,7 +40,7 @@ struct DefaultQuestRepository: QuestsInterface {
     func fetchQuestAnswer(questID: Int) async throws -> QuestAnswerEntity {
         let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
-            QuestAPI.answer(userID: userID, questID: questID),
+            QuestAPI.answer(questID: questID),
             decodingType: QuestAnswerResponseDTO.self
         )
         return result.toEntity()
@@ -50,7 +50,7 @@ struct DefaultQuestRepository: QuestsInterface {
         let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         
         let tip = try await network.request(
-            QuestAPI.tip(userID: userID, questID: questID),
+            QuestAPI.tip(questID: questID),
             decodingType: QuestTipResponseDTO.self
         )
         return tip.toEntity()
@@ -68,7 +68,7 @@ struct DefaultQuestRepository: QuestsInterface {
         let saveQuestRequestDTO: SaveQuestRequestDTO = .init(answer: answer, questEmotionState: emotionState)
         
         let _ = try await network.request(
-            QuestAPI.recording(userID: userID, questID: questID, request: saveQuestRequestDTO)
+            QuestAPI.recording(questID: questID, request: saveQuestRequestDTO)
         )
     }
     
@@ -79,7 +79,7 @@ struct DefaultQuestRepository: QuestsInterface {
         let signedURLRequestDTO = SignedURLRequestDTO(contentType: "image/jpeg", imageKey: imageKey)
         
         let result = try await network.request(
-            QuestAPI.images(userID: userID, request: signedURLRequestDTO),
+            QuestAPI.images(request: signedURLRequestDTO),
             decodingType: SignedURLResponseDTO.self
         )
         
@@ -104,7 +104,7 @@ struct DefaultQuestRepository: QuestsInterface {
         )
         
         let _ = try await network.request(
-            QuestAPI.active(userID: userID, questID: questID, request: saveQuestActiveDTO)
+            QuestAPI.active(questID: questID, request: saveQuestActiveDTO)
         )
     }
 }

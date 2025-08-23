@@ -24,7 +24,7 @@ struct DefaultUsersRepository: UsersInterface {
     func fetchJourney() async throws -> JourneyEntity {
         let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
-            UsersAPI.journey(userID: userID),
+            UsersAPI.journey,
             decodingType: UserJourneyResponseDTO.self
         )
         
@@ -49,7 +49,7 @@ struct DefaultUsersRepository: UsersInterface {
     func fetchCharacterDialogue() async throws -> String {
         let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
-            UsersAPI.character(userID: userID),
+            UsersAPI.character,
             decodingType: DialogueResponseDTO.self
         )
         
@@ -59,7 +59,7 @@ struct DefaultUsersRepository: UsersInterface {
     func fetchCompleteQuestCount() async throws -> Int {
         let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
-            UsersAPI.count(userID: userID),
+            UsersAPI.count,
             decodingType: CompleteQuestCountResponseDTO.self
         )
         
@@ -68,7 +68,7 @@ struct DefaultUsersRepository: UsersInterface {
     
     func startJourney() async throws {
         let userID: Int = userDefaultsService.load(key: .userID) ?? 1
-        try await network.request(UsersAPI.start(userID: userID))
+        try await network.request(UsersAPI.start)
     }
     
     // MARK: Persistence
