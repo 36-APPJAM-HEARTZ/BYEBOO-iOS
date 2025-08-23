@@ -13,4 +13,11 @@ extension DIContainer {
         let presentationAssembler = PresentationDependencyAssembler(preAssembler: domainAssembler)
         presentationAssembler.assemble()
     }
+    
+    func mockDependencyInject() {
+        let dataAssembler = MockDataDependencyAssembler()
+        let domainAssembler = DomainDependencyAssembler(preAssembler: dataAssembler)
+        let presentationAssembler = PresentationDependencyAssembler(preAssembler: domainAssembler)
+        presentationAssembler.assemble()
+    }
 }
