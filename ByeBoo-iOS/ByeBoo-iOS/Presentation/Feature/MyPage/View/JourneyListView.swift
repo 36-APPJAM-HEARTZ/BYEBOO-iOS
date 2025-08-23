@@ -20,11 +20,11 @@ final class JourneyListView: BaseView {
     private let prepareTitleLabel = UILabel()
     
     private let isFinished: Bool
-    private let journeyList: [JourneyStyleEntity]
+    private let journeyList: [JourneyEntity]
     
     init(
         isFinished: Bool,
-        journeyList: [JourneyStyleEntity]
+        journeyList: [JourneyEntity]
     ) {
         self.isFinished = isFinished
         self.journeyList = journeyList
@@ -109,7 +109,7 @@ final class JourneyListView: BaseView {
 }
 
 extension JourneyListView {
-    func updateUI(journeyList: [JourneyStyleEntity]) {
+    func updateUI(journeyList: [JourneyEntity]) {
         if !journeyList.isEmpty {
             self.emptyLabel?.removeFromSuperview()
             journeyListView?.removeFromSuperview()
@@ -130,8 +130,8 @@ extension JourneyListView {
             
             journeyList.forEach { journey in
             let journeyView = OneLineTextBoxView(
-                title: journey.journey,
-                tagTitle: QuestStyle.toString(questType: journey.style),
+                title: journey.title,
+                tagTitle: QuestStyle.toString(questType: journey.description ?? ""),
                 tagType: isFinished ? .word3Gray : .word3Purple,
                 isHighlighted: !isFinished
             )

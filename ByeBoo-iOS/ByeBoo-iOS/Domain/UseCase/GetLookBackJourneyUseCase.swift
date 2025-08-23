@@ -6,7 +6,7 @@
 //
 
 protocol GetLookBackJourneyUseCase {
-    func execute() async throws -> [JourneyStyleEntity]
+    func execute() async throws -> [JourneyEntity]
 }
 
 struct DefaultGetLookBackJourneyUseCase: GetLookBackJourneyUseCase {
@@ -17,7 +17,7 @@ struct DefaultGetLookBackJourneyUseCase: GetLookBackJourneyUseCase {
         self.lookBackJourneyRepository = lookBackJourneyRepository
     }
     
-    func execute() async throws -> [JourneyStyleEntity] {
+    func execute() async throws -> [JourneyEntity] {
         try await lookBackJourneyRepository.getLookBackJourney()
     }
 }

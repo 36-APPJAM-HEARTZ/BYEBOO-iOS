@@ -13,9 +13,9 @@ final class LookBackJourneyView: BaseView {
     private let divider = SectionDividerView()
     private let journeyView: JourneyListView
     
-    private var journeyList: [JourneyStyleEntity]
+    private var journeyList: [JourneyEntity]
     
-    init(journeyList: [JourneyStyleEntity]) {
+    init(journeyList: [JourneyEntity]) {
         self.journeyList = journeyList
         self.journeyView = JourneyListView(isFinished: true, journeyList: journeyList)
 
@@ -61,7 +61,7 @@ final class LookBackJourneyView: BaseView {
 }
 
 extension LookBackJourneyView {
-    func bind(with entity: [JourneyStyleEntity]) {
+    func bind(with entity: [JourneyEntity]) {
         journeyList = entity
         journeyView.updateCountLabel(count: entity.count)
         journeyView.updateUI(journeyList: journeyList)

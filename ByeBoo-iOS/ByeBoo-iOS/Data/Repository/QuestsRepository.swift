@@ -72,7 +72,7 @@ struct DefaultQuestRepository: QuestsInterface {
         )
     }
     
-    func getLookBackJourney() async throws -> [JourneyStyleEntity] {
+    func getLookBackJourney() async throws -> [JourneyEntity] {
         let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
             QuestAPI.journey(userID: userID),
@@ -155,8 +155,8 @@ struct MockQuestsRepository: QuestsInterface {
         
     }
     
-    func getLookBackJourney() async throws -> [JourneyStyleEntity]{
-        return JourneyStyleEntity.stub()
+    func getLookBackJourney() async throws -> [JourneyEntity]{
+        return [JourneyEntity.stub()]
     }
     
     func getNewJourney() async throws -> LookBackJourneyEntity {

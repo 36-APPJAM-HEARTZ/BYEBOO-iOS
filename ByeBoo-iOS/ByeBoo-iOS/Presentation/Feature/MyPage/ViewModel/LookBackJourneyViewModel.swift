@@ -10,7 +10,7 @@ import Foundation
 
 final class LookBackJourneyViewModel {
     
-    private var lookBackJourneySubject: PassthroughSubject<Result<[JourneyStyleEntity], ByeBooError>, Never> = .init()
+    private var lookBackJourneySubject: PassthroughSubject<Result<[JourneyEntity], ByeBooError>, Never> = .init()
     
     var output: Output {
         Output(
@@ -34,7 +34,7 @@ extension LookBackJourneyViewModel {
     }
     
     struct Output {
-        let lookBackJourneyPublisher: AnyPublisher<Result<[JourneyStyleEntity], ByeBooError>, Never>
+        let lookBackJourneyPublisher: AnyPublisher<Result<[JourneyEntity], ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {

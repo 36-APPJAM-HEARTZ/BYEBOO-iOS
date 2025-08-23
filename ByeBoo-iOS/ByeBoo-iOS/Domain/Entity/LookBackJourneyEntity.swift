@@ -7,32 +7,18 @@
 
 struct LookBackJourneyEntity {
     let inCompletedCount: Int
-    let inCompletedJourneys: [JourneyStyleEntity]
+    let inCompletedJourneys: [JourneyEntity]
     let completedCount: Int
-    let completedJourneys: [JourneyStyleEntity]
-}
-
-struct JourneyStyleEntity {
-    let journey: String
-    let style: String
+    let completedJourneys: [JourneyEntity]
 }
 
 extension LookBackJourneyEntity {
     static func stub() -> LookBackJourneyEntity {
         return .init(
             inCompletedCount: 1,
-            inCompletedJourneys: JourneyStyleEntity.stub(),
+            inCompletedJourneys: [JourneyEntity.stub()],
             completedCount: 1,
-            completedJourneys: JourneyStyleEntity.stub()
+            completedJourneys: [JourneyEntity.stub()]
         )
-    }
-}
-
-extension JourneyStyleEntity {
-    static func stub() -> [JourneyStyleEntity] {
-        return [
-            JourneyStyleEntity(journey: "감정 정리", style: "ACTIVE"),
-            JourneyStyleEntity(journey: "감정 직면", style: "RECORDING"),
-        ]
     }
 }
