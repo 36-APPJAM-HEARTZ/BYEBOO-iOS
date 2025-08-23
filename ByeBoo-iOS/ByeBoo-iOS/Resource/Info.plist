@@ -4,8 +4,8 @@
 <dict>
 	<key>BASE_URL</key>
 	<string>$(BASE_URL)</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>사진 업로드를 위해 갤러리 접근 권한이 필요합니다. 사진 선택을 위해 [설정]에서 접근 권한을 허용해 주세요.</string>
+	<key>MASTER_TOKEN</key>
+	<string>$(MASTER_TOKEN)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Pretendard-Bold.otf</string>

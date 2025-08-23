@@ -24,6 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             fatalError()
         }
+        
         let viewController = InformationViewController(viewModel: viewModel)
 
         let navigationController = UINavigationController(rootViewController: viewController)

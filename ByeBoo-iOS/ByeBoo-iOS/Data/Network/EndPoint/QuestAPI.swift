@@ -10,13 +10,13 @@ import Foundation
 import Alamofire
 
 enum QuestAPI {
-    case checkQuest(userID: Int, questID: Int)
-    case recording(userID: Int, questID: Int, request: SaveQuestRequestDTO)
-    case active(userID: Int, questID: Int, request: SaveQuestActiveRequestDTO)
-    case images(userID: Int, request: SignedURLRequestDTO)
-    case tip(userID: Int, questID: Int)
-    case answer(userID: Int, questID: Int)
-    case progressingQuests(userID: Int)
+    case checkQuest(questID: Int)
+    case recording(questID: Int, request: SaveQuestRequestDTO)
+    case active(questID: Int, request: SaveQuestActiveRequestDTO)
+    case images(request: SignedURLRequestDTO)
+    case tip(questID: Int)
+    case answer(questID: Int)
+    case progressingQuests
 }
 
 extension QuestAPI: EndPoint {
@@ -27,17 +27,17 @@ extension QuestAPI: EndPoint {
     
     var path: String {
         switch self {
-        case .checkQuest(_, let questID):
+        case .checkQuest(let questID):
             return "/\(questID)"
-        case .recording(_, let questID, _):
+        case .recording(let questID, _):
             return "/\(questID)/recording"
-        case .active(_, let questID, _):
+        case .active(let questID, _):
             return "/\(questID)/active"
         case .images:
             return "/images/signed-url"
-        case .tip(_, let questID):
+        case .tip(let questID):
             return "/\(questID)/tip"
-        case .answer(_, let questID):
+        case .answer(let questID):
             return "/answer/\(questID)"
         case .progressingQuests:
             return "/all/progress"
@@ -55,14 +55,8 @@ extension QuestAPI: EndPoint {
     
     var headers: HeaderType {
         switch self {
-        case let .checkQuest(userID, _),
-            let .recording(userID, _, _),
-            let .active(userID, _, _),
-            let .tip(userID, _),
-            let .images(userID, _),
-            let .answer(userID, _),
-            let .progressingQuests(userID):
-            return .withAuth(userID: userID)
+        case .checkQuest, .recording, .active, .tip, .images, .answer, .progressingQuests:
+            return .withAuth(acessToken: Bundle.main.infoDictionary?["MASTER_TOKEN"] as! String)
         }
     }
     
@@ -81,11 +75,11 @@ extension QuestAPI: EndPoint {
     
     var bodyParameters: Parameters? {
         switch self {
-        case let .recording(_, _, dto):
+        case let .recording(_, dto):
             return try? dto.toDictionary()
-        case let .active(_, _, dto):
+        case let .active(_, dto):
             return try? dto.toDictionary()
-        case let .images(_, dto):
+        case let .images(dto):
             return try? dto.toDictionary()
         case .checkQuest, .tip, .answer, .progressingQuests:
             return nil
