@@ -61,8 +61,12 @@ final class MyPageViewController: BaseViewController {
     }
     
     private func setGesture() {
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(lookBackButtonDidTap))
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewByeBooWorldDidTap))
         rootView.myRecordView.textBoxView.do {
+            $0.addGestureRecognizer(tapRecognizer)
+            $0.isUserInteractionEnabled = true
+        }
+        rootView.worldView.textBoxView.do {
             $0.addGestureRecognizer(tapRecognizer)
             $0.isUserInteractionEnabled = true
         }
@@ -94,6 +98,13 @@ extension MyPageViewController {
         let lookBackViewController = LookBackJourneyViewController()
         lookBackViewController.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(lookBackViewController, animated: true)
+    }
+    
+    @objc
+    private func viewByeBooWorldDidTap() {
+        let tutorialViewController = TutorialModalViewController()
+        tutorialViewController.navigationItem.hidesBackButton = true
+        self.navigationController?.pushViewController(tutorialViewController, animated: false)
     }
     
     @objc
