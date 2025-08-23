@@ -109,6 +109,31 @@ extension MyPageViewController {
               let type = MyPageDetailFeatureType(rawValue: title) else {
             return
         }
-        type.action(for: self)
+        actionFeature(type: type)
+    }
+    
+    private func actionFeature(type: MyPageDetailFeatureType) {
+        switch type {
+        case .inquireByeBoo:
+            ExternalLink.inquire.openURL(for: self)
+        case .makeService:
+            ExternalLink.makeService.openURL(for: self)
+        case .privacyPolicy:
+            ExternalLink.privacyPolicy.openURL(for: self)
+        case .serviceTerm:
+            ExternalLink.serviceTerm.openURL(for: self)
+        case .logout:
+            presentModal(to: LogoutModalView())
+        case .cancel:
+            presentModal(to: CancelModalView())
+        }
+    }
+    
+    private func presentModal(to modal: BaseView & ModalProtocol) {
+        ModalBuilder(
+            modalView: modal,
+            action: nil,
+            rootViewController: self
+        ).present()
     }
 }

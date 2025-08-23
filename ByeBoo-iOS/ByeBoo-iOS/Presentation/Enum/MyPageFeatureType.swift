@@ -33,29 +33,4 @@ enum MyPageDetailFeatureType: String {
     case serviceTerm = "서비스 이용 약관"
     case logout = "로그아웃"
     case cancel = "탈퇴"
-    
-    func action(for viewController: MyPageViewController) {
-        switch self {
-        case .inquireByeBoo:
-            ExternalLink.inquire.openURL(for: viewController)
-        case .makeService:
-            ExternalLink.makeService.openURL(for: viewController)
-        case .privacyPolicy:
-            ExternalLink.privacyPolicy.openURL(for: viewController)
-        case .serviceTerm:
-            ExternalLink.serviceTerm.openURL(for: viewController)
-        case .logout:
-            presentModal(for: viewController, to: LogoutModalView())
-        case .cancel:
-            presentModal(for: viewController, to: CancelModalView())
-        }
-    }
-    
-    private func presentModal(for viewController: UIViewController, to modal: BaseView & ModalProtocol) {
-        ModalBuilder(
-            modalView: modal,
-            action: nil,
-            rootViewController: viewController
-        ).present()
-    }
 }
