@@ -11,12 +11,12 @@ final class NicknameStateView: BaseView {
     
     private let nicknameStateView = UIView()
     private let errorIconImageView = UIImageView()
-    private let nicknameStateLabel = UILabel()
+    private let stateLabel = UILabel()
     private(set) var letterCountLabel = UILabel()
     
     override func setStyle() {
         nicknameStateView.backgroundColor = .clear
-        nicknameStateLabel.do {
+        stateLabel.do {
             $0.text = NicknameState.normal.rawValue
             $0.textColor = .grayscale400
             $0.font = FontManager.cap2R12.font
@@ -35,7 +35,7 @@ final class NicknameStateView: BaseView {
     override func setUI() {
         addSubviews(
             errorIconImageView,
-            nicknameStateLabel,
+            stateLabel,
             letterCountLabel
         )
     }
@@ -50,7 +50,7 @@ final class NicknameStateView: BaseView {
             $0.top.equalToSuperview().offset(8.adjustedH)
             $0.size.equalTo(16.adjustedW)
         }
-        nicknameStateLabel.snp.makeConstraints {
+        stateLabel.snp.makeConstraints {
             $0.leading.equalTo(errorIconImageView.snp.trailing).offset(3.adjustedW)
             $0.top.equalToSuperview().offset(8.adjustedH)
             $0.width.equalTo(300.adjustedW)
@@ -76,8 +76,8 @@ extension NicknameStateView {
     }
     
     private func updateOnBeginEditingState() {
-        nicknameStateLabel.text = NicknameState.normal.rawValue
-        nicknameStateLabel.textColor = .grayscale400
+        stateLabel.text = NicknameState.normal.rawValue
+        stateLabel.textColor = .grayscale400
         letterCountLabel.textColor = .grayscale400
         errorIconImageView.image = .error
         errorIconImageView.isHidden = false
@@ -85,8 +85,8 @@ extension NicknameStateView {
     }
     
     private func updateErrorState() {
-        nicknameStateLabel.text = NicknameState.normal.rawValue
-        nicknameStateLabel.textColor = .error300
+        stateLabel.text = NicknameState.normal.rawValue
+        stateLabel.textColor = .error300
         letterCountLabel.textColor = .error300
         errorIconImageView.image = .errorRed
         errorIconImageView.isHidden = false
@@ -94,8 +94,8 @@ extension NicknameStateView {
     }
     
     private func updateNormalState() {
-        nicknameStateLabel.text = NicknameState.complete.rawValue
-        nicknameStateLabel.textColor = .primary300
+        stateLabel.text = NicknameState.complete.rawValue
+        stateLabel.textColor = .primary300
         letterCountLabel.textColor = .primary300
         errorIconImageView.isHidden = true
         hideErrorIconImageView()
