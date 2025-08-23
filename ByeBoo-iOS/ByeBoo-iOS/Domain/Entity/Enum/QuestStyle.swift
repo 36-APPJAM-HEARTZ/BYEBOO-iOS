@@ -27,17 +27,3 @@ enum QuestStyle: CaseIterable {
         }
     }
 }
-
-
-extension QuestStyle {
-    static func toString(questType: String) -> String {
-        switch questType {
-        case QuestStyle.recording.key:
-            return QuestStyle.recording.text
-        case QuestStyle.active.key:
-            return QuestStyle.active.text
-        default:
-            return ""
-        }
-    }
-}
