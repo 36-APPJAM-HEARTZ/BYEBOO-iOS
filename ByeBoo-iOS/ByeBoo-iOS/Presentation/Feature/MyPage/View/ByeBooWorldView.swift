@@ -11,13 +11,12 @@ final class ByeBooWorldView: BaseView {
     
     private let iconImageView = UIImageView()
     private let titleLabel = UILabel()
-    let textBoxView = OneLineTextBoxView(title: "Bye Boo 세계관 보러 가기", isHighlighted: true)
+    private(set) var textBoxView = OneLineTextBoxView(title: "Bye Boo 세계관 보러 가기", isHighlighted: true)
     
     override func setStyle() {
         iconImageView.do {
             $0.image = .change
         }
-        
         titleLabel.do {
             $0.text = "보리가 궁금하다면?"
             $0.font = FontManager.body1Sb16.font
