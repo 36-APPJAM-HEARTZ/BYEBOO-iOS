@@ -72,6 +72,8 @@ extension HomeViewModel: ViewModelType {
             fetchDialogue()
             fetchStatus()
             fetchJourney()
+            
+            getUserResult()
         case .helperTapped:
             setHelperShown()
         }
