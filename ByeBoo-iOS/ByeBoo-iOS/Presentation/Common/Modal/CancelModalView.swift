@@ -21,7 +21,6 @@ final class CancelModalView: BaseView, ModalProtocol {
             secondDescriptionLabel,
             buttonStackView
         )
-        
         if let dismissButton = dismissButton {
             buttonStackView.addArrangedSubviews(dismissButton, actionButton)
         }

@@ -22,7 +22,6 @@ final class LogoutModalView: BaseView, ModalProtocol {
             titleLabel,
             buttonStackView
         )
-        
         if let dismissButton = dismissButton {
             buttonStackView.addArrangedSubviews(dismissButton, actionButton)
         }
