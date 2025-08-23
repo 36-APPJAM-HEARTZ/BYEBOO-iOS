@@ -1,25 +1,25 @@
 //
-//  MyRecordView.swift
+//  ByeBooWorldView.swift
 //  ByeBoo-iOS
 //
-//  Created by 최주리 on 7/7/25.
+//  Created by APPLE on 8/21/25.
 //
 
 import UIKit
 
-final class MyRecordView: BaseView {
+final class ByeBooWorldView: BaseView {
     
     private let iconImageView = UIImageView()
     private let titleLabel = UILabel()
-    let textBoxView = OneLineTextBoxView(title: "완료한 여정 돌아보기", isHighlighted: true)
+    let textBoxView = OneLineTextBoxView(title: "Bye Boo 세계관 보러 가기", isHighlighted: true)
     
     override func setStyle() {
         iconImageView.do {
-            $0.image = .write
+            $0.image = .change
         }
         
         titleLabel.do {
-            $0.text = "나의 기록"
+            $0.text = "보리가 궁금하다면?"
             $0.font = FontManager.body1Sb16.font
             $0.textColor = .grayscale300
         }
@@ -50,5 +50,4 @@ final class MyRecordView: BaseView {
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
     }
-
 }

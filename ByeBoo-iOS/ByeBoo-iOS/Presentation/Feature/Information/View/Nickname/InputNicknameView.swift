@@ -20,14 +20,22 @@ final class InputNicknameView: BaseView {
     private let titleView = UIView()
     private let titleLabel = UILabel()
     private let subTitleLabel = UILabel()
-    
     private let nicknameFieldView = UIView()
     private(set) var nicknameTextField = ByeBooNicknameTextField(.onBeginEditing)
+    private let nicknameStateView = NicknameStateView()
     
-    private let nicknameStateView = UIView()
-    private let errorIconImageView = UIImageView()
-    private let nicknameStateLabel = UILabel()
-    private let letterCountLabel = UILabel()
+    init() {
+        super.init(frame: .zero)
+        
+        setStyle()
+        setUI()
+        setLayout()
+        setAction()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func setStyle() {
         titleView.backgroundColor = .clear
@@ -44,27 +52,6 @@ final class InputNicknameView: BaseView {
             $0.font = FontManager.body6R14.font
         }
         nicknameFieldView.backgroundColor = .clear
-        nicknameStateView.backgroundColor = .clear
-        nicknameStateLabel.do {
-            $0.text = NicknameState.normal.rawValue
-            $0.textColor = .grayscale400
-            $0.font = FontManager.cap2R12.font
-        }
-        errorIconImageView.do {
-            $0.image = .error
-        }
-        letterCountLabel.do {
-            $0.text = "0/5"
-            $0.textColor = .grayscale400
-            $0.textAlignment = .right
-            $0.font = FontManager.cap2R12.font
-        }
-        nicknameTextField.onTextChange = { [weak self] text in
-            self?.letterCountLabel.text = "\(text.count)/\(5)"
-        }
-        nicknameTextField.onStateChange = { [weak self] type in
-            self?.updateNicknameState(type)
-        }
     }
     
     override func setUI() {
@@ -73,11 +60,6 @@ final class InputNicknameView: BaseView {
             subTitleLabel
         )
         nicknameFieldView.addSubview(nicknameTextField)
-        nicknameStateView.addSubviews(
-            errorIconImageView,
-            nicknameStateLabel,
-            letterCountLabel
-        )
         addSubviews(
             titleView,
             nicknameFieldView,
@@ -120,60 +102,14 @@ final class InputNicknameView: BaseView {
             $0.width.equalTo(375.adjustedW)
             $0.height.equalTo(48.adjustedH)
         }
-        errorIconImageView.snp.makeConstraints {
-            $0.leading.equalToSuperview().inset(24.adjustedW)
-            $0.top.equalToSuperview().offset(8.adjustedH)
-            $0.size.equalTo(16.adjustedW)
-        }
-        nicknameStateLabel.snp.makeConstraints {
-            $0.leading.equalTo(errorIconImageView.snp.trailing).offset(3.adjustedW)
-            $0.top.equalToSuperview().offset(8.adjustedH)
-            $0.width.equalTo(300.adjustedW)
-            $0.height.equalTo(16.adjustedH)
-        }
-        letterCountLabel.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(24.adjustedW)
-            $0.top.equalToSuperview().offset(8.adjustedH)
-            $0.width.equalTo(27.adjustedW)
-            $0.height.equalTo(16.adjustedH)
-        }
-    }
-}
-
-extension InputNicknameView {
-    
-    func updateNicknameState(_ type: NicknameFieldType) {
-        switch type {
-        case .onBeginEditing:
-            nicknameStateLabel.text = NicknameState.normal.rawValue
-            nicknameStateLabel.textColor = .grayscale400
-            letterCountLabel.textColor = .grayscale400
-            errorIconImageView.image = .error
-            errorIconImageView.isHidden = false
-            makeErrorIconImageViewConstraints()
-        case .error:
-            nicknameStateLabel.text = NicknameState.normal.rawValue
-            nicknameStateLabel.textColor = .error300
-            letterCountLabel.textColor = .error300
-            errorIconImageView.image = .errorRed
-            errorIconImageView.isHidden = false
-            makeErrorIconImageViewConstraints()
-        case .normal:
-            nicknameStateLabel.text = NicknameState.complete.rawValue
-            nicknameStateLabel.textColor = .primary300
-            letterCountLabel.textColor = .primary300
-            errorIconImageView.isHidden = true
-            errorIconImageView.snp.updateConstraints {
-                $0.size.equalTo(0)
-            }
-        }
     }
     
-    private func makeErrorIconImageViewConstraints() {
-        errorIconImageView.snp.makeConstraints {
-            $0.leading.equalToSuperview().inset(24.adjustedW)
-            $0.top.equalToSuperview().offset(8.adjustedH)
-            $0.size.equalTo(16.adjustedW)
+    private func setAction() {
+        nicknameTextField.onTextChange = { [weak self] text in
+            self?.nicknameStateView.letterCountLabel.text = "\(text.count)/\(5)"
+        }
+        nicknameTextField.onStateChange = { [weak self] type in
+            self?.nicknameStateView.updateNicknameState(type)
         }
     }
 }
