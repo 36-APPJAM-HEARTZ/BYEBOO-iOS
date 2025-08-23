@@ -23,14 +23,3 @@ struct DefaultFetchQuestStatusUseCase: FetchQuestStatusUseCase {
         return try await repository.fetchQuestStatus()
     }
 }
-
-struct MockFetchQuestStatusUseCase: FetchQuestStatusUseCase {
-    func execute() async throws -> UserQuestStatusEntity {
-        return .init(
-            todayComplete: true,
-            currentStatus: .afterJourney,
-            questCount: 3
-        )
-//        throw ByeBooError.notFoundQuest
-    }
-}

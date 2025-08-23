@@ -8,7 +8,7 @@
 struct UserQuestStatusResponseDTO: Decodable {
     let todayComplete: Bool
     let count: Int
-    let userCurrentStatus: String
+    let userCurrentStatus: HomeStateData
 }
 
 extension UserQuestStatusResponseDTO {
