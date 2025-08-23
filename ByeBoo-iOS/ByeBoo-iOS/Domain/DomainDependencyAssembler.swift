@@ -55,8 +55,8 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultFetchCharacterDialogueUseCase(repository: userRepository)
         }
         
-        DIContainer.shared.register(type: FetchCompleteQuestCountUseCase.self) { _ in
-            return DefaultFetchCompleteQuestCountUseCase(repository: userRepository)
+        DIContainer.shared.register(type: FetchQuestStatusUseCase.self) { _ in
+            return DefaultFetchQuestStatusUseCase(repository: userRepository)
         }
         
         DIContainer.shared.register(type: StartJourneyUseCase.self) { _ in

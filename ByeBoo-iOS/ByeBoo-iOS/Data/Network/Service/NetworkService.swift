@@ -49,19 +49,7 @@ struct DefaultNetworkService: NetworkService {
                     if let data = response.data,
                        let statusCode = response.response?.statusCode,  
                        let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
-                        let error: ByeBooError
-                        
-                        if statusCode == 404 {
-                            error = ByeBooError.notFoundQuest
-                        } else if statusCode == 400 {
-                            error = ByeBooError.beforeJourney
-                        } else {
-                            error = ByeBooError.networkError(
-                                code: statusCode,
-                                message: errorResponse.message
-                            )
-                        }
-                        
+                        let error = handleError(statusCode, errorResponse.message)
                         ByeBooLogger.error(error)
                         continuation.resume(throwing: error)
                     } else {
