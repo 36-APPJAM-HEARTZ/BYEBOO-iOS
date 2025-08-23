@@ -26,14 +26,9 @@ final class LoadingViewController: BaseViewController {
         super.viewDidLoad()
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            guard let viewModel = DIContainer.shared.resolve(type: JourneyResultViewModel.self) else {
-                ByeBooLogger.error(ByeBooError.DIFailedError)
-                fatalError()
-            }
-            
-            let resultViewController = CardJourneyViewController(viewModel: viewModel)
+            let viewController = ViewControllerFactory.shared.makeCardJourneyViewController()
             self.navigationController?.navigationBar.isHidden = true
-            self.navigationController?.pushViewController(resultViewController, animated: false)
+            self.navigationController?.pushViewController(viewController, animated: false)
         }
     }
 }
