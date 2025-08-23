@@ -44,6 +44,6 @@ extension ModifyNicknameViewController {
     
     func updateName(_ name: String?) {
         guard let name = name else { return }
-        rootView.setName(name)
+        rootView.configure(name)
     }
 }

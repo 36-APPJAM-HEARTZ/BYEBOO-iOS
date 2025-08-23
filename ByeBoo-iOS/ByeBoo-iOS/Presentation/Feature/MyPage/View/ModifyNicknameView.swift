@@ -94,7 +94,7 @@ final class ModifyNicknameView: BaseView {
 
 extension ModifyNicknameView {
     
-    func setName(_ name: String) {
+    func configure(_ name: String) {
         nicknameTextField.nicknameField.text = name
     }
 }
