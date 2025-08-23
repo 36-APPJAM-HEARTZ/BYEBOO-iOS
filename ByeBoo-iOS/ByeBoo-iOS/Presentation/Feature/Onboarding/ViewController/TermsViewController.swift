@@ -91,11 +91,7 @@ extension TermsViewController {
     
     @objc
     private func moveNextButtonDidTap() {
-        guard let viewModel = DIContainer.shared.resolve(type: InformationViewModel.self) else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            fatalError()
-        }
-        let informationViewController = InformationViewController(viewModel: viewModel)
-        self.navigationController?.pushViewController(informationViewController, animated: true)
+        let viewController = ViewControllerFactory.shared.makeInformationViewController()
+        self.navigationController?.pushViewController(viewController, animated: true)
     }
 }

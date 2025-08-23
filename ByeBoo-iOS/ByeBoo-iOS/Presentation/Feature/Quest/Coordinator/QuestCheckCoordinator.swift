@@ -16,11 +16,7 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     }
     
     func moveQuestStart() {
-        guard let startViewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {            ByeBooLogger.error(ByeBooError.DIFailedError)
-            fatalError()
-        }
-        
-        let viewController = QuestStartViewController(viewModel: startViewModel)
+        let viewController = ViewControllerFactory.shared.makeQuestStartViewController()
         viewController.modalPresentationStyle = .fullScreen
         rootViewController?.present(viewController, animated: false)
     }

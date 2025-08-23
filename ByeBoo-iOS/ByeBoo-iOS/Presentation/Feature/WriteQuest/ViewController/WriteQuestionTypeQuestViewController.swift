@@ -157,6 +157,7 @@ extension WriteQuestionTypeQuestViewController {
                     }
                     
                     self?.bottomSheetViewController.dismiss(animated: true)
+                    // TODO: viewController에 viewModel만 들어가도록 변경
                     let viewController = CompleteQuestionTypeQuestViewController(
                         viewModel: viewModel,
                         questID: self?.questID ?? 1
