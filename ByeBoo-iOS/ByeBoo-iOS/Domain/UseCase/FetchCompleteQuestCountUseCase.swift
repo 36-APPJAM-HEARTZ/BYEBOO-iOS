@@ -23,10 +23,3 @@ struct DefaultFetchCompleteQuestCountUseCase: FetchCompleteQuestCountUseCase {
         return try await repository.fetchCompleteQuestCount()
     }
 }
-
-struct MockFetchCompleteQuestCountUseCase: FetchCompleteQuestCountUseCase {
-    func execute() async throws -> Int {
-//        return 3
-        throw ByeBooError.notFoundQuest
-    }
-}
