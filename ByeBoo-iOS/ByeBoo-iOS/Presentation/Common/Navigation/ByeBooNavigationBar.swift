@@ -105,13 +105,13 @@ struct ByeBooNavigationBar {
             )
             
         case .titleAndClose(let string, _):
+            navigationItem.title = string
             makeCloseButtonItem(
                 image: .xicon,
                 target: topViewController,
                 navigationItem: navigationItem,
                 action: action
             )
-            navigationItem.title = string
             
         case .titleAndBack(let string, _):
             navigationItem.title = string
