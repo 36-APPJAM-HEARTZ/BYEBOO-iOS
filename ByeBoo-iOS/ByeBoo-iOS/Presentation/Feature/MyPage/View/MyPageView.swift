@@ -18,7 +18,7 @@ final class MyPageView: BaseView {
     private(set) var moveButton = UIButton()
     private let divider1 = SectionDividerView()
     private(set) var myRecordView = MyRecordView()
-    private(set) var worldView = ByeBooWorldView()
+    private(set) var worldView = ByeBooUniverseView()
     private let divider2 = SectionDividerView()
     private(set) var inquireView = MyPageFeatureView(
         title: MyPageFeatureType.inquire.rawValue,

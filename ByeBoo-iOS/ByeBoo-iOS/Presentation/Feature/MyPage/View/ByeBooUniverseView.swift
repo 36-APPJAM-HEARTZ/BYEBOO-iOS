@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ByeBooWorldView: BaseView {
+final class ByeBooUniverseView: BaseView {
     
     private let iconImageView = UIImageView()
     private let titleLabel = UILabel()
