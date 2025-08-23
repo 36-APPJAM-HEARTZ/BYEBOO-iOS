@@ -71,22 +71,12 @@ extension TermsViewController {
     
     @objc
     private func serviceViewMoreButtonDidTap() {
-        openURL(.termsOfService)
+        ExternalLink.serviceTerm.openURL(for: self)
     }
     
     @objc
     private func privacyViewMoreButtonDidTap() {
-        openURL(.privacyPolicy)
-    }
-    
-    private func openURL(_ externalLink: ExternalLink) {
-        guard let url = URL(string: externalLink.rawValue) else {
-            ByeBooLogger.error(ByeBooError.URLError)
-            return
-        }
-        let safariVC = SFSafariViewController(url: url)
-        safariVC.modalPresentationStyle = .fullScreen
-        self.present(safariVC, animated: true)
+        ExternalLink.serviceTerm.openURL(for: self)
     }
     
     @objc
