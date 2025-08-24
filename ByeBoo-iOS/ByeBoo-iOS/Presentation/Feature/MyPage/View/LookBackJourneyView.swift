@@ -8,12 +8,12 @@
 import UIKit
 
 final class LookBackJourneyView: BaseView {
-    // TODO: 승준이의 attributedString 반영
+    
     private let titleLabel = UILabel()
     private let divider = SectionDividerView()
     private let journeyView: JourneyListView
     
-    private let journeyList: [JourneyEntity]
+    private var journeyList: [JourneyEntity]
     
     init(journeyList: [JourneyEntity]) {
         self.journeyList = journeyList
@@ -57,5 +57,13 @@ final class LookBackJourneyView: BaseView {
             $0.top.equalTo(divider.snp.bottom).offset(8.adjustedH)
             $0.horizontalEdges.equalToSuperview()
         }
+    }
+}
+
+extension LookBackJourneyView {
+    func bind(with entity: [JourneyEntity]) {
+        journeyList = entity
+        journeyView.updateCountLabel(count: entity.count)
+        journeyView.updateUI(journeyList: journeyList)
     }
 }

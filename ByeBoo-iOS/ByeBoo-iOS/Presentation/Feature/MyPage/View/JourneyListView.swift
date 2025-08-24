@@ -12,7 +12,7 @@ final class JourneyListView: BaseView {
     private let stackView = UIStackView()
     private let titleLabel = UILabel()
     private let countLabel = UILabel()
-    private let journeyListView: UIStackView?
+    private var journeyListView: UIStackView?
     
     private let emptyLabel: UILabel?
     
@@ -88,24 +88,7 @@ final class JourneyListView: BaseView {
             countLabel
         )
         
-        if let journeyListView {
-            addSubview(journeyListView)
-            journeyList.forEach { journey in
-                // TODO: 칩 컴포넌트 바꾸기
-                let journeyView = OneLineTextBoxView(
-                    title: journey.title,
-                    tagTitle: journey.title,
-                    tagType: isFinished ? .word3Gray : .word3Purple,
-                    isHighlighted: !isFinished
-                )
-                journeyListView.addArrangedSubview(journeyView)
-            }
-            prepareView.addSubview(prepareTitleLabel)
-            if !isFinished {
-                journeyListView.addArrangedSubview(prepareView)
-            }
-            
-        } else if let emptyLabel {
+        if let emptyLabel {
             addSubview(emptyLabel)
         }
     }
@@ -116,25 +99,60 @@ final class JourneyListView: BaseView {
             $0.leading.equalToSuperview().inset(24.adjustedW)
         }
         
-        if let journeyListView {
-            journeyListView.snp.makeConstraints {
-                $0.top.equalTo(stackView.snp.bottom).offset(16.adjustedH)
-                $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-                $0.bottom.equalToSuperview().inset(16.adjustedH)
-            }
-            prepareView.snp.makeConstraints {
-                $0.height.equalTo(62.adjustedH)
-            }
-            prepareTitleLabel.snp.makeConstraints {
-                $0.center.equalToSuperview()
-            }
-        }
-        
         if let emptyLabel {
             emptyLabel.snp.makeConstraints {
                 $0.top.equalTo(stackView.snp.bottom).offset(201.adjustedH)
                 $0.centerX.equalToSuperview()
             }
         }
+    }
+}
+
+extension JourneyListView {
+    func updateUI(journeyList: [JourneyEntity]) {
+        if !journeyList.isEmpty {
+            self.emptyLabel?.removeFromSuperview()
+            journeyListView?.removeFromSuperview()
+            
+            journeyListView = UIStackView()
+            addSubviews(journeyListView!)
+            
+            journeyListView?.do {
+                $0.spacing = 16.adjustedH
+                $0.axis = .vertical
+            }
+        
+            journeyListView?.snp.makeConstraints {
+                $0.top.equalTo(stackView.snp.bottom).offset(16.adjustedH)
+                $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+                $0.bottom.equalToSuperview().inset(16.adjustedH)
+            }
+            
+            journeyList.forEach { journey in
+            let journeyView = OneLineTextBoxView(
+                title: journey.title,
+                tagTitle: journey.style?.text,
+                tagType: isFinished ? .word3Gray : .word3Purple,
+                isHighlighted: !isFinished
+            )
+                journeyListView?.addArrangedSubview(journeyView)
+            }
+            
+            if !isFinished {
+                journeyListView?.addArrangedSubview(prepareView)
+                prepareView.addSubview(prepareTitleLabel)
+                
+                prepareView.snp.makeConstraints {
+                    $0.height.equalTo(62.adjustedH)
+                }
+                prepareTitleLabel.snp.makeConstraints {
+                    $0.center.equalToSuperview()
+                }
+            }
+        }
+    }
+
+    func updateCountLabel(count: Int) {
+        countLabel.text = "\(count)개"
     }
 }

@@ -41,17 +41,21 @@ final class MyPageViewController: BaseViewController {
         viewModel.action(.viewDidLoad)
     }
     
-//    override func setAddTarget() {
-//        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(lookBackButtonDidTap))
-//        rootView.myRecordView.textBoxView.addGestureRecognizer(tapRecognizer)
-//        rootView.myRecordView.textBoxView.isUserInteractionEnabled = true
-//    }
+    override func setAddTarget() {
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(lookBackButtonDidTap))
+        rootView.myRecordView.textBoxView.addGestureRecognizer(tapRecognizer)
+        rootView.myRecordView.textBoxView.isUserInteractionEnabled = true
+    }
 }
 
 extension MyPageViewController {
     @objc
     private func lookBackButtonDidTap() {
-        let lookBackViewController = LookBackJourneyViewController()
+        guard let viewModel = DIContainer.shared.resolve(type: LookBackJourneyViewModel.self) else {
+            return
+        }
+        
+        let lookBackViewController = LookBackJourneyViewController(viewModel: viewModel)
         lookBackViewController.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(lookBackViewController, animated: true)
     }
