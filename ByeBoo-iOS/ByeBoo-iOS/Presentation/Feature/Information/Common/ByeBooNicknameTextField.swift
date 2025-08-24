@@ -25,7 +25,7 @@ enum NicknameFieldType {
     var borderColor: CGColor? {
         switch self {
         case .onBeginEditing:
-            return UIColor.clear.cgColor
+            return nil
         case .normal:
             return UIColor.primary300.cgColor
         case .error:

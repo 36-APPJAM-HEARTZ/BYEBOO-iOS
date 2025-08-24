@@ -19,6 +19,7 @@ enum NavigationBarType: Equatable {
     case title(String, header: NavigationHeaderType = .clear)
     case close(header: NavigationHeaderType = .clear)
     case titleAndClose(String, header: NavigationHeaderType = .clear)
+    case titleAndBack(String, header: NavigationHeaderType = .clear)
     case none(header: NavigationHeaderType = .clear)
 }
 
@@ -56,7 +57,8 @@ struct ByeBooNavigationBar {
              .close(let header),
              .none(let header),
              .title(_, let header),
-             .titleAndClose(_, let header):
+             .titleAndClose(_, let header),
+             .titleAndBack(_, let header):
             headerType = header
         }
         
@@ -103,13 +105,23 @@ struct ByeBooNavigationBar {
             )
             
         case .titleAndClose(let string, _):
+            navigationItem.title = string
             makeCloseButtonItem(
                 image: .xicon,
                 target: topViewController,
                 navigationItem: navigationItem,
                 action: action
             )
+            
+        case .titleAndBack(let string, _):
             navigationItem.title = string
+            let backButtonItem = makeBarButtonItem(
+                image: .left.withTintColor(.white),
+                target: topViewController,
+                action: action
+            )
+            navigationItem.leftBarButtonItem = backButtonItem
+            
         case .none:
             let emptyItem = makeBarButtonItem(
                 image: UIImage(),
