@@ -22,9 +22,3 @@ struct DefaultSetHelperUseCase: SetHelperUseCase {
         repository.setHelperShown()
     }
 }
-
-struct MockSetHelperUseCase: SetHelperUseCase {
-    func execute() {
-        
-    }
-}
