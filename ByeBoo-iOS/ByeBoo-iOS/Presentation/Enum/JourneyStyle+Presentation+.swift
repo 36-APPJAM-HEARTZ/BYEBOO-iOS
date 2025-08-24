@@ -1,14 +1,11 @@
 //
-//  Untitled.swift
+//  QuestStyle+Presentation.swift
 //  ByeBoo-iOS
 //
-//  Created by APPLE on 7/10/25.
+//  Created by 이나연 on 8/24/25.
 //
 
-enum QuestStyle: CaseIterable {
-    case recording
-    case active
-    
+extension JourneyStyle {
     var key: String {
         switch self {
         case .recording:
