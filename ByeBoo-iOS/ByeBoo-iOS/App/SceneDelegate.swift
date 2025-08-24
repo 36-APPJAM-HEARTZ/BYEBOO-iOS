@@ -21,9 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         DIContainer.shared.dependencyInject()
 
         let viewController = BottomNavigationViewController()
-        
-        let viewController = BottomNavigationViewController()
-        
+                
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = viewController
         window.makeKeyAndVisible()
