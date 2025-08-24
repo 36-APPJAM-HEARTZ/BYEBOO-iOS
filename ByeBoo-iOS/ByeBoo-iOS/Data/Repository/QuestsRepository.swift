@@ -8,7 +8,7 @@
 import Foundation
 
 struct DefaultQuestRepository: QuestsInterface {
-    
+
     private let network: NetworkService
     private let userDefaultsService: UserDefaultService
     
@@ -72,6 +72,27 @@ struct DefaultQuestRepository: QuestsInterface {
         )
     }
     
+    func getLookBackJourney() async throws -> [JourneyEntity] {
+        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
+        let result = try await network.request(
+            QuestAPI.journey,
+            decodingType: LookBackJourneyResponseDTO.self
+        )
+        
+        let entity = result.toEntity()
+        return entity.completedJourneys
+    }
+    
+    func getNewJourney() async throws -> LookBackJourneyEntity {
+        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
+        let result = try await network.request(
+            QuestAPI.journey,
+            decodingType: LookBackJourneyResponseDTO.self
+        )
+        
+        return result.toEntity()
+    }
+    
     // MARK: private function
     
     private func makeSignedURL(imageKey: String) async throws -> String {
@@ -132,5 +153,13 @@ struct MockQuestsRepository: QuestsInterface {
     
     func postQuestionQuest(questID: Int, answer: String, emotionState: String) async throws {
         
+    }
+    
+    func getLookBackJourney() async throws -> [JourneyEntity]{
+        return [JourneyEntity.stub()]
+    }
+    
+    func getNewJourney() async throws -> LookBackJourneyEntity {
+        return .stub()
     }
 }

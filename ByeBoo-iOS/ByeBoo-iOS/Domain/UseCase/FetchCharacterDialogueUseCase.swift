@@ -20,9 +20,3 @@ struct DefaultFetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase {
         return try await repository.fetchCharacterDialogue()
     }
 }
-
-struct MockFetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase {
-    func execute() async throws -> String {
-        return "하츠핑님의 이별 극복을 도와드릴게요"
-    }
-}

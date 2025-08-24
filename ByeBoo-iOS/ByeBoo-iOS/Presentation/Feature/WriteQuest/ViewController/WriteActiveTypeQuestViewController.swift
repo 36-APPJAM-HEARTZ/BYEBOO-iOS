@@ -184,6 +184,7 @@ extension WriteActiveTypeQuestViewController {
                         fatalError()
                     }
                     
+                    // TODO: viewController에 viewModel만 들어가도록 변경
                     let viewController = CompleteActiveTypeQuestViewController(
                         viewModel: viewModel,
                         questID: self?.questID ?? 1

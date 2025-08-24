@@ -29,7 +29,11 @@ final class QuestInitViewController: BaseViewController {
 extension QuestInitViewController {
     @objc
     private func startButtonDidTap() {
-        let viewController = NewJourneySelectViewController()
+        guard let viewModel = DIContainer.shared.resolve(type: NewJourneyViewModel.self) else {
+            return
+        }
+        
+        let viewController = NewJourneySelectViewController(viewModel: viewModel)
         
         guard let navigationController else {
             ByeBooLogger.error(ByeBooError.navigationControllerMissing)
@@ -41,7 +45,11 @@ extension QuestInitViewController {
     
     @objc
     private func lookBackButtonDidTap() {
-        let viewController = LookBackJourneyViewController()
+        guard let viewModel = DIContainer.shared.resolve(type: LookBackJourneyViewModel.self) else {
+            return
+        }
+        
+        let viewController = LookBackJourneyViewController(viewModel: viewModel)
         
         guard let navigationController else {
             ByeBooLogger.error(ByeBooError.navigationControllerMissing)

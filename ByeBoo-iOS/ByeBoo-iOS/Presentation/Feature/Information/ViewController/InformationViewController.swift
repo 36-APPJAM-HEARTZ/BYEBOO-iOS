@@ -161,8 +161,8 @@ extension InformationViewController {
     private func saveQuest() {
         let questCards = selectQuestView.questCardsView.questCards
         for (index, questCard) in questCards.enumerated() where questCard.isSelected {
-            if QuestStyle.allCases.indices.contains(index) {
-                let quest = QuestStyle.allCases[index]
+            if JourneyStyle.allCases.indices.contains(index) {
+                let quest = JourneyStyle.allCases[index]
                 viewModel.action(.questButtonDidTap(quest))
             }
         }

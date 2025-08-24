@@ -19,41 +19,23 @@ final class BottomNavigationViewController: UITabBarController {
     
     private func setViewController() {
         
-        guard let homeViewModel = DIContainer.shared.resolve(type: HomeViewModel.self),
-              let myPageViewModel = DIContainer.shared.resolve(type: MyPageViewModel.self),
-              let questViewModel = DIContainer.shared.resolve(type: QuestsViewModel.self)
-        else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            
-            //TODO: Login으로 변경
-            let tempViewController = OnboardingViewController()
-            
-            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-               let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
-                
-                ViewControllerUtils.setRootViewController(
-                    window: window,
-                    viewController: tempViewController,
-                    withAnimation: true
-                )
-            }
-            
-            return
-        }
+        let homeViewController = ViewControllerFactory.shared.makeHomeViewController()
+        let questViewController = ViewControllerFactory.shared.makeQuestViewController()
+        let myPageViewController = ViewControllerFactory.shared.makeMyPageViewController()
         
         self.viewControllers = [
             createViewController(
-                for: HomeViewController(viewModel: homeViewModel),
+                for: homeViewController,
                 title: "홈",
                 imageName: .homeOff
             ),
             createViewController(
-                for: QuestCheckViewController(viewModel: questViewModel),
+                for: questViewController,
                 title: "퀘스트",
                 imageName: .questOff
             ),
             createViewController(
-                for: MyPageViewController(viewModel: myPageViewModel),
+                for: myPageViewController,
                 title: "내 정보",
                 imageName: .userOff
             )

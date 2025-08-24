@@ -46,7 +46,13 @@ extension FinishJourneyViewController {
     @objc
     private func startButtonDidTap() {
         ByeBooLogger.debug("starbuttontapped")
-        let viewController = NewJourneySelectViewController()
+        
+        guard let viewModel = DIContainer.shared.resolve(type: NewJourneyViewModel.self) else {
+            return
+        }
+        
+        let viewController = NewJourneySelectViewController(viewModel: viewModel)
+        
         guard let navigationController else {
             ByeBooLogger.error(ByeBooError.navigationControllerMissing)
             return
@@ -57,7 +63,13 @@ extension FinishJourneyViewController {
     @objc
     private func lookBackButtonDidTap() {
         ByeBooLogger.debug("lookBackButtonTapped")
-        let viewController = LookBackJourneyViewController()
+        
+        guard let viewModel = DIContainer.shared.resolve(type: LookBackJourneyViewModel.self) else {
+            return
+        }
+        
+        let viewController = LookBackJourneyViewController(viewModel: viewModel)
+        
         guard let navigationController else {
             ByeBooLogger.error(ByeBooError.navigationControllerMissing)
             return

@@ -17,7 +17,7 @@ final class HomeViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     private let rootView = HomeView()
     
-    private var state: HomeState = .beforeJourneyStart(journey: .stub())
+    private var state: HomeState = .beforeJourneyStart
     
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -56,10 +56,6 @@ final class HomeViewController: BaseViewController {
         tapGestureRecognizer.cancelsTouchesInView = false
         rootView.headerView.homeStateView.addGestureRecognizer(tapGestureRecognizer)
     }
-    
-    private func startAnimation() {
-        rootView.headerView.startHelperAnimation()
-    }
 }
 
 extension HomeViewController {
@@ -71,6 +67,7 @@ extension HomeViewController {
     
     @objc
     private func helperDidTap() {
+        // TODO: 수정하기
         viewModel.action(.helperTapped)
         rootView.helperDidTap()
     }
@@ -89,37 +86,30 @@ extension HomeViewController {
                 }
             }
             .store(in: &cancellables)
-        
-        viewModel.output.homeStateResult
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] result in
-                switch result {
-                case .success(let state):
-                    self?.rootView.updateState(state)
-                    self?.state = state
-                case .failure(let failure):
-                    ByeBooLogger.error(failure)
-                }
-            }
-            .store(in: &cancellables)
-        
+  
         Publishers.CombineLatest3(
-            viewModel.output.countResult,
             viewModel.output.userResult,
-            viewModel.output.journeyResult
+            viewModel.output.journeyResult,
+            viewModel.output.homeStateResult
         )
             .receive(on: DispatchQueue.main)
             .sink { [weak self]
-                count,
                 name,
-                journey in
-                switch (count, name, journey) {
-                case let (.success(count), name, .success(journey)):
+                journey,
+                state in
+                switch (name, journey, state) {
+                case let (name, .success(journey), .success(state)):
+                    self?.rootView.updateState(state.currentStatus)
+                    self?.state = state.currentStatus
                     self?.rootView.updateProgressView(
                         name: name,
-                        progress: count,
+                        progress: state.questCount,
                         journey: journey.title
                     )
+                    
+                case let (_, .success(journey), .failure(.notFoundQuest)):
+                    self?.rootView.updateState(.beforeJourneyStart, journey.title)
+                    self?.state = .beforeJourneyStart
                 default:
                     ByeBooLogger.error(ByeBooError.unknownError)
                 }

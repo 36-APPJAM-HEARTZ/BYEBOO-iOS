@@ -62,12 +62,7 @@ extension OnboardingViewController {
     }
     
     private func pushViewController() {
-        guard let viewModel = DIContainer.shared.resolve(type: InformationViewModel.self) else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            fatalError()
-        }
-        let viewController = InformationViewController(viewModel: viewModel)
-        
+        let viewController = ViewControllerFactory.shared.makeInformationViewController()
         let transition = CATransition()
         transition.duration = 0.2
         transition.type = .fade
