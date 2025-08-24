@@ -75,7 +75,7 @@ struct DefaultQuestRepository: QuestsInterface {
     func getLookBackJourney() async throws -> [JourneyEntity] {
         let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
-            QuestAPI.journey(userID: userID),
+            QuestAPI.journey,
             decodingType: LookBackJourneyResponseDTO.self
         )
         
@@ -86,7 +86,7 @@ struct DefaultQuestRepository: QuestsInterface {
     func getNewJourney() async throws -> LookBackJourneyEntity {
         let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
-            QuestAPI.journey(userID: userID),
+            QuestAPI.journey,
             decodingType: LookBackJourneyResponseDTO.self
         )
         

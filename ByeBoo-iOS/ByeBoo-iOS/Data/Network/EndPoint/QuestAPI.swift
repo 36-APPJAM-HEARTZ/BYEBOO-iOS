@@ -17,6 +17,7 @@ enum QuestAPI {
     case tip(questID: Int)
     case answer(questID: Int)
     case progressingQuests
+    case journey
 }
 
 extension QuestAPI: EndPoint {
@@ -57,7 +58,7 @@ extension QuestAPI: EndPoint {
     
     var headers: HeaderType {
         switch self {
-        case .checkQuest, .recording, .active, .tip, .images, .answer, .progressingQuests:
+        case .checkQuest, .recording, .active, .tip, .images, .answer, .progressingQuests, .journey:
             return .withAuth(acessToken: Bundle.main.infoDictionary?["MASTER_TOKEN"] as! String)
         }
     }
