@@ -95,7 +95,7 @@ extension MyPageViewController {
     
     @objc
     private func lookBackButtonDidTap() {
-        let lookBackViewController = LookBackJourneyViewController()
+        let lookBackViewController = ViewControllerFactory.shared.makeLookBackViewController()
         lookBackViewController.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(lookBackViewController, animated: true)
     }
