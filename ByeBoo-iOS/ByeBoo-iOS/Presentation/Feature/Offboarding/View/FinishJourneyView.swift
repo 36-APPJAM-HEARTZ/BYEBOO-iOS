@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Lottie
+
 final class FinishJourneyView: BaseView {
     
     private let backgroundImageView = UIImageView()
@@ -14,7 +16,9 @@ final class FinishJourneyView: BaseView {
     private let titleLabel = UILabel()
     private let currentTextLabel = UILabel()
     private let nextTextLabel = UILabel()
-    private let characterImageView = UIImageView()
+    
+    private let characterLottie = LottieAnimationView(name: "bori_cake")
+    
     let startButton = ByeBooButton(titleText: "새로운 이별 극복 여정 시작하기", type: .enabled)
     let lookBackButton = ByeBooButton(titleText: "완료한 여정 다시보기", type: .sub)
     let backHomeLabel = UILabel()
@@ -54,8 +58,10 @@ final class FinishJourneyView: BaseView {
             $0.textColor = .secondary5050
             $0.textAlignment = .center
         }
-        characterImageView.do {
-            $0.image = .cake
+        characterLottie.do {
+            $0.play()
+            $0.loopMode = .loop
+            $0.contentMode = .scaleAspectFill
         }
     }
     
@@ -66,7 +72,7 @@ final class FinishJourneyView: BaseView {
             titleLabel,
             currentTextLabel,
             nextTextLabel,
-            characterImageView,
+            characterLottie,
             startButton,
             lookBackButton
         )
@@ -93,12 +99,13 @@ final class FinishJourneyView: BaseView {
             $0.top.equalTo(currentTextLabel.snp.bottom).offset(16.adjustedH)
             $0.centerX.equalToSuperview()
         }
-        characterImageView.snp.makeConstraints {
+        characterLottie.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(154.adjustedH)
+            $0.width.height.equalTo(290.adjustedH)
             $0.centerX.equalToSuperview()
         }
         startButton.snp.makeConstraints {
-            $0.top.equalTo(characterImageView.snp.bottom).offset(30.adjustedH)
+            $0.top.equalTo(characterLottie.snp.bottom).offset(30.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
         lookBackButton.snp.makeConstraints {
