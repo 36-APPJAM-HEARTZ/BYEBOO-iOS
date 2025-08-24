@@ -26,6 +26,8 @@ final class FinishJourneyViewController: BaseViewController {
             type: .close(header: .clear),
             action: #selector(close)
         )
+        
+        rootView.startParagraphAnimation()
     }
     
     override func viewWillAppear(_ animated: Bool) {
