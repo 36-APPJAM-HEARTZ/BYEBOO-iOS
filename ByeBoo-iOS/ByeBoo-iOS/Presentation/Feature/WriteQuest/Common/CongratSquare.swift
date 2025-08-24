@@ -35,7 +35,7 @@ final class CongratSquare: BaseView {
         
         imageLottie.do {
             $0.play()
-            $0.loopMode = .loop
+            $0.loopMode = .playOnce
             $0.contentMode = .scaleAspectFill
         }
         
