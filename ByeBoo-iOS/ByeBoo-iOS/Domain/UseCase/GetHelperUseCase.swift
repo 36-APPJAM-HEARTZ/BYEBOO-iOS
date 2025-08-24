@@ -22,9 +22,3 @@ struct DefaultGetHelperUseCase: GetHelperUseCase {
         return repository.getIsHelperShown() ?? false
     }
 }
-
-struct MockGetHelperUseCase: GetHelperUseCase {
-    func execute() -> Bool {
-        return false
-    }
-}

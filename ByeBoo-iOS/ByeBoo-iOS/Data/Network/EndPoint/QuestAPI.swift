@@ -17,6 +17,7 @@ enum QuestAPI {
     case tip(questID: Int)
     case answer(questID: Int)
     case progressingQuests
+    case journey
 }
 
 extension QuestAPI: EndPoint {
@@ -41,12 +42,14 @@ extension QuestAPI: EndPoint {
             return "/answer/\(questID)"
         case .progressingQuests:
             return "/all/progress"
+        case .journey:
+            return "/journey"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .checkQuest, .tip, .answer, .progressingQuests:
+        case .checkQuest, .tip, .answer, .progressingQuests, .journey:
             return .get
         case .recording, .active, .images:
             return .post
@@ -55,14 +58,14 @@ extension QuestAPI: EndPoint {
     
     var headers: HeaderType {
         switch self {
-        case .checkQuest, .recording, .active, .tip, .images, .answer, .progressingQuests:
+        case .checkQuest, .recording, .active, .tip, .images, .answer, .progressingQuests, .journey:
             return .withAuth(acessToken: Bundle.main.infoDictionary?["MASTER_TOKEN"] as! String)
         }
     }
     
     var parameterEncoding: any ParameterEncoding {
         switch self {
-        case .checkQuest, .tip, .answer, .progressingQuests:
+        case .checkQuest, .tip, .answer, .progressingQuests, .journey:
             return URLEncoding.default
         case .recording, .active, .images:
             return JSONEncoding.default
@@ -81,7 +84,7 @@ extension QuestAPI: EndPoint {
             return try? dto.toDictionary()
         case let .images(dto):
             return try? dto.toDictionary()
-        case .checkQuest, .tip, .answer, .progressingQuests:
+        case .checkQuest, .tip, .answer, .progressingQuests, .journey:
             return nil
         }
     }

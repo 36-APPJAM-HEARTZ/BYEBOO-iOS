@@ -20,9 +20,3 @@ struct DefaultFetchUserJourneyUseCase: FetchUserJourneyUseCase {
         return try await repository.fetchJourney()
     }
 }
-
-struct MockFetchUserJourneyUseCase: FetchUserJourneyUseCase {
-    func execute() async throws -> JourneyEntity {
-        return .stub()
-    }
-}

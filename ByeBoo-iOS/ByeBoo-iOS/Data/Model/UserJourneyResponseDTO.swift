@@ -14,7 +14,8 @@ extension UserJourneyResponseDTO {
     func toEntity() -> JourneyEntity {
         return .init(
             title: self.journey,
-            description: self.description
+            description: self.description,
+            style: nil
         )
     }
 }

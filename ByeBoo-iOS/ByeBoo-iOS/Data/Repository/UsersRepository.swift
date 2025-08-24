@@ -22,7 +22,6 @@ struct DefaultUsersRepository: UsersInterface {
     // MARK: Network
     
     func fetchJourney() async throws -> JourneyEntity {
-        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
             UsersAPI.journey,
             decodingType: UserJourneyResponseDTO.self
@@ -47,7 +46,6 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func fetchCharacterDialogue() async throws -> String {
-        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
             UsersAPI.character,
             decodingType: DialogueResponseDTO.self
@@ -56,18 +54,16 @@ struct DefaultUsersRepository: UsersInterface {
         return result.dialogue
     }
     
-    func fetchCompleteQuestCount() async throws -> Int {
-        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
+    func fetchQuestStatus() async throws -> UserQuestStatusEntity {
         let result = try await network.request(
             UsersAPI.count,
-            decodingType: CompleteQuestCountResponseDTO.self
+            decodingType: UserQuestStatusResponseDTO.self
         )
         
-        return result.count
+        return result.toEntity()
     }
     
     func startJourney() async throws {
-        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         try await network.request(UsersAPI.start)
     }
     
@@ -127,8 +123,12 @@ struct MockUserRepository: UsersInterface {
         return "천천히, 하지만 분명하게. 오늘도 나아가 봐요."
     }
     
-    func fetchCompleteQuestCount() async throws -> Int {
-        return 1
+    func fetchQuestStatus() async throws -> UserQuestStatusEntity {
+        return .init(
+            todayComplete: true,
+            currentStatus: .afterQuest,
+            questCount: 3
+        )
     }
     
     func startJourney() async throws { }
