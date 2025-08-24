@@ -27,7 +27,9 @@ final class FinishJourneyViewController: BaseViewController {
             action: #selector(close)
         )
         
-        rootView.startParagraphAnimation()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.rootView.startParagraphAnimation()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

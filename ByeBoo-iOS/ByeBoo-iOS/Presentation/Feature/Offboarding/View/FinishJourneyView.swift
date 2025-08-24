@@ -41,12 +41,14 @@ final class FinishJourneyView: BaseView {
             $0.textAlignment = .center
         }
         currentTextLabel.do {
+            $0.text = animationText[0]
             $0.numberOfLines = 0
             $0.font = FontManager.body6R14.font
             $0.textColor = .secondary50
             $0.textAlignment = .center
         }
         nextTextLabel.do {
+            $0.text = animationText[1]
             $0.numberOfLines = 0
             $0.font = FontManager.cap2R12.font
             $0.textColor = .secondary5050
@@ -121,10 +123,10 @@ extension FinishJourneyView {
         let nextText = animationText[paragraphIndex]
         
         nextTextLabel.text = nextText
-        nextTextLabel.transform = .identity
         self.nextTextLabel.alpha = 1
+        nextTextLabel.transform = .identity
         
-        UIView.animate(withDuration: 1, delay: 2, options: [.curveEaseInOut], animations: {
+        UIView.animate(withDuration: 1, delay: 1, options: [.curveEaseInOut], animations: {
             self.currentTextLabel.transform = CGAffineTransform(translationX: 0, y: -20)
             self.currentTextLabel.alpha = 0
             
@@ -141,9 +143,7 @@ extension FinishJourneyView {
                 self.nextTextLabel.text = ""
                 self.nextTextLabel.alpha = 0
             } else {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    self.nextParagraphAnimation()
-                }
+                self.nextParagraphAnimation()
             }
         })
     }
