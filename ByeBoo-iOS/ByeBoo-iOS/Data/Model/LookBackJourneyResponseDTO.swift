@@ -31,8 +31,9 @@ extension LookBackJourneyResponseDTO {
 extension JourneyStyleData {
     func toEntity() -> JourneyEntity {
         .init(
-            title: journey,
-            description: style
+            title: self.journey,
+            description: nil,
+            style: JourneyStyle.toEnum(self.style)
         )
     }
 }

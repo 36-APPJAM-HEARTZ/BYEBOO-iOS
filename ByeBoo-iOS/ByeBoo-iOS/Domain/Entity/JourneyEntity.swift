@@ -10,10 +10,11 @@ import Foundation
 struct JourneyEntity {
     let title: String
     let description: String?
+    let style: JourneyStyle?
 }
 
 extension JourneyEntity {
     static func stub() -> Self {
-        return .init(title: "감정 직면", description: "설명")
+        return .init(title: "감정 직면", description: "설명", style: .recording)
     }
 }

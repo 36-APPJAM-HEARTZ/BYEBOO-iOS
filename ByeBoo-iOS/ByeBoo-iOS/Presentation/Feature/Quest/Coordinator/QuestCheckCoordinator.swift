@@ -24,7 +24,7 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     func moveArchive(quest: QuestEntity?) {
         guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else { return }
         
-        let questType: QuestType = (quest?.questStyle == QuestStyle.recording.key) ? .question : .activation
+        let questType: QuestType = (quest?.questStyle == JourneyStyle.recording.key) ? .question : .activation
         let archiveQuestViewController = ArchiveQuestViewController(
             viewModel: viewModel,
             questID: quest?.questId ?? 1,
@@ -64,7 +64,7 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
             return
         }
         
-        let questType: QuestType = (quest?.questStyle == QuestStyle.recording.key) ? .question : .activation
+        let questType: QuestType = (quest?.questStyle == JourneyStyle.recording.key) ? .question : .activation
         let questTipViewController = QuestTipViewController(
             viewModel: viewModel,
             questID: questID,
@@ -76,7 +76,7 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     }
     
     func moveWriteQuest(quest: QuestEntity) {
-        if quest.questStyle == QuestStyle.recording.key {
+        if quest.questStyle == JourneyStyle.recording.key {
             moveToWriteQuestion(questID: quest.questId)
             return
         }
