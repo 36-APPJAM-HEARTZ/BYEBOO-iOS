@@ -74,6 +74,17 @@ final class MyPageViewController: BaseViewController {
 }
 
 extension MyPageViewController {
+
+    @objc
+    private func lookBackButtonDidTap() {
+        guard let viewModel = DIContainer.shared.resolve(type: LookBackJourneyViewModel.self) else {
+            return
+        }
+        
+        let lookBackViewController = LookBackJourneyViewController(viewModel: viewModel)
+        lookBackViewController.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(lookBackViewController, animated: true)
+    }
     
     private func bind() {
         viewModel.output.userResult

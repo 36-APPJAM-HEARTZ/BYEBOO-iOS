@@ -15,6 +15,6 @@ protocol UsersInterface {
     func fetchJourney() async throws -> JourneyEntity
     func sendUser(name: String, feeling: String, questStyle: String) async throws -> UserEntity
     func fetchCharacterDialogue() async throws -> String
-    func fetchCompleteQuestCount() async throws -> Int
+    func fetchQuestStatus() async throws -> UserQuestStatusEntity
     func startJourney() async throws
 }

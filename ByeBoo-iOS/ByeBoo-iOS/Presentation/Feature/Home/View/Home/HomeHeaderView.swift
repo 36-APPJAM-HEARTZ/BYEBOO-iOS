@@ -9,7 +9,7 @@ import UIKit
 
 final class HomeHeaderView: BaseView {
 
-    private(set) var homeStateView: HomeStateView = HomeStateView(state: .beforeJourneyStart(journey: .stub()))
+    private(set) var homeStateView: HomeStateView = HomeStateView(state: .beforeJourneyStart)
     
     private let stackView = UIStackView()
     private var journeyProgressView: JourneyProgressView? = nil
@@ -80,7 +80,7 @@ extension HomeHeaderView {
         journeyProgressView?.updateJourney(title)
     }
     
-    func updateState(_ state: HomeState) {
+    func updateState(_ state: HomeState, _ journeyTitle: String? = nil) {
         if state.hasProgress {
             if journeyProgressView == nil {
                 journeyProgressView = JourneyProgressView()
@@ -106,7 +106,7 @@ extension HomeHeaderView {
             helperButton.alpha = 1
         }
         
-        homeStateView.updateState(state)
+        homeStateView.updateState(state, journeyTitle)
     }
     
     func startHelperAnimation() {

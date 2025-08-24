@@ -55,8 +55,8 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultFetchCharacterDialogueUseCase(repository: userRepository)
         }
         
-        DIContainer.shared.register(type: FetchCompleteQuestCountUseCase.self) { _ in
-            return DefaultFetchCompleteQuestCountUseCase(repository: userRepository)
+        DIContainer.shared.register(type: FetchQuestStatusUseCase.self) { _ in
+            return DefaultFetchQuestStatusUseCase(repository: userRepository)
         }
         
         DIContainer.shared.register(type: StartJourneyUseCase.self) { _ in
@@ -81,6 +81,14 @@ struct DomainDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: GetHelperUseCase.self) { _ in
             return DefaultGetHelperUseCase(repository: userRepository)
+        }
+        
+        DIContainer.shared.register(type: GetLookBackJourneyUseCase.self) { _ in
+            return DefaultGetLookBackJourneyUseCase(lookBackJourneyRepository: questRepository)
+        }
+        
+        DIContainer.shared.register(type: GetNewJourneyUseCase.self) { _ in
+            return DefaultGetNewJourneyUseCase(lookBackJourneyRepository: questRepository)
         }
     }
 }

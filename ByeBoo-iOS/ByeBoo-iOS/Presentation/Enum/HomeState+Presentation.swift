@@ -7,16 +7,11 @@
 
 import UIKit
 
-enum HomeState {
-    case beforeJourneyStart(journey: JourneyEntity)
-    case beforeQuest
-    case afterQuest
-    case afterJourney
-    
+extension HomeState {
     var title: String {
         switch self {
-        case .beforeJourneyStart(let journey):
-            "\(journey.title) 여정 시작하기"
+        case .beforeJourneyStart:
+            "여정 시작하기"
         case .beforeQuest:
             "오늘의 퀘스트 하러 가기"
         case .afterQuest:

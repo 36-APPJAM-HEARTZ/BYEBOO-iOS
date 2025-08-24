@@ -22,3 +22,15 @@ struct DataDependencyAssembler: DependencyAssembler {
         }
     }
 }
+
+struct MockDataDependencyAssembler: DependencyAssembler {
+    func assemble() {
+        DIContainer.shared.register(type: UsersInterface.self) { _ in
+            return MockUserRepository()
+        }
+        
+        DIContainer.shared.register(type: QuestsInterface.self) { _ in
+            return MockQuestsRepository()
+        }
+    }
+}

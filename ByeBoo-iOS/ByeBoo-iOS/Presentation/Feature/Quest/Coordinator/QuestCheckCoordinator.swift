@@ -16,11 +16,7 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     }
     
     func moveQuestStart() {
-        guard let startViewModel = DIContainer.shared.resolve(type: QuestStartViewModel.self) else {            ByeBooLogger.error(ByeBooError.DIFailedError)
-            fatalError()
-        }
-        
-        let viewController = QuestStartViewController(viewModel: startViewModel)
+        let viewController = ViewControllerFactory.shared.makeQuestStartViewController()
         viewController.modalPresentationStyle = .fullScreen
         rootViewController?.present(viewController, animated: false)
     }
@@ -28,7 +24,8 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     func moveArchive(quest: QuestEntity?) {
         guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else { return }
         
-        let questType: QuestType = (quest?.questStyle == QuestStyle.recording.key) ? .question : .activation
+        // TODO: Presentation레이어에서 key 빼기
+        let questType: QuestType = (quest?.questStyle == JourneyStyle.recording.key) ? .question : .activation
         let archiveQuestViewController = ArchiveQuestViewController(
             viewModel: viewModel,
             questID: quest?.questId ?? 1,
@@ -68,7 +65,8 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
             return
         }
         
-        let questType: QuestType = (quest?.questStyle == QuestStyle.recording.key) ? .question : .activation
+        // TODO: Presentation레이어에서 key 빼기
+        let questType: QuestType = (quest?.questStyle == JourneyStyle.recording.key) ? .question : .activation
         let questTipViewController = QuestTipViewController(
             viewModel: viewModel,
             questID: questID,
@@ -80,7 +78,8 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     }
     
     func moveWriteQuest(quest: QuestEntity) {
-        if quest.questStyle == QuestStyle.recording.key {
+        // TODO: Presentation레이어에서 key 빼기
+        if quest.questStyle == JourneyStyle.recording.key {
             moveToWriteQuestion(questID: quest.questId)
             return
         }
