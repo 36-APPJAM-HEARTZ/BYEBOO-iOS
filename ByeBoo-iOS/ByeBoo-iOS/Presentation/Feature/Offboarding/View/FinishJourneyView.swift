@@ -63,6 +63,12 @@ final class FinishJourneyView: BaseView {
             $0.loopMode = .loop
             $0.contentMode = .scaleAspectFill
         }
+        startButton.do {
+            $0.setImage(UIImage(named: "reset")?.withRenderingMode(.alwaysTemplate), for: .normal)
+            $0.tintColor = .white
+            $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 4.adjustedW)
+            $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 4.adjustedW, bottom: 0, right: 0)
+        }
     }
     
     override func setUI() {
