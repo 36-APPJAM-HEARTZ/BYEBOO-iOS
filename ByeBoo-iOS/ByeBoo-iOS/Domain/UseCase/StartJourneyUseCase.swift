@@ -22,7 +22,3 @@ struct DefaultStartJourneyUseCase: StartJourneyUseCase {
         try await repository.startJourney()
     }
 }
-
-struct MockStartJourneyUseCase: StartJourneyUseCase {
-    func execute() async throws { }
-}
