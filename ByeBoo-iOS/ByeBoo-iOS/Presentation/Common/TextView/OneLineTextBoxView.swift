@@ -11,7 +11,7 @@ final class OneLineTextBoxView: BaseView {
     private let titleLabel = UILabel()
     private var tagView: ByeBooFilledTag? = nil
     
-    private let title: String
+    private(set) var title: String
     private let tagTitle: String?
     private let tagType: ByeBooFilledTagType?
     private let isHighlighted: Bool
@@ -52,6 +52,7 @@ final class OneLineTextBoxView: BaseView {
         
         titleLabel.do {
             $0.numberOfLines = 1
+            $0.isUserInteractionEnabled = false
             $0.font = FontManager.body3R16.font
             if isHighlighted {
                 $0.textColor = .grayscale50
@@ -74,6 +75,8 @@ final class OneLineTextBoxView: BaseView {
                 $0.leading.equalToSuperview().inset(24.adjustedW)
                 $0.centerY.equalToSuperview()
             }
+            
+            tagView.isUserInteractionEnabled = false
         }
         
         titleLabel.snp.makeConstraints {

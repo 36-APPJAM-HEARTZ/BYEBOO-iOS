@@ -12,7 +12,7 @@ final class NewJourneySelectView: BaseView {
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
     private let divider1 = SectionDividerView()
-    private let unCompleteListView: JourneyListView
+    private(set) var unCompleteListView: JourneyListView
     
     private let unCompleteJourneyList: [JourneyEntity]
     init(
@@ -40,6 +40,9 @@ final class NewJourneySelectView: BaseView {
             $0.text = "각 여정 당 30개의 퀘스트를 제공해드려요"
             $0.font = FontManager.body6R14.font
             $0.textColor = .grayscale400
+        }
+        unCompleteListView.do {
+            $0.isUserInteractionEnabled = true
         }
     }
     
