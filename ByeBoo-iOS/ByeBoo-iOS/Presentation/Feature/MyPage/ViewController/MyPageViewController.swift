@@ -134,10 +134,38 @@ extension MyPageViewController {
         case .serviceTerm:
             ExternalLink.serviceTerm.openURL(for: self)
         case .logout:
-            presentModal(to: LogoutModalView())
+            let logoutModalView = createConfirmModal(
+                title: "로그아웃하시겠어요?",
+                dismissOption: "취소",
+                actionOption: "로그아웃"
+            )
+            presentModal(to: logoutModalView)
         case .cancel:
-            presentModal(to: CancelModalView())
+            let cancelModalView = createConfirmModal(
+                title: "정말 탈퇴하시겠어요?",
+                description: "탈퇴 시 모든 데이터가 삭제됩니다.",
+                dismissOption: "취소",
+                actionOption: "탈퇴하기"
+            )
+            presentModal(to: cancelModalView)
         }
+    }
+    
+    private func createConfirmModal(
+        title: String,
+        description: String? = nil,
+        dismissOption: String? = nil,
+        actionOption: String
+    ) -> ConfirmModalView {
+        let dismissButton: ByeBooButton? = dismissOption.map { ByeBooButton(titleText: $0, type: .outline) }
+        let actionButton = ByeBooButton(titleText: actionOption, type: .enabled)
+        
+        return ConfirmModalView(
+            title: title,
+            description: description,
+            dismissButton: dismissButton,
+            actionButton: actionButton
+        )
     }
     
     private func presentModal(to modal: BaseView & ModalProtocol) {
