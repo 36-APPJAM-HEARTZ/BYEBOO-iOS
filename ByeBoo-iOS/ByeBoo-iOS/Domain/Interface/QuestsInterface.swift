@@ -21,4 +21,5 @@ protocol QuestsInterface {
     func postQuestionQuest(questID: Int, answer: String, emotionState: String) async throws
     func getLookBackJourney() async throws -> [JourneyEntity]
     func getNewJourney() async throws -> LookBackJourneyEntity
+    func postNewJourney(journey: String) async throws
 }
