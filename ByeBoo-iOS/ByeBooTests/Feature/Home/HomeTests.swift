@@ -1,5 +1,5 @@
 //
-//  ByeBooTests.swift
+//  HomeTests.swift
 //  ByeBooTests
 //
 //  Created by 최주리 on 8/25/25.
@@ -8,7 +8,7 @@
 import Testing
 @testable import ByeBoo_iOS
 
-struct ByeBooTests {
+struct HomeTests {
     
     // (1) questStatus가 beforeJourneyStart이고, isHelperShown이 false일 때  -> false
     // (2) questStatus가 afterJourney, afterQuest, beforeQuest일 때 -> true
@@ -23,7 +23,7 @@ struct ByeBooTests {
                 currentStatus: .beforeJourneyStart,
                 questCount: 0
             ),
-            isHelperShown: false
+            isHelperShown: true
         )
         
         // When
