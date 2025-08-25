@@ -8,9 +8,3 @@
 struct UserNameResponseDTO: Decodable {
     let name: String
 }
-
-extension UserNameResponseDTO {
-    func toEntity() -> UserNameEntity {
-        return .init(name: self.name)
-    }
-}
