@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Lottie
+
 final class HomeOnboardingViewController: BaseViewController {
     
     private let rootView = HomeOnboardingView()
@@ -28,7 +30,7 @@ final class HomeOnboardingViewController: BaseViewController {
 extension HomeOnboardingViewController {
     private func setGesture() {
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(longDidTap))
-        rootView.characterImageView.addGestureRecognizer(longPressGesture)
+        rootView.characterLottie.addGestureRecognizer(longPressGesture)
     }
     
     @objc
@@ -38,6 +40,7 @@ extension HomeOnboardingViewController {
         case .began:
             ByeBooLogger.debug("꾹 누르기 시작")
             pressStartTime = Date()
+            rootView.characterLottie.pause()
             rootView.startPressAnimation()
         case .ended, .failed, .cancelled:
             ByeBooLogger.debug("꾹 누르기 종료")

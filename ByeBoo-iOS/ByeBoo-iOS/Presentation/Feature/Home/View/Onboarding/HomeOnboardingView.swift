@@ -7,13 +7,15 @@
 
 import UIKit
 
+import Lottie
+
 final class HomeOnboardingView: BaseView {
 
     private let backgroundImageView = UIImageView()
     private let backgroundView = UIView()
     private let descriptionLabel = UILabel()
     private let speechBoxView = SpeechTextBoxView(title: "")
-    let characterImageView = UIImageView()
+    let characterLottie = LottieAnimationView(name: "bori_newborn")
     private let foregroundView = UIView()
     
     override func setStyle() {
@@ -30,8 +32,10 @@ final class HomeOnboardingView: BaseView {
             $0.textAlignment = .center
             $0.alpha = 0
         }
-        characterImageView.do {
-            $0.image = .newborn
+        characterLottie.do {
+            $0.play()
+            $0.loopMode = .loop
+            $0.contentMode = .scaleAspectFill
             $0.isUserInteractionEnabled = true
         }
         foregroundView.do {
@@ -46,7 +50,7 @@ final class HomeOnboardingView: BaseView {
             backgroundView,
             descriptionLabel,
             speechBoxView,
-            characterImageView,
+            characterLottie,
             foregroundView
         )
     }
@@ -66,8 +70,9 @@ final class HomeOnboardingView: BaseView {
             $0.top.equalToSuperview().offset(316.adjustedH)
             $0.horizontalEdges.equalToSuperview()
         }
-        characterImageView.snp.makeConstraints {
+        characterLottie.snp.makeConstraints {
             $0.bottom.equalToSuperview().inset(143.adjustedH)
+            $0.width.height.equalTo(259.adjustedH)
             $0.centerX.equalToSuperview()
         }
         foregroundView.snp.makeConstraints {
