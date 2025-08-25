@@ -15,7 +15,7 @@ struct ByeBooTests {
     // (3) isHelperShown이 true일 때 -> true
     // 안보이는 게 true
     @Test("questStatus에 따른 helper가 보여지는 여부")
-    func example() async throws {
+    func helperShowingTest() async throws {
         // Given
         let viewModel = makeViewModel(
             questStatus: .init(
