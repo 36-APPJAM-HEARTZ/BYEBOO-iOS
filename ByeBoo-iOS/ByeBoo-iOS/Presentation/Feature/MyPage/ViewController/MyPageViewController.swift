@@ -29,6 +29,11 @@ final class MyPageViewController: BaseViewController {
         view = rootView
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.action(.viewWillAppear)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         bind()
@@ -38,8 +43,6 @@ final class MyPageViewController: BaseViewController {
             navigationController: self.navigationController,
             type: .title("내 정보")
         )
-        
-        viewModel.action(.viewDidLoad)
     }
     
     override func setAddTarget() {
@@ -109,7 +112,7 @@ extension MyPageViewController {
     
     @objc
     private func moveButtonDidTap() {
-        let modifyNicknameViewController = ModifyNicknameViewController()
+        let modifyNicknameViewController = ViewControllerFactory.shared.makeModifyNicknameViewController()
         modifyNicknameViewController.updateName(self.name)
         self.navigationController?.pushViewController(modifyNicknameViewController, animated: false)
     }
