@@ -14,7 +14,8 @@ protocol ViewControllerFactoryProtocol {
     func makeInformationViewController() -> InformationViewController
     func makeCardJourneyViewController() -> CardJourneyViewController
     func makeQuestStartViewController() -> QuestStartViewController
-    func makeLookBackViewController() -> LookBackJourneyViewController
+    func makeLookBackJourneyViewController() -> LookBackJourneyViewController
+    func makeNewJourneySelectViewController() -> NewJourneySelectViewController
 }
 
 final class ViewControllerFactory: ViewControllerFactoryProtocol {
@@ -69,12 +70,20 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
         return QuestStartViewController(viewModel: viewModel)
     }
     
-    func makeLookBackViewController() -> LookBackJourneyViewController {
+    func makeLookBackJourneyViewController() -> LookBackJourneyViewController {
         guard let viewModel = DIContainer.shared.resolve(type: LookBackJourneyViewModel.self) else {
             DIErrorHandle()
             fatalError()
         }
         return LookBackJourneyViewController(viewModel: viewModel)
+    }
+    
+    func makeNewJourneySelectViewController() -> NewJourneySelectViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: NewJourneyViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        return NewJourneySelectViewController(viewModel: viewModel)
     }
 }
 

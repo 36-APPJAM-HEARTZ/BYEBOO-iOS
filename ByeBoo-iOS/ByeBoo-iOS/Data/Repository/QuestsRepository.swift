@@ -93,6 +93,15 @@ struct DefaultQuestRepository: QuestsInterface {
         return result.toEntity()
     }
     
+    func postNewJourney(journey: String) async throws {
+        let journeyEnum = JourneyType.toServerKey(journey)
+        ByeBooLogger.debug(journeyEnum)
+        // TODO: 로그인 붙인 후 주석 해제
+//        let _ = try await network.request(
+//            QuestAPI.postJourney(journey: journeyEnum)
+//        )
+    }
+    
     // MARK: private function
     
     private func makeSignedURL(imageKey: String) async throws -> String {
@@ -161,5 +170,9 @@ struct MockQuestsRepository: QuestsInterface {
     
     func getNewJourney() async throws -> LookBackJourneyEntity {
         return .stub()
+    }
+    
+    func postNewJourney(journey: String) async throws {
+        
     }
 }

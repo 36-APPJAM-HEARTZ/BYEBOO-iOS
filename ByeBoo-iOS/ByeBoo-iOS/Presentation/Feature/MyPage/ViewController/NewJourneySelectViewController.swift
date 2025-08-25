@@ -9,7 +9,7 @@ import Combine
 import UIKit
 
 final class NewJourneySelectViewController: BaseViewController {
-    
+        
     private let rootView: NewJourneySelectView
     private let viewModel: NewJourneyViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -30,7 +30,8 @@ final class NewJourneySelectViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
+        rootView.unCompleteListView.delegate = self
         viewModel.action(.newJourneyDidLoad)
         
         ByeBooNavigationBar.makeNavigationBar(
@@ -42,7 +43,7 @@ final class NewJourneySelectViewController: BaseViewController {
         
         bind()
     }
-    
+        
     private func bind() {
         viewModel.output.newJourneyPublisher
             .receive(on: DispatchQueue.main)
@@ -66,5 +67,27 @@ extension NewJourneySelectViewController: BackNavigable {
         }
         
         navigationController.popViewController(animated: true)
+    }
+}
+
+extension NewJourneySelectViewController: selectUnCompletedJourneyProtocol {
+    func addGesture() {
+        guard let journeyStack = rootView.unCompleteListView.journeyListView else { return }
+
+        ByeBooLogger.debug(journeyStack)
+        journeyStack.arrangedSubviews.forEach { journey in
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(journeyDidTap))
+            journey.addGestureRecognizer(tapRecognizer)
+            journey.isUserInteractionEnabled = true
+        }
+    }
+}
+
+extension NewJourneySelectViewController {
+    @objc
+    private func journeyDidTap(_ tapRecognizer: UITapGestureRecognizer) {
+        guard let journeyView = tapRecognizer.view as? OneLineTextBoxView else { return }
+        ByeBooLogger.debug(journeyView.title)
+        viewModel.action(.selectedJourneyDidTap(journey: journeyView.title))
     }
 }
