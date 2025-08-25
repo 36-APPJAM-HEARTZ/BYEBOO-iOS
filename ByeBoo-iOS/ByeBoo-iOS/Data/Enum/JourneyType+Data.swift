@@ -6,7 +6,7 @@
 //
 
 extension JourneyType {
-    static func toEnum(_ rawValue: String) -> String {
+    static func toServerKey(_ rawValue: String) -> String {
         switch rawValue {
         case "감정 직면":
             return "FACE_EMOTION"

@@ -94,7 +94,7 @@ struct DefaultQuestRepository: QuestsInterface {
     }
     
     func postNewJourney(journey: String) async throws {
-        let journeyEnum = JourneyType.toEnum(journey)
+        let journeyEnum = JourneyType.toServerKey(journey)
         ByeBooLogger.debug(journeyEnum)
         // TODO: 로그인 붙인 후 주석 해제
 //        let _ = try await network.request(
