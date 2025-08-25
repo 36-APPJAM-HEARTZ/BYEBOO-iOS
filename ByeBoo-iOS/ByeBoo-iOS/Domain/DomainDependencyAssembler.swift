@@ -94,5 +94,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: ModifyNicknameUseCase.self) { _ in
             return DefaultModifyNicknameUseCase(repository: userRepository)
         }
+        
+        DIContainer.shared.register(type: FetchNewJourneyUseCase.self) { _ in
+            return DefaultFetchNewJourneyUseCase(fetchNewJourneyRepository: questRepository)
+        }
     }
 }

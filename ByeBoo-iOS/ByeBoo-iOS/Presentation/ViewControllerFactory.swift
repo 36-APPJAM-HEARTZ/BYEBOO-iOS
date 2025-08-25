@@ -70,7 +70,7 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
         return QuestStartViewController(viewModel: viewModel)
     }
     
-    func makeLookBackViewController() -> LookBackJourneyViewController {
+    func makeLookBackJourneyViewController() -> LookBackJourneyViewController {
         guard let viewModel = DIContainer.shared.resolve(type: LookBackJourneyViewModel.self) else {
             DIErrorHandle()
             fatalError()
@@ -84,6 +84,14 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
             fatalError()
         }
         return ModifyNicknameViewController(viewModel: viewModel)
+    }
+    
+    func makeNewJourneySelectViewController() -> NewJourneySelectViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: NewJourneyViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        return NewJourneySelectViewController(viewModel: viewModel)
     }
 }
 
