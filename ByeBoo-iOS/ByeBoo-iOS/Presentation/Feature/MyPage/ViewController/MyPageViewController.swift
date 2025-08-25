@@ -114,6 +114,7 @@ extension MyPageViewController {
     private func moveButtonDidTap() {
         let modifyNicknameViewController = ViewControllerFactory.shared.makeModifyNicknameViewController()
         modifyNicknameViewController.updateName(self.name)
+        modifyNicknameViewController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(modifyNicknameViewController, animated: false)
     }
     
