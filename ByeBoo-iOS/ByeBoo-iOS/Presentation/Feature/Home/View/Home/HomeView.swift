@@ -11,7 +11,7 @@ import Lottie
 
 final class HomeView: BaseView {
 
-    private let backgroundImageView = LottieAnimationView(name: "Bori_home8")
+    private let backgroundImageView = LottieAnimationView(name: "bori_home")
     private(set) var headerView = HomeHeaderView()
     private let speechBoxView = SpeechTextBoxView(title: "")
     

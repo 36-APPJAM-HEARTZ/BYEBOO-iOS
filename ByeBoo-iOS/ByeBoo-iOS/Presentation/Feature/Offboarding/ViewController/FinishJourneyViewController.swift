@@ -18,11 +18,22 @@ final class FinishJourneyViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationItem.hidesBackButton = true
+        
+        ByeBooNavigationBar.makeNavigationBar(
+            navigationItem: self.navigationItem,
+            navigationController: self.navigationController,
+            type: .close(header: .clear),
+            action: #selector(close)
+        )
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.rootView.startParagraphAnimation()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: false)
         tabBarController?.tabBar.isHidden = true
     }
     
@@ -39,6 +50,12 @@ final class FinishJourneyViewController: BaseViewController {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(homeLabelDidTap))
         rootView.backHomeLabel.addGestureRecognizer(tapRecognizer)
         rootView.backHomeLabel.isUserInteractionEnabled = true
+    }
+}
+
+extension FinishJourneyViewController: Dismissible {
+    func close() {
+        
     }
 }
 
