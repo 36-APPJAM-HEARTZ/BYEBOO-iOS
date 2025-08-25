@@ -53,13 +53,13 @@ final class FinishJourneyViewController: BaseViewController {
     }
 }
 
-extension FinishJourneyViewController {
-    
-    @objc
-    private func close() {
+extension FinishJourneyViewController: Dismissible {
+    func close() {
         
     }
-    
+}
+
+extension FinishJourneyViewController {
     @objc
     private func startButtonDidTap() {
         ByeBooLogger.debug("starbuttontapped")
