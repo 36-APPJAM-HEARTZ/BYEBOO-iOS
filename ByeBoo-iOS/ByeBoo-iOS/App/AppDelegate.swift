@@ -15,7 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         sleep(1)
         
-        KakaoSDK.initSDK(appKey: "${NATIVE_APP_KEY}")
+        if let kakaoNativeAppKey = Bundle.main.object(forInfoDictionaryKey: "KAKAO_NATIVE_APP_KEY") as? String {
+            KakaoSDK.initSDK(appKey: kakaoNativeAppKey)
+        } else {
+            fatalError("카카오 네이티브 앱 키 없음")
+        }
         
         return true
     }
