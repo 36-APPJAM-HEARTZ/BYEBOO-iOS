@@ -9,6 +9,7 @@ import Foundation
 
 protocol UsersInterface {
     func getUserName() -> String?
+    func modifyUserNickname(name: String) async throws -> String
     func getUserID() -> Int?
     func setHelperShown()
     func getIsHelperShown() -> Bool?
