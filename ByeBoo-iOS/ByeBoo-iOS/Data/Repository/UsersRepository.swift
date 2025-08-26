@@ -86,6 +86,15 @@ struct DefaultUsersRepository: UsersInterface {
         _ = userDefaultsService.save(false, key: .isHelperShown)
         return userDefaultsService.load(key: .isHelperShown)
     }
+    
+    func modifyUserNickname(name: String) async throws -> String {
+        let result = try await network.request(
+            UsersAPI.modifyName(requestDTO: UserNameRequestDTO(name: name)),
+            decodingType: UserNameResponseDTO.self
+        )
+        let _ = userDefaultsService.save(result.name, key: .userName)
+        return result.name
+    }
 }
 
 struct MockUserRepository: UsersInterface {
@@ -132,6 +141,10 @@ struct MockUserRepository: UsersInterface {
     }
     
     func startJourney() async throws { }
+    
+    func modifyUserNickname(name: String) -> String {
+        "하쵸핑"
+    }
 }
 
 

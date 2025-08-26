@@ -29,16 +29,15 @@ final class MyPageViewModel: ViewModelType {
     
     func action(_ trigger: Input) {
         switch trigger {
-        case .viewDidLoad:
+        case .viewWillAppear:
             getUserName()
-            
         }
     }
 }
 
 extension MyPageViewModel {
     enum Input {
-        case viewDidLoad
+        case viewWillAppear
     }
     
     struct Output {

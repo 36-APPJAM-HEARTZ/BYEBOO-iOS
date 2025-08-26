@@ -170,5 +170,16 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             )
         }
         
+        DIContainer.shared.register(type: ModifyNicknameViewModel.self) { container in
+            guard let modifyNicknameUseCase = container.resolve(type: ModifyNicknameUseCase.self)
+            else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return ModifyNicknameViewModel(
+                useCase: modifyNicknameUseCase
+            )
+        }
     }
 }

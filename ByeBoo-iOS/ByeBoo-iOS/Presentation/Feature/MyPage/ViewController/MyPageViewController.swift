@@ -29,6 +29,11 @@ final class MyPageViewController: BaseViewController {
         view = rootView
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.action(.viewWillAppear)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         bind()
@@ -38,8 +43,6 @@ final class MyPageViewController: BaseViewController {
             navigationController: self.navigationController,
             type: .title("내 정보")
         )
-        
-        viewModel.action(.viewDidLoad)
     }
     
     override func setAddTarget() {
@@ -95,9 +98,9 @@ extension MyPageViewController {
     
     @objc
     private func lookBackButtonDidTap() {
-        let lookBackViewController = ViewControllerFactory.shared.makeLookBackJourneyViewController()
-        lookBackViewController.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(lookBackViewController, animated: true)
+        let lookBackJourneyViewController = ViewControllerFactory.shared.makeLookBackJourneyViewController()
+        lookBackJourneyViewController.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(lookBackJourneyViewController, animated: true)
     }
     
     @objc
@@ -109,8 +112,9 @@ extension MyPageViewController {
     
     @objc
     private func moveButtonDidTap() {
-        let modifyNicknameViewController = ModifyNicknameViewController()
+        let modifyNicknameViewController = ViewControllerFactory.shared.makeModifyNicknameViewController()
         modifyNicknameViewController.updateName(self.name)
+        modifyNicknameViewController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(modifyNicknameViewController, animated: false)
     }
     

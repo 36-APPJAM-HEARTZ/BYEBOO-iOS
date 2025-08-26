@@ -15,6 +15,7 @@ enum UsersAPI {
     case character
     case count
     case start
+    case modifyName(requestDTO: UserNameRequestDTO)
 }
 
 extension UsersAPI: EndPoint {
@@ -34,6 +35,8 @@ extension UsersAPI: EndPoint {
             return "/count"
         case .start:
             return "/journey/start"
+        case .modifyName:
+            return "/name"
         }
     }
     
@@ -41,16 +44,14 @@ extension UsersAPI: EndPoint {
         switch self {
         case .journey, .character, .count:
             return .get
-        case .sendUser:
-            return .patch
-        case .start:
+        case .sendUser, .start, .modifyName:
             return .patch
         }
     }
     
     var headers: HeaderType {
         switch self {
-        case .journey, .sendUser, .character, .count, .start:
+        case .journey, .sendUser, .character, .count, .start, .modifyName:
             return .withAuth(acessToken: Bundle.main.infoDictionary?["MASTER_TOKEN"] as! String)
         }
     }
@@ -59,7 +60,7 @@ extension UsersAPI: EndPoint {
         switch self {
         case .journey, .character, .count, .start:
             return URLEncoding.default
-        case .sendUser:
+        case .sendUser, .modifyName:
             return JSONEncoding.default
         }
     }
@@ -73,6 +74,8 @@ extension UsersAPI: EndPoint {
         case .journey, .character, .count, .start:
             return nil
         case .sendUser(let dto):
+            return try? dto.toDictionary()
+        case .modifyName(let dto):
             return try? dto.toDictionary()
         }
     }
