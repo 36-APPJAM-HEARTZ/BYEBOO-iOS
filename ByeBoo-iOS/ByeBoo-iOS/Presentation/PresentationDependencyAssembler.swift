@@ -157,14 +157,16 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: NewJourneyViewModel.self) { container in
-            guard let getNewJourneyCase = container.resolve(type: GetNewJourneyUseCase.self)
+            guard let getNewJourneyUseCase = container.resolve(type: GetNewJourneyUseCase.self),
+                  let postNewJourneyUseCase = container.resolve(type: FetchNewJourneyUseCase.self)
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
             return NewJourneyViewModel(
-                useCase: getNewJourneyCase
+                getNewJourneyUseCase: getNewJourneyUseCase,
+                postJourneyUseCase: postNewJourneyUseCase
             )
         }
         

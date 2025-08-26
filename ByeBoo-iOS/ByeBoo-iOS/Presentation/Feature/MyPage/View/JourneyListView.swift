@@ -7,12 +7,16 @@
 
 import UIKit
 
+protocol selectUnCompletedJourneyProtocol: AnyObject {
+    func addGesture()
+}
+
 final class JourneyListView: BaseView {
 
     private let stackView = UIStackView()
     private let titleLabel = UILabel()
     private let countLabel = UILabel()
-    private var journeyListView: UIStackView?
+    private(set) var journeyListView: UIStackView?
     
     private let emptyLabel: UILabel?
     
@@ -21,6 +25,8 @@ final class JourneyListView: BaseView {
     
     private let isFinished: Bool
     private let journeyList: [JourneyEntity]
+    
+    weak var delegate: selectUnCompletedJourneyProtocol?
     
     init(
         isFinished: Bool,
@@ -65,6 +71,7 @@ final class JourneyListView: BaseView {
         journeyListView?.do {
             $0.spacing = 16.adjustedH
             $0.axis = .vertical
+            $0.isUserInteractionEnabled = true
         }
         emptyLabel?.do {
             // TODO: 미완료 일 때 text 바뀌어야 하는데 앱잼 내에 구현 X
@@ -120,6 +127,7 @@ extension JourneyListView {
             journeyListView?.do {
                 $0.spacing = 16.adjustedH
                 $0.axis = .vertical
+                $0.isUserInteractionEnabled = true
             }
         
             journeyListView?.snp.makeConstraints {
@@ -129,13 +137,17 @@ extension JourneyListView {
             }
             
             journeyList.forEach { journey in
-            let journeyView = OneLineTextBoxView(
-                title: journey.title,
-                tagTitle: journey.style?.text,
-                tagType: isFinished ? .word3Gray : .word3Purple,
-                isHighlighted: !isFinished
-            )
+                let journeyView = OneLineTextBoxView(
+                    title: journey.title,
+                    tagTitle: journey.style?.text,
+                    tagType: isFinished ? .word3Gray : .word3Purple,
+                    isHighlighted: !isFinished
+                )
                 journeyListView?.addArrangedSubview(journeyView)
+                journeyView.snp.makeConstraints {
+                    $0.height.equalTo(60.adjustedH)
+                }
+                journeyView.isUserInteractionEnabled = true
             }
             
             if !isFinished {
@@ -149,6 +161,8 @@ extension JourneyListView {
                     $0.center.equalToSuperview()
                 }
             }
+            self.layoutIfNeeded()
+            delegate?.addGesture()
         }
     }
 

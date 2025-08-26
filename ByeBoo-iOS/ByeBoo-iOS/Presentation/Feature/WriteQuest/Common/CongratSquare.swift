@@ -7,16 +7,17 @@
 
 import UIKit
 
+import Lottie
 import SnapKit
 import Then
 
 final class CongratSquare: BaseView {
     private let titleLabel = UILabel()
-    private let imageView = UIImageView()
+    private let imageLottie = LottieAnimationView(name: "bori_congrate")
     private let descriptionLabel = UILabel()
     
     override func setUI() {
-        addSubviews(titleLabel, imageView, descriptionLabel)
+        addSubviews(titleLabel, imageLottie, descriptionLabel)
     }
     
     override func setStyle() {
@@ -32,8 +33,9 @@ final class CongratSquare: BaseView {
             $0.textAlignment = .center
         }
         
-        imageView.do {
-            $0.image = .congrate
+        imageLottie.do {
+            $0.play()
+            $0.loopMode = .playOnce
             $0.contentMode = .scaleAspectFill
         }
         
@@ -58,7 +60,7 @@ final class CongratSquare: BaseView {
             $0.width.equalTo(203.adjustedW)
         }
         
-        imageView.snp.makeConstraints {
+        imageLottie.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(16.adjustedH)
             $0.width.equalTo(203.adjustedW)
             $0.height.equalTo(181.adjustedH)
@@ -66,7 +68,7 @@ final class CongratSquare: BaseView {
         }
         
         descriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(imageView.snp.bottom).offset(16.adjustedH)
+            $0.top.equalTo(imageLottie.snp.bottom).offset(16.adjustedH)
             $0.leading.trailing.equalToSuperview().inset(61.adjustedH)
         }
     }

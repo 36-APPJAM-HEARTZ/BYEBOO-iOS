@@ -7,23 +7,36 @@
 
 import UIKit
 
-final class FinishJourneyView: BaseView {
+import Lottie
 
+final class FinishJourneyView: BaseView {
+    
     private let backgroundImageView = UIImageView()
     private let backgroundView = UIView()
     private let titleLabel = UILabel()
-    private let descriptionLabel = UILabel()
-    private let characterImageView = UIImageView()
+    private let currentTextLabel = UILabel()
+    private let nextTextLabel = UILabel()
+    
+    private let characterLottie = LottieAnimationView(name: "bori_cake")
+    
     let startButton = ByeBooButton(titleText: "새로운 이별 극복 여정 시작하기", type: .enabled)
     let lookBackButton = ByeBooButton(titleText: "완료한 여정 다시보기", type: .sub)
     let backHomeLabel = UILabel()
+    
+    private let animationText: [String] = [
+        "무려 30개의 퀘스트를 완료했어요.\n끝까지 포기하지 않고 극복하기 위해 노력한\n하츠핑님이 너무 대단해요.",
+        "지금의 하츠핑님은, 처음보다 성장했을 거예요.",
+        "만약 아직 정리되지 못한 감정이 남아있다면,\n또 다른 새로운 여정을 시작해볼까요?"
+    ]
+    
+    private var paragraphIndex: Int = 0
     
     override func setStyle() {
         backgroundImageView.do {
             $0.image = .bgLight
         }
         backgroundView.do {
-            $0.backgroundColor = .black50
+            $0.backgroundColor = .black80
         }
         titleLabel.do {
             $0.text = "🎉감정 직면 여정을 완료했어요!🎉"
@@ -31,32 +44,30 @@ final class FinishJourneyView: BaseView {
             $0.textColor = .secondary300
             $0.textAlignment = .center
         }
-        descriptionLabel.do {
-            $0.text =
-            """
-            무려 30개의 퀘스트를 완료했어요.
-            끝까지 포기하지 않고 극복하기 위해 노력한
-            하츠핑님이 너무 대단해요.
-
-            지금의 하츠핑님은, 처음보다 성장했을 거예요.
-
-            만약 아직 정리되지 못한 감정이 남아있다면,
-            또 다른 새로운 여정을 시작해볼까요?
-            """
+        currentTextLabel.do {
+            $0.text = animationText[0]
             $0.numberOfLines = 0
             $0.font = FontManager.body6R14.font
-            $0.textColor = .secondary100
+            $0.textColor = .secondary50
             $0.textAlignment = .center
         }
-        characterImageView.do {
-            $0.image = .cake
-        }
-        backHomeLabel.do {
-            $0.text = "홈으로 돌아가기"
+        nextTextLabel.do {
+            $0.text = animationText[1]
+            $0.numberOfLines = 0
+            $0.font = FontManager.cap2R12.font
+            $0.textColor = .secondary5050
             $0.textAlignment = .center
-            $0.font = FontManager.body1Sb16.font
-            $0.textColor = .primary50
-            $0.underLine(text: $0.text ?? "")
+        }
+        characterLottie.do {
+            $0.play()
+            $0.loopMode = .loop
+            $0.contentMode = .scaleAspectFill
+        }
+        startButton.do {
+            $0.setImage(UIImage(named: "reset")?.withRenderingMode(.alwaysTemplate), for: .normal)
+            $0.tintColor = .white
+            $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 4.adjustedW)
+            $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 4.adjustedW, bottom: 0, right: 0)
         }
     }
     
@@ -65,17 +76,17 @@ final class FinishJourneyView: BaseView {
             backgroundImageView,
             backgroundView,
             titleLabel,
-            descriptionLabel,
-            characterImageView,
+            currentTextLabel,
+            nextTextLabel,
+            characterLottie,
             startButton,
-            lookBackButton,
-            backHomeLabel
+            lookBackButton
         )
     }
-
+    
     override func setLayout() {
         let safeArea = safeAreaLayoutGuide
-
+        
         backgroundImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
@@ -83,28 +94,70 @@ final class FinishJourneyView: BaseView {
             $0.edges.equalToSuperview()
         }
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(safeArea).offset(45.adjustedH)
+            $0.top.equalTo(safeArea).offset(18.adjustedH)
             $0.centerX.equalToSuperview()
         }
-        descriptionLabel.snp.makeConstraints {
+        currentTextLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(24.adjustedH)
             $0.centerX.equalToSuperview()
         }
-        characterImageView.snp.makeConstraints {
-            $0.top.equalTo(descriptionLabel.snp.bottom).offset(24.adjustedH)
+        nextTextLabel.snp.makeConstraints {
+            $0.top.equalTo(currentTextLabel.snp.bottom).offset(16.adjustedH)
+            $0.centerX.equalToSuperview()
+        }
+        characterLottie.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(154.adjustedH)
+            $0.width.height.equalTo(290.adjustedH)
             $0.centerX.equalToSuperview()
         }
         startButton.snp.makeConstraints {
-            $0.top.equalTo(characterImageView.snp.bottom).offset(30.adjustedH)
+            $0.top.equalTo(characterLottie.snp.bottom).offset(30.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
         lookBackButton.snp.makeConstraints {
             $0.top.equalTo(startButton.snp.bottom).offset(16.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
-        backHomeLabel.snp.makeConstraints {
-            $0.top.equalTo(lookBackButton.snp.bottom).offset(16.adjustedH)
-            $0.centerX.equalToSuperview()
-        }
+    }
+}
+
+extension FinishJourneyView {
+    
+    func startParagraphAnimation() {
+        paragraphIndex = 0
+        currentTextLabel.text = animationText[paragraphIndex]
+        nextParagraphAnimation()
+    }
+    
+    private func nextParagraphAnimation() {
+        guard paragraphIndex + 1 < animationText.count else { return }
+        
+        paragraphIndex += 1
+        let nextText = animationText[paragraphIndex]
+        
+        nextTextLabel.text = nextText
+        self.nextTextLabel.alpha = 1
+        nextTextLabel.transform = .identity
+        
+        UIView.animate(withDuration: 1, delay: 1, options: [.curveEaseInOut], animations: {
+            self.currentTextLabel.transform = CGAffineTransform(translationX: 0, y: -20)
+            self.currentTextLabel.alpha = 0
+            
+            self.nextTextLabel.transform = CGAffineTransform(translationX: 0, y: -20)
+        }, completion: { _ in
+            self.currentTextLabel.text = nextText
+            self.currentTextLabel.alpha = 1
+            self.currentTextLabel.transform = .identity
+
+            self.nextTextLabel.transform = .identity
+            self.nextTextLabel.alpha = 0
+
+            if self.paragraphIndex == self.animationText.count - 1 {
+                self.nextTextLabel.text = ""
+                self.nextTextLabel.alpha = 0
+            } else {
+                self.nextParagraphAnimation()
+            }
+        })
     }
 }
