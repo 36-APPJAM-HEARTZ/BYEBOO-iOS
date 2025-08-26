@@ -14,9 +14,9 @@ final class FinishJourneyView: BaseView {
     private let backgroundImageView = UIImageView()
     private let backgroundView = UIView()
     private let titleLabel = UILabel()
-    private let currentTextLabel = UILabel()
-    private let nextTextLabel = UILabel()
-    
+    private let firstTextLabel = UILabel()
+    private let secondTextLabel = UILabel()
+    private let thirdTextLabel = UILabel()
     private let characterLottie = LottieAnimationView(name: "bori_cake")
     
     let startButton = ByeBooButton(titleText: "새로운 이별 극복 여정 시작하기", type: .enabled)
@@ -28,9 +28,6 @@ final class FinishJourneyView: BaseView {
         "지금의 하츠핑님은, 처음보다 성장했을 거예요.",
         "만약 아직 정리되지 못한 감정이 남아있다면,\n또 다른 새로운 여정을 시작해볼까요?"
     ]
-    
-    private var paragraphIndex: Int = 0
-    
     override func setStyle() {
         backgroundImageView.do {
             $0.image = .bgLight
@@ -44,20 +41,6 @@ final class FinishJourneyView: BaseView {
             $0.textColor = .secondary300
             $0.textAlignment = .center
         }
-        currentTextLabel.do {
-            $0.text = animationText[0]
-            $0.numberOfLines = 0
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .secondary50
-            $0.textAlignment = .center
-        }
-        nextTextLabel.do {
-            $0.text = animationText[1]
-            $0.numberOfLines = 0
-            $0.font = FontManager.cap2R12.font
-            $0.textColor = .secondary5050
-            $0.textAlignment = .center
-        }
         characterLottie.do {
             $0.play()
             $0.loopMode = .loop
@@ -69,6 +52,30 @@ final class FinishJourneyView: BaseView {
             $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 4.adjustedW)
             $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 4.adjustedW, bottom: 0, right: 0)
         }
+        firstTextLabel.do {
+            $0.text = animationText[0]
+            $0.numberOfLines = 0
+            $0.font = FontManager.body6R14.font
+            $0.textColor = .secondary50
+            $0.textAlignment = .center
+        }
+        
+        secondTextLabel.do {
+            $0.text = animationText[1]
+            $0.numberOfLines = 0
+            $0.font = FontManager.cap2R12.font
+            $0.textColor = .secondary5050
+            $0.textAlignment = .center
+        }
+        
+        thirdTextLabel.do {
+            $0.text = animationText[2]
+            $0.numberOfLines = 0
+            $0.font = FontManager.cap2R12.font
+            $0.textColor = .secondary5050
+            $0.textAlignment = .center
+            $0.alpha = 0
+        }
     }
     
     override func setUI() {
@@ -76,8 +83,9 @@ final class FinishJourneyView: BaseView {
             backgroundImageView,
             backgroundView,
             titleLabel,
-            currentTextLabel,
-            nextTextLabel,
+            firstTextLabel,
+            secondTextLabel,
+            thirdTextLabel,
             characterLottie,
             startButton,
             lookBackButton
@@ -97,12 +105,16 @@ final class FinishJourneyView: BaseView {
             $0.top.equalTo(safeArea).offset(18.adjustedH)
             $0.centerX.equalToSuperview()
         }
-        currentTextLabel.snp.makeConstraints {
+        firstTextLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(24.adjustedH)
             $0.centerX.equalToSuperview()
         }
-        nextTextLabel.snp.makeConstraints {
-            $0.top.equalTo(currentTextLabel.snp.bottom).offset(16.adjustedH)
+        secondTextLabel.snp.makeConstraints {
+            $0.top.equalTo(firstTextLabel.snp.bottom).offset(16.adjustedH)
+            $0.centerX.equalToSuperview()
+        }
+        thirdTextLabel.snp.makeConstraints {
+            $0.top.equalTo(secondTextLabel.snp.bottom).offset(16.adjustedH)
             $0.centerX.equalToSuperview()
         }
         characterLottie.snp.makeConstraints {
@@ -122,42 +134,33 @@ final class FinishJourneyView: BaseView {
 }
 
 extension FinishJourneyView {
-    
     func startParagraphAnimation() {
-        paragraphIndex = 0
-        currentTextLabel.text = animationText[paragraphIndex]
-        nextParagraphAnimation()
-    }
-    
-    private func nextParagraphAnimation() {
-        guard paragraphIndex + 1 < animationText.count else { return }
-        
-        paragraphIndex += 1
-        let nextText = animationText[paragraphIndex]
-        
-        nextTextLabel.text = nextText
-        self.nextTextLabel.alpha = 1
-        nextTextLabel.transform = .identity
-        
-        UIView.animate(withDuration: 1, delay: 1, options: [.curveEaseInOut], animations: {
-            self.currentTextLabel.transform = CGAffineTransform(translationX: 0, y: -20)
-            self.currentTextLabel.alpha = 0
-            
-            self.nextTextLabel.transform = CGAffineTransform(translationX: 0, y: -20)
+        UIView.transition(with: self.secondTextLabel, duration: 2.1, options: .transitionCrossDissolve, animations: {
+            self.secondTextLabel.textColor = .secondary50
         }, completion: { _ in
-            self.currentTextLabel.text = nextText
-            self.currentTextLabel.alpha = 1
-            self.currentTextLabel.transform = .identity
-
-            self.nextTextLabel.transform = .identity
-            self.nextTextLabel.alpha = 0
-
-            if self.paragraphIndex == self.animationText.count - 1 {
-                self.nextTextLabel.text = ""
-                self.nextTextLabel.alpha = 0
-            } else {
-                self.nextParagraphAnimation()
+            UIView.transition(with: self.thirdTextLabel, duration: 2, options: .transitionCrossDissolve) {
+                self.thirdTextLabel.textColor = .secondary50
             }
         })
+        
+        UIView.animate(withDuration: 1, delay: 1, options: [.curveEaseInOut], animations: {
+            self.firstTextLabel.transform = CGAffineTransform(translationX: 0, y: -20)
+            self.firstTextLabel.alpha = 0
+            
+            let animation = CGAffineTransform(translationX: 0, y: -50)
+            self.secondTextLabel.transform = animation.scaledBy(x: 1.2, y: 1.2)
+            
+            self.thirdTextLabel.alpha = 1
+            self.thirdTextLabel.transform = CGAffineTransform(translationX: 0, y: -50)
+            
+        }) { _ in
+            UIView.animate(withDuration: 1, delay: 1, options: [.curveEaseInOut], animations: {
+                self.secondTextLabel.transform = CGAffineTransform(translationX: 0, y: -70)
+                self.secondTextLabel.alpha = 0
+                
+                let animation = CGAffineTransform(translationX: 0, y: -100)
+                self.thirdTextLabel.transform = animation.scaledBy(x: 1.2, y: 1.2)
+            })
+        }
     }
 }
