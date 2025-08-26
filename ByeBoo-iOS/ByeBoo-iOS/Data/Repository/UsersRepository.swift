@@ -98,6 +98,26 @@ struct DefaultUsersRepository: UsersInterface {
 }
 
 struct MockUserRepository: UsersInterface {
+    var questStatus: UserQuestStatusEntity = .init(
+        todayComplete: true,
+        currentStatus: .afterJourney,
+        questCount: 0
+    )
+    var isHelperShown: Bool = true
+    
+    init(
+        questStatus: UserQuestStatusEntity? = nil,
+        isHelperShown: Bool? = nil
+    ) {
+        if let questStatus {
+            self.questStatus = questStatus
+        }
+        
+        if let isHelperShown {
+            self.isHelperShown = isHelperShown
+        }
+    }
+    
     func getUserName() -> String? {
         "하츠핑"
     }
@@ -109,7 +129,7 @@ struct MockUserRepository: UsersInterface {
     func setHelperShown() { }
     
     func getIsHelperShown() -> Bool? {
-        false
+        isHelperShown
     }
     
     func fetchJourney() async throws -> JourneyEntity {
@@ -133,11 +153,7 @@ struct MockUserRepository: UsersInterface {
     }
     
     func fetchQuestStatus() async throws -> UserQuestStatusEntity {
-        return .init(
-            todayComplete: true,
-            currentStatus: .afterQuest,
-            questCount: 3
-        )
+        return questStatus
     }
     
     func startJourney() async throws { }

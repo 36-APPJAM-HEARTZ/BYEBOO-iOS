@@ -14,8 +14,19 @@
 		CBF009C82E1D889D003F9DFE /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = CBF009C72E1D889D003F9DFE /* Lottie */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		CBC60E452E5CA1900044CA41 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CB4180832E0925D2001E7BCB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CB41808A2E0925D2001E7BCB;
+			remoteInfo = "ByeBoo-iOS";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		CB41808B2E0925D2001E7BCB /* ByeBoo-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ByeBoo-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBC60E412E5CA1900044CA41 /* ByeBooTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ByeBooTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -37,6 +48,11 @@
 			path = "ByeBoo-iOS";
 			sourceTree = "<group>";
 		};
+		CBC60E422E5CA1900044CA41 /* ByeBooTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = ByeBooTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +68,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CBC60E3E2E5CA1900044CA41 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -59,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				CB41808D2E0925D2001E7BCB /* ByeBoo-iOS */,
+				CBC60E422E5CA1900044CA41 /* ByeBooTests */,
 				CB41808C2E0925D2001E7BCB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -67,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				CB41808B2E0925D2001E7BCB /* ByeBoo-iOS.app */,
+				CBC60E412E5CA1900044CA41 /* ByeBooTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -101,6 +126,29 @@
 			productReference = CB41808B2E0925D2001E7BCB /* ByeBoo-iOS.app */;
 			productType = "com.apple.product-type.application";
 		};
+		CBC60E402E5CA1900044CA41 /* ByeBooTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CBC60E492E5CA1900044CA41 /* Build configuration list for PBXNativeTarget "ByeBooTests" */;
+			buildPhases = (
+				CBC60E3D2E5CA1900044CA41 /* Sources */,
+				CBC60E3E2E5CA1900044CA41 /* Frameworks */,
+				CBC60E3F2E5CA1900044CA41 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CBC60E462E5CA1900044CA41 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CBC60E422E5CA1900044CA41 /* ByeBooTests */,
+			);
+			name = ByeBooTests;
+			packageProductDependencies = (
+			);
+			productName = ByeBooTests;
+			productReference = CBC60E412E5CA1900044CA41 /* ByeBooTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -113,6 +161,10 @@
 				TargetAttributes = {
 					CB41808A2E0925D2001E7BCB = {
 						CreatedOnToolsVersion = 16.2;
+					};
+					CBC60E402E5CA1900044CA41 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = CB41808A2E0925D2001E7BCB;
 					};
 				};
 			};
@@ -138,12 +190,20 @@
 			projectRoot = "";
 			targets = (
 				CB41808A2E0925D2001E7BCB /* ByeBoo-iOS */,
+				CBC60E402E5CA1900044CA41 /* ByeBooTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		CB4180892E0925D2001E7BCB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CBC60E3F2E5CA1900044CA41 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -160,7 +220,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CBC60E3D2E5CA1900044CA41 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CBC60E462E5CA1900044CA41 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CB41808A2E0925D2001E7BCB /* ByeBoo-iOS */;
+			targetProxy = CBC60E452E5CA1900044CA41 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		CB41809F2E0925D4001E7BCB /* Debug */ = {
@@ -359,6 +434,50 @@
 			};
 			name = Release;
 		};
+		CBC60E472E5CA1900044CA41 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.byeboo.ByeBooTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ByeBoo-iOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ByeBoo-iOS";
+				XROS_DEPLOYMENT_TARGET = 2.2;
+			};
+			name = Debug;
+		};
+		CBC60E482E5CA1900044CA41 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MACOSX_DEPLOYMENT_TARGET = 15.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.byeboo.ByeBooTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ByeBoo-iOS.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ByeBoo-iOS";
+				XROS_DEPLOYMENT_TARGET = 2.2;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -376,6 +495,15 @@
 			buildConfigurations = (
 				CB41809F2E0925D4001E7BCB /* Debug */,
 				CB4180A02E0925D4001E7BCB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CBC60E492E5CA1900044CA41 /* Build configuration list for PBXNativeTarget "ByeBooTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CBC60E472E5CA1900044CA41 /* Debug */,
+				CBC60E482E5CA1900044CA41 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
