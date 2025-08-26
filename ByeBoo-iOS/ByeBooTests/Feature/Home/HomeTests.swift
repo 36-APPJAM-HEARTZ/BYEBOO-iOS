@@ -11,7 +11,7 @@ import Testing
 struct HomeTests {
     
     // 안보이는 게 true
-    @Test("currentStatus가 beforeJourneyStart이고 isHelperShown이 false일 때, helperResult가 false인가")
+    @Test("🏁 [currentStatus가 beforeJourneyStart]이고 [isHelperShown이 false]일 때 ✅ helperResult가 false인가")
     func case1() async throws {
         // Given
         let viewModel = makeViewModel(
@@ -37,7 +37,7 @@ struct HomeTests {
         #expect(value == false)
     }
     
-    @Test("currentStatus가 afterJourney, afterQuest, beforeQuest이고 isHelperShown이 false일 때, helperResult가 true인지")
+    @Test("🏁 currentStatus가 afterJourney, afterQuest, beforeQuest이고 isHelperShown이 false일 때 ✅ helperResult가 true인지")
     func case2() async throws {
         // Given
         let viewModel = makeViewModel(
@@ -63,7 +63,7 @@ struct HomeTests {
         #expect(value == true)
     }
     
-    @Test("isHelperShown이 true일 때, helperResult가 true인지")
+    @Test("🏁 isHelperShown이 true일 때 ✅ helperResult가 true인지")
     func case3() async throws {
         // Given
         let viewModel = makeViewModel(
