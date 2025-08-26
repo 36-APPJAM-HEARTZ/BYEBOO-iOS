@@ -22,10 +22,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         DIContainer.shared.dependencyInject()
       
-        let viewController = BottomNavigationViewController()
-                
+        let viewController = ViewControllerFactory.shared.makeLoginViewController()
+        let navigationController = UINavigationController(rootViewController: viewController)
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = viewController
+        window.rootViewController = navigationController
         window.makeKeyAndVisible()
         
         self.window = window
