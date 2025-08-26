@@ -29,7 +29,6 @@ struct DefaultQuestRepository: QuestsInterface {
     }
     
     func getQuestInfo(questID: Int) async throws -> QuestInfoEntity {
-        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
             QuestAPI.checkQuest(questID: questID),
             decodingType: QuestInfoResponseDTO.self
@@ -38,7 +37,6 @@ struct DefaultQuestRepository: QuestsInterface {
     }
     
     func fetchQuestAnswer(questID: Int) async throws -> QuestAnswerEntity {
-        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
             QuestAPI.answer(questID: questID),
             decodingType: QuestAnswerResponseDTO.self
@@ -47,8 +45,6 @@ struct DefaultQuestRepository: QuestsInterface {
     }
     
     func fetchQuestTips(questID: Int) async throws -> QuestTipDataEntity {
-        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
-        
         let tip = try await network.request(
             QuestAPI.tip(questID: questID),
             decodingType: QuestTipResponseDTO.self
@@ -64,7 +60,6 @@ struct DefaultQuestRepository: QuestsInterface {
     }
     
     func postQuestionQuest(questID: Int, answer: String, emotionState: String) async throws {
-        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let saveQuestRequestDTO: SaveQuestRequestDTO = .init(answer: answer, questEmotionState: emotionState)
         
         let _ = try await network.request(
@@ -73,7 +68,6 @@ struct DefaultQuestRepository: QuestsInterface {
     }
     
     func getLookBackJourney() async throws -> [JourneyEntity] {
-        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
             QuestAPI.journey,
             decodingType: LookBackJourneyResponseDTO.self
@@ -84,7 +78,6 @@ struct DefaultQuestRepository: QuestsInterface {
     }
     
     func getNewJourney() async throws -> LookBackJourneyEntity {
-        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let result = try await network.request(
             QuestAPI.journey,
             decodingType: LookBackJourneyResponseDTO.self
@@ -105,7 +98,6 @@ struct DefaultQuestRepository: QuestsInterface {
     // MARK: private function
     
     private func makeSignedURL(imageKey: String) async throws -> String {
-        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let signedURLRequestDTO = SignedURLRequestDTO(contentType: "image/jpeg", imageKey: imageKey)
         
         let result = try await network.request(
@@ -126,7 +118,6 @@ struct DefaultQuestRepository: QuestsInterface {
         emotionState: String,
         imageKey: String
     ) async throws {
-        let userID: Int = userDefaultsService.load(key: .userID) ?? 1
         let saveQuestActiveDTO = SaveQuestActiveRequestDTO(
             imageKey: imageKey,
             answer: answer,
