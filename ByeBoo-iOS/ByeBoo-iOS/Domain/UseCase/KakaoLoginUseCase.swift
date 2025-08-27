@@ -8,7 +8,7 @@
 import Foundation
 
 protocol KakaoLoginUseCase {
-    func execute() async throws
+    func execute(platform: LoginPlatform) async throws
 }
 
 struct DefaultKakaoLoginUseCase: KakaoLoginUseCase {
@@ -18,7 +18,8 @@ struct DefaultKakaoLoginUseCase: KakaoLoginUseCase {
         self.repository = repository
     }
     
-    func execute() async throws {
-        return try await repository.kakaoLogin()
+    func execute(platform: LoginPlatform) async throws {
+        try await repository.kakaoLogin()
+        return try await repository.postLogin(platform: platform)
     }
 }

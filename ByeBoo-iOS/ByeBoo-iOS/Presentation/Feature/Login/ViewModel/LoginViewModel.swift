@@ -62,9 +62,9 @@ extension LoginViewModel {
     private func kakaoLogin() {
         Task {
             do {
-                let _ = try await kakaoLoginUseCase.execute()
+                let _ = try await kakaoLoginUseCase.execute(platform: .KAKAO)
                 kakaoLoginAuthSubject.send(.success(()))
-                postLogin(platform: "KAKAO")
+                getIsRegistered()
             } catch {
                 guard let error = error as? ByeBooError else {
                     return
@@ -77,22 +77,6 @@ extension LoginViewModel {
     
     private func appleLogin() {
         
-    }
-    
-    private func postLogin(platform: String) {
-        Task {
-            do {
-                let _ = try await postLoginUseCase.execute(platform: platform)
-                postLoginSubject.send(.success(()))
-                getIsRegistered()
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
-                ByeBooLogger.error(error as ByeBooError)
-                postLoginSubject.send(.failure(error))
-            }
-        }
     }
     
     private func getIsRegistered() {
