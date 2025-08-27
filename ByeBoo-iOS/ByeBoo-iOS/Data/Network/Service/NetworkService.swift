@@ -127,7 +127,7 @@ struct DefaultNetworkService: NetworkService {
                 UserApi.shared.loginWithKakaoTalk { ouathToken, error in
                     if let error = error {
                         ByeBooLogger.error(error)
-                        continuation.resume(throwing: ByeBooError.unknownError)
+                        continuation.resume(throwing: ByeBooError.kakaoOuathError)
                     } else {
                         ByeBooLogger.debug("카카오 로그인 토큰 받기 성공")
                         continuation.resume(returning: ouathToken?.accessToken ?? "")
@@ -137,7 +137,7 @@ struct DefaultNetworkService: NetworkService {
                 UserApi.shared.loginWithKakaoAccount { ouathToken, error in
                     if let error = error {
                         ByeBooLogger.error(error)
-                        continuation.resume(throwing: ByeBooError.unknownError)
+                        continuation.resume(throwing: ByeBooError.kakaoOuathError)
                     } else {
                         ByeBooLogger.debug("카카오 로그인 토큰 받기 성공")
                         continuation.resume(returning: ouathToken?.accessToken ?? "")
