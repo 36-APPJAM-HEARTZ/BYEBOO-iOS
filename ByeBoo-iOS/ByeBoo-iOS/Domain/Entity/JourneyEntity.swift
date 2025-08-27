@@ -10,7 +10,8 @@ import Foundation
 struct JourneyEntity {
     let title: String
     let description: String?
-    let style: JourneyStyle?
+    // TODO: 교체
+    let style: SelectQuestType?
 }
 
 extension JourneyEntity {

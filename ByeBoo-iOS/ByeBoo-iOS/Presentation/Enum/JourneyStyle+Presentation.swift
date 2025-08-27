@@ -5,16 +5,8 @@
 //  Created by 이나연 on 8/24/25.
 //
 
-extension JourneyStyle {
-    var key: String {
-        switch self {
-        case .recording:
-            return "RECORDING"
-        case .active:
-            return "ACTIVE"
-        }
-    }
-    
+// TODO: Journey Type으로 교체
+extension SelectQuestType {
     var text: String {
         switch self {
         case .recording:

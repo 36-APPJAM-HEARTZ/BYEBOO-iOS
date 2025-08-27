@@ -7,12 +7,12 @@
 
 struct LookBackJourneyResponseDTO: Decodable{
     let inCompletedCount: Int
-    let inCompletedJourneys: [JourneyStyleData]
+    let inCompletedJourneys: [JourneyTypeData]
     let completedCount: Int
-    let completedJourneys: [JourneyStyleData]
+    let completedJourneys: [JourneyTypeData]
 }
 
-struct JourneyStyleData: Decodable {
+struct JourneyTypeData: Decodable {
     let journey: String
     let style: String
 }
@@ -28,12 +28,13 @@ extension LookBackJourneyResponseDTO {
     }
 }
 
-extension JourneyStyleData {
+extension JourneyTypeData {
+    // TODO: 교체
     func toEntity() -> JourneyEntity {
         .init(
             title: self.journey,
             description: nil,
-            style: JourneyStyle.toEnum(self.style)
+            style: SelectQuestType.keyToEnum(self.style)
         )
     }
 }

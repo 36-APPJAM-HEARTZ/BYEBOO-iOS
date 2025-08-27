@@ -5,7 +5,8 @@
 //  Created by APPLE on 7/10/25.
 //
 
-enum JourneyStyle: CaseIterable {
+// 온보딩 시에 퀘스트 방식 선택
+enum SelectQuestType: CaseIterable {
     case recording
     case active
 }
