@@ -16,6 +16,7 @@ protocol ViewControllerFactoryProtocol {
     func makeQuestStartViewController() -> QuestStartViewController
     func makeLookBackJourneyViewController() -> LookBackJourneyViewController
     func makeNewJourneySelectViewController() -> NewJourneySelectViewController
+    func makeLoginViewController() -> LoginViewController
     func makeModifyNicknameViewController() -> ModifyNicknameViewController
 }
 
@@ -87,6 +88,14 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
         return NewJourneySelectViewController(viewModel: viewModel)
     }
     
+    func makeLoginViewController() -> LoginViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: LoginViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        return LoginViewController(viewModel: viewModel)
+    }
+    
     func makeModifyNicknameViewController() -> ModifyNicknameViewController {
         guard let viewModel = DIContainer.shared.resolve(type: ModifyNicknameViewModel.self) else {
             DIErrorHandle()
@@ -97,11 +106,10 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
 }
 
 extension ViewControllerFactory {
-    //TODO: Login으로 변경
     private func DIErrorHandle() {
         ByeBooLogger.error(ByeBooError.DIFailedError)
         
-        let tempViewController = OnboardingViewController()
+        let tempViewController = ViewControllerFactory.shared.makeLoginViewController()
         
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let window = windowScene.windows.first(where: { $0.isKeyWindow }) {

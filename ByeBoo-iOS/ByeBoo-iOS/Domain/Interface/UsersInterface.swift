@@ -18,4 +18,5 @@ protocol UsersInterface {
     func fetchCharacterDialogue() async throws -> String
     func fetchQuestStatus() async throws -> UserQuestStatusEntity
     func startJourney() async throws
+    func getIsRegistered() -> Bool
 }

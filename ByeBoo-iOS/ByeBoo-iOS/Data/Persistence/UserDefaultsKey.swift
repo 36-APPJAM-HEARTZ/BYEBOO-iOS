@@ -11,4 +11,5 @@ enum UserDefaultsKey: String {
     case userName
     case userID
     case isHelperShown
+    case isRegistered
 }

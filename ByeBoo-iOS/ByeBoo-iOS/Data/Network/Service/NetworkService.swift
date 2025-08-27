@@ -8,6 +8,7 @@
 import Foundation
 
 import Alamofire
+import KakaoSDKUser
 
 protocol NetworkService {
     func request<T: Decodable>(
@@ -16,6 +17,7 @@ protocol NetworkService {
     ) async throws -> T
     func request(_ endPoint: EndPoint) async throws
     func request(image: Data, signedURL: String) async throws
+    func request() async throws -> String
 }
 
 struct DefaultNetworkService: NetworkService {
@@ -117,6 +119,33 @@ struct DefaultNetworkService: NetworkService {
                        }
                    }
            }
+    }
+    
+    func request() async throws -> String {
+        return try await withCheckedThrowingContinuation { continuation in
+            if UserApi.isKakaoTalkLoginAvailable() {
+                UserApi.shared.loginWithKakaoTalk { ouathToken, error in
+                    if let error = error {
+                        ByeBooLogger.error(error)
+                        continuation.resume(throwing: ByeBooError.kakaoOuathError)
+                    } else {
+                        ByeBooLogger.debug("카카오 로그인 토큰 받기 성공")
+                        continuation.resume(returning: ouathToken?.accessToken ?? "")
+                    }
+                }
+            } else {
+                UserApi.shared.loginWithKakaoAccount { ouathToken, error in
+                    if let error = error {
+                        ByeBooLogger.error(error)
+                        continuation.resume(throwing: ByeBooError.kakaoOuathError)
+                    } else {
+                        ByeBooLogger.debug("카카오 로그인 토큰 받기 성공")
+                        continuation.resume(returning: ouathToken?.accessToken ?? "")
+                    }
+                }
+            }
+            
+        }
     }
     
     private func requestLogger(_ endPoint: EndPoint) {

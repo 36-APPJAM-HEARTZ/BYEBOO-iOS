@@ -87,6 +87,10 @@ struct DefaultUsersRepository: UsersInterface {
         return userDefaultsService.load(key: .isHelperShown)
     }
     
+    func getIsRegistered() -> Bool {
+        return userDefaultsService.load(key: .isRegistered) ?? false
+    }
+    
     func modifyUserNickname(name: String) async throws -> String {
         let result = try await network.request(
             UsersAPI.modifyName(requestDTO: UserNameRequestDTO(name: name)),
@@ -157,6 +161,10 @@ struct MockUserRepository: UsersInterface {
     }
     
     func startJourney() async throws { }
+    
+    func getIsRegistered() -> Bool {
+        return false
+    }
     
     func modifyUserNickname(name: String) -> String {
         "하쵸핑"
