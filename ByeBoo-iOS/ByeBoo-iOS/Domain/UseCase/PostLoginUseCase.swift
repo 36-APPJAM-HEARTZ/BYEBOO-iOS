@@ -8,7 +8,7 @@
 import Foundation
 
 protocol PostLoginUseCase {
-    func execute(platform: String) async throws
+    func execute(platform: LoginPlatform) async throws
 }
 
 struct DefaultPostLoginUseCase: PostLoginUseCase {
@@ -18,7 +18,7 @@ struct DefaultPostLoginUseCase: PostLoginUseCase {
         self.repository = repository
     }
     
-    func execute(platform: String) async throws {
+    func execute(platform: LoginPlatform) async throws {
         return try await repository.postLogin(platform: platform)
     }
 }
