@@ -104,7 +104,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultFetchNewJourneyUseCase(fetchNewJourneyRepository: questRepository)
         }
         
-        DIContainer.shared.register(type: KakaoLoginUseCase.self) { _ in
+        DIContainer.shared.register(type: SocialLoginUseCase.self) { _ in
             return DefaultKakaoLoginUseCase(repository: authRepository)
         }
     }

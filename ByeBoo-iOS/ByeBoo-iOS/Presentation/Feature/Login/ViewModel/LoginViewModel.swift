@@ -22,11 +22,11 @@ final class LoginViewModel {
     
     private var cancellables = Set<AnyCancellable>()
     
-    private let kakaoLoginUseCase: KakaoLoginUseCase
+    private let kakaoLoginUseCase: SocialLoginUseCase
     private let getIsRegisteredUseCase: GetIsRegisteredUseCase
     
     init(
-        kakaoLoginUseCase: KakaoLoginUseCase,
+        kakaoLoginUseCase: SocialLoginUseCase,
         getIsRegisteredUseCase: GetIsRegisteredUseCase
     ) {
         self.kakaoLoginUseCase = kakaoLoginUseCase

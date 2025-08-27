@@ -182,7 +182,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             )
         }
         DIContainer.shared.register(type: LoginViewModel.self) { container in
-            guard let kakaoLoginUseCase = container.resolve(type: KakaoLoginUseCase.self),
+            guard let kakaoLoginUseCase = container.resolve(type: SocialLoginUseCase.self),
                   let getIsRegisteredUseCase = container.resolve(type: GetIsRegisteredUseCase.self)
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)

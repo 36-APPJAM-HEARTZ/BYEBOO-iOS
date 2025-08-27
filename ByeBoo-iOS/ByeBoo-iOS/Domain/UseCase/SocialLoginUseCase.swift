@@ -7,11 +7,11 @@
 
 import Foundation
 
-protocol KakaoLoginUseCase {
+protocol SocialLoginUseCase {
     func execute(platform: LoginPlatform) async throws
 }
 
-struct DefaultKakaoLoginUseCase: KakaoLoginUseCase {
+struct DefaultKakaoLoginUseCase: SocialLoginUseCase {
     private var repository: AuthInterface
     
     init(repository: AuthInterface) {
@@ -19,6 +19,12 @@ struct DefaultKakaoLoginUseCase: KakaoLoginUseCase {
     }
     
     func execute(platform: LoginPlatform) async throws {
-        return try await repository.kakaoLogin(platform: platform)
+        switch platform {
+        case .KAKAO:
+            return try await repository.kakaoLogin(platform: platform)
+        case .APPLE:
+            return
+        }
+        
     }
 }
