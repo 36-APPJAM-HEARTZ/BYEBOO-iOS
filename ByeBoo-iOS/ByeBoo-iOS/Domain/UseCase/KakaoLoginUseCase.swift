@@ -19,7 +19,6 @@ struct DefaultKakaoLoginUseCase: KakaoLoginUseCase {
     }
     
     func execute(platform: LoginPlatform) async throws {
-        try await repository.kakaoLogin()
-        return try await repository.postLogin(platform: platform)
+        return try await repository.kakaoLogin(platform: platform)
     }
 }

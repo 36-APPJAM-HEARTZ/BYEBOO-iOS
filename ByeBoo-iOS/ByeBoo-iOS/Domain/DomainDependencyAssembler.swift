@@ -107,9 +107,5 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: KakaoLoginUseCase.self) { _ in
             return DefaultKakaoLoginUseCase(repository: authRepository)
         }
-        
-        DIContainer.shared.register(type: PostLoginUseCase.self) { _ in
-            return DefaultPostLoginUseCase(repository: authRepository)
-        }
     }
 }
