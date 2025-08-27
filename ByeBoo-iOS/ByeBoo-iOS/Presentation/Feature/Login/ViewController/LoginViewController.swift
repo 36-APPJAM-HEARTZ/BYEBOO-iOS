@@ -55,6 +55,7 @@ extension LoginViewController {
             .sink { [weak self] result in
                 switch result {
                 case .success(let isRegisterd):
+                    ByeBooLogger.debug(isRegisterd)
                     let nextViewController: UIViewController
                     if isRegisterd {
                         nextViewController = BottomNavigationViewController()
