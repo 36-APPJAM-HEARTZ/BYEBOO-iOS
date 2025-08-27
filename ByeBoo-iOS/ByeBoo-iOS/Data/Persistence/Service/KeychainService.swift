@@ -6,76 +6,23 @@
 //
 
 import Foundation
-import Security
-
-enum keyType: String {
-    case authorization
-    case accessToken
-    case refreshToken
-}
 
 protocol KeychainService {
-    static func save(key: keyType, token: String)
-    static func load(key: keyType) -> String
-    static func delete(key: keyType)
+    func save(key: KeyType, token: String)
+    func load(key: KeyType) -> String
+    func delete(key: KeyType)
 }
 
 struct DefaultKeychainService: KeychainService {
-    static func save(key: keyType, token: String) {
-        let data = token.data(using: .utf8, allowLossyConversion: false) as Any
-        
-        let query: [CFString: Any] = [
-            kSecClass: kSecClassGenericPassword,
-            kSecAttrAccount: key.rawValue,
-            kSecValueData: data
-        ]
-        
-        SecItemDelete(query as CFDictionary)
-        
-        let status = SecItemAdd(query as CFDictionary, nil)
-        if status == errSecSuccess {
-            ByeBooLogger.debug("키체인 \(key) 저장 성공")
-            ByeBooLogger.debug("저장된 토큰: \(token)")
-        } else {
-            ByeBooLogger.debug("키체인 \(key) 저장 실패")
-        }
+    func save(key: KeyType, token: String) {
+        KeychainManager.save(key: key, token: token)
     }
     
-    static func load(key: keyType) -> String {
-        let query: [CFString: Any]  = [
-                kSecClass: kSecClassGenericPassword,
-                kSecAttrAccount: key.rawValue,
-                kSecReturnData: kCFBooleanTrue as Any,
-                kSecMatchLimit: kSecMatchLimitOne
-            ]
-            
-        var item: CFTypeRef?
-        if SecItemCopyMatching(query as CFDictionary, &item) != errSecSuccess {
-            ByeBooLogger.debug("키체인 \(key) 로드 실패")
-            return ""
-        }
-        
-        guard let data = item as? Data,
-              let token = String(data: data, encoding: .utf8) else {
-            ByeBooLogger.debug("키체인 \(key) 디코딩 실패")
-            return ""
-        }
-
-        ByeBooLogger.debug("키체인 \(key)의 값 \(token) 로드 성공")
-        return token
+    func load(key: KeyType) -> String {
+        KeychainManager.load(key: key)
     }
     
-    static func delete(key: keyType) {
-        let query: [CFString: Any] = [
-            kSecClass: kSecClassGenericPassword,
-            kSecAttrAccount: key.rawValue
-        ]
-        let status = SecItemDelete(query as CFDictionary)
-        
-        if status == errSecSuccess {
-            ByeBooLogger.debug("키체인 \(key) 삭제 성공")
-        } else {
-            ByeBooLogger.debug("키체인 \(key) 삭제 실패")
-        }
+    func delete(key: KeyType) {
+        KeychainManager.delete(key: key)
     }
 }

@@ -44,13 +44,14 @@ extension AuthAPI: EndPoint {
     }
     
     var headers: HeaderType {
+        let keychainService = DefaultKeychainService()
         switch self {
         case .login:
-            return .withAuth(acessToken: DefaultKeychainService.load(key: .authorization))
+            return .withAuth(acessToken: keychainService.load(key: .authorization))
         case .reissue:
-            return .withAuth(acessToken: DefaultKeychainService.load(key: .refreshToken))
+            return .withAuth(acessToken: keychainService.load(key: .refreshToken))
         case .logout, .withdraw:
-            return .withAuth(acessToken: DefaultKeychainService.load(key: .accessToken))
+            return .withAuth(acessToken: keychainService.load(key: .accessToken))
         }
     }
     

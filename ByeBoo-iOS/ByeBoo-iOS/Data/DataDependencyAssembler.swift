@@ -22,7 +22,7 @@ struct DataDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: AuthInterface.self) { _ in
-            return DefaultAuthRepository(network: networkService, userDefaultsService: userDefaultService)
+            return DefaultAuthRepository(network: networkService, keychainService: keychainService, userDefaultsService: userDefaultService)
         }
     }
 }

@@ -9,5 +9,5 @@ import Foundation
 
 protocol AuthInterface {
     func kakaoLogin() async throws
-    func postLogin(platform: String) async throws
+    func postLogin(platform: LoginPlatform) async throws
 }
