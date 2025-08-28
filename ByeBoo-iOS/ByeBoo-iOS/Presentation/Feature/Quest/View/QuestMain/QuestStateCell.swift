@@ -72,7 +72,7 @@ final class QuestStateCell: UICollectionViewCell {
             $0.center.equalToSuperview()
         }
         timerLabel.snp.makeConstraints {
-            $0.top.equalTo(imageContentView.snp.bottom)
+            $0.bottom.equalToSuperview().inset(12.adjustedH)
             $0.centerX.equalToSuperview()
         }
     }
@@ -101,7 +101,7 @@ extension QuestStateCell {
         }
         imageView.do {
             $0.image = state.image
-            $0.tintColor = state == .locked ? .white10 : .clear
+            $0.tintColor = state.tintColor
             $0.contentMode = .scaleAspectFit
         }
         timerLabel.isHidden = state.isHiddenTimer
@@ -109,7 +109,7 @@ extension QuestStateCell {
     
     private func bindLayout(state: QuestState) {
         imageView.snp.remakeConstraints {
-            if state == .locked {
+            if state == .locked || state == .upComing {
                 $0.center.equalToSuperview()
                 $0.width.height.equalTo(24.adjustedW)
             } else if state == .completed {
