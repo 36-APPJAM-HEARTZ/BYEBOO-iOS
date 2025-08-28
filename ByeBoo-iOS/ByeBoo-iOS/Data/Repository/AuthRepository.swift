@@ -25,14 +25,17 @@ struct DefaultAuthRepository: AuthInterface {
     
     // MARK: Network
     
-    func kakaoLogin(platform: LoginPlatform) async throws{
+    func kakaoLogin(platform: LoginPlatform) async throws {
         let authorization = try await network.kakaoRequest()
         keychainService.save(key: .authorization, token: authorization)
         try await postLogin(platform: platform)
     }
     
     func appleLogin(platform: LoginPlatform) async throws {
-        
+        let (identityToken, authorizationCode) = try await network.appleRequest()
+        keychainService.save(key: .authorization, token: identityToken)
+        keychainService.save(key: .authorizationCode, token: authorizationCode)
+        try await postLogin(platform: platform)
     }
     
     
@@ -52,5 +55,8 @@ struct DefaultAuthRepository: AuthInterface {
 
 struct MockAuthRepository: AuthInterface {
     func kakaoLogin(platform: LoginPlatform) async throws  {
+    }
+    
+    func appleLogin(platform: LoginPlatform) async throws {
     }
 }
