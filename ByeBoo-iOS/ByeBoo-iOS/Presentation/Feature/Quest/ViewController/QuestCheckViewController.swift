@@ -85,7 +85,6 @@ final class QuestCheckViewController: BaseViewController {
             switch (name, journey, quests) {
             case let (.success(name), .success(journey), .success(quests)):
                 self?.updateQuestMainUI(name: name, journey: journey, quests: quests)
-                self?.publishInitialTime()
             case (.success(_), .success(_), .failure(_)):
                 self?.coordinator?.moveQuestStart()
             default:
@@ -109,10 +108,6 @@ final class QuestCheckViewController: BaseViewController {
                 }
             }
             .store(in: &cancellable)
-    }
-    
-    private func publishInitialTime() {
-        
     }
     
     private func bindTimer() {
