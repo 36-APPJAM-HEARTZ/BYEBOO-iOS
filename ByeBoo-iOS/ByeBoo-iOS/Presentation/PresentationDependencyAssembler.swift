@@ -143,7 +143,19 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: MyPageViewModel.self) { container in
-            return MyPageViewModel(getUserNameUseCase: getUserNameUseCase)
+            guard let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
+                  let logoutUseCase = container.resolve(type: LogoutUseCase.self),
+                  let withdrawUseCase = container.resolve(type: WithdrawUseCase.self)
+            else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return MyPageViewModel(
+                getUserNameUseCase: getUserNameUseCase,
+                logoutUseCase: logoutUseCase,
+                withdrawUseCase: withdrawUseCase
+            )
         }
         
         DIContainer.shared.register(type: LookBackJourneyViewModel.self) { container in
