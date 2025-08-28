@@ -13,12 +13,10 @@ enum QuestState {
     
     var backgroundColor: UIColor {
         switch self {
-        case .completed, .locked:
+        case .completed, .upComing, .locked:
             return .white10
         case .ongoing:
             return .primary30020
-        case .upComing:
-            return .secondary300
         }
     }
     
@@ -66,12 +64,21 @@ enum QuestState {
         }
     }
     
+    var tintColor: UIColor {
+        switch self {
+        case .upComing, .locked:
+            return .white10
+        case .completed, .ongoing:
+            return .clear
+        }
+    }
+    
     var isHiddenTimer: Bool {
         switch self {
         case .upComing:
-            return true
-        case .completed, .ongoing, .locked:
             return false
+        case .completed, .ongoing, .locked:
+            return true
         }
     }
 }
