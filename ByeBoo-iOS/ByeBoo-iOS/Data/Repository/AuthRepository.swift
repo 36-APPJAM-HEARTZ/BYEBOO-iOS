@@ -5,6 +5,7 @@
 //  Created by 이나연 on 8/26/25.
 //
 
+import AuthenticationServices
 import Foundation
 
 struct DefaultAuthRepository: AuthInterface {
@@ -24,11 +25,19 @@ struct DefaultAuthRepository: AuthInterface {
     
     // MARK: Network
     
-    func kakaoLogin(platform: LoginPlatform) async throws{
-        let authorization = try await network.request()
+    func kakaoLogin(platform: LoginPlatform) async throws {
+        let authorization = try await network.kakaoRequest()
         keychainService.save(key: .authorization, token: authorization)
         try await postLogin(platform: platform)
     }
+    
+    func appleLogin(platform: LoginPlatform) async throws {
+        let (identityToken, authorizationCode) = try await network.appleRequest()
+        keychainService.save(key: .authorization, token: identityToken)
+        keychainService.save(key: .authorizationCode, token: authorizationCode)
+        try await postLogin(platform: platform)
+    }
+    
     
     private func postLogin(platform: LoginPlatform) async throws {
         let loginRequestDTO = LoginRequestDTO(platform: platform.rawValue)
@@ -46,5 +55,8 @@ struct DefaultAuthRepository: AuthInterface {
 
 struct MockAuthRepository: AuthInterface {
     func kakaoLogin(platform: LoginPlatform) async throws  {
+    }
+    
+    func appleLogin(platform: LoginPlatform) async throws {
     }
 }

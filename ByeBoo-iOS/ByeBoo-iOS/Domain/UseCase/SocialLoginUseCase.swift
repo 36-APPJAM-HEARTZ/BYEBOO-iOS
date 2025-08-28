@@ -23,7 +23,7 @@ struct DefaultKakaoLoginUseCase: SocialLoginUseCase {
         case .KAKAO:
             return try await repository.kakaoLogin(platform: platform)
         case .APPLE:
-            return
+            return try await repository.appleLogin(platform: platform)
         }
         
     }

@@ -5,6 +5,7 @@
 //  Created by 이나연 on 8/19/25.
 //
 
+import AuthenticationServices
 import Combine
 import UIKit
 
@@ -35,16 +36,15 @@ final class LoginViewController: BaseViewController {
     }
 }
 
-extension LoginViewController {
+extension LoginViewController{
     @objc
-    func kakaoLoginButtonDidTap() {
-        ByeBooLogger.debug("로그인 버튼 터치됨")
-        viewModel.action(.kakaoLoginButtonDidTap)
+    private func kakaoLoginButtonDidTap() {
+        viewModel.action(.socialLoginButtonDidTap(platform: .KAKAO))
     }
     
     @objc
-    func appleLoginButtonDidTap() {
-        
+    private func appleLoginButtonDidTap() {
+        viewModel.action(.socialLoginButtonDidTap(platform: .APPLE))
     }
 }
 
