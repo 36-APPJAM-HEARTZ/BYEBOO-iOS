@@ -190,7 +190,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             }
             
             return LoginViewModel(
-                kakaoLoginUseCase: kakaoLoginUseCase,
+                socialLoginUseCase: kakaoLoginUseCase,
                 getIsRegisteredUseCase: getIsRegisteredUseCase
             )
         }
