@@ -33,8 +33,6 @@ final class DefaultNetworkService: NSObject, NetworkService {
         
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             guard let self else { return }
-            let responseLogger: (DataResponse<BaseResponse<T>, AFError>) -> Void = self.responseLogger
-            let handleError = self.handleError
             
             AF.request(
                 endPoint.requestURL,
@@ -45,7 +43,7 @@ final class DefaultNetworkService: NSObject, NetworkService {
             )
             .validate()
             .responseDecodable(of: BaseResponse<T>.self) { response in
-                responseLogger(response)
+                self.responseLogger(response)
                 switch response.result {
                 case .success(let data):
                     guard let data = data.data else {
@@ -59,7 +57,7 @@ final class DefaultNetworkService: NSObject, NetworkService {
                     if let data = response.data,
                        let statusCode = response.response?.statusCode,
                        let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
-                        let error = handleError(statusCode, errorResponse.message)
+                        let error = self.handleError(statusCode, errorResponse.message)
                         ByeBooLogger.error(error)
                         continuation.resume(throwing: error)
                     } else {
@@ -77,8 +75,6 @@ final class DefaultNetworkService: NSObject, NetworkService {
         
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             guard let self else { return }
-            let responseLogger: (DataResponse<EmptyResponse, AFError>) -> Void = self.responseLogger
-            let handleError = self.handleError
             
             AF.request(
                 endPoint.requestURL,
@@ -89,7 +85,7 @@ final class DefaultNetworkService: NSObject, NetworkService {
             )
             .validate()
             .responseDecodable(of: EmptyResponse.self) { response in
-                responseLogger(response)
+                self.responseLogger(response)
                 
                 switch response.result {
                 case .success:
@@ -98,7 +94,7 @@ final class DefaultNetworkService: NSObject, NetworkService {
                     if let data = response.data,
                        let statusCode = response.response?.statusCode,
                        let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
-                        let error = handleError(statusCode, errorResponse.message)
+                        let error = self.handleError(statusCode, errorResponse.message)
                         ByeBooLogger.error(error)
                         continuation.resume(throwing: error)
                     } else {
