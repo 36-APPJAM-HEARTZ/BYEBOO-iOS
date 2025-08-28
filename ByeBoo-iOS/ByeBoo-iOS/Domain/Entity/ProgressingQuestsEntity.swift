@@ -10,6 +10,8 @@ import Foundation
 struct ProgressingQuestsEntity {
     let progressPeriod: Int
     let currentStep: Int
+    let questOpenTime: Date?
+    let currentTime: Date?
     let steps: [StepEntity]
 }
 
@@ -32,6 +34,8 @@ extension ProgressingQuestsEntity {
         return .init(
             progressPeriod: 1,
             currentStep: 1,
+            questOpenTime: nil,
+            currentTime: nil,
             steps: (1...5).map { StepEntity.stub(stepNumber: $0) }
         )
     }
