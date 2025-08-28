@@ -71,6 +71,7 @@ final class QuestCheckViewController: BaseViewController {
         
         bindQuestData()
         bindLoading()
+        bindTimer()
     }
     
     private func bindQuestData() {
@@ -91,6 +92,20 @@ final class QuestCheckViewController: BaseViewController {
             }
         }
         .store(in: &cancellable)
+    }
+    
+    private func bindTimer() {
+        viewModel.output.timePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] remainingTime in
+                guard let self = self else { return }
+                
+                let indexPath = self.viewModel.getCurrentQuestIndexPath()
+                if let cell = self.questsCheckView.questCollectionView.cellForItem(at: indexPath) as? QuestStateCell {
+                    cell.updateRemainingTime(remainingTime)
+                }
+            }
+            .store(in: &cancellable)
     }
     
     private func bindLoading() {
@@ -158,11 +173,10 @@ extension QuestCheckViewController: UICollectionViewDelegate {
         guard let questNumber = quest?.questNumber else {
             return
         }
-        
         if questNumber < currentStep {
             coordinator?.moveArchive(quest: quest)
         }
-        if questNumber == currentStep {
+        if questNumber == currentStep && !viewModel.isQuestLocked {
             coordinator?.presentQuestModal(quest: quest)
         }
     }
@@ -208,7 +222,7 @@ extension QuestCheckViewController: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
         
-        if let stepEntity = viewModel.getSteps(section: indexPath.section) {
+        if let stepEntity = viewModel.getStep(section: indexPath.section) {
             headerView.setStep(stepNumber: stepEntity.stepNumber, step: stepEntity.step)
         }
         return headerView
