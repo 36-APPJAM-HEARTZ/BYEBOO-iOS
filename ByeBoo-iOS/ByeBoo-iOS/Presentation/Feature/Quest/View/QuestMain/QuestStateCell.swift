@@ -104,29 +104,13 @@ extension QuestStateCell {
             $0.tintColor = state.tintColor
             $0.contentMode = .scaleAspectFit
         }
-        timerLabel.isHidden = state.isHiddenTimer
+        timerLabel.do {
+            $0.isHidden = state.isHiddenTimer
+            $0.text = state.timerText
+        }
     }
     
     private func bindLayout(state: QuestState) {
-        imageView.snp.remakeConstraints {
-            if state == .locked || state == .upComing {
-                $0.center.equalToSuperview()
-                $0.width.height.equalTo(24.adjustedW)
-            } else if state == .completed {
-                $0.centerX.equalToSuperview()
-                $0.width.height.equalTo(80.adjustedW)
-                $0.edges.equalToSuperview().inset(
-                    UIEdgeInsets(
-                        top: 8.adjustedH,
-                        left: 3.adjustedW,
-                        bottom: 0.adjustedH,
-                        right: 3.adjustedW
-                    )
-                )
-            } else {
-                $0.centerX.equalToSuperview()
-                $0.width.height.equalTo(80.adjustedW)
-            }
-        }
+        state.setImageViewLayout(imageView)
     }
 }
