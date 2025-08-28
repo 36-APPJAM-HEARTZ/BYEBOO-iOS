@@ -18,8 +18,6 @@ final class QuestCheckViewController: BaseViewController {
     private let viewModel: QuestsViewModel
     var coordinator: QuestCheckCoordinating?
     private var cancellable = Set<AnyCancellable>()
-    private var questsEntity: ProgressingQuestsEntity?
-    private var quest: QuestEntity?
     
     init(viewModel: QuestsViewModel) {
         self.viewModel = viewModel
@@ -116,7 +114,6 @@ final class QuestCheckViewController: BaseViewController {
             nickname: name,
             journey: journey.title
         )
-        self.questsEntity = quests
         self.questsCheckView.questCheckHeaderView.updatePeriod(quests.progressPeriod)
         self.questsCheckView.questCollectionView.reloadData()
         
@@ -129,11 +126,10 @@ final class QuestCheckViewController: BaseViewController {
     }
     
     private func scrollToStep() {
-        guard let questsEntity = questsEntity else { return }
-        for (sectionIndex, step) in questsEntity.steps.enumerated() {
+        for (sectionIndex, step) in viewModel.steps.enumerated() {
             let collectionView = questsCheckView.questCollectionView
             
-            if let _ = step.quests.firstIndex(where: { $0.questNumber == questsEntity.currentStep }) {
+            if let _ = step.quests.firstIndex(where: { $0.questNumber == viewModel.currentStep }) {
                 // MARK: - 마지막 스텝 진입 시 맨 아래로 스크롤
                 if step.stepNumber == QuestCheckViewController.lastStep {
                     let maxOffsetY = collectionView.contentSize.height - collectionView.bounds.height + 30
@@ -156,10 +152,10 @@ final class QuestCheckViewController: BaseViewController {
 extension QuestCheckViewController: UICollectionViewDelegate {
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        quest = questsEntity?.steps[indexPath.section].quests[indexPath.item]
+        let quest = viewModel.getQuest(section: indexPath.section, item: indexPath.item)
+        let currentStep = viewModel.currentStep
         
-        guard let currentStep = questsEntity?.currentStep,
-              let questNumber = quest?.questNumber else {
+        guard let questNumber = quest?.questNumber else {
             return
         }
         
@@ -175,37 +171,24 @@ extension QuestCheckViewController: UICollectionViewDelegate {
 extension QuestCheckViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return questsEntity?.steps.count ?? 0
+        return viewModel.steps.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return questsEntity?.steps[section].quests.count ?? 0
+        return viewModel.getQuestsCount(section: section)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: QuestStateCell.identifier,
             for: indexPath
-        ) as? QuestStateCell,
-              let quest = questsEntity?.steps[indexPath.section].quests[indexPath.item],
-              let currentStep = questsEntity?.currentStep
-        else {
+        ) as? QuestStateCell, let quest = viewModel.getQuest(section: indexPath.section, item: indexPath.item) else {
             return UICollectionViewCell()
         }
         
-        let state = getQuestState(questNumber: quest.questNumber, currentStep: currentStep)
+        let state = viewModel.getQuestState(questNumber: quest.questNumber)
         cell.bind(state: state, questNumber: quest.questNumber)
         return cell
-    }
-    
-    private func getQuestState(questNumber: Int, currentStep: Int) -> QuestState {
-        if questNumber < currentStep {
-            return .completed
-        } else if questNumber == currentStep {
-            return .ongoing
-        } else {
-            return .locked
-        }
     }
     
     func collectionView(
@@ -225,10 +208,9 @@ extension QuestCheckViewController: UICollectionViewDataSource {
             return UICollectionReusableView()
         }
         
-        if let stepEntity = questsEntity?.steps[indexPath.section] {
+        if let stepEntity = viewModel.getSteps(section: indexPath.section) {
             headerView.setStep(stepNumber: stepEntity.stepNumber, step: stepEntity.step)
         }
-        
         return headerView
     }
 }
