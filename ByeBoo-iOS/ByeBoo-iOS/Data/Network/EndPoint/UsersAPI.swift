@@ -52,7 +52,8 @@ extension UsersAPI: EndPoint {
     var headers: HeaderType {
         switch self {
         case .journey, .sendUser, .character, .count, .start, .modifyName:
-            return .withAuth(acessToken: Bundle.main.infoDictionary?["MASTER_TOKEN"] as! String)
+            let keychainService = DefaultKeychainService()
+            return .withAuth(acessToken: keychainService.load(key: .accessToken))
         }
     }
     
