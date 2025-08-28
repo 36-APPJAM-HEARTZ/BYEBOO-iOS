@@ -9,7 +9,7 @@ import UIKit
 
 enum QuestState {
     
-    case completed, ongoing, upComing(String), locked
+    case completed, ongoing, upComing, locked
     
     var backgroundColor: UIColor {
         switch self {
