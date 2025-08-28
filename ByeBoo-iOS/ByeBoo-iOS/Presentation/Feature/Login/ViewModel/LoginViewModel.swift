@@ -5,12 +5,13 @@
 //  Created by 이나연 on 8/26/25.
 //
 
+import AuthenticationServices
 import Combine
 import Foundation
 
-final class LoginViewModel {
+final class LoginViewModel: NSObject {
         
-    private var kakaoLoginAuthSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
+    private var socialLoginAuthSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private var postLoginSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private var isRegisteredSubject: PassthroughSubject<Result<Bool, ByeBooError>, Never> = .init()
     
@@ -37,8 +38,7 @@ final class LoginViewModel {
 
 extension LoginViewModel {
     enum Input {
-        case kakaoLoginButtonDidTap
-        case appleLoginButtonDidTap
+        case socialLoginButtonDidTap(platform: LoginPlatform)
     }
     
     struct Output {
@@ -47,33 +47,27 @@ extension LoginViewModel {
     
     func action(_ trigger: Input) {
         switch trigger {
-        case .kakaoLoginButtonDidTap:
-            kakaoLogin()
-        case .appleLoginButtonDidTap:
-            appleLogin()
+        case .socialLoginButtonDidTap(let platform) :
+            socialLogin(platform: platform)
         }
     }
 }
 
 extension LoginViewModel {
-    private func kakaoLogin() {
+    private func socialLogin(platform: LoginPlatform) {
         Task {
             do {
-                let _ = try await socialLoginUseCase.execute(platform: .KAKAO)
-                kakaoLoginAuthSubject.send(.success(()))
+                let _ = try await socialLoginUseCase.execute(platform: platform)
+                socialLoginAuthSubject.send(.success(()))
                 getIsRegistered()
             } catch {
                 guard let error = error as? ByeBooError else {
                     return
                 }
                 ByeBooLogger.error(error as ByeBooError)
-                kakaoLoginAuthSubject.send(.failure(error))
+                socialLoginAuthSubject.send(.failure(error))
             }
         }
-    }
-    
-    private func appleLogin() {
-        
     }
     
     private func getIsRegistered() {
