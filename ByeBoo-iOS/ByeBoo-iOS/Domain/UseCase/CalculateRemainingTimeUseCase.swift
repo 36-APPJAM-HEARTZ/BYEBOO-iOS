@@ -7,6 +7,11 @@
 
 import Foundation
 
+enum TimeConstant {
+    static let secondPerHour = 3600
+    static let secondPerMinute = 60
+}
+
 protocol CalculateRemainingTimeUseCase {
     
     func calculateRemainingTime(questOpenTime: Date, currentTime: Date) -> Int
