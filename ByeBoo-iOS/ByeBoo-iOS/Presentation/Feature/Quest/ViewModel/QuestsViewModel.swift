@@ -15,7 +15,7 @@ final class QuestsViewModel {
     private let journeySubject = PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never>.init()
     private let questsSubject = PassthroughSubject<Result<ProgressingQuestsEntity, ByeBooError>, Never>.init()
     private let loadingSubject = PassthroughSubject<Bool, Never>.init()
-    private let timeSubject = CurrentValueSubject<String, Never>.init("")
+    private let timeSubject = PassthroughSubject<Result<String, ByeBooError>, Never>.init()
     
     private(set) var output: Output
     
@@ -83,6 +83,7 @@ final class QuestsViewModel {
             do {
                 let questsEntity = try await progressingQuestsUseCase.execute(userID: userID)
                 self.questsEntity = questsEntity
+                self.setQuestTimer()
                 questsSubject.send(.success(questsEntity))
                 loadingSubject.send(false)
             } catch {
@@ -92,31 +93,31 @@ final class QuestsViewModel {
         }
     }
     
-    func setQuestTimer() {
+    private func setQuestTimer() {
         guard let questOpenTime = questsEntity?.questOpenTime,
-              let currentTime = questsEntity?.currentTime else {
-            return
-        }
-        let remainingSeconds = calculateRemainingTimeUseCase.calculateRemainingTime(
+              let currentTime = questsEntity?.currentTime else { return }
+
+        var remainingSeconds = calculateRemainingTimeUseCase.calculateRemainingTime(
             questOpenTime: questOpenTime,
             currentTime: currentTime
         )
-        
+
         timeCancellabels?.cancel()
         timeCancellabels = Timer.publish(every: 1.0, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
                 guard let self = self else { return }
+
                 if remainingSeconds > 0 {
-                    let remainingTime = self.calculateRemainingTimeUseCase.formatRemainingTime(
-                        seconds: remainingSeconds
-                    )
-                    timeSubject.send(remainingTime)
+                    remainingSeconds -= 1
+                    let time = self.calculateRemainingTimeUseCase.formatRemainingTime(seconds: remainingSeconds)
+                    self.timeSubject.send(.success(time))
                     return
                 }
                 self.timeCancellabels?.cancel()
             }
     }
+
 }
 
 extension QuestsViewModel {
@@ -181,7 +182,7 @@ extension QuestsViewModel: ViewModelType {
         let journeyPublisher: AnyPublisher<Result<JourneyEntity, ByeBooError>, Never>
         let questsPublisher: AnyPublisher<Result<ProgressingQuestsEntity, ByeBooError>, Never>
         let loadingPublisher: AnyPublisher<Bool, Never>
-        let timePublisher: AnyPublisher<String, Never>
+        let timePublisher: AnyPublisher<Result<String, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {

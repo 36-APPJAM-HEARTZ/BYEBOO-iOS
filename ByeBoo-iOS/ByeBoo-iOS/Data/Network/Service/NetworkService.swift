@@ -28,6 +28,26 @@ struct DefaultNetworkService: NetworkService {
         requestLogger(endPoint)
         
         return try await withCheckedThrowingContinuation { continuation in
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .custom { decoder -> Date in
+                let container = try decoder.singleValueContainer()
+                let dateStr = try container.decode(String.self)
+                let formats = ["yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"]
+                let formatter = DateFormatter()
+                formatter.locale = Locale(identifier: "en_US_POSIX")
+                formatter.timeZone = TimeZone(secondsFromGMT: 0)
+                
+                for format in formats {
+                    formatter.dateFormat = format
+                    if let date = formatter.date(from: dateStr) {
+                        return date
+                    }
+                }
+                throw DecodingError.dataCorruptedError(
+                    in: container,
+                    debugDescription: "Invalid date format: \(dateStr)"
+                )
+            }
             AF.request(
                 endPoint.requestURL,
                 method: endPoint.method,
@@ -36,7 +56,7 @@ struct DefaultNetworkService: NetworkService {
                 headers: endPoint.headers.value
             )
             .validate()
-            .responseDecodable(of: BaseResponse<T>.self) { response in
+            .responseDecodable(of: BaseResponse<T>.self, decoder: decoder) { response in
                 responseLogger(response)
                 switch response.result {
                 case .success(let data):
@@ -49,8 +69,8 @@ struct DefaultNetworkService: NetworkService {
                     continuation.resume(returning: data)
                 case .failure:
                     if let data = response.data,
-                       let statusCode = response.response?.statusCode,  
-                       let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
+                       let statusCode = response.response?.statusCode,
+                       let errorResponse = try? decoder.decode(EmptyResponse.self, from: data) {
                         let error = handleError(statusCode, errorResponse.message)
                         ByeBooLogger.error(error)
                         continuation.resume(throwing: error)
@@ -107,18 +127,18 @@ struct DefaultNetworkService: NetworkService {
                 method: .put,
                 headers: ["Content-Type": "image/jpeg"]
             )
-                   .validate()
-                   .response { response in
-                       ByeBooLogger.network(response)
-                       if let error = response.error {
-                           ByeBooLogger.error(error)
-                           continuation.resume(throwing: ByeBooError.unknownError)
-                       } else {
-                           ByeBooLogger.debug("이미지 업로드 성공")
-                           continuation.resume()
-                       }
-                   }
-           }
+            .validate()
+            .response { response in
+                ByeBooLogger.network(response)
+                if let error = response.error {
+                    ByeBooLogger.error(error)
+                    continuation.resume(throwing: ByeBooError.unknownError)
+                } else {
+                    ByeBooLogger.debug("이미지 업로드 성공")
+                    continuation.resume()
+                }
+            }
+        }
     }
     
     func request() async throws -> String {

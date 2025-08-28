@@ -85,6 +85,7 @@ final class QuestCheckViewController: BaseViewController {
             switch (name, journey, quests) {
             case let (.success(name), .success(journey), .success(quests)):
                 self?.updateQuestMainUI(name: name, journey: journey, quests: quests)
+                self?.publishInitialTime()
             case (.success(_), .success(_), .failure(_)):
                 self?.coordinator?.moveQuestStart()
             default:
@@ -92,20 +93,6 @@ final class QuestCheckViewController: BaseViewController {
             }
         }
         .store(in: &cancellable)
-    }
-    
-    private func bindTimer() {
-        viewModel.output.timePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] remainingTime in
-                guard let self = self else { return }
-                
-                let indexPath = self.viewModel.getCurrentQuestIndexPath()
-                if let cell = self.questsCheckView.questCollectionView.cellForItem(at: indexPath) as? QuestStateCell {
-                    cell.updateRemainingTime(remainingTime)
-                }
-            }
-            .store(in: &cancellable)
     }
     
     private func bindLoading() {
@@ -124,7 +111,33 @@ final class QuestCheckViewController: BaseViewController {
             .store(in: &cancellable)
     }
     
-    private func updateQuestMainUI(name: String, journey: JourneyEntity, quests: ProgressingQuestsEntity) {
+    private func publishInitialTime() {
+        
+    }
+    
+    private func bindTimer() {
+        viewModel.output.timePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success(let time):
+                    let indexPath = self.viewModel.getCurrentQuestIndexPath()
+                    let cell = self.questsCheckView.questCollectionView.cellForItem(at: indexPath)
+                    if let questStateCell = cell as? QuestStateCell {
+                        questStateCell.updateRemainingTime(time)
+                    }
+                case .failure:
+                    ByeBooLogger.error(ByeBooError.unknownError)
+                }
+            }
+            .store(in: &cancellable)
+    }
+    
+    private func updateQuestMainUI(
+        name: String,
+        journey: JourneyEntity,
+        quests: ProgressingQuestsEntity
+    ) {
         self.questsCheckView.questCheckHeaderView.updateHeader(
             nickname: name,
             journey: journey.title
