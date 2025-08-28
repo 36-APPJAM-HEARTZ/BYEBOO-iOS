@@ -66,12 +66,12 @@ enum QuestState {
         }
     }
     
-    var timeText: String? {
+    var isHiddenTimer: Bool {
         switch self {
-        case .upComing(let time):
-            return time
+        case .upComing:
+            return true
         case .completed, .ongoing, .locked:
-            return nil
+            return false
         }
     }
 }

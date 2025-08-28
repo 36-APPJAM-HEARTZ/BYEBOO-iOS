@@ -17,6 +17,7 @@ final class QuestStateCell: UICollectionViewCell {
     private let questNumberLabel = UILabel()
     private let imageContentView = UIView()
     private let imageView = UIImageView()
+    private let timerLabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -35,6 +36,11 @@ final class QuestStateCell: UICollectionViewCell {
         questNumberLabel.font = FontManager.cap1M12.font
         imageContentView.backgroundColor = .clear
         imageView.backgroundColor = .clear
+        timerLabel.do {
+            $0.textColor = .secondary300
+            $0.font = FontManager.cap1M12.font
+            $0.textAlignment = .center
+        }
     }
     
     private func setUI() {
@@ -42,7 +48,8 @@ final class QuestStateCell: UICollectionViewCell {
         questBackgroundView.addSubviews(
             frontView,
             questNumberLabel,
-            imageContentView
+            imageContentView,
+            timerLabel
         )
         addSubviews(questBackgroundView)
     }
@@ -64,6 +71,10 @@ final class QuestStateCell: UICollectionViewCell {
             $0.width.height.equalTo(80.adjustedW)
             $0.center.equalToSuperview()
         }
+        timerLabel.snp.makeConstraints {
+            $0.top.equalTo(imageContentView.snp.bottom)
+            $0.centerX.equalToSuperview()
+        }
     }
 }
 
@@ -72,6 +83,10 @@ extension QuestStateCell {
     func bind(state: QuestState, questNumber: Int) {
         bindUI(state: state, questNumber: questNumber)
         bindLayout(state: state)
+    }
+    
+    func updateRemainingTime(_ remainingTime: String) {
+        timerLabel.text = remainingTime
     }
     
     private func bindUI(state: QuestState, questNumber: Int) {
@@ -89,6 +104,7 @@ extension QuestStateCell {
             $0.tintColor = state == .locked ? .white10 : .clear
             $0.contentMode = .scaleAspectFit
         }
+        timerLabel.isHidden = state.isHiddenTimer
     }
     
     private func bindLayout(state: QuestState) {
