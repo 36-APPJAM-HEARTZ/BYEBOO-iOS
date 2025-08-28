@@ -9,7 +9,7 @@ import UIKit
 
 enum QuestState {
     
-    case completed, ongoing, locked
+    case completed, ongoing, upComing(String), locked
     
     var backgroundColor: UIColor {
         switch self {
@@ -17,6 +17,8 @@ enum QuestState {
             return .white10
         case .ongoing:
             return .primary30020
+        case .upComing:
+            return .secondary300
         }
     }
     
@@ -26,6 +28,8 @@ enum QuestState {
             return .white50
         case .ongoing:
             return .primary300
+        case .upComing:
+            return .secondary300
         case .locked:
             return .white10
         }
@@ -37,12 +41,14 @@ enum QuestState {
             return UIColor.primary300.cgColor
         case .completed, .locked:
             return UIColor.clear.cgColor
+        case .upComing:
+            return UIColor.secondary300.cgColor
         }
     }
     
     var strokeWidth: CGFloat {
         switch self {
-        case .ongoing:
+        case .ongoing, .upComing:
             return 1
         case .completed, .locked:
             return 0
@@ -55,8 +61,17 @@ enum QuestState {
             return .boriStamp
         case .ongoing:
             return .travel
-        case .locked:
+        case .locked, .upComing:
             return .lock.withRenderingMode(.alwaysTemplate)
+        }
+    }
+    
+    var timeText: String? {
+        switch self {
+        case .upComing(let time):
+            return time
+        case .completed, .ongoing, .locked:
+            return nil
         }
     }
 }
