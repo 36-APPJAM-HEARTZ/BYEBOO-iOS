@@ -45,13 +45,32 @@ extension AuthAPI: EndPoint {
     
     var headers: HeaderType {
         let keychainService = DefaultKeychainService()
+        let userDefaultsService = DefaultUserDefaultService()
         switch self {
         case .login:
             return .withAuth(acessToken: keychainService.load(key: .authorization))
         case .reissue:
             return .withAuth(acessToken: keychainService.load(key: .refreshToken))
-        case .logout, .withdraw:
+        case .logout:
             return .withAuth(acessToken: keychainService.load(key: .accessToken))
+        case .withdraw:
+            let loginPlatform: String? = userDefaultsService.load(key: .loginPlatcform)
+            guard let loginPlatform = loginPlatform else {
+               return .withAuth(acessToken: keychainService.load(key: .accessToken))
+            }
+            
+            switch loginPlatform {
+            case "KAKAO":
+                return .withAuth(acessToken: keychainService.load(key: .accessToken))
+            case "APPLE":
+                return .withAuthCode(
+                    acessToken: keychainService.load(key: .accessToken),
+                    authorizationCode: keychainService.load(key: .authorizationCode)
+                )
+            default :
+                ByeBooLogger.debug("login Platform 없음")
+                return .withAuth(acessToken: keychainService.load(key: .accessToken))
+            }
         }
     }
     

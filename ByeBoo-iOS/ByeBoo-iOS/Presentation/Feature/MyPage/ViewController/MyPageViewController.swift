@@ -91,6 +91,33 @@ extension MyPageViewController {
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.output.logoutResult
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success:
+                    ByeBooLogger.debug("로그아웃 성공")
+                    self?.navigateInitialViewController()
+                case .failure(let failure):
+                    ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
+        
+        
+        viewModel.output.withdrawResult
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success:
+                    ByeBooLogger.debug("탈퇴 성공")
+                    self?.navigateInitialViewController()
+                case .failure(let failure):
+                    ByeBooLogger.error(failure)
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -139,15 +166,14 @@ extension MyPageViewController {
             ExternalLink.serviceTerm.openURL(for: self)
         case .logout:
             let logoutModalView = createConfirmModal(
-                title: "로그아웃하시겠어요?",
+                modalType: .logout,
                 dismissOption: "취소",
                 actionOption: "로그아웃"
             )
             presentModal(to: logoutModalView)
         case .cancel:
             let cancelModalView = createConfirmModal(
-                title: "정말 탈퇴하시겠어요?",
-                description: "탈퇴 시 모든 데이터가 삭제됩니다.",
+                modalType: .withdraw,
                 dismissOption: "취소",
                 actionOption: "탈퇴하기"
             )
@@ -156,8 +182,7 @@ extension MyPageViewController {
     }
     
     private func createConfirmModal(
-        title: String,
-        description: String? = nil,
+        modalType: ConfirmModalType,
         dismissOption: String? = nil,
         actionOption: String
     ) -> ConfirmModalView {
@@ -165,18 +190,40 @@ extension MyPageViewController {
         let actionButton = ByeBooButton(titleText: actionOption, type: .enabled)
         
         return ConfirmModalView(
-            title: title,
-            description: description,
+            modalType: modalType,
             dismissButton: dismissButton,
             actionButton: actionButton
         )
     }
     
     private func presentModal(to modal: BaseView & ModalProtocol) {
+        guard let modalType = modal.modalType else { return }
+        let action: (() -> Void) = {
+            switch modalType{
+            case .logout:
+                self.viewModel.action(.logoutActionButtonDidTap)
+            case .withdraw:
+                self.viewModel.action(.withdrawActionButtonDidTap)
+            }
+        }
+        
         ModalBuilder(
             modalView: modal,
-            action: nil,
+            action: action,
             rootViewController: self
         ).present()
+    }
+    
+    private func navigateInitialViewController() {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let sceneDelegate = windowScene.delegate as? SceneDelegate else {
+            return
+        }
+
+        let viewController = ViewControllerFactory.shared.makeLoginViewController()
+        let navigationController = UINavigationController(rootViewController: viewController)
+        
+        sceneDelegate.window?.rootViewController = navigationController
+        sceneDelegate.window?.makeKeyAndVisible()
     }
 }
