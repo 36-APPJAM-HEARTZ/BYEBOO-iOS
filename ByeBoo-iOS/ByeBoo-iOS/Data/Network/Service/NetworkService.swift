@@ -164,7 +164,6 @@ final class DefaultNetworkService: NSObject, NetworkService {
             self.continuation = continuation
             let provider = ASAuthorizationAppleIDProvider()
             let request = provider.createRequest()
-            request.requestedScopes = [.fullName, .email]
             
             let controller = ASAuthorizationController(authorizationRequests: [request])
             controller.delegate = self
