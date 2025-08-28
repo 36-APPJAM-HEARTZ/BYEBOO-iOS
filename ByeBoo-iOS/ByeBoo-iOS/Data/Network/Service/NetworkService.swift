@@ -8,6 +8,7 @@
 import Foundation
 
 import Alamofire
+import AuthenticationServices
 import KakaoSDKUser
 
 protocol NetworkService {
@@ -17,7 +18,7 @@ protocol NetworkService {
     ) async throws -> T
     func request(_ endPoint: EndPoint) async throws
     func request(image: Data, signedURL: String) async throws
-    func request() async throws -> String
+    func kakaoRequest() async throws -> String
 }
 
 struct DefaultNetworkService: NetworkService {
@@ -121,7 +122,7 @@ struct DefaultNetworkService: NetworkService {
            }
     }
     
-    func request() async throws -> String {
+    func kakaoRequest() async throws -> String {
         return try await withCheckedThrowingContinuation { continuation in
             if UserApi.isKakaoTalkLoginAvailable() {
                 UserApi.shared.loginWithKakaoTalk { ouathToken, error in

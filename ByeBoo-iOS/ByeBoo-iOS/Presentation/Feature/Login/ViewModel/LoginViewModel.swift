@@ -9,7 +9,7 @@ import Combine
 import Foundation
 
 final class LoginViewModel {
-    
+        
     private var kakaoLoginAuthSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private var postLoginSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private var isRegisteredSubject: PassthroughSubject<Result<Bool, ByeBooError>, Never> = .init()
@@ -22,14 +22,14 @@ final class LoginViewModel {
     
     private var cancellables = Set<AnyCancellable>()
     
-    private let kakaoLoginUseCase: SocialLoginUseCase
+    private let socialLoginUseCase: SocialLoginUseCase
     private let getIsRegisteredUseCase: GetIsRegisteredUseCase
     
     init(
-        kakaoLoginUseCase: SocialLoginUseCase,
+        socialLoginUseCase: SocialLoginUseCase,
         getIsRegisteredUseCase: GetIsRegisteredUseCase
     ) {
-        self.kakaoLoginUseCase = kakaoLoginUseCase
+        self.socialLoginUseCase = socialLoginUseCase
         self.getIsRegisteredUseCase = getIsRegisteredUseCase
     }
     
@@ -59,7 +59,7 @@ extension LoginViewModel {
     private func kakaoLogin() {
         Task {
             do {
-                let _ = try await kakaoLoginUseCase.execute(platform: .KAKAO)
+                let _ = try await socialLoginUseCase.execute(platform: .KAKAO)
                 kakaoLoginAuthSubject.send(.success(()))
                 getIsRegistered()
             } catch {
