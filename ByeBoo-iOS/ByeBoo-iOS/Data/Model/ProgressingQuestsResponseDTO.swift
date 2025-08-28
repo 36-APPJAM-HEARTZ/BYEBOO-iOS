@@ -10,6 +10,8 @@ import Foundation
 struct ProgressingQuestsResponseDTO: Decodable {
     let progressPeriod: Int
     let currentStep: Int
+    let questOpenTime: Date?
+    let currentTime: Date?
     let steps: [StepResponseDTO]
 }
 
@@ -31,6 +33,8 @@ extension ProgressingQuestsResponseDTO {
         .init(
             progressPeriod: progressPeriod,
             currentStep: currentStep,
+            questOpenTime: questOpenTime,
+            currentTime: currentTime,
             steps: steps.map { $0.toEntity() }
         )
     }
