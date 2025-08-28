@@ -11,6 +11,7 @@ import SnapKit
 import Then
 
 final class QuestModalView: BaseView, ModalProtocol {
+    var modalType: ConfirmModalType? = nil
     let actionButton: ByeBooButton = ByeBooButton(titleText: "진행하기", type: .enabled)
     var dismissButton: ByeBooButton?
     

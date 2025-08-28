@@ -11,7 +11,7 @@ import SnapKit
 import Then
 
 final class CongrateModalView: BaseView, ModalProtocol {
-    
+    var modalType: ConfirmModalType? = nil
     let actionButton: ByeBooButton = ByeBooButton(titleText: "바로가기", type: .enabled)
     let dismissButton: ByeBooButton? = nil
     
