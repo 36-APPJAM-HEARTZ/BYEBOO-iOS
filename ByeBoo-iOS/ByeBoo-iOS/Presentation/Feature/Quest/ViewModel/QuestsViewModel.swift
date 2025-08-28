@@ -94,13 +94,7 @@ final class QuestsViewModel {
     }
     
     private func setQuestTimer() {
-        guard let questOpenTime = questsEntity?.questOpenTime,
-              let currentTime = questsEntity?.currentTime else { return }
-
-        var remainingSeconds = calculateRemainingTimeUseCase.calculateRemainingTime(
-            questOpenTime: questOpenTime,
-            currentTime: currentTime
-        )
+        var remainingSeconds = getRemainingTime()
 
         timeCancellabels?.cancel()
         timeCancellabels = Timer.publish(every: 1.0, on: .main, in: .common)
@@ -118,6 +112,22 @@ final class QuestsViewModel {
             }
     }
 
+    private func setInitialTime() -> String {
+        var remainingSeconds = getRemainingTime()
+        let initialTime = calculateRemainingTimeUseCase.formatRemainingTime(seconds: remainingSeconds)
+        return initialTime
+    }
+    
+    private func getRemainingTime() -> Int {
+        guard let questOpenTime = questsEntity?.questOpenTime,
+              let currentTime = questsEntity?.currentTime else { return 0 }
+
+        let remainingSeconds = calculateRemainingTimeUseCase.calculateRemainingTime(
+            questOpenTime: questOpenTime,
+            currentTime: currentTime
+        )
+        return remainingSeconds
+    }
 }
 
 extension QuestsViewModel {
@@ -150,7 +160,8 @@ extension QuestsViewModel {
             return .locked
         }
         if isQuestLocked {
-            return .upComing
+            let initialTime = setInitialTime()
+            return .upComing(initialTime)
         }
         return .ongoing
     }
