@@ -42,8 +42,8 @@ final class DefaultNetworkService: NSObject, NetworkService {
                 headers: endPoint.headers.value
             )
             .validate()
-            .responseDecodable(of: BaseResponse<T>.self) { response in
-                self.responseLogger(response)
+            .responseDecodable(of: BaseResponse<T>.self) { [weak self] response in
+                self?.responseLogger(response)
                 switch response.result {
                 case .success(let data):
                     guard let data = data.data else {
@@ -57,9 +57,9 @@ final class DefaultNetworkService: NSObject, NetworkService {
                     if let data = response.data,
                        let statusCode = response.response?.statusCode,
                        let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
-                        let error = self.handleError(statusCode, errorResponse.message)
-                        ByeBooLogger.error(error)
-                        continuation.resume(throwing: error)
+                        let error = self?.handleError(statusCode, errorResponse.message)
+                        ByeBooLogger.error(error ?? .unknownError)
+                        continuation.resume(throwing: error ?? .unknownError)
                     } else {
                         ByeBooLogger.error(ByeBooError.decodingError)
                         continuation.resume(throwing: ByeBooError.decodingError)
@@ -84,8 +84,8 @@ final class DefaultNetworkService: NSObject, NetworkService {
                 headers: endPoint.headers.value
             )
             .validate()
-            .responseDecodable(of: EmptyResponse.self) { response in
-                self.responseLogger(response)
+            .responseDecodable(of: EmptyResponse.self) { [weak self] response in
+                self?.responseLogger(response)
                 
                 switch response.result {
                 case .success:
@@ -94,9 +94,9 @@ final class DefaultNetworkService: NSObject, NetworkService {
                     if let data = response.data,
                        let statusCode = response.response?.statusCode,
                        let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
-                        let error = self.handleError(statusCode, errorResponse.message)
-                        ByeBooLogger.error(error)
-                        continuation.resume(throwing: error)
+                        let error = self?.handleError(statusCode, errorResponse.message)
+                        ByeBooLogger.error(error ?? .unknownError)
+                        continuation.resume(throwing: error ?? .unknownError)
                     } else {
                         ByeBooLogger.error(ByeBooError.decodingError)
                         continuation.resume(throwing: ByeBooError.decodingError)
@@ -129,6 +129,7 @@ final class DefaultNetworkService: NSObject, NetworkService {
         }
     }
     
+    @MainActor
     func kakaoRequest() async throws -> String {
         return try await withCheckedThrowingContinuation { continuation in
             if UserApi.isKakaoTalkLoginAvailable() {
@@ -155,6 +156,7 @@ final class DefaultNetworkService: NSObject, NetworkService {
         }
     }
     
+    @MainActor
     func appleRequest() async throws -> (String, String) {
         return try await  withCheckedThrowingContinuation { continuation in
             self.continuation = continuation
@@ -202,6 +204,7 @@ final class DefaultNetworkService: NSObject, NetworkService {
 }
 
 extension DefaultNetworkService: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = windowScene.windows.first
