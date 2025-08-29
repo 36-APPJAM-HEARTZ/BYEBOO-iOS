@@ -15,6 +15,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     
     private var questID: Int = 1
+    private var questType: QuestType = .activation
     
     private var answerText: String = ""
     private var emotionState: String = ""
@@ -140,8 +141,7 @@ extension WriteActiveTypeQuestViewController {
     @objc
     private func tipTagDidTap() {
         let viewController = ViewControllerFactory.shared.makeQuestTipViewController()
-        // TODO: 위 VC가 questType도 가져올 수 있도록 수정
-        viewController.configure(questID: questID, questType: .activation)
+        viewController.configure(questID: questID, questType: questType)
         viewController.navigationItem.hidesBackButton = true
         viewController.modalPresentationStyle = .fullScreen
         self.present(viewController, animated: false)
@@ -248,7 +248,8 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
 }
 
 extension WriteActiveTypeQuestViewController {
-    func configure(questID: Int) {
+    func configure(questID: Int, questType: QuestType) {
         self.questID = questID
+        self.questType = questType
     }
 }

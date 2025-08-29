@@ -114,8 +114,7 @@ extension WriteQuestionTypeQuestViewController {
     @objc
     private func tipTagDidTap() {
         let viewController = ViewControllerFactory.shared.makeQuestTipViewController()
-        // TODO: 해당 VC가 questType도 가지도록 변경
-        viewController.configure(questID: questID, questType: .activation)
+        viewController.configure(questID: questID, questType: questType)
         viewController.navigationItem.hidesBackButton = true
         viewController.modalPresentationStyle = .fullScreen
         self.present(viewController, animated: false)

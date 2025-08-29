@@ -69,7 +69,8 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
             moveToWriteQuestion(questID: quest.questId, questNumber: quest.questNumber, questType: .activation)
             return
         }
-        moveToWriteActivity(questID: quest.questId)
+        // TODO: questType 머지하고 변경
+        moveToWriteActivity(questID: quest.questId, questType: .activation)
     }
     
     private func moveToWriteQuestion(questID: Int, questNumber: Int, questType: QuestType) {
@@ -79,9 +80,9 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
         rootViewController?.navigationController?.pushViewController(questionQuestViewController, animated: false)
     }
     
-    private func moveToWriteActivity(questID: Int) {
+    private func moveToWriteActivity(questID: Int, questType: QuestType) {
         let activationQuestViewController = ViewControllerFactory.shared.makeWriteActiveTypeQuestViewController()
-        activationQuestViewController.configure(questID: questID)
+        activationQuestViewController.configure(questID: questID, questType: questType)
         rootViewController?.tabBarController?.tabBar.isHidden = true
         rootViewController?.navigationController?.pushViewController(activationQuestViewController, animated: false)
     }
