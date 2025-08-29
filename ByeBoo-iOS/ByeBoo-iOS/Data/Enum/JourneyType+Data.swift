@@ -6,14 +6,16 @@
 //
 
 extension JourneyType {
-    static func toServerKey(_ rawValue: String) -> String {
-        switch rawValue {
-        case "감정 직면":
-            return "FACE_EMOTION"
-        case "감정 정리":
-            return "PROCESS_EMOTION"
-        default:
-            return ""
+    var key: String {
+        switch self {
+        case .face:
+            "FACE_EMOTION"
+        case .process:
+            "PROCESS_EMOTION"
         }
+    }
+    
+    static func keyToEnum(_ key: String) -> Self? {
+        return Self.allCases.first { $0.key == key }
     }
 }

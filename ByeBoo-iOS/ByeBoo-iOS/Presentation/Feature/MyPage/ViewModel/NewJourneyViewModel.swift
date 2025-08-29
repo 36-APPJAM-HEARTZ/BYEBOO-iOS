@@ -56,7 +56,7 @@ extension NewJourneyViewModel {
 }
 
 extension NewJourneyViewModel {
-    func getNewJourneys() {
+    private func getNewJourneys() {
         Task {
             do {
                 let journeys = try await getNewJourneyUseCase.execute()
@@ -71,10 +71,10 @@ extension NewJourneyViewModel {
         }
     }
     
-    func postNewJourneys(journey: String) {
+    private func postNewJourneys(journey: String) {
         Task {
             do {
-                let _ = try await postJourneyUseCase.execute(journey: journey)
+                let _ = try await postJourneyUseCase.execute(journey: JourneyType.titleToEnum(journey) ?? .face)
                 postJourneySubject.send(.success(()))
             } catch {
                 guard let error = error as? ByeBooError else {

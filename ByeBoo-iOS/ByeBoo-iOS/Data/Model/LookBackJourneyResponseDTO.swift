@@ -29,12 +29,11 @@ extension LookBackJourneyResponseDTO {
 }
 
 extension JourneyTypeData {
-    // TODO: 교체
     func toEntity() -> JourneyEntity {
         .init(
             title: self.journey,
             description: nil,
-            style: SelectQuestType.keyToEnum(self.style)
+            style: JourneyType.keyToEnum(self.style)
         )
     }
 }

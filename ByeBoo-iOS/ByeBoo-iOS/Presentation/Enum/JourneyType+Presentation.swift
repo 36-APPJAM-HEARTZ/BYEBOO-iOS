@@ -7,9 +7,15 @@
 
 import UIKit
 
-enum JourneyType: String {
-    case face = "감정 직면"
-    case process = "감정 정리"
+extension JourneyType {
+    var title: String {
+        switch self {
+        case .face:
+            "감정 직면"
+        case .process:
+            "감정 정리"
+        }
+    }
     
     var image: UIImage {
         switch self {
@@ -21,7 +27,7 @@ enum JourneyType: String {
     }
     
     var description: String {
-        return "\(rawValue) 여정"
+        return "\(title) 여정"
     }
     
     var frontImage: UIImage {
@@ -40,5 +46,9 @@ enum JourneyType: String {
         case .process:
                 .processBackCard
         }
+    }
+    
+    static func titleToEnum(_ title: String) -> Self? {
+        return Self.allCases.first { $0.title == title }
     }
 }

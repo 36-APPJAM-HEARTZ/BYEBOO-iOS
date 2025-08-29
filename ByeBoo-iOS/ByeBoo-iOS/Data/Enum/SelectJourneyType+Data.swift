@@ -15,7 +15,7 @@ extension SelectQuestType {
         }
     }
     
-    static func keyToEnum(_ key: String) -> SelectQuestType? {
+    static func keyToEnum(_ key: String) -> Self? {
         return Self.allCases.first { $0.key == key }
     }
 }
