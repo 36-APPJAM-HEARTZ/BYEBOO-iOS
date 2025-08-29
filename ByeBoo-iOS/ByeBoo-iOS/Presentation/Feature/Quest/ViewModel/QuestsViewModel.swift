@@ -25,7 +25,7 @@ final class QuestsViewModel {
     private let fetchUserJourneyUseCase: FetchUserJourneyUseCase
     private let calculateRemainingTimeUseCase: CalculateRemainingTimeUseCase
     
-    private var questsEntity: ProgressingQuestsEntity?
+    private(set) var questsEntity: ProgressingQuestsEntity?
     private var timeCancellabels: AnyCancellable?
     
     init(
