@@ -18,7 +18,8 @@ struct DomainDependencyAssembler: DependencyAssembler {
         preAssembler.assemble()
         
         guard let userRepository = DIContainer.shared.resolve(type: UsersInterface.self),
-              let questRepository = DIContainer.shared.resolve(type: QuestsInterface.self) else {
+              let questRepository = DIContainer.shared.resolve(type: QuestsInterface.self),
+              let authRepository = DIContainer.shared.resolve(type: AuthInterface.self) else {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             return
         }
@@ -42,15 +43,15 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: SaveQuestTypeUseCase.self) { _ in
             return DefaultSaveQuestTypeUseCase(repqository: questRepository)
         }
-      
+        
         DIContainer.shared.register(type: SendUserUseCase.self) { _ in
             return DefaultSenduserUseCase(repository: userRepository)
         }
-
+        
         DIContainer.shared.register(type: QuestAnswerUseCase.self) { _ in
             return DefaultQuestAnswerUseCase(questAnswerRepository: questRepository)
         }
-      
+        
         DIContainer.shared.register(type: FetchCharacterDialogueUseCase.self) { _ in
             return DefaultFetchCharacterDialogueUseCase(repository: userRepository)
         }
@@ -63,10 +64,14 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultStartJourneyUseCase(repository: userRepository)
         }
         
+        DIContainer.shared.register(type: GetIsRegisteredUseCase.self) { _ in
+            return DefaultGetIsRegisteredUseCase(repository: userRepository)
+        }
+        
         DIContainer.shared.register(type: SaveQuestActiveUseCase.self) { _ in
             return DefaultSaveQuestActiveUseCase(questActiveRepository: questRepository)
         }
-      
+        
         DIContainer.shared.register(type: GetProgressingQuestsUseCase.self) { _ in
             return DefaultGetProgressingQuestsUseCase(repository: questRepository)
         }
@@ -74,7 +79,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: QuestTipUseCase.self) { _ in
             return DefaultQuestTipUseCase(questTipRepository: questRepository)
         }
-            
+        
         DIContainer.shared.register(type: SetHelperUseCase.self) { _ in
             return DefaultSetHelperUseCase(repository: userRepository)
         }
@@ -97,6 +102,10 @@ struct DomainDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: FetchNewJourneyUseCase.self) { _ in
             return DefaultFetchNewJourneyUseCase(fetchNewJourneyRepository: questRepository)
+        }
+        
+        DIContainer.shared.register(type: SocialLoginUseCase.self) { _ in
+            return DefaultKakaoLoginUseCase(repository: authRepository)
         }
     }
 }

@@ -20,6 +20,10 @@ struct DataDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: QuestsInterface.self) { _ in
             return DefaultQuestRepository(network: networkService, userDefaultsService: userDefaultService)
         }
+        
+        DIContainer.shared.register(type: AuthInterface.self) { _ in
+            return DefaultAuthRepository(network: networkService, keychainService: keychainService, userDefaultsService: userDefaultService)
+        }
     }
 }
 
@@ -31,6 +35,10 @@ struct MockDataDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: QuestsInterface.self) { _ in
             return MockQuestsRepository()
+        }
+        
+        DIContainer.shared.register(type: AuthInterface.self) { _ in
+            return MockAuthRepository()
         }
     }
 }

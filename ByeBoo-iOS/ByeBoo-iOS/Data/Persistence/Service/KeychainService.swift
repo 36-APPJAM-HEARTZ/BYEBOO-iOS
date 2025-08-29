@@ -8,21 +8,21 @@
 import Foundation
 
 protocol KeychainService {
-    func save()
-    func load()
-    func delete()
+    func save(key: KeyType, token: String)
+    func load(key: KeyType) -> String
+    func delete(key: KeyType)
 }
 
 struct DefaultKeychainService: KeychainService {
-    func save() {
-        //keychain에 저장
+    func save(key: KeyType, token: String) {
+        KeychainManager.save(key: key, token: token)
     }
     
-    func load() {
-        //
+    func load(key: KeyType) -> String {
+        KeychainManager.load(key: key)
     }
     
-    func delete() {
-        //
+    func delete(key: KeyType) {
+        KeychainManager.delete(key: key)
     }
 }

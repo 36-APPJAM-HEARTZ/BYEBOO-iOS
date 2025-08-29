@@ -62,7 +62,8 @@ extension QuestAPI: EndPoint {
     var headers: HeaderType {
         switch self {
         case .checkQuest, .recording, .active, .tip, .images, .answer, .progressingQuests, .journey, .postJourney:
-            return .withAuth(acessToken: Bundle.main.infoDictionary?["MASTER_TOKEN"] as! String)
+            let keychainService = DefaultKeychainService()
+            return .withAuth(acessToken: keychainService.load(key: .accessToken))
         }
     }
     

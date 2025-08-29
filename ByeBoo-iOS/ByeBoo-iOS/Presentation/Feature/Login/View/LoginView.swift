@@ -15,8 +15,8 @@ final class LoginView: BaseView {
     private let backgroundImageView = UIImageView()
     private let logoImageView = UIImageView()
     
-    private let appleLoginButton = UIButton()
-    private let kakaoLoginButton = UIButton()
+    private(set) var appleLoginButton = UIButton()
+    private(set) var kakaoLoginButton = UIButton()
     
     override func setStyle() {
         backgroundImageView.do {
