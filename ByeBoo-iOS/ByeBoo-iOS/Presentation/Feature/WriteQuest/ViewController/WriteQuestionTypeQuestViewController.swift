@@ -14,19 +14,16 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     private let viewModel: WriteQuestionTypeViewModel
     private var cancellables = Set<AnyCancellable>()
     
-    private var questID: Int
+    private var questID: Int = 1
+    
     private var answerText: String = ""
     private var emotionState: String = ""
     private var isKeyboardUsed: Bool = false
     
     private let bottomSheetViewController = EmotionBottomSheetViewController()
     
-    init(
-        viewModel: WriteQuestionTypeViewModel,
-        questID: Int
-    ){
+    init(viewModel: WriteQuestionTypeViewModel){
         self.viewModel = viewModel
-        self.questID = questID
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -114,14 +111,9 @@ extension WriteQuestionTypeQuestViewController {
     
     @objc
     private func tipTagDidTap() {
-        guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self) else {
-            return
-        }
-        let viewController = QuestTipViewController(
-            viewModel: viewModel,
-            questID: questID,
-            questType: .question
-        )
+        let viewController = ViewControllerFactory.shared.makeQuestTipViewController()
+        // TODO: 해당 VC가 questType도 가지도록 변경
+        viewController.configure(questID: questID, questType: .activation)
         viewController.navigationItem.hidesBackButton = true
         viewController.modalPresentationStyle = .fullScreen
         self.present(viewController, animated: false)
@@ -151,17 +143,10 @@ extension WriteQuestionTypeQuestViewController {
             .sink { [weak self] result in
                 switch result {
                 case .success(()):
-                    guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
-                        ByeBooLogger.error(ByeBooError.DIFailedError)
-                        fatalError()
-                    }
-                    
+                    let viewController = ViewControllerFactory.shared.makeCompleteQuestionTypeQuestViewController()
+                    // TODO: 해당 VC가 questNumber도 갖도록 변경
+                    viewController.configure(questID: self?.questID ?? 1, questNumber: 1)
                     self?.bottomSheetViewController.dismiss(animated: true)
-                    // TODO: viewController에 viewModel만 들어가도록 변경
-                    let viewController = CompleteQuestionTypeQuestViewController(
-                        viewModel: viewModel,
-                        questID: self?.questID ?? 1
-                    )
                     self?.navigationController?.pushViewController(viewController, animated: true)
                 case .failure(let failure):
                     ByeBooLogger.error(failure)
@@ -201,5 +186,11 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
             emotionState: emotionState
             )
         )
+    }
+}
+
+extension WriteQuestionTypeQuestViewController {
+    func configure(_ questID: Int) {
+        self.questID = questID
     }
 }

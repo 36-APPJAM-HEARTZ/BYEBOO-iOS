@@ -14,7 +14,8 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private let viewModel: WriteActiveTypeViewModel
     private var cancellables = Set<AnyCancellable>()
     
-    private let questID: Int
+    private var questID: Int = 1
+    
     private var answerText: String = ""
     private var emotionState: String = ""
     private var image: UIImage = UIImage()
@@ -26,12 +27,8 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         view = rootView
     }
     
-    init(
-        viewModel: WriteActiveTypeViewModel,
-        questID: Int
-    ){
+    init(viewModel: WriteActiveTypeViewModel){
         self.viewModel = viewModel
-        self.questID = questID
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -145,11 +142,9 @@ extension WriteActiveTypeQuestViewController {
         guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self) else {
             return
         }
-        let viewController = QuestTipViewController(
-            viewModel: viewModel,
-            questID: questID,
-            questType: QuestType.activation
-        )
+        let viewController = ViewControllerFactory.shared.makeQuestTipViewController()
+        // TODO: 위 VC가 questType도 가져올 수 있도록 수정
+        viewController.configure(questID: questID, questType: .activation)
         viewController.navigationItem.hidesBackButton = true
         viewController.modalPresentationStyle = .fullScreen
         self.present(viewController, animated: false)
@@ -179,16 +174,8 @@ extension WriteActiveTypeQuestViewController {
             .sink { [weak self] result in
                 switch result {
                 case .success(()):
-                    guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
-                        ByeBooLogger.error(ByeBooError.DIFailedError)
-                        fatalError()
-                    }
-                    
-                    // TODO: viewController에 viewModel만 들어가도록 변경
-                    let viewController = CompleteActiveTypeQuestViewController(
-                        viewModel: viewModel,
-                        questID: self?.questID ?? 1
-                    )
+                    let viewController = ViewControllerFactory.shared.makeCompleteActiveTypeQuestViewController()
+                    viewController.configure(questID: questID)
                     self?.bottomSheetViewController.dismiss(animated: true)
                     self?.navigationController?.pushViewController(viewController, animated: true)
                 case .failure(let failure):
@@ -260,5 +247,11 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
             image: self.image,
             imageKey: uuidKey)
         )
+    }
+}
+
+extension WriteActiveTypeQuestViewController {
+    func configure(questID: Int) {
+        self.questID = questID
     }
 }

@@ -13,15 +13,15 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
     private let rootView = CompleteActiveTypeQuestView()
     private var viewModel: CompleteQuestViewModel
     private var cancellables = Set<AnyCancellable>()
-    private let questID: Int
+    
+    private var questID: Int = 1
     
     override func loadView() {
         view = rootView
     }
     
-    init(viewModel: CompleteQuestViewModel, questID: Int) {
+    init(viewModel: CompleteQuestViewModel) {
         self.viewModel = viewModel
-        self.questID = questID
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -78,5 +78,11 @@ extension CompleteActiveTypeQuestViewController: Dismissible {
     func close() {
         tabBarController?.tabBar.isHidden = false
         self.navigationController?.popToRootViewController(animated: false)
+    }
+}
+
+extension CompleteActiveTypeQuestViewController {
+    func configure(questID: Int) {
+        self.questID = questID
     }
 }

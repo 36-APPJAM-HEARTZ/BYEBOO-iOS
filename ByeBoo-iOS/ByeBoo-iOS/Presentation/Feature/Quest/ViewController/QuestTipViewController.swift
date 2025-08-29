@@ -10,21 +10,19 @@ import UIKit
 
 final class QuestTipViewController: BaseViewController {
     
-    private let rootView: QuestTipView
+    private var rootView: QuestTipView?
     private let viewModel: QuestTipViewModel
     private var cancellables = Set<AnyCancellable>()
-    private let questID: Int
-    private let questType: QuestType
+    
+    private var questID: Int = 1
+    private var questType: QuestType = .activation
     
     override func loadView() {
         view = rootView
     }
     
-    init(viewModel: QuestTipViewModel, questID: Int, questType: QuestType) {
+    init(viewModel: QuestTipViewModel) {
         self.viewModel = viewModel
-        self.questID = questID
-        self.questType = questType
-        rootView = QuestTipView(questType: questType)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -49,7 +47,7 @@ final class QuestTipViewController: BaseViewController {
     }
     
     private func setAction() {
-        rootView.closeButton.addTarget(self, action: #selector(closeButtonDidTap), for: .touchUpInside)
+        rootView?.closeButton.addTarget(self, action: #selector(closeButtonDidTap), for: .touchUpInside)
     }
     
     private func bind() {
@@ -58,7 +56,7 @@ final class QuestTipViewController: BaseViewController {
             .sink { [weak self] result in
                 switch result {
                 case .success(let entity):
-                    self?.rootView.bind(with: entity)
+                    self?.rootView?.bind(with: entity)
                 case .failure(let error):
                     ByeBooLogger.debug(error)
                 }
@@ -72,5 +70,13 @@ extension QuestTipViewController {
     @objc
     func closeButtonDidTap() {
         self.dismiss(animated: true)
+    }
+}
+
+extension QuestTipViewController {
+    func configure(questID: Int, questType: QuestType) {
+        self.questID = questID
+        self.questType = questType
+        rootView = QuestTipView(questType: questType)
     }
 }

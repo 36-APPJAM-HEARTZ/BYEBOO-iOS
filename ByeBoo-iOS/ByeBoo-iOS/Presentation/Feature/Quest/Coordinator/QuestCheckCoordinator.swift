@@ -22,15 +22,9 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     }
     
     func moveArchive(quest: QuestEntity?) {
-        guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else { return }
-        
-        // TODO: Presentation레이어에서 key 빼기
-        let questType: QuestType = (quest?.questStyle == JourneyStyle.recording.key) ? .question : .activation
-        let archiveQuestViewController = ArchiveQuestViewController(
-            viewModel: viewModel,
-            questID: quest?.questId ?? 1,
-            questType: questType
-        )
+        let archiveQuestViewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
+        // TODO: questType 머지하고 고치기
+        archiveQuestViewController.configure(questID: quest?.questId ?? 1, questType: .activation)
         rootViewController?.tabBarController?.tabBar.isHidden = true
         rootViewController?.navigationController?.pushViewController(archiveQuestViewController, animated: false)
     }
@@ -60,18 +54,9 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     }
     
     func moveQuestTip(quest: QuestEntity?) {
-        guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self),
-              let questID = quest?.questId else {
-            return
-        }
-        
-        // TODO: Presentation레이어에서 key 빼기
-        let questType: QuestType = (quest?.questStyle == JourneyStyle.recording.key) ? .question : .activation
-        let questTipViewController = QuestTipViewController(
-            viewModel: viewModel,
-            questID: questID,
-            questType: questType
-        )
+        let questTipViewController = ViewControllerFactory.shared.makeQuestTipViewController()
+        // TODO: questType 머지받고 수정
+        questTipViewController.configure(questID: quest?.questId ?? 1, questType: .activation)
         questTipViewController.modalPresentationStyle = .fullScreen
         let topViewController = UIApplication.shared.topViewController()
         topViewController?.present(questTipViewController, animated: false)
@@ -87,25 +72,15 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     }
     
     private func moveToWriteQuestion(questID: Int) {
-        guard let viewModel = DIContainer.shared.resolve(type: WriteQuestionTypeViewModel.self) else {
-            return
-        }
-        let questionQuestViewController = WriteQuestionTypeQuestViewController(
-            viewModel: viewModel,
-            questID: questID
-        )
+        let questionQuestViewController = ViewControllerFactory.shared.makeWriteQuestionTypeQuestViewController()
+        questionQuestViewController.configure(questID)
         rootViewController?.tabBarController?.tabBar.isHidden = true
         rootViewController?.navigationController?.pushViewController(questionQuestViewController, animated: false)
     }
     
     private func moveToWriteActivity(questID: Int) {
-        guard let viewModel = DIContainer.shared.resolve(type: WriteActiveTypeViewModel.self) else {
-            return
-        }
-        let activationQuestViewController = WriteActiveTypeQuestViewController(
-            viewModel: viewModel,
-            questID: questID
-        )
+        let activationQuestViewController = ViewControllerFactory.shared.makeWriteActiveTypeQuestViewController()
+        activationQuestViewController.configure(questID: questID)
         rootViewController?.tabBarController?.tabBar.isHidden = true
         rootViewController?.navigationController?.pushViewController(activationQuestViewController, animated: false)
     }
