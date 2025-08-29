@@ -7,9 +7,15 @@
 
 import Foundation
 
-enum QuestType {
-    case question
-    case activation
+extension QuestType {
+    var title: String {
+        switch self {
+        case .question:
+            "질문형"
+        case .activation:
+            "행동형"
+        }
+    }
     
     var plaeholder: String {
         switch self {

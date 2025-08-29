@@ -24,12 +24,10 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     func moveArchive(quest: QuestEntity?) {
         guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else { return }
         
-        // TODO: Presentation레이어에서 key 빼기
-        let questType: QuestType = (quest?.questStyle == JourneyStyle.recording.key) ? .question : .activation
         let archiveQuestViewController = ArchiveQuestViewController(
             viewModel: viewModel,
             questID: quest?.questId ?? 1,
-            questType: questType
+            questType: quest?.questStyle ?? .question
         )
         rootViewController?.tabBarController?.tabBar.isHidden = true
         rootViewController?.navigationController?.pushViewController(archiveQuestViewController, animated: false)
@@ -64,13 +62,11 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
               let questID = quest?.questId else {
             return
         }
-        
-        // TODO: Presentation레이어에서 key 빼기
-        let questType: QuestType = (quest?.questStyle == JourneyStyle.recording.key) ? .question : .activation
+
         let questTipViewController = QuestTipViewController(
             viewModel: viewModel,
             questID: questID,
-            questType: questType
+            questType: quest?.questStyle ?? .question
         )
         questTipViewController.modalPresentationStyle = .fullScreen
         let topViewController = UIApplication.shared.topViewController()
@@ -78,12 +74,11 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     }
     
     func moveWriteQuest(quest: QuestEntity) {
-        // TODO: Presentation레이어에서 key 빼기
-        if quest.questStyle == JourneyStyle.recording.key {
+        if quest.questStyle == .question {
             moveToWriteQuestion(questID: quest.questId)
-            return
+        } else {
+            moveToWriteActivity(questID: quest.questId)
         }
-        moveToWriteActivity(questID: quest.questId)
     }
     
     private func moveToWriteQuestion(questID: Int) {

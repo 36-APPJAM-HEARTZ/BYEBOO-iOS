@@ -139,7 +139,7 @@ extension JourneyListView {
             journeyList.forEach { journey in
                 let journeyView = OneLineTextBoxView(
                     title: journey.title,
-                    tagTitle: journey.style?.text,
+                    tagTitle: journey.style?.title,
                     tagType: isFinished ? .word3Gray : .word3Purple,
                     isHighlighted: !isFinished
                 )
