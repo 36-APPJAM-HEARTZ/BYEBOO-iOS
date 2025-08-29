@@ -5,6 +5,7 @@
 //  Created by 최주리 on 6/25/25.
 //
 
+import AuthenticationServices
 import Foundation
 
 import Alamofire
@@ -17,17 +18,22 @@ protocol NetworkService {
     ) async throws -> T
     func request(_ endPoint: EndPoint) async throws
     func request(image: Data, signedURL: String) async throws
-    func request() async throws -> String
+    func kakaoRequest() async throws -> String
+    func appleRequest() async throws -> (String, String)
 }
 
-struct DefaultNetworkService: NetworkService {
+final class DefaultNetworkService: NSObject, NetworkService {
+    private var continuation: CheckedContinuation<(String, String), Error>?
+    
     func request<T: Decodable>(
         _ endPoint: EndPoint,
         decodingType: T.Type
     ) async throws -> T {
         requestLogger(endPoint)
         
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await withCheckedThrowingContinuation { [weak self] continuation in
+            guard let self else { return }
+            
             AF.request(
                 endPoint.requestURL,
                 method: endPoint.method,
@@ -37,7 +43,7 @@ struct DefaultNetworkService: NetworkService {
             )
             .validate()
             .responseDecodable(of: BaseResponse<T>.self) { response in
-                responseLogger(response)
+                self.responseLogger(response)
                 switch response.result {
                 case .success(let data):
                     guard let data = data.data else {
@@ -49,9 +55,9 @@ struct DefaultNetworkService: NetworkService {
                     continuation.resume(returning: data)
                 case .failure:
                     if let data = response.data,
-                       let statusCode = response.response?.statusCode,  
+                       let statusCode = response.response?.statusCode,
                        let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
-                        let error = handleError(statusCode, errorResponse.message)
+                        let error = self.handleError(statusCode, errorResponse.message)
                         ByeBooLogger.error(error)
                         continuation.resume(throwing: error)
                     } else {
@@ -67,7 +73,9 @@ struct DefaultNetworkService: NetworkService {
     func request(_ endPoint: EndPoint) async throws {
         requestLogger(endPoint)
         
-        return try await withCheckedThrowingContinuation { continuation in
+        return try await withCheckedThrowingContinuation { [weak self] continuation in
+            guard let self else { return }
+            
             AF.request(
                 endPoint.requestURL,
                 method: endPoint.method,
@@ -77,7 +85,7 @@ struct DefaultNetworkService: NetworkService {
             )
             .validate()
             .responseDecodable(of: EmptyResponse.self) { response in
-                responseLogger(response)
+                self.responseLogger(response)
                 
                 switch response.result {
                 case .success:
@@ -86,7 +94,7 @@ struct DefaultNetworkService: NetworkService {
                     if let data = response.data,
                        let statusCode = response.response?.statusCode,
                        let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
-                        let error = handleError(statusCode, errorResponse.message)
+                        let error = self.handleError(statusCode, errorResponse.message)
                         ByeBooLogger.error(error)
                         continuation.resume(throwing: error)
                     } else {
@@ -107,21 +115,21 @@ struct DefaultNetworkService: NetworkService {
                 method: .put,
                 headers: ["Content-Type": "image/jpeg"]
             )
-                   .validate()
-                   .response { response in
-                       ByeBooLogger.network(response)
-                       if let error = response.error {
-                           ByeBooLogger.error(error)
-                           continuation.resume(throwing: ByeBooError.unknownError)
-                       } else {
-                           ByeBooLogger.debug("이미지 업로드 성공")
-                           continuation.resume()
-                       }
-                   }
-           }
+            .validate()
+            .response { response in
+                ByeBooLogger.network(response)
+                if let error = response.error {
+                    ByeBooLogger.error(error)
+                    continuation.resume(throwing: ByeBooError.unknownError)
+                } else {
+                    ByeBooLogger.debug("이미지 업로드 성공")
+                    continuation.resume()
+                }
+            }
+        }
     }
     
-    func request() async throws -> String {
+    func kakaoRequest() async throws -> String {
         return try await withCheckedThrowingContinuation { continuation in
             if UserApi.isKakaoTalkLoginAvailable() {
                 UserApi.shared.loginWithKakaoTalk { ouathToken, error in
@@ -144,7 +152,19 @@ struct DefaultNetworkService: NetworkService {
                     }
                 }
             }
+        }
+    }
+    
+    func appleRequest() async throws -> (String, String) {
+        return try await  withCheckedThrowingContinuation { continuation in
+            self.continuation = continuation
+            let provider = ASAuthorizationAppleIDProvider()
+            let request = provider.createRequest()
             
+            let controller = ASAuthorizationController(authorizationRequests: [request])
+            controller.delegate = self
+            controller.presentationContextProvider = self
+            controller.performRequests()
         }
     }
     
@@ -178,5 +198,39 @@ struct DefaultNetworkService: NetworkService {
         }
         
         return error
+    }
+}
+
+extension DefaultNetworkService: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
+    func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first
+        else {
+            fatalError("windown 없음")
+        }
+        return window
+    }
+    
+    func authorizationController (
+        controller: ASAuthorizationController,
+        didCompleteWithAuthorization authorization: ASAuthorization
+    ) {
+        guard let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
+              let identityToken = credential.identityToken,
+              let authorizationCode = credential.authorizationCode else { return }
+        
+        let identityTokenString = String(data: identityToken, encoding: .utf8) ?? ""
+        let authorizationCodeString = String(data: authorizationCode, encoding: .utf8) ?? ""
+        
+        ByeBooLogger.debug("identity Token \(identityTokenString)")
+        ByeBooLogger.debug("authorization Code \(authorizationCodeString)")
+        
+        guard let continuation = self.continuation else { return }
+        continuation.resume(returning: (identityTokenString, authorizationCodeString))
+    }
+    
+    func authorizationController(controller: ASAuthorizationController, didCompleteWithError error: Error) {
+        guard let continuation = self.continuation else { return }
+        continuation.resume(throwing: ByeBooError.appleLoginError)
     }
 }
