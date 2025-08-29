@@ -15,6 +15,8 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     
     private var questID: Int = 1
+    private var questNumber: Int = 1
+    private var questType: QuestType = .activation
     
     private var answerText: String = ""
     private var emotionState: String = ""
@@ -144,8 +146,7 @@ extension WriteQuestionTypeQuestViewController {
                 switch result {
                 case .success(()):
                     let viewController = ViewControllerFactory.shared.makeCompleteQuestionTypeQuestViewController()
-                    // TODO: 해당 VC가 questNumber도 갖도록 변경
-                    viewController.configure(questID: self?.questID ?? 1, questNumber: 1)
+                    viewController.configure(questID: self?.questID ?? 1, questNumber: self?.questNumber ?? 1)
                     self?.bottomSheetViewController.dismiss(animated: true)
                     self?.navigationController?.pushViewController(viewController, animated: true)
                 case .failure(let failure):
@@ -190,7 +191,9 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
 }
 
 extension WriteQuestionTypeQuestViewController {
-    func configure(_ questID: Int) {
+    func configure(_ questID: Int, _ questNumber: Int, _ questType: QuestType) {
         self.questID = questID
+        self.questNumber = questNumber
+        self.questType = questType
     }
 }

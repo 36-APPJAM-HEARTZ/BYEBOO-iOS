@@ -139,9 +139,6 @@ extension WriteActiveTypeQuestViewController {
     
     @objc
     private func tipTagDidTap() {
-        guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self) else {
-            return
-        }
         let viewController = ViewControllerFactory.shared.makeQuestTipViewController()
         // TODO: 위 VC가 questType도 가져올 수 있도록 수정
         viewController.configure(questID: questID, questType: .activation)
@@ -175,7 +172,7 @@ extension WriteActiveTypeQuestViewController {
                 switch result {
                 case .success(()):
                     let viewController = ViewControllerFactory.shared.makeCompleteActiveTypeQuestViewController()
-                    viewController.configure(questID: questID)
+                    viewController.configure(questID: self?.questID ?? 1)
                     self?.bottomSheetViewController.dismiss(animated: true)
                     self?.navigationController?.pushViewController(viewController, animated: true)
                 case .failure(let failure):

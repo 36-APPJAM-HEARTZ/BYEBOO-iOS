@@ -80,7 +80,9 @@ extension CompleteQuestionTypeQuestViewController: Dismissible {
         tabBarController?.tabBar.isHidden = false
         self.navigationController?.popToRootViewController(animated: false)
         
-        
+        if questNumber == 30 {
+            // TODO: 오프보딩 플로우 연결
+        }
     }
 }
 

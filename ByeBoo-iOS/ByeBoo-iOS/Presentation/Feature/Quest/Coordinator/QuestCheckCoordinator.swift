@@ -65,15 +65,16 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     func moveWriteQuest(quest: QuestEntity) {
         // TODO: Presentation레이어에서 key 빼기
         if quest.questStyle == JourneyStyle.recording.key {
-            moveToWriteQuestion(questID: quest.questId)
+            // TODO: questType 머지하고 변경
+            moveToWriteQuestion(questID: quest.questId, questNumber: quest.questNumber, questType: .activation)
             return
         }
         moveToWriteActivity(questID: quest.questId)
     }
     
-    private func moveToWriteQuestion(questID: Int) {
+    private func moveToWriteQuestion(questID: Int, questNumber: Int, questType: QuestType) {
         let questionQuestViewController = ViewControllerFactory.shared.makeWriteQuestionTypeQuestViewController()
-        questionQuestViewController.configure(questID)
+        questionQuestViewController.configure(questID, questNumber, questType)
         rootViewController?.tabBarController?.tabBar.isHidden = true
         rootViewController?.navigationController?.pushViewController(questionQuestViewController, animated: false)
     }
