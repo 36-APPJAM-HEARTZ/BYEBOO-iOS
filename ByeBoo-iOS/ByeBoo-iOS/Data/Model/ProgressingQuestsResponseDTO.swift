@@ -51,7 +51,7 @@ extension QuestResponseDTO {
         return .init(
             questId: questId,
             question: question,
-            questStyle: questStyle,
+            questStyle: QuestType.keyToEnum(questStyle) ?? .question,
             questNumber: questNumber
         )
     }

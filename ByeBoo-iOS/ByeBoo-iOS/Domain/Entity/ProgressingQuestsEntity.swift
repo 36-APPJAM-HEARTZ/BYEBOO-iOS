@@ -22,7 +22,7 @@ struct StepEntity {
 struct QuestEntity {
     let questId: Int
     let question: String
-    let questStyle: String
+    let questStyle: QuestType
     let questNumber: Int
 }
 
@@ -67,7 +67,7 @@ extension QuestEntity {
         return .init(
             questId: 30 + index,
             question: "무슨 일이 있었나요?",
-            questStyle: "RECORDING",
+            questStyle: .question,
             questNumber: index
         )
     }
