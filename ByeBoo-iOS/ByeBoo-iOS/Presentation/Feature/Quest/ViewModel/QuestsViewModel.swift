@@ -135,9 +135,18 @@ extension QuestsViewModel {
     var steps: [StepEntity] { questsEntity?.steps ?? [] }
     var currentStep: Int { questsEntity?.currentStep ?? 0 }
     var isQuestLocked: Bool { questsEntity?.questOpenTime != nil && questsEntity?.currentTime != nil }
-    
-    private func getSteps() -> [StepEntity]? {
-        questsEntity?.steps
+    var currentQuestIndexPath: IndexPath {
+        var indexPath = IndexPath()
+        
+        for (sectionIndex, step) in steps.enumerated() {
+            if let itemIndex = step.quests.firstIndex(where: {
+                $0.questNumber == currentStep
+            }) {
+                indexPath = IndexPath(item: itemIndex, section: sectionIndex)
+                break
+            }
+        }
+        return indexPath
     }
     
     func getStep(section: Int) -> StepEntity? {
@@ -164,21 +173,6 @@ extension QuestsViewModel {
             return .upComing(initialTime)
         }
         return .ongoing
-    }
-    
-    func getCurrentQuestIndexPath() -> IndexPath {
-        var indexPath = IndexPath()
-        guard let steps = getSteps() else { return indexPath }
-        
-        for (sectionIndex, step) in steps.enumerated() {
-            if let itemIndex = step.quests.firstIndex(where: {
-                $0.questNumber == currentStep
-            }) {
-                indexPath = IndexPath(item: itemIndex, section: sectionIndex)
-                break
-            }
-        }
-        return indexPath
     }
 }
 

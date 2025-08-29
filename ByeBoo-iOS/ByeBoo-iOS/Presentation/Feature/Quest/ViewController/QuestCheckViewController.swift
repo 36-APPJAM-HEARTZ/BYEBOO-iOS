@@ -116,7 +116,7 @@ final class QuestCheckViewController: BaseViewController {
             .sink { result in
                 switch result {
                 case .success(let time):
-                    let indexPath = self.viewModel.getCurrentQuestIndexPath()
+                    let indexPath = self.viewModel.currentQuestIndexPath
                     let cell = self.questsCheckView.questCollectionView.cellForItem(at: indexPath)
                     if let questStateCell = cell as? QuestStateCell {
                         questStateCell.updateRemainingTime(time)
