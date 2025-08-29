@@ -106,6 +106,7 @@ final class QuestsViewModel {
                     return
                 }
                 self.timeCancellabels?.cancel()
+                self.timeSubject.send(.failure(.kakaoOuathError))
             }
     }
 }
@@ -167,6 +168,7 @@ extension QuestsViewModel: ViewModelType {
     
     enum Input {
         case questViewWillAppear
+        case questOpen
     }
     
     struct Output {
@@ -183,6 +185,8 @@ extension QuestsViewModel: ViewModelType {
             loadingSubject.send(true)
             getUseName()
             fetchUserJourney()
+            fetchProgressingQuests()
+        case .questOpen:
             fetchProgressingQuests()
         }
     }

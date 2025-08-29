@@ -122,7 +122,7 @@ final class QuestCheckViewController: BaseViewController {
                         questStateCell.updateRemainingTime(time)
                     }
                 case .failure:
-                    ByeBooLogger.error(ByeBooError.unknownError)
+                    self.viewModel.action(.questOpen)
                 }
             }
             .store(in: &cancellable)
