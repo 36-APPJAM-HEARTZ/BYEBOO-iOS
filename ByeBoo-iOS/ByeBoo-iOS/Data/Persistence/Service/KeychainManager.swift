@@ -12,6 +12,7 @@ enum KeyType: String {
     case authorization
     case accessToken
     case refreshToken
+    case authorizationCode
 }
 
 enum KeychainManager {

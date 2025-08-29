@@ -21,6 +21,7 @@ enum ByeBooError: Error, LocalizedError {
     case beforeJourney
     case cannotOpenPage
     case kakaoOuathError
+    case appleLoginError
     
     var errorDescription: String? {
         switch self {
@@ -48,6 +49,8 @@ enum ByeBooError: Error, LocalizedError {
             return "페이지를 열 수 없음"
         case .kakaoOuathError:
             return "카카오 액세스 토큰 받기 실패"
+        case .appleLoginError:
+            return "애플 로그인 실패"
         case .unknownError:
             return nil
         }
