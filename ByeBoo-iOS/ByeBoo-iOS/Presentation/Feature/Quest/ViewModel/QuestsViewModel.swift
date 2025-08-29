@@ -106,7 +106,7 @@ final class QuestsViewModel {
                     return
                 }
                 self.timeCancellabels?.cancel()
-                self.timeSubject.send(.failure(.kakaoOuathError))
+                self.timeSubject.send(.failure(.endTimer))
             }
     }
 }
