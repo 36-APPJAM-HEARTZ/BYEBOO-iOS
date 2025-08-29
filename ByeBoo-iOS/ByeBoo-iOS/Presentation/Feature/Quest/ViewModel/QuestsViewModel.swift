@@ -101,13 +101,32 @@ final class QuestsViewModel {
 
                 if remainingSeconds > 0 {
                     remainingSeconds -= 1
-                    let time = self.calculateRemainingTimeUseCase.formatRemainingTime(seconds: remainingSeconds)
+                    let time = self.formatRemainingTime(seconds: remainingSeconds)
                     self.timeSubject.send(.success(time))
                     return
                 }
                 self.timeCancellabels?.cancel()
                 self.timeSubject.send(.failure(.endTimer))
             }
+    }
+    
+    func formatRemainingTime(seconds: Int) -> String {
+        let hours = calculateHours(seconds: seconds)
+        let minutes = calculateMinutes(seconds: seconds)
+        let remainingTime = formatTime(hours, minutes)
+        return remainingTime
+    }
+    
+    private func calculateHours(seconds: Int) -> Int {
+        seconds / TimeConstant.secondPerHour
+    }
+    
+    private func calculateMinutes(seconds: Int) -> Int {
+        (seconds % TimeConstant.secondPerHour) / TimeConstant.secondPerMinute
+    }
+    
+    private func formatTime(_ hours: Int, _ minutes: Int) -> String {
+        String(format: "%02d:%02d", hours, minutes)
     }
 }
 
@@ -157,7 +176,7 @@ extension QuestsViewModel {
                 questOpenTime: questsEntity?.questOpenTime,
                 currentTime: questsEntity?.currentTime
             )
-            let initialTime = calculateRemainingTimeUseCase.formatRemainingTime(seconds: remainingSeconds)
+            let initialTime = formatRemainingTime(seconds: remainingSeconds)
             return .upComing(initialTime)
         }
         return .ongoing
