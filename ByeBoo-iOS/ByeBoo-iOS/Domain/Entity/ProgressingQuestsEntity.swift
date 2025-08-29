@@ -44,8 +44,8 @@ extension ProgressingQuestsEntity {
         return .init(
             progressPeriod: 2,
             currentStep: 2,
-            questOpenTime: DateFormatter.formatTime(string: "2025-08-29T14:37:31.626055"),
-            currentTime: DateFormatter.formatTime(string: "2025-08-29T14:37:28.626055"),
+            questOpenTime: ServerDateFormatter.shared.formatDate(string: "2025-08-29T14:37:31.626055"),
+            currentTime: ServerDateFormatter.shared.formatDate(string: "2025-08-29T14:37:28.626055"),
             steps: [StepEntity.stub(stepNumber: 1)]
         )
     }

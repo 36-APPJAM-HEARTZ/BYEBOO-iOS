@@ -33,8 +33,8 @@ extension ProgressingQuestsResponseDTO {
         return .init(
             progressPeriod: progressPeriod,
             currentStep: currentStep,
-            questOpenTime: DateFormatter.formatTime(string: questOpenTime),
-            currentTime: DateFormatter.formatTime(string: currentTime),
+            questOpenTime: ServerDateFormatter.shared.formatDate(string: questOpenTime),
+            currentTime: ServerDateFormatter.shared.formatDate(string: currentTime),
             steps: steps.map { $0.toEntity() }
         )
     }
