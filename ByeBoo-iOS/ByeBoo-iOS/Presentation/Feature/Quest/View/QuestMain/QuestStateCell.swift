@@ -111,6 +111,26 @@ extension QuestStateCell {
     }
     
     private func bindLayout(state: QuestState) {
-        state.setImageViewLayout(imageView)
+        imageView.snp.remakeConstraints {
+            switch state {
+            case .upComing, .locked:
+                $0.center.equalToSuperview()
+                $0.width.height.equalTo(24.adjustedW)
+            case .completed:
+                $0.centerX.equalToSuperview()
+                $0.width.height.equalTo(80.adjustedW)
+                $0.edges.equalToSuperview().inset(
+                    UIEdgeInsets(
+                        top: 8.adjustedH,
+                        left: 3.adjustedW,
+                        bottom: 0.adjustedH,
+                        right: 3.adjustedW
+                    )
+                )
+            case .ongoing:
+                $0.centerX.equalToSuperview()
+                $0.width.height.equalTo(80.adjustedW)
+            }
+        }
     }
 }
