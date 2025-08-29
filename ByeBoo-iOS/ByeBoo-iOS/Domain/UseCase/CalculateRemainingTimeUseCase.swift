@@ -14,15 +14,23 @@ enum TimeConstant {
 
 protocol CalculateRemainingTimeUseCase {
     
-    func calculateRemainingTime(questOpenTime: Date, currentTime: Date) -> Int
+    func isQuestLocked(questOpenTime: Date?, currentTime: Date?) -> Bool
+    func calculateRemainingTime(questOpenTime: Date?, currentTime: Date?) -> Int
     func formatRemainingTime(seconds: Int) -> String
 }
 
 struct DefaultCalculateRemainingTimeUseCase: CalculateRemainingTimeUseCase {
     
-    func calculateRemainingTime(questOpenTime: Date, currentTime: Date) -> Int {
-        let timeInterval = Int(questOpenTime.timeIntervalSince(currentTime))
-        return max(0, timeInterval)
+    func isQuestLocked(questOpenTime: Date?, currentTime: Date?) -> Bool {
+        questOpenTime != nil && currentTime != nil
+    }
+    
+    func calculateRemainingTime(questOpenTime: Date?, currentTime: Date?) -> Int {
+        if let questOpenTime, let currentTime {
+            let timeInterval = Int(questOpenTime.timeIntervalSince(currentTime))
+            return max(0, timeInterval)
+        }
+        return 0
     }
     
     func formatRemainingTime(seconds: Int) -> String {

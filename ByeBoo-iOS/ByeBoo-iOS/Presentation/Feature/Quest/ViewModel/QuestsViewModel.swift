@@ -88,7 +88,10 @@ final class QuestsViewModel {
     }
     
     private func setQuestTimer() {
-        var remainingSeconds = getRemainingTime()
+        var remainingSeconds = calculateRemainingTimeUseCase.calculateRemainingTime(
+            questOpenTime: questsEntity?.questOpenTime,
+            currentTime: questsEntity?.currentTime
+        )
 
         timeCancellabels?.cancel()
         timeCancellabels = Timer.publish(every: 1.0, on: .main, in: .common)
@@ -105,37 +108,23 @@ final class QuestsViewModel {
                 self.timeCancellabels?.cancel()
             }
     }
-
-    private func setInitialTime() -> String {
-        var remainingSeconds = getRemainingTime()
-        let initialTime = calculateRemainingTimeUseCase.formatRemainingTime(seconds: remainingSeconds)
-        return initialTime
-    }
-    
-    private func getRemainingTime() -> Int {
-        guard let questOpenTime = questsEntity?.questOpenTime,
-              let currentTime = questsEntity?.currentTime else { return 0 }
-
-        let remainingSeconds = calculateRemainingTimeUseCase.calculateRemainingTime(
-            questOpenTime: questOpenTime,
-            currentTime: currentTime
-        )
-        return remainingSeconds
-    }
 }
 
 extension QuestsViewModel {
     
     var steps: [StepEntity] { questsEntity?.steps ?? [] }
     var currentStep: Int { questsEntity?.currentStep ?? 0 }
-    var isQuestLocked: Bool { questsEntity?.questOpenTime != nil && questsEntity?.currentTime != nil }
+    var isQuestLocked: Bool {
+        calculateRemainingTimeUseCase.isQuestLocked(
+            questOpenTime: questsEntity?.questOpenTime,
+            currentTime: questsEntity?.currentTime
+        )
+    }
     var currentQuestIndexPath: IndexPath {
         var indexPath = IndexPath()
         
         for (sectionIndex, step) in steps.enumerated() {
-            if let itemIndex = step.quests.firstIndex(where: {
-                $0.questNumber == currentStep
-            }) {
+            if let itemIndex = step.quests.firstIndex(where: { $0.questNumber == currentStep }) {
                 indexPath = IndexPath(item: itemIndex, section: sectionIndex)
                 break
             }
@@ -163,7 +152,11 @@ extension QuestsViewModel {
             return .locked
         }
         if isQuestLocked {
-            let initialTime = setInitialTime()
+            let remainingSeconds = calculateRemainingTimeUseCase.calculateRemainingTime(
+                questOpenTime: questsEntity?.questOpenTime,
+                currentTime: questsEntity?.currentTime
+            )
+            let initialTime = calculateRemainingTimeUseCase.formatRemainingTime(seconds: remainingSeconds)
             return .upComing(initialTime)
         }
         return .ongoing
