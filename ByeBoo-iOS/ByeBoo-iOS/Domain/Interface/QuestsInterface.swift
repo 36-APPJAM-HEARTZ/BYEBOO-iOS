@@ -8,7 +8,7 @@
 import Foundation
 
 protocol QuestsInterface {
-    func fetchProgressingQuests(userID: Int) async throws -> ProgressingQuestsEntity
+    func fetchProgressingQuests() async throws -> ProgressingQuestsEntity
     func getQuestInfo(questID: Int) async throws -> QuestInfoEntity
     func fetchQuestAnswer(questID: Int) async throws -> QuestAnswerEntity
     func fetchQuestTips(questID: Int) async throws -> QuestTipDataEntity

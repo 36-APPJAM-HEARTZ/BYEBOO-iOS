@@ -20,7 +20,7 @@ struct DefaultQuestRepository: QuestsInterface {
         self.userDefaultsService = userDefaultsService
     }
     
-    func fetchProgressingQuests(userID: Int) async throws -> ProgressingQuestsEntity {
+    func fetchProgressingQuests() async throws -> ProgressingQuestsEntity {
         let result = try await network.request(
             QuestAPI.progressingQuests,
             decodingType: ProgressingQuestsResponseDTO.self
@@ -131,7 +131,7 @@ struct DefaultQuestRepository: QuestsInterface {
 }
 
 struct MockQuestsRepository: QuestsInterface {
-    func fetchProgressingQuests(userID: Int) async throws -> ProgressingQuestsEntity {
+    func fetchProgressingQuests() async throws -> ProgressingQuestsEntity {
         return .stub()
     }
     

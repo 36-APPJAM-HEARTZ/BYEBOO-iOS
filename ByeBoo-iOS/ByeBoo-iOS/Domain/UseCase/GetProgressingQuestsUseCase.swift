@@ -6,7 +6,7 @@
 //
 
 protocol GetProgressingQuestsUseCase {
-    func execute(userID: Int) async throws -> ProgressingQuestsEntity
+    func execute() async throws -> ProgressingQuestsEntity
 }
 
 struct DefaultGetProgressingQuestsUseCase: GetProgressingQuestsUseCase {
@@ -17,20 +17,7 @@ struct DefaultGetProgressingQuestsUseCase: GetProgressingQuestsUseCase {
         self.repository = repository
     }
     
-    func execute(userID: Int) async throws -> ProgressingQuestsEntity {
-        return try await repository.fetchProgressingQuests(userID: userID)
+    func execute() async throws -> ProgressingQuestsEntity {
+        return try await repository.fetchProgressingQuests()
     }
 }
-//
-//final class MockGetProgressingQuestsUseCase: GetProgressingQuestsUseCase {
-//    
-//    private var called: Int = 0
-//    
-//    func execute(userID: Int) async throws -> ProgressingQuestsEntity {
-//        if called == 0 {
-//            called += 1
-//            throw ByeBooError.beforeJourney
-//        }
-//        return .stub()
-//    }
-//}

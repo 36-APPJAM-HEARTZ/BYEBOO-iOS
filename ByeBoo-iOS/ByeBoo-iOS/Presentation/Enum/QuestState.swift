@@ -9,11 +9,11 @@ import UIKit
 
 enum QuestState {
     
-    case completed, ongoing, locked
+    case completed, ongoing, upComing(String), locked
     
     var backgroundColor: UIColor {
         switch self {
-        case .completed, .locked:
+        case .completed, .upComing, .locked:
             return .white10
         case .ongoing:
             return .primary30020
@@ -26,6 +26,8 @@ enum QuestState {
             return .white50
         case .ongoing:
             return .primary300
+        case .upComing:
+            return .secondary300
         case .locked:
             return .white10
         }
@@ -37,12 +39,14 @@ enum QuestState {
             return UIColor.primary300.cgColor
         case .completed, .locked:
             return UIColor.clear.cgColor
+        case .upComing:
+            return UIColor.secondary300.cgColor
         }
     }
     
     var strokeWidth: CGFloat {
         switch self {
-        case .ongoing:
+        case .ongoing, .upComing:
             return 1
         case .completed, .locked:
             return 0
@@ -55,8 +59,35 @@ enum QuestState {
             return .boriStamp
         case .ongoing:
             return .travel
-        case .locked:
+        case .locked, .upComing:
             return .lock.withRenderingMode(.alwaysTemplate)
+        }
+    }
+    
+    var tintColor: UIColor {
+        switch self {
+        case .upComing, .locked:
+            return .white10
+        case .completed, .ongoing:
+            return .clear
+        }
+    }
+    
+    var isHiddenTimer: Bool {
+        switch self {
+        case .upComing:
+            return false
+        case .completed, .ongoing, .locked:
+            return true
+        }
+    }
+    
+    var timerText: String? {
+        switch self {
+        case .upComing(let time):
+            return time
+        case .completed, .ongoing, .locked:
+            return nil
         }
     }
 }
