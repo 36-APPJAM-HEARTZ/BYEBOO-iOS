@@ -73,15 +73,9 @@ final class QuestsViewModel {
     }
     
     private func fetchProgressingQuests() {
-        guard let userID = getUserIDUseCase.execute() else {
-            loadingSubject.send(false)
-            questsSubject.send(.success(.stub()))
-            return
-        }
-        
         Task {
             do {
-                let questsEntity = try await progressingQuestsUseCase.execute(userID: userID)
+                let questsEntity = try await progressingQuestsUseCase.execute()
                 self.questsEntity = questsEntity
                 self.setQuestTimer()
                 questsSubject.send(.success(questsEntity))
