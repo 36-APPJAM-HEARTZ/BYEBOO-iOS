@@ -203,7 +203,9 @@ extension QuestsViewModel: ViewModelType {
             fetchUserJourney()
             fetchProgressingQuests()
         case .questOpen:
-            fetchProgressingQuests()
+            if isQuestLocked {
+                fetchProgressingQuests()
+            }
         }
     }
 }
