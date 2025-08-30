@@ -48,9 +48,8 @@ extension ModifyNicknameViewModel {
     private func modifyUserName(name: String) {
         Task {
             do {
-                throw ByeBooError.networkConnect
-//                let name = try await useCase.execute(name: name)
-//                userNameSubject.send(.success(name))
+                let name = try await useCase.execute(name: name)
+                userNameSubject.send(.success(name))
             } catch {
                 userNameSubject.send(.failure(error as! ByeBooError))
             }
