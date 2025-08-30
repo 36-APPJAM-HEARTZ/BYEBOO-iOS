@@ -70,7 +70,7 @@ extension NewJourneySelectViewController: BackNavigable {
     }
 }
 
-extension NewJourneySelectViewController: selectUnCompletedJourneyProtocol {
+extension NewJourneySelectViewController: SelectUnCompletedJourneyProtocol {
     func addGesture() {
         guard let journeyStack = rootView.unCompleteListView.journeyListView else { return }
 
