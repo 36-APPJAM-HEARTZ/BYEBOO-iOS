@@ -65,6 +65,51 @@ final class InformationViewController: BaseViewController {
             for: .touchUpInside
         )
     }
+}
+
+extension InformationViewController {
+    
+    @objc
+    private func nextButtonDidTap() {
+        switch informationBaseView.informationView {
+        case is InputNicknameView: saveNickname()
+        case is SelectEmotionView: saveEmotion()
+        case is SelectQuestView: saveQuest()
+        default: break
+        }
+    }
+    
+    private func saveNickname() {
+        if let nickname = inputNicknameView.nicknameTextField.nicknameField.text,
+           !nickname.isEmpty {
+            viewModel.action(.nicknameButtonDidTap(nickname))
+        }
+        move(view: selectEmotionView, progress: .second)
+    }
+    
+    private func saveEmotion() {
+        let emotionCards = selectEmotionView.emotionCardsView.emotionCards
+        for (index, emotionCard) in emotionCards.enumerated() where emotionCard.isSelected {
+            if Feeling.allCases.indices.contains(index) {
+                let feeling = Feeling.allCases[index]
+                viewModel.action(.feelingButtonDidTap(feeling))
+            }
+        }
+        move(view: selectQuestView, progress: .third)
+    }
+    
+    private func saveQuest() {
+        let questCards = selectQuestView.questCardsView.questCards
+        for (index, questCard) in questCards.enumerated() where questCard.isSelected {
+            if SelectQuestType.allCases.indices.contains(index) {
+                let quest = SelectQuestType.allCases[index]
+                viewModel.action(.questButtonDidTap(quest))
+            }
+        }
+    }
+}
+
+extension InformationViewController: ToastPresentable, ToastErrorHandler {
     
     private func bind() {
         viewModel.output.userInformationPublisher
@@ -73,7 +118,7 @@ final class InformationViewController: BaseViewController {
                 case .success:
                     self?.bindName()
                 case .failure(let error):
-                    ByeBooLogger.error(error)
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)
@@ -123,48 +168,6 @@ extension InformationViewController: BackNavigable {
             move(view: selectEmotionView, progress: .second)
         default:
             break
-        }
-    }
-}
-
-extension InformationViewController {
-    
-    @objc
-    private func nextButtonDidTap() {
-        switch informationBaseView.informationView {
-        case is InputNicknameView: saveNickname()
-        case is SelectEmotionView: saveEmotion()
-        case is SelectQuestView: saveQuest()
-        default: break
-        }
-    }
-    
-    private func saveNickname() {
-        if let nickname = inputNicknameView.nicknameTextField.nicknameField.text,
-           !nickname.isEmpty {
-            viewModel.action(.nicknameButtonDidTap(nickname))
-        }
-        move(view: selectEmotionView, progress: .second)
-    }
-    
-    private func saveEmotion() {
-        let emotionCards = selectEmotionView.emotionCardsView.emotionCards
-        for (index, emotionCard) in emotionCards.enumerated() where emotionCard.isSelected {
-            if Feeling.allCases.indices.contains(index) {
-                let feeling = Feeling.allCases[index]
-                viewModel.action(.feelingButtonDidTap(feeling))
-            }
-        }
-        move(view: selectQuestView, progress: .third)
-    }
-    
-    private func saveQuest() {
-        let questCards = selectQuestView.questCardsView.questCards
-        for (index, questCard) in questCards.enumerated() where questCard.isSelected {
-            if SelectQuestType.allCases.indices.contains(index) {
-                let quest = SelectQuestType.allCases[index]
-                viewModel.action(.questButtonDidTap(quest))
-            }
         }
     }
 }

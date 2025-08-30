@@ -59,13 +59,6 @@ extension ModifyNicknameViewController {
     }
 }
 
-extension ModifyNicknameViewController: BackNavigable {
-    
-    func back() {
-        self.navigationController?.popViewController(animated: false)
-    }
-}
-
 extension ModifyNicknameViewController: ToastPresentable, ToastErrorHandler {
     
     private func bind() {
@@ -84,5 +77,12 @@ extension ModifyNicknameViewController: ToastPresentable, ToastErrorHandler {
     func updateName(_ name: String?) {
         guard let name = name else { return }
         rootView.configure(name)
+    }
+}
+
+extension ModifyNicknameViewController: BackNavigable {
+    
+    func back() {
+        self.navigationController?.popViewController(animated: false)
     }
 }

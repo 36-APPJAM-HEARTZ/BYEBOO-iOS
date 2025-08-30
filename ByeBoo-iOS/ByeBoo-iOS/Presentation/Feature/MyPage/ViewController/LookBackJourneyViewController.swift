@@ -43,6 +43,9 @@ final class LookBackJourneyViewController: BaseViewController {
         
         bind()
     }
+}
+
+extension LookBackJourneyViewController: ToastPresentable, ToastErrorHandler {
     
     private func bind() {
         viewModel.output.lookBackJourneyPublisher
@@ -52,7 +55,7 @@ final class LookBackJourneyViewController: BaseViewController {
                 case .success(let entity):
                     self?.rootView.bind(with: entity)
                 case .failure(let error):
-                    ByeBooLogger.debug(error)
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)

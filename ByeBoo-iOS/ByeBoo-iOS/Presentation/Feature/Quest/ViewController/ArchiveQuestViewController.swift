@@ -61,7 +61,7 @@ final class ArchiveQuestViewController: BaseViewController {
     }
 }
 
-extension ArchiveQuestViewController {
+extension ArchiveQuestViewController: ToastPresentable, ToastErrorHandler {
     func bind() {
         viewModel.output.resultPublisher
             .receive(on: DispatchQueue.main)
@@ -70,7 +70,7 @@ extension ArchiveQuestViewController {
                 case .success(let entity):
                     self?.rootView.updateUI(entity)
                 case .failure(let error):
-                    ByeBooLogger.debug(error)
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)

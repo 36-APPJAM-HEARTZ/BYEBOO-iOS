@@ -64,6 +64,9 @@ final class QuestCheckViewController: BaseViewController {
             $0.backgroundColor = .grayscale900
         }
     }
+}
+
+extension QuestCheckViewController: ToastPresentable, ToastErrorHandler {
     
     func bind() {
         cancellable.forEach { $0.cancel() }
@@ -87,6 +90,8 @@ final class QuestCheckViewController: BaseViewController {
                 self?.updateQuestMainUI(name: name, journey: journey, quests: quests)
             case (.success(_), .success(_), .failure(_)):
                 self?.coordinator?.moveQuestStart()
+            case (_, .failure(let error), _), (_, _, .failure(let error)):
+                self?.handleError(error)
             default:
                 ByeBooLogger.error(ByeBooError.unknownError)
             }
@@ -127,6 +132,9 @@ final class QuestCheckViewController: BaseViewController {
             }
             .store(in: &cancellable)
     }
+}
+
+extension QuestCheckViewController {
     
     private func updateQuestMainUI(
         name: String,

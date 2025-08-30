@@ -51,6 +51,17 @@ final class QuestTipViewController: BaseViewController {
     private func setAction() {
         rootView.closeButton.addTarget(self, action: #selector(closeButtonDidTap), for: .touchUpInside)
     }
+}
+
+extension QuestTipViewController {
+    
+    @objc
+    func closeButtonDidTap() {
+        self.dismiss(animated: true)
+    }
+}
+
+extension QuestTipViewController: ToastPresentable, ToastErrorHandler {
     
     private func bind() {
         viewModel.output.questTipPublisher
@@ -60,17 +71,9 @@ final class QuestTipViewController: BaseViewController {
                 case .success(let entity):
                     self?.rootView.bind(with: entity)
                 case .failure(let error):
-                    ByeBooLogger.debug(error)
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)
-    }
-}
-
-extension QuestTipViewController {
-    
-    @objc
-    func closeButtonDidTap() {
-        self.dismiss(animated: true)
     }
 }

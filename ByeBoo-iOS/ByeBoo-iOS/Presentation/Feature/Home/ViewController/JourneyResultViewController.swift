@@ -50,6 +50,9 @@ extension JourneyResultViewController {
         navigationController?.pushViewController(viewController, animated: false)
     }
     
+}
+
+extension JourneyResultViewController: ToastPresentable, ToastErrorHandler {
     private func bind() {
         viewModel.output.journeyResult
             .receive(on: DispatchQueue.main)
@@ -60,8 +63,8 @@ extension JourneyResultViewController {
                         journeyType: JourneyType.titleToEnum(journey.title) ?? .face,
                         journeyDescription: journey.description ?? ""
                     )
-                case .failure(let failure):
-                    ByeBooLogger.error(failure)
+                case .failure(let error):
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)
