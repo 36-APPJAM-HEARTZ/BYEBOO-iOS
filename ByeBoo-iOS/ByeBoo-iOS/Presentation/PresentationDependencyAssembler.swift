@@ -115,7 +115,6 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: QuestsViewModel.self) { container in
             guard let progressingQuestsUseCase = container.resolve(type: GetProgressingQuestsUseCase.self),
-                  let getUserIDUseCase = container.resolve(type: GetUserIDUseCase.self),
                   let calculateRemainingTimeUseCase = container.resolve(type: CalculateRemainingTimeUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -123,7 +122,6 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             
             return QuestsViewModel(
                 progressingQuestsUseCase: progressingQuestsUseCase,
-                getUserIDUseCase: getUserIDUseCase,
                 getUserNameUseCase: getUserNameUseCase,
                 fetchUserJourneyUseCase: fetchUserJourneyUseCase,
                 calculateRemainingTimeUseCase: calculateRemainingTimeUseCase

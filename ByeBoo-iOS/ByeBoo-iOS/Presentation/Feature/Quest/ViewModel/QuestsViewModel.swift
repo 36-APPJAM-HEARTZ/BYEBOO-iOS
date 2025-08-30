@@ -20,7 +20,6 @@ final class QuestsViewModel {
     private(set) var output: Output
     
     private let progressingQuestsUseCase: GetProgressingQuestsUseCase
-    private let getUserIDUseCase: GetUserIDUseCase
     private let getUserNameUseCase: GetUserNameUseCase
     private let fetchUserJourneyUseCase: FetchUserJourneyUseCase
     private let calculateRemainingTimeUseCase: CalculateRemainingTimeUseCase
@@ -30,13 +29,11 @@ final class QuestsViewModel {
     
     init(
         progressingQuestsUseCase: GetProgressingQuestsUseCase,
-        getUserIDUseCase: GetUserIDUseCase,
         getUserNameUseCase: GetUserNameUseCase,
         fetchUserJourneyUseCase: FetchUserJourneyUseCase,
         calculateRemainingTimeUseCase: CalculateRemainingTimeUseCase
     ) {
         self.progressingQuestsUseCase = progressingQuestsUseCase
-        self.getUserIDUseCase = getUserIDUseCase
         self.getUserNameUseCase = getUserNameUseCase
         self.fetchUserJourneyUseCase = fetchUserJourneyUseCase
         self.calculateRemainingTimeUseCase = calculateRemainingTimeUseCase
