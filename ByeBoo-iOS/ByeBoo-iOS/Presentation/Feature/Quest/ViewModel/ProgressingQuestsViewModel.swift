@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-final class QuestsViewModel {
+final class ProgressingQuestsViewModel {
     
     private let cancellables = Set<AnyCancellable>()
     private let nameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>.init()
@@ -127,7 +127,7 @@ final class QuestsViewModel {
     }
 }
 
-extension QuestsViewModel {
+extension ProgressingQuestsViewModel {
     
     var steps: [StepEntity] { questsEntity?.steps ?? [] }
     var currentStep: Int { questsEntity?.currentStep ?? 0 }
@@ -180,7 +180,7 @@ extension QuestsViewModel {
     }
 }
 
-extension QuestsViewModel: ViewModelType {
+extension ProgressingQuestsViewModel: ViewModelType {
     
     enum Input {
         case questViewWillAppear

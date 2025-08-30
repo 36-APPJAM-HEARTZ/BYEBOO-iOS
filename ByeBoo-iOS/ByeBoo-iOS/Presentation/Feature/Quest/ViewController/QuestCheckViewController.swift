@@ -15,11 +15,11 @@ final class QuestCheckViewController: BaseViewController {
     private static let lastStep = 5
     
     private let questsCheckView = QuestsCheckView()
-    private let viewModel: QuestsViewModel
+    private let viewModel: ProgressingQuestsViewModel
     var coordinator: QuestCheckCoordinating?
     private var cancellable = Set<AnyCancellable>()
     
-    init(viewModel: QuestsViewModel) {
+    init(viewModel: ProgressingQuestsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
         self.coordinator = QuestCheckCoordinator(rootViewController: self)
