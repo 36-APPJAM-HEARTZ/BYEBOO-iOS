@@ -192,6 +192,9 @@ final class DefaultNetworkService: NSObject, NetworkService {
             error = ByeBooError.notFoundQuest
         } else if statusCode == 400 {
             error = ByeBooError.beforeJourney
+        } else if statusCode == 408 || (500...599) ~= statusCode {
+            // 408 : 요청이 제한 시간 내에 완료되지 않음
+            error = ByeBooError.networkConnect
         } else {
             error = ByeBooError.networkError(
                 code: statusCode,
