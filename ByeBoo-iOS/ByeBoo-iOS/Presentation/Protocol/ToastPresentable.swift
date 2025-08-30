@@ -21,6 +21,10 @@ extension ToastPresentable where Self: BaseViewController {
         
         setUI(toastMessageView)
         setLayout(toastMessageView)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.removeUI(toastMessageView)
+        }
     }
     
     private func setUI(_ view: ToastMessageView) {
@@ -31,6 +35,13 @@ extension ToastPresentable where Self: BaseViewController {
         view.snp.makeConstraints {
             $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().inset(104.adjustedH)
+        }
+    }
+    
+    private func removeUI(_ view: ToastMessageView) {
+        view.do {
+            $0.removeFromSuperview()
+            $0.snp.removeConstraints()
         }
     }
 }
