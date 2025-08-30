@@ -72,8 +72,8 @@ final class InformationViewController: BaseViewController {
                 switch result {
                 case .success:
                     self?.bindName()
-                case .failure:
-                    break
+                case .failure(let error):
+                    ByeBooLogger.error(error)
                 }
             }
             .store(in: &cancellables)
