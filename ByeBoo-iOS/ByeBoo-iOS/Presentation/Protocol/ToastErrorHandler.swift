@@ -5,11 +5,11 @@
 //  Created by APPLE on 8/30/25.
 //
 
-protocol ErrorHandler: AnyObject {
+protocol ToastErrorHandler: AnyObject {
     func handleError(_ error: ByeBooError)
 }
 
-extension ErrorHandler where Self: BaseViewController & ToastPresentable {
+extension ToastErrorHandler where Self: BaseViewController & ToastPresentable {
     
     func handleError(_ error: ByeBooError) {
         switch error {

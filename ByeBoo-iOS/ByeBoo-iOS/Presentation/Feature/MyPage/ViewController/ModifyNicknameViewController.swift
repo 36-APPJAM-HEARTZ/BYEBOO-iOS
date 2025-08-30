@@ -66,7 +66,7 @@ extension ModifyNicknameViewController: BackNavigable {
     }
 }
 
-extension ModifyNicknameViewController: ToastPresentable, ErrorHandler {
+extension ModifyNicknameViewController: ToastPresentable, ToastErrorHandler {
     
     private func bind() {
         viewModel.output.nameResult
