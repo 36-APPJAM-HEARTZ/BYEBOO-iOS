@@ -50,7 +50,7 @@ final class QuestsViewModel {
         )
     }
     
-    private func getUseName() {
+    private func getUserName() {
         let name = getUserNameUseCase.execute()
         nameSubject.send(.success(name))
     }
@@ -202,7 +202,7 @@ extension QuestsViewModel: ViewModelType {
         switch trigger {
         case .questViewWillAppear:
             loadingSubject.send(true)
-            getUseName()
+            getUserName()
             fetchUserJourney()
             fetchProgressingQuests()
         case .questOpen:
