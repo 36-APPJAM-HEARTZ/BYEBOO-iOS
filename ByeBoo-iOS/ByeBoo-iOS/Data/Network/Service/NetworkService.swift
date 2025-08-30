@@ -192,6 +192,8 @@ final class DefaultNetworkService: NSObject, NetworkService {
             error = ByeBooError.notFoundQuest
         } else if statusCode == 400 {
             error = ByeBooError.beforeJourney
+        } else if statusCode == 408 || (500...599) ~= statusCode {
+            error = ByeBooError.networkConnect
         } else {
             error = ByeBooError.networkError(
                 code: statusCode,

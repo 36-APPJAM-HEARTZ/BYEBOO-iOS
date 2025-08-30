@@ -38,20 +38,7 @@ final class ModifyNicknameViewController: BaseViewController {
             action: #selector(back)
         )
         
-        sink()
-    }
-    
-    private func sink() {
-        viewModel.output.nameResult
-            .receive(on: DispatchQueue.main)
-            .sink { result in
-            switch result {
-            case .success:
-                self.back()
-            case .failure:
-                break
-            }
-        }.store(in: &cancellables)
+        bind()
     }
     
     override func setAddTarget() {
@@ -72,17 +59,30 @@ extension ModifyNicknameViewController {
     }
 }
 
-extension ModifyNicknameViewController: BackNavigable {
+extension ModifyNicknameViewController: ToastPresentable, ToastErrorHandler {
     
-    func back() {
-        self.navigationController?.popViewController(animated: false)
+    private func bind() {
+        viewModel.output.nameResult
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+            switch result {
+            case .success:
+                self.back()
+            case .failure(let error):
+                self.handleError(error)
+            }
+        }.store(in: &cancellables)
     }
-}
-
-extension ModifyNicknameViewController {
     
     func updateName(_ name: String?) {
         guard let name = name else { return }
         rootView.configure(name)
+    }
+}
+
+extension ModifyNicknameViewController: BackNavigable {
+    
+    func back() {
+        self.navigationController?.popViewController(animated: false)
     }
 }

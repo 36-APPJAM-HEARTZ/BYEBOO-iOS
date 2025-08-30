@@ -12,6 +12,7 @@ enum ByeBooError: Error, LocalizedError {
     case decodingError
     case URLError
     case networkRequestFailed
+    case networkConnect
     case networkError(code: Int, message: String)
     case navigationControllerMissing
     case noData
@@ -34,6 +35,8 @@ enum ByeBooError: Error, LocalizedError {
             return "URL 변환 실패"
         case .networkRequestFailed:
             return "네트워크 요청 실패"
+        case .networkConnect:
+            return "네트워크 연결 에러"
         case .networkError(let code, let message):
             return "\(code): \(message)"
         case .navigationControllerMissing:

@@ -154,8 +154,11 @@ extension WriteActiveTypeQuestViewController {
         viewController.modalPresentationStyle = .fullScreen
         self.present(viewController, animated: false)
     }
+}
+
+extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandler {
     
-    private func bind() {   
+    private func bind() {
         viewModel.output.questInfoResultPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
@@ -168,8 +171,8 @@ extension WriteActiveTypeQuestViewController {
                         questStyle: quest.questStyle,
                         question: quest.question
                     )
-                case .failure(let failure):
-                    ByeBooLogger.error(failure)
+                case .failure(let error):
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)
@@ -191,8 +194,8 @@ extension WriteActiveTypeQuestViewController {
                     )
                     self?.bottomSheetViewController.dismiss(animated: true)
                     self?.navigationController?.pushViewController(viewController, animated: true)
-                case .failure(let failure):
-                    ByeBooLogger.error(failure)
+                case .failure(let error):
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)

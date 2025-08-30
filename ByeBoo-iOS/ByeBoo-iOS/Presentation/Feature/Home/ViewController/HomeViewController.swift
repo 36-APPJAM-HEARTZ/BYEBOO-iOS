@@ -73,7 +73,7 @@ extension HomeViewController {
     }
 }
 
-extension HomeViewController {
+extension HomeViewController: ToastPresentable, ToastErrorHandler {
     private func bind() {
         viewModel.output.characterResult
             .receive(on: DispatchQueue.main)
@@ -81,8 +81,8 @@ extension HomeViewController {
                 switch result {
                 case .success(let text):
                     self?.rootView.updateOnboardingText(text)
-                case .failure(let failure):
-                    ByeBooLogger.error(failure)
+                case .failure(let error):
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)
@@ -110,8 +110,9 @@ extension HomeViewController {
                 case let (_, .success(journey), .failure(.notFoundQuest)):
                     self?.rootView.updateState(.beforeJourneyStart, journey.title)
                     self?.state = .beforeJourneyStart
-                default:
-                    ByeBooLogger.error(ByeBooError.unknownError)
+                    
+                case (_, .failure(let error), _), (_, _, .failure(let error)):
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)
