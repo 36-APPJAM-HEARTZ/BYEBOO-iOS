@@ -85,6 +85,8 @@ final class ProgressingQuestsViewModel {
     }
     
     private func setQuestTimer() {
+        if !isQuestLocked { return }
+        
         var remainingSeconds = calculateRemainingTimeUseCase.calculateRemainingTime(
             questOpenTime: questsEntity?.questOpenTime,
             currentTime: questsEntity?.currentTime
@@ -203,9 +205,7 @@ extension ProgressingQuestsViewModel: ViewModelType {
             fetchUserJourney()
             fetchProgressingQuests()
         case .questOpen:
-            if isQuestLocked {
-                fetchProgressingQuests()
-            }
+            fetchProgressingQuests()
         }
     }
 }
