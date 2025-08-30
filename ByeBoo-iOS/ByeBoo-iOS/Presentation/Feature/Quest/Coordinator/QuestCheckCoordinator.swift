@@ -23,8 +23,7 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     
     func moveArchive(quest: QuestEntity?) {
         let archiveQuestViewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
-        // TODO: questType 머지하고 고치기
-        archiveQuestViewController.configure(questID: quest?.questId ?? 1, questType: .activation)
+        archiveQuestViewController.configure(questID: quest?.questId ?? 1, questType: quest?.questStyle ?? .activation)
         rootViewController?.tabBarController?.tabBar.isHidden = true
         rootViewController?.navigationController?.pushViewController(archiveQuestViewController, animated: false)
     }
@@ -55,22 +54,18 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     
     func moveQuestTip(quest: QuestEntity?) {
         let questTipViewController = ViewControllerFactory.shared.makeQuestTipViewController()
-        // TODO: questType 머지받고 수정
-        questTipViewController.configure(questID: quest?.questId ?? 1, questType: .activation)
+        questTipViewController.configure(questID: quest?.questId ?? 1, questType: quest?.questStyle ?? .activation)
         questTipViewController.modalPresentationStyle = .fullScreen
         let topViewController = UIApplication.shared.topViewController()
         topViewController?.present(questTipViewController, animated: false)
     }
     
     func moveWriteQuest(quest: QuestEntity) {
-        // TODO: Presentation레이어에서 key 빼기
-        if quest.questStyle == JourneyStyle.recording.key {
-            // TODO: questType 머지하고 변경
-            moveToWriteQuestion(questID: quest.questId, questNumber: quest.questNumber, questType: .activation)
-            return
+        if quest.questStyle == .question {
+            moveToWriteQuestion(questID: quest.questId)
+        } else {
+            moveToWriteActivity(questID: quest.questId)
         }
-        // TODO: questType 머지하고 변경
-        moveToWriteActivity(questID: quest.questId, questType: .activation)
     }
     
     private func moveToWriteQuestion(questID: Int, questNumber: Int, questType: QuestType) {

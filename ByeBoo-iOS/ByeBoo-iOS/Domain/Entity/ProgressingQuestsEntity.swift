@@ -10,6 +10,8 @@ import Foundation
 struct ProgressingQuestsEntity {
     let progressPeriod: Int
     let currentStep: Int
+    let questOpenTime: Date?
+    let currentTime: Date?
     let steps: [StepEntity]
 }
 
@@ -22,17 +24,39 @@ struct StepEntity {
 struct QuestEntity {
     let questId: Int
     let question: String
-    let questStyle: String
+    let questStyle: QuestType
     let questNumber: Int
 }
 
 extension ProgressingQuestsEntity {
     
+    private static var flag = false
+    
     static func stub() -> Self {
+        if flag {
+            return questOpenStub()
+        }
+        flag = true
+        return questLockedStub()
+    }
+    
+    private static func questLockedStub() -> Self {
         return .init(
-            progressPeriod: 1,
-            currentStep: 1,
-            steps: (1...5).map { StepEntity.stub(stepNumber: $0) }
+            progressPeriod: 2,
+            currentStep: 2,
+            questOpenTime: ServerDateFormatter.shared.formatDate(string: "2025-08-29T14:37:31.626055"),
+            currentTime: ServerDateFormatter.shared.formatDate(string: "2025-08-29T14:37:28.626055"),
+            steps: [StepEntity.stub(stepNumber: 1)]
+        )
+    }
+    
+    private static func questOpenStub() -> Self {
+        return .init(
+            progressPeriod: 2,
+            currentStep: 2,
+            questOpenTime: nil,
+            currentTime: nil,
+            steps: [StepEntity.stub(stepNumber: 1)]
         )
     }
 }
@@ -40,11 +64,14 @@ extension ProgressingQuestsEntity {
 extension StepEntity {
     
     static func stub(stepNumber: Int) -> Self {
+        var number = 0
         return .init(
             stepNumber: stepNumber,
             step: stepName(for: stepNumber),
             quests: (1...6).map { _ in
-                QuestEntity.stub(index: (stepNumber))
+                let questEntity = QuestEntity.stub(index: (number))
+                number += 1
+                return questEntity
             }
         )
     }
@@ -67,7 +94,7 @@ extension QuestEntity {
         return .init(
             questId: 30 + index,
             question: "무슨 일이 있었나요?",
-            questStyle: "RECORDING",
+            questStyle: .question,
             questNumber: index
         )
     }

@@ -20,7 +20,7 @@ struct DefaultQuestRepository: QuestsInterface {
         self.userDefaultsService = userDefaultsService
     }
     
-    func fetchProgressingQuests(userID: Int) async throws -> ProgressingQuestsEntity {
+    func fetchProgressingQuests() async throws -> ProgressingQuestsEntity {
         let result = try await network.request(
             QuestAPI.progressingQuests,
             decodingType: ProgressingQuestsResponseDTO.self
@@ -86,13 +86,12 @@ struct DefaultQuestRepository: QuestsInterface {
         return result.toEntity()
     }
     
-    func postNewJourney(journey: String) async throws {
-        let journeyEnum = JourneyType.toServerKey(journey)
-        ByeBooLogger.debug(journeyEnum)
+    func postNewJourney(journey: JourneyType) async throws {
+        ByeBooLogger.debug(journey)
         // TODO: 로그인 붙인 후 주석 해제
-//        let _ = try await network.request(
-//            QuestAPI.postJourney(journey: journeyEnum)
-//        )
+        let _ = try await network.request(
+            QuestAPI.postJourney(journey: journey)
+        )
     }
     
     // MARK: private function
@@ -131,7 +130,7 @@ struct DefaultQuestRepository: QuestsInterface {
 }
 
 struct MockQuestsRepository: QuestsInterface {
-    func fetchProgressingQuests(userID: Int) async throws -> ProgressingQuestsEntity {
+    func fetchProgressingQuests() async throws -> ProgressingQuestsEntity {
         return .stub()
     }
     
@@ -163,7 +162,7 @@ struct MockQuestsRepository: QuestsInterface {
         return .stub()
     }
     
-    func postNewJourney(journey: String) async throws {
+    func postNewJourney(journey: JourneyType) async throws {
         
     }
 }

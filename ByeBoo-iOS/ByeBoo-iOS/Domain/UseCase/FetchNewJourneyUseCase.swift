@@ -6,7 +6,7 @@
 //
 
 protocol FetchNewJourneyUseCase {
-    func execute(journey: String) async throws
+    func execute(journey: JourneyType) async throws
 }
 
 struct DefaultFetchNewJourneyUseCase: FetchNewJourneyUseCase {
@@ -16,7 +16,7 @@ struct DefaultFetchNewJourneyUseCase: FetchNewJourneyUseCase {
         self.fetchNewJourneyRepository = fetchNewJourneyRepository
     }
     
-    func execute(journey: String) async throws {
+    func execute(journey: JourneyType) async throws {
         try await fetchNewJourneyRepository.postNewJourney(journey: journey)
     }
 }

@@ -18,7 +18,7 @@ enum QuestAPI {
     case answer(questID: Int)
     case progressingQuests
     case journey
-    case postJourney(journey: String)
+    case postJourney(journey: JourneyType)
 }
 
 extension QuestAPI: EndPoint {
@@ -46,7 +46,7 @@ extension QuestAPI: EndPoint {
         case .journey:
             return "/journey"
         case .postJourney(let journey):
-            return "/journey=\(journey)"
+            return "/journey=\(journey.key)"
         }
     }
     

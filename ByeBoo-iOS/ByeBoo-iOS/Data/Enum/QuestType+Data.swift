@@ -1,17 +1,19 @@
 //
-//  JourneyType+Data.swift
+//  QuestType+Data.swift
 //  ByeBoo-iOS
 //
-//  Created by 이나연 on 8/24/25.
+//  Created by 최주리 on 8/29/25.
 //
 
-extension JourneyType {
+import Foundation
+
+extension QuestType {
     var key: String {
         switch self {
-        case .face:
-            "FACE_EMOTION"
-        case .process:
-            "PROCESS_EMOTION"
+        case .question:
+            "RECORDING"
+        case .activation:
+            "ACTIVE"
         }
     }
     

@@ -16,7 +16,7 @@ final class InformationViewModel {
     
     private var currentNickname: String?
     private var currentFeeling: Feeling?
-    private var currentQuestStyle: JourneyStyle?
+    private var currentQuestStyle: SelectQuestType?
     private var user: UserEntity = UserEntity(id: 1, name: "")
     
     private let sendUserUseCase: SendUserUseCase
@@ -38,7 +38,7 @@ final class InformationViewModel {
     private func createUserInformation(
         nickname: String?,
         feeling: Feeling?,
-        questStyle: JourneyStyle?
+        questStyle: SelectQuestType?
     ) {
         guard let name = currentNickname,
               let feeling = currentFeeling,
@@ -69,7 +69,7 @@ extension InformationViewModel: ViewModelType {
     enum Input {
         case nicknameButtonDidTap(String)
         case feelingButtonDidTap(Feeling)
-        case questButtonDidTap(JourneyStyle)
+        case questButtonDidTap(SelectQuestType)
     }
     
     struct Output {
