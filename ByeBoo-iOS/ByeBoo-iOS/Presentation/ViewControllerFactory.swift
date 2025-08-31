@@ -41,7 +41,7 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
     }
     
     func makeQuestViewController() -> QuestCheckViewController {
-        guard let viewModel = DIContainer.shared.resolve(type: QuestsViewModel.self) else {
+        guard let viewModel = DIContainer.shared.resolve(type: ProgressingQuestsViewModel.self) else {
             DIErrorHandle()
             fatalError()
         }
