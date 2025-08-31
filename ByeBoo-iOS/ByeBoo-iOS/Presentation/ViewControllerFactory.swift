@@ -24,6 +24,7 @@ protocol ViewControllerFactoryProtocol {
     func makeWriteActiveTypeQuestViewController() -> WriteActiveTypeQuestViewController
     func makeCompleteActiveTypeQuestViewController() -> CompleteActiveTypeQuestViewController
     func makeCompleteQuestionTypeQuestViewController() -> CompleteQuestionTypeQuestViewController
+    func makeFinishJourneyViewController() -> FinishJourneyViewController
 }
 
 final class ViewControllerFactory: ViewControllerFactoryProtocol {
@@ -156,6 +157,10 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
             fatalError()
         }
         return CompleteQuestionTypeQuestViewController(viewModel: viewModel)
+    }
+    
+    func makeFinishJourneyViewController() -> FinishJourneyViewController {
+        return FinishJourneyViewController()
     }
 }
 
