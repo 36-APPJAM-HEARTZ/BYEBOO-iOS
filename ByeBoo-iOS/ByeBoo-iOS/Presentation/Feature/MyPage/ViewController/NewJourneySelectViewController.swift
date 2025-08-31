@@ -56,6 +56,19 @@ final class NewJourneySelectViewController: BaseViewController {
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.output.postJourneyPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success:
+                    guard self?.tabBarController?.viewControllers?[safe: 1] != nil else { return }
+                    self?.navigationController?.tabBarController?.selectedIndex = 1
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
