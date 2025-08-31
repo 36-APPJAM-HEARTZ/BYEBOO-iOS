@@ -16,6 +16,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     
     private var questID: Int = 1
     private var questType: QuestType = .activation
+    private var questNumber: Int = 1
     
     private var answerText: String = ""
     private var emotionState: String = ""
@@ -248,8 +249,9 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
 }
 
 extension WriteActiveTypeQuestViewController {
-    func configure(questID: Int, questType: QuestType) {
+    func configure(_ questID: Int, _ questNumber: Int, _ questType: QuestType) {
         self.questID = questID
+        self.questNumber = questNumber
         self.questType = questType
     }
 }
