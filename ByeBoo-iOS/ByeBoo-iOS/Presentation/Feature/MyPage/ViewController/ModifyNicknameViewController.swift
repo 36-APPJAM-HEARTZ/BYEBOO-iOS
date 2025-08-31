@@ -39,6 +39,7 @@ final class ModifyNicknameViewController: BaseViewController {
         )
         
         bind()
+        focusTextField()
     }
     
     override func setAddTarget() {
@@ -47,6 +48,12 @@ final class ModifyNicknameViewController: BaseViewController {
             action: #selector(confirmButtonDidTap),
             for: .touchUpInside
         )
+    }
+    
+    private func focusTextField() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+            self.rootView.nicknameTextField.nicknameField.becomeFirstResponder()
+        }
     }
 }
 
