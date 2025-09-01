@@ -176,7 +176,7 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                 switch result {
                 case .success(()):
                     let viewController = ViewControllerFactory.shared.makeCompleteActiveTypeQuestViewController()
-                    viewController.configure(questID: self?.questID ?? 1)
+                    viewController.configure(questID: self?.questID ?? 1, questNumber: self?.questNumber ?? 1)
                     self?.bottomSheetViewController.dismiss(animated: true)
                     self?.navigationController?.pushViewController(viewController, animated: true)
                 case .failure(let error):

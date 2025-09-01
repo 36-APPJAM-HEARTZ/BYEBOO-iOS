@@ -100,7 +100,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: QuestStartViewModel.self) { container in
-            guard let startJourneyUseCase = container.resolve(type: StartJourneyUseCase.self)
+            guard let startJourneyUseCase = container.resolve(type: StartJourneyUseCase.self),
+                  let postNewJourneyUseCase = container.resolve(type: FetchNewJourneyUseCase.self)
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -109,7 +110,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             return QuestStartViewModel(
                 startJourneyUseCase: startJourneyUseCase,
                 getUserNameUseCase: getUserNameUseCase,
-                fetchJourneyUseCase: fetchUserJourneyUseCase
+                fetchJourneyUseCase: fetchUserJourneyUseCase,
+                postJourneyUseCase: postNewJourneyUseCase
             )
         }
         
@@ -165,8 +167,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             }
             
             return NewJourneyViewModel(
-                getNewJourneyUseCase: getNewJourneyUseCase,
-                postJourneyUseCase: postNewJourneyUseCase
+                getNewJourneyUseCase: getNewJourneyUseCase
             )
         }
         

@@ -29,7 +29,7 @@ final class QuestTipViewController: BaseViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -59,6 +59,14 @@ extension QuestTipViewController {
     }
 }
 
+extension QuestTipViewController {
+    func configure(questID: Int, questType: QuestType) {
+        self.questID = questID
+        self.questType = questType
+        rootView = QuestTipView(questType: questType)
+    }
+}
+
 extension QuestTipViewController: ToastPresentable, ToastErrorHandler {
     
     private func bind() {
@@ -67,7 +75,7 @@ extension QuestTipViewController: ToastPresentable, ToastErrorHandler {
             .sink { [weak self] result in
                 switch result {
                 case .success(let entity):
-                    self?.rootView.bind(with: entity)
+                    self?.rootView?.bind(with: entity)
                 case .failure(let error):
                     self?.handleError(error)
                 }

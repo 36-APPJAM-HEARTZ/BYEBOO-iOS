@@ -21,6 +21,12 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
         rootViewController?.present(viewController, animated: false)
     }
     
+    func moveFinishQuest() {
+        let viewController = ViewControllerFactory.shared.makeFinishJourneyViewController()
+        rootViewController?.hidesBottomBarWhenPushed = true
+        rootViewController?.navigationController?.pushViewController(viewController, animated: false)
+    }
+    
     func moveArchive(quest: QuestEntity?) {
         let archiveQuestViewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
         archiveQuestViewController.configure(questID: quest?.questId ?? 1, questType: quest?.questStyle ?? .activation)

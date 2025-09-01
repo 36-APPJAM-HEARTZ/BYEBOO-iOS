@@ -11,46 +11,37 @@ import Foundation
 final class NewJourneyViewModel {
     
     private var newJourneySubject: PassthroughSubject<Result<LookBackJourneyEntity, ByeBooError>, Never> = .init()
-    private var postJourneySubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     
     var output: Output {
         Output(
-            newJourneyPublisher: newJourneySubject.eraseToAnyPublisher(),
-            postJourneyPublisher: postJourneySubject.eraseToAnyPublisher()
+            newJourneyPublisher: newJourneySubject.eraseToAnyPublisher()
         )
     }
     
     private var cancellables = Set<AnyCancellable>()
     
     private let getNewJourneyUseCase: GetNewJourneyUseCase
-    private let postJourneyUseCase: FetchNewJourneyUseCase
     
     init(
-        getNewJourneyUseCase: GetNewJourneyUseCase,
-        postJourneyUseCase: FetchNewJourneyUseCase
+        getNewJourneyUseCase: GetNewJourneyUseCase
     ) {
         self.getNewJourneyUseCase = getNewJourneyUseCase
-        self.postJourneyUseCase = postJourneyUseCase
     }
 }
 
 extension NewJourneyViewModel {
     enum Input {
         case newJourneyDidLoad
-        case selectedJourneyDidTap(journey: String)
     }
     
     struct Output {
         let newJourneyPublisher: AnyPublisher<Result<LookBackJourneyEntity, ByeBooError>, Never>
-        let postJourneyPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
         switch trigger {
         case .newJourneyDidLoad:
             getNewJourneys()
-        case .selectedJourneyDidTap(let journey):
-            postNewJourneys(journey: journey)
         }
     }
 }
@@ -67,21 +58,6 @@ extension NewJourneyViewModel {
                 }
                 ByeBooLogger.error(error as ByeBooError)
                 newJourneySubject.send(.failure(error))
-            }
-        }
-    }
-    
-    private func postNewJourneys(journey: String) {
-        Task {
-            do {
-                let _ = try await postJourneyUseCase.execute(journey: JourneyType.titleToEnum(journey) ?? .face)
-                postJourneySubject.send(.success(()))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
-                ByeBooLogger.error(error as ByeBooError)
-                postJourneySubject.send(.failure((error)))
             }
         }
     }

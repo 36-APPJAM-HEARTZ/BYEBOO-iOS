@@ -14,7 +14,7 @@ final class QuestStartViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     private let rootView = QuestStartView()
     
-    var onStartedQuest: (() -> Void)?
+    private var journeyTitle: String = ""
     
     init(viewModel: QuestStartViewModel) {
         self.viewModel = viewModel
@@ -62,7 +62,7 @@ extension QuestStartViewController {
     
     @objc
     func questStartButtonDidTap() {
-        viewModel.action(.buttonDidTap)
+        viewModel.action(.buttonDidTap(journey: journeyTitle))
     }
 }
 
@@ -78,6 +78,8 @@ extension QuestStartViewController: ToastPresentable, ToastErrorHandler {
             switch (name, journey) {
             case let (.success(name), .success(journey)):
                 self?.rootView.updateDescription(nickname: name, journey: journey.title)
+            case let (.success(name), .failure):
+                self?.rootView.updateDescription(nickname: name, journey: self?.journeyTitle ?? "")
             case (_, .failure(let error)):
                 self?.handleError(error)
             default:
@@ -91,8 +93,9 @@ extension QuestStartViewController: ToastPresentable, ToastErrorHandler {
             .sink { [weak self] result in
                 switch result {
                 case .success:
-                    self?.onStartedQuest?()
                     self?.dismiss(animated: false)
+                    guard self?.tabBarController?.viewControllers?[safe: 1] != nil else { return }
+                    self?.navigationController?.tabBarController?.selectedIndex = 1
                 case .failure(let error):
                     self?.handleError(error)
                 }
@@ -107,7 +110,14 @@ extension QuestStartViewController: BackNavigable {
             if let tabBarController = presentingVC as? UITabBarController {
                 self.dismiss(animated: false)
                 tabBarController.selectedIndex = 0
+            } else {
+                self.dismiss(animated: false)
             }
         }
+    }
+}
+extension QuestStartViewController {
+    func configure(journeyTitle: String) {
+        self.journeyTitle = journeyTitle
     }
 }
