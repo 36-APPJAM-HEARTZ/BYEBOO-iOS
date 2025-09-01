@@ -12,8 +12,9 @@ import Foundation
 final class LoginViewModel: NSObject {
         
     private var socialLoginAuthSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
-    private var postLoginSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
+//    private var postLoginSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private var isRegisteredSubject: PassthroughSubject<Result<Bool, ByeBooError>, Never> = .init()
+    private let keychainService = DefaultKeychainService()
     
     var output: Output {
         Output(
@@ -25,19 +26,26 @@ final class LoginViewModel: NSObject {
     
     private let socialLoginUseCase: SocialLoginUseCase
     private let getIsRegisteredUseCase: GetIsRegisteredUseCase
+    private let tokenReissueUseCase: TokenReissueUseCase
+    private let autoLoginUseCase: AutoLoginUseCase
     
     init(
         socialLoginUseCase: SocialLoginUseCase,
-        getIsRegisteredUseCase: GetIsRegisteredUseCase
+        getIsRegisteredUseCase: GetIsRegisteredUseCase,
+        tokenReissueUseCase: TokenReissueUseCase,
+        autoLoginUseCase: AutoLoginUseCase
     ) {
         self.socialLoginUseCase = socialLoginUseCase
         self.getIsRegisteredUseCase = getIsRegisteredUseCase
+        self.tokenReissueUseCase = tokenReissueUseCase
+        self.autoLoginUseCase = autoLoginUseCase
     }
     
 }
 
 extension LoginViewModel {
     enum Input {
+        case viewDidLoad
         case socialLoginButtonDidTap(platform: LoginPlatform)
     }
     
@@ -47,6 +55,8 @@ extension LoginViewModel {
     
     func action(_ trigger: Input) {
         switch trigger {
+        case .viewDidLoad:
+            autoLogin()
         case .socialLoginButtonDidTap(let platform) :
             socialLogin(platform: platform)
         }
@@ -54,6 +64,14 @@ extension LoginViewModel {
 }
 
 extension LoginViewModel {
+    private func autoLogin()  {
+        if autoLoginUseCase.execute() {
+            socialLoginAuthSubject.send(.success(()))
+            getIsRegistered()
+            ByeBooLogger.debug("자동로그인 성공")
+        }
+    }
+    
     private func socialLogin(platform: LoginPlatform) {
         Task {
             do {

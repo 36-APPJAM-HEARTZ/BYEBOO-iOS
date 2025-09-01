@@ -27,7 +27,13 @@ final class LoginViewController: BaseViewController {
     override func viewDidLoad() {
         view = rootView
         setAddTarget()
+        
         bind()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.action(.viewDidLoad)
     }
     
     override func setAddTarget() {
