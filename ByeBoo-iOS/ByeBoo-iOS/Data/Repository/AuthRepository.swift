@@ -61,8 +61,10 @@ struct DefaultAuthRepository: AuthInterface {
     
     func hasTokens() -> Bool {
         if !keychainService.load(key: .accessToken).isEmpty && !keychainService.load(key: .refreshToken).isEmpty {
+            ByeBooLogger.debug("정보 있음")
             return true
         } else {
+            ByeBooLogger.debug("정보 업음")
             return false
         }
     }
@@ -73,7 +75,7 @@ struct DefaultAuthRepository: AuthInterface {
             AuthAPI.logout(header: header)
         )
         
-        removeUserInfo()
+        removeTokenInfo()
     }
     
     func withdraw() async throws {
@@ -86,7 +88,7 @@ struct DefaultAuthRepository: AuthInterface {
             try await network.request(
                 AuthAPI.withdraw(header: header)
             )
-            removeUserInfo()
+            removeTokenInfo()
         case "APPLE":
             // TODO: - authroization code 서버에서 처리하기 
             let (_, authorizationCode) = try await network.appleRequest()
@@ -100,6 +102,7 @@ struct DefaultAuthRepository: AuthInterface {
             try await network.request(
                 AuthAPI.withdraw(header: header)
             )
+            removeTokenInfo()
             removeUserInfo()
         default :
             return
@@ -108,13 +111,19 @@ struct DefaultAuthRepository: AuthInterface {
 }
 
 extension DefaultAuthRepository {
-    private func removeUserInfo() {
+    private func removeTokenInfo() {
         for key in KeyType.allCases {
-            keychainService.delete(key: key)
+            let token = keychainService.load(key: key)
+                if !token.isEmpty {
+                    ByeBooLogger.debug("remove 실행: \(key.rawValue)")
+                    keychainService.delete(key: key)
+            }
         }
-        
+    }
+    
+    private func removeUserInfo() {
         for key in UserDefaultsKey.allCases {
-            _ = userDefaultsService.delete(key: key)
+            let _ = userDefaultsService.delete(key: key)
         }
     }
 }

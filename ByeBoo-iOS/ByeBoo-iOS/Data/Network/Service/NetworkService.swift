@@ -213,7 +213,7 @@ final class DefaultNetworkService: NSObject, NetworkService {
         let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .refreshToken))
         let result = try await request(
             AuthAPI.reissue(header: header),
-            decodingType: PostLoginResponseDTO.self
+            decodingType: TokenReissueResponseDTO.self
         )
         keychainService.save(key: .accessToken, token: result.accessToken)
         keychainService.save(key: .refreshToken, token: result.refreshToken)
