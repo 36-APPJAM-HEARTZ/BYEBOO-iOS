@@ -79,6 +79,12 @@ final class MyPageViewController: BaseViewController {
 extension MyPageViewController {
     
     private func bind() {
+        bindUserResult()
+        bindLogoutResult()
+        bindWithdrawResult()
+    }
+    
+    private func bindUserResult() {
         viewModel.output.userResult
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
@@ -91,7 +97,9 @@ extension MyPageViewController {
                 }
             }
             .store(in: &cancellables)
-        
+    }
+    
+    private func bindLogoutResult() {
         viewModel.output.logoutResult
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
@@ -104,8 +112,9 @@ extension MyPageViewController {
                 }
             }
             .store(in: &cancellables)
+    }
         
-        
+    private func bindWithdrawResult() {
         viewModel.output.withdrawResult
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in

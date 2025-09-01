@@ -27,14 +27,14 @@ struct DefaultAuthRepository: AuthInterface {
     
     func kakaoLogin(platform: LoginPlatform) async throws {
         let authorization = try await network.kakaoRequest()
-        let _ = userDefaultsService.save("KAKAO", key: .loginPlatcform)
+        let _ = userDefaultsService.save("KAKAO", key: .loginPlatform)
         keychainService.save(key: .authorization, token: authorization)
         try await postLogin(platform: platform)
     }
     
     func appleLogin(platform: LoginPlatform) async throws {
         let (identityToken, _) = try await network.appleRequest()
-        let _ = userDefaultsService.save("APPLE", key: .loginPlatcform)
+        let _ = userDefaultsService.save("APPLE", key: .loginPlatform)
         keychainService.save(key: .authorization, token: identityToken)
         try await postLogin(platform: platform)
     }
@@ -42,8 +42,9 @@ struct DefaultAuthRepository: AuthInterface {
     
     private func postLogin(platform: LoginPlatform) async throws {
         let loginRequestDTO = LoginRequestDTO(platform: platform.rawValue)
+        let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .authorization))
         let result = try await network.request(
-            AuthAPI.login(requestDTO: loginRequestDTO),
+            AuthAPI.login(header: header, requestDTO: loginRequestDTO),
             decodingType: PostLoginResponseDTO.self
         )
         _ = userDefaultsService.save(result.isRegistered, key: .isRegistered)
@@ -52,20 +53,34 @@ struct DefaultAuthRepository: AuthInterface {
     }
     
     func logout() async throws {
-        try await network.request(AuthAPI.logout)
+        let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
+        try await network.request(
+            AuthAPI.logout(header: header)
+        )
     }
     
     func withdraw() async throws {
-        let loginPlatform: String? = userDefaultsService.load(key: .loginPlatcform)
+        let loginPlatform: String? = userDefaultsService.load(key: .loginPlatform)
         guard let loginPlatform = loginPlatform else { return }
         
         switch loginPlatform {
         case "KAKAO":
-            return try await network.request(AuthAPI.withdraw)
+            let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
+            return try await network.request(
+                AuthAPI.withdraw(header: header)
+            )
         case "APPLE":
             let (_, authorizationCode) = try await network.appleRequest()
             keychainService.save(key: .authorizationCode, token: authorizationCode)
-            return try await network.request(AuthAPI.withdraw)
+            
+            let header: HeaderType = .withAuthCode(
+                acessToken: keychainService.load(key: .accessToken),
+                authorizationCode: keychainService.load(key: .authorizationCode)
+            )
+            
+            return try await network.request(
+                AuthAPI.withdraw(header: header)
+            )
         default :
             return
         }

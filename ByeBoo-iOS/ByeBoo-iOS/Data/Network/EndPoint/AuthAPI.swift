@@ -10,10 +10,10 @@ import Foundation
 import Alamofire
 
 enum AuthAPI {
-    case login(requestDTO: LoginRequestDTO)
-    case reissue
-    case logout
-    case withdraw
+    case login(header: HeaderType, requestDTO: LoginRequestDTO)
+    case reissue(header: HeaderType)
+    case logout(header: HeaderType)
+    case withdraw(header: HeaderType)
 }
 
 extension AuthAPI: EndPoint {
@@ -44,33 +44,12 @@ extension AuthAPI: EndPoint {
     }
     
     var headers: HeaderType {
-        let keychainService = DefaultKeychainService()
-        let userDefaultsService = DefaultUserDefaultService()
         switch self {
-        case .login:
-            return .withAuth(acessToken: keychainService.load(key: .authorization))
-        case .reissue:
-            return .withAuth(acessToken: keychainService.load(key: .refreshToken))
-        case .logout:
-            return .withAuth(acessToken: keychainService.load(key: .accessToken))
-        case .withdraw:
-            let loginPlatform: String? = userDefaultsService.load(key: .loginPlatcform)
-            guard let loginPlatform = loginPlatform else {
-               return .withAuth(acessToken: keychainService.load(key: .accessToken))
-            }
-            
-            switch loginPlatform {
-            case "KAKAO":
-                return .withAuth(acessToken: keychainService.load(key: .accessToken))
-            case "APPLE":
-                return .withAuthCode(
-                    acessToken: keychainService.load(key: .accessToken),
-                    authorizationCode: keychainService.load(key: .authorizationCode)
-                )
-            default :
-                ByeBooLogger.debug("login Platform 없음")
-                return .withAuth(acessToken: keychainService.load(key: .accessToken))
-            }
+        case .login(let header, _),
+            .reissue(let header),
+            .logout(let header),
+            .withdraw(let header):
+            return header
         }
     }
     
@@ -90,7 +69,7 @@ extension AuthAPI: EndPoint {
     
     var bodyParameters: Alamofire.Parameters? {
         switch self {
-        case .login(let dto):
+        case .login(_, let dto):
             return try? dto.toDictionary()
         case .reissue, .logout, .withdraw:
             return nil
