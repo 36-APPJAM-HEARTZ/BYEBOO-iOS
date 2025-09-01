@@ -52,6 +52,18 @@ struct DefaultAuthRepository: AuthInterface {
         keychainService.save(key: .refreshToken, token: result.refreshToken)
     }
     
+    func reissue() async throws {
+        try await network.tokenReissue()
+    }
+    
+    func hasTokens() -> Bool {
+        if !keychainService.load(key: .accessToken).isEmpty && !keychainService.load(key: .refreshToken).isEmpty {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     func logout() async throws {
         let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
         try await network.request(
@@ -94,6 +106,13 @@ struct MockAuthRepository: AuthInterface {
     }
     
     func appleLogin(platform: LoginPlatform) async throws {
+    }
+    
+    func reissue() async throws {
+    }
+    
+    func hasTokens() -> Bool {
+        return false
     }
     
     func logout() async throws {
