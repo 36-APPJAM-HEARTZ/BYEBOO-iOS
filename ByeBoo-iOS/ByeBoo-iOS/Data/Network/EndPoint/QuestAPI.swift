@@ -17,7 +17,7 @@ enum QuestAPI {
     case tip(questID: Int)
     case answer(questID: Int)
     case progressingQuests
-    case journey
+    case fetchCompletedJourney
     case postJourney(journey: JourneyType)
 }
 
@@ -43,16 +43,14 @@ extension QuestAPI: EndPoint {
             return "/answer/\(questID)"
         case .progressingQuests:
             return "/all/progress"
-        case .journey:
+        case .fetchCompletedJourney, .postJourney:
             return "/journey"
-        case .postJourney(let journey):
-            return "/journey=\(journey.key)"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .checkQuest, .tip, .answer, .progressingQuests, .journey:
+        case .checkQuest, .tip, .answer, .progressingQuests, .fetchCompletedJourney:
             return .get
         case .recording, .active, .images, .postJourney:
             return .post
@@ -61,7 +59,7 @@ extension QuestAPI: EndPoint {
     
     var headers: HeaderType {
         switch self {
-        case .checkQuest, .recording, .active, .tip, .images, .answer, .progressingQuests, .journey, .postJourney:
+        case .checkQuest, .recording, .active, .tip, .images, .answer, .progressingQuests, .fetchCompletedJourney, .postJourney:
             let keychainService = DefaultKeychainService()
             return .withAuth(acessToken: keychainService.load(key: .accessToken))
         }
@@ -69,7 +67,7 @@ extension QuestAPI: EndPoint {
     
     var parameterEncoding: any ParameterEncoding {
         switch self {
-        case .checkQuest, .tip, .answer, .progressingQuests, .journey, .postJourney:
+        case .checkQuest, .tip, .answer, .progressingQuests, .fetchCompletedJourney, .postJourney:
             return URLEncoding.default
         case .recording, .active, .images:
             return JSONEncoding.default
@@ -77,7 +75,12 @@ extension QuestAPI: EndPoint {
     }
     
     var queryParameters: [String : String]? {
-        return nil
+        switch self {
+        case .postJourney(let journey):
+            return ["journey": journey.key]
+        default:
+            return nil
+        }
     }
     
     var bodyParameters: Parameters? {
@@ -88,7 +91,7 @@ extension QuestAPI: EndPoint {
             return try? dto.toDictionary()
         case let .images(dto):
             return try? dto.toDictionary()
-        case .checkQuest, .tip, .answer, .progressingQuests, .journey, .postJourney:
+        case .checkQuest, .tip, .answer, .progressingQuests, .fetchCompletedJourney, .postJourney:
             return nil
         }
     }

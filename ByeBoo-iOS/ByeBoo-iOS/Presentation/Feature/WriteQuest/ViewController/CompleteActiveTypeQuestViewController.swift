@@ -13,15 +13,16 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
     private let rootView = CompleteActiveTypeQuestView()
     private var viewModel: CompleteQuestViewModel
     private var cancellables = Set<AnyCancellable>()
-    private let questID: Int
+    
+    private var questID: Int = 1
+    private var questNumber: Int = 1
     
     override func loadView() {
         view = rootView
     }
     
-    init(viewModel: CompleteQuestViewModel, questID: Int) {
+    init(viewModel: CompleteQuestViewModel) {
         self.viewModel = viewModel
-        self.questID = questID
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -79,7 +80,32 @@ extension CompleteActiveTypeQuestViewController: ToastPresentable, ToastErrorHan
 extension CompleteActiveTypeQuestViewController: Dismissible {
     
     func close() {
+        // TODO: 매직 넘버 바꾸기
+        if questNumber == 30 {
+            let modalBuilder = ModalBuilder(
+                modalView: CongrateModalView(),
+                action: modalAction,
+                rootViewController: self
+            )
+            modalBuilder.present()
+        } else {
+            tabBarController?.tabBar.isHidden = false
+            self.navigationController?.popToRootViewController(animated: false)
+        }
+    }
+    
+    private func modalAction() {
         tabBarController?.tabBar.isHidden = false
         self.navigationController?.popToRootViewController(animated: false)
+    }
+}
+
+extension CompleteActiveTypeQuestViewController {
+    func configure(
+        questID: Int,
+        questNumber: Int
+    ) {
+        self.questID = questID
+        self.questNumber = questNumber
     }
 }

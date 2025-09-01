@@ -22,15 +22,18 @@ final class QuestStartViewModel {
     private let startJourneyUseCase: StartJourneyUseCase
     private let getUserNameUseCase: GetUserNameUseCase
     private let fetchJourneyUseCase: FetchUserJourneyUseCase
+    private let postJourneyUseCase: FetchNewJourneyUseCase
     
     init(
         startJourneyUseCase: StartJourneyUseCase,
         getUserNameUseCase: GetUserNameUseCase,
-        fetchJourneyUseCase: FetchUserJourneyUseCase
+        fetchJourneyUseCase: FetchUserJourneyUseCase,
+        postJourneyUseCase: FetchNewJourneyUseCase
     ) {
         self.startJourneyUseCase = startJourneyUseCase
         self.getUserNameUseCase = getUserNameUseCase
         self.fetchJourneyUseCase = fetchJourneyUseCase
+        self.postJourneyUseCase = postJourneyUseCase
         
         output = Output(
             startResult: startResultSubject.eraseToAnyPublisher(),
@@ -44,7 +47,7 @@ extension QuestStartViewModel: ViewModelType {
     
     enum Input {
         case viewDidLoad
-        case buttonDidTap
+        case buttonDidTap(journey: String)
     }
     
     struct Output {
@@ -58,8 +61,12 @@ extension QuestStartViewModel: ViewModelType {
         case .viewDidLoad:
             fetchJourney()
             getUserName()
-        case .buttonDidTap:
-            startJourney()
+        case .buttonDidTap(let journey):
+            if !journey.isEmpty {
+                postNewJourneys(journey: journey)
+            } else {
+                startJourney()
+            }
         }
     }
 }
@@ -72,6 +79,21 @@ extension QuestStartViewModel {
                 startResultSubject.send(.success(true))
             } catch {
                 startResultSubject.send(.failure(error as? ByeBooError ?? ByeBooError.unknownError))
+            }
+        }
+    }
+    
+    private func postNewJourneys(journey: String) {
+        Task {
+            do {
+                let _ = try await postJourneyUseCase.execute(journey: JourneyType.titleToEnum(journey) ?? .face)
+                startResultSubject.send(.success(true))
+            } catch {
+                guard let error = error as? ByeBooError else {
+                    return
+                }
+                ByeBooLogger.error(error as ByeBooError)
+                startResultSubject.send(.failure((error)))
             }
         }
     }

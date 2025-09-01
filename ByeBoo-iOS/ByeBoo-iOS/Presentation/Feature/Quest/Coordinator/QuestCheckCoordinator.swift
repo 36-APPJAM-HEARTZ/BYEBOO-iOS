@@ -21,14 +21,15 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
         rootViewController?.present(viewController, animated: false)
     }
     
+    func moveFinishQuest() {
+        let viewController = ViewControllerFactory.shared.makeFinishJourneyViewController()
+        rootViewController?.hidesBottomBarWhenPushed = true
+        rootViewController?.navigationController?.pushViewController(viewController, animated: false)
+    }
+    
     func moveArchive(quest: QuestEntity?) {
-        guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else { return }
-        
-        let archiveQuestViewController = ArchiveQuestViewController(
-            viewModel: viewModel,
-            questID: quest?.questId ?? 1,
-            questType: quest?.questStyle ?? .question
-        )
+        let archiveQuestViewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
+        archiveQuestViewController.configure(questID: quest?.questId ?? 1, questType: quest?.questStyle ?? .activation)
         rootViewController?.tabBarController?.tabBar.isHidden = true
         rootViewController?.navigationController?.pushViewController(archiveQuestViewController, animated: false)
     }
@@ -58,16 +59,8 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     }
     
     func moveQuestTip(quest: QuestEntity?) {
-        guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self),
-              let questID = quest?.questId else {
-            return
-        }
-
-        let questTipViewController = QuestTipViewController(
-            viewModel: viewModel,
-            questID: questID,
-            questType: quest?.questStyle ?? .question
-        )
+        let questTipViewController = ViewControllerFactory.shared.makeQuestTipViewController()
+        questTipViewController.configure(questID: quest?.questId ?? 1, questType: quest?.questStyle ?? .activation)
         questTipViewController.modalPresentationStyle = .fullScreen
         let topViewController = UIApplication.shared.topViewController()
         topViewController?.present(questTipViewController, animated: false)
@@ -75,32 +68,22 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     
     func moveWriteQuest(quest: QuestEntity) {
         if quest.questStyle == .question {
-            moveToWriteQuestion(questID: quest.questId)
+            moveToWriteQuestion(questID: quest.questId, questNumber: quest.questNumber, questType: quest.questStyle)
         } else {
-            moveToWriteActivity(questID: quest.questId)
+            moveToWriteActivity(questID: quest.questId, questNumber: quest.questNumber, questType: quest.questStyle)
         }
     }
     
-    private func moveToWriteQuestion(questID: Int) {
-        guard let viewModel = DIContainer.shared.resolve(type: WriteQuestionTypeViewModel.self) else {
-            return
-        }
-        let questionQuestViewController = WriteQuestionTypeQuestViewController(
-            viewModel: viewModel,
-            questID: questID
-        )
+    private func moveToWriteQuestion(questID: Int, questNumber: Int, questType: QuestType) {
+        let questionQuestViewController = ViewControllerFactory.shared.makeWriteQuestionTypeQuestViewController()
+        questionQuestViewController.configure(questID, questNumber, questType)
         rootViewController?.tabBarController?.tabBar.isHidden = true
         rootViewController?.navigationController?.pushViewController(questionQuestViewController, animated: false)
     }
     
-    private func moveToWriteActivity(questID: Int) {
-        guard let viewModel = DIContainer.shared.resolve(type: WriteActiveTypeViewModel.self) else {
-            return
-        }
-        let activationQuestViewController = WriteActiveTypeQuestViewController(
-            viewModel: viewModel,
-            questID: questID
-        )
+    private func moveToWriteActivity(questID: Int, questNumber: Int, questType: QuestType) {
+        let activationQuestViewController = ViewControllerFactory.shared.makeWriteActiveTypeQuestViewController()
+        activationQuestViewController.configure(questID, questNumber, questType)
         rootViewController?.tabBarController?.tabBar.isHidden = true
         rootViewController?.navigationController?.pushViewController(activationQuestViewController, animated: false)
     }

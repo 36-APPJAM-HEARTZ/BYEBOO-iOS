@@ -102,6 +102,7 @@ extension HomeViewModel {
                 let status = try await fetchQuestStatusUseCase.execute()
                 homeStateResultSubject.send(.success(status))
                 isHelperShown(state: status.currentStatus)
+                ByeBooLogger.debug("home status: \(status)")
             } catch {
                 if let error = error as? ByeBooError {
                     homeStateResultSubject.send(.failure(error))

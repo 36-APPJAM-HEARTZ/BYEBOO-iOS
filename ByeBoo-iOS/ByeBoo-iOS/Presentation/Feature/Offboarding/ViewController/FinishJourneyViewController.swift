@@ -55,7 +55,11 @@ final class FinishJourneyViewController: BaseViewController {
 
 extension FinishJourneyViewController: Dismissible {
     func close() {
-        
+        if let tabBar = tabBarController {
+            navigationController?.popViewController(animated: false)
+            guard tabBar.viewControllers?[safe: 0] != nil else { return }
+            tabBar.selectedIndex = 0
+        }
     }
 }
 
@@ -64,11 +68,7 @@ extension FinishJourneyViewController {
     private func startButtonDidTap() {
         ByeBooLogger.debug("starbuttontapped")
         
-        guard let viewModel = DIContainer.shared.resolve(type: NewJourneyViewModel.self) else {
-            return
-        }
-        
-        let viewController = NewJourneySelectViewController(viewModel: viewModel)
+        let viewController = ViewControllerFactory.shared.makeNewJourneySelectViewController()
         
         guard let navigationController else {
             ByeBooLogger.error(ByeBooError.navigationControllerMissing)
@@ -81,11 +81,7 @@ extension FinishJourneyViewController {
     private func lookBackButtonDidTap() {
         ByeBooLogger.debug("lookBackButtonTapped")
         
-        guard let viewModel = DIContainer.shared.resolve(type: LookBackJourneyViewModel.self) else {
-            return
-        }
-        
-        let viewController = LookBackJourneyViewController(viewModel: viewModel)
+        let viewController = ViewControllerFactory.shared.makeLookBackJourneyViewController()
         
         guard let navigationController else {
             ByeBooLogger.error(ByeBooError.navigationControllerMissing)

@@ -69,7 +69,7 @@ struct DefaultQuestRepository: QuestsInterface {
     
     func getLookBackJourney() async throws -> [JourneyEntity] {
         let result = try await network.request(
-            QuestAPI.journey,
+            QuestAPI.fetchCompletedJourney,
             decodingType: LookBackJourneyResponseDTO.self
         )
         
@@ -79,7 +79,7 @@ struct DefaultQuestRepository: QuestsInterface {
     
     func getNewJourney() async throws -> LookBackJourneyEntity {
         let result = try await network.request(
-            QuestAPI.journey,
+            QuestAPI.fetchCompletedJourney,
             decodingType: LookBackJourneyResponseDTO.self
         )
         

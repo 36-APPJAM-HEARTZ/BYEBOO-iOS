@@ -18,6 +18,13 @@ protocol ViewControllerFactoryProtocol {
     func makeNewJourneySelectViewController() -> NewJourneySelectViewController
     func makeLoginViewController() -> LoginViewController
     func makeModifyNicknameViewController() -> ModifyNicknameViewController
+    func makeArchiveQuestViewController() -> ArchiveQuestViewController
+    func makeQuestTipViewController() -> QuestTipViewController
+    func makeWriteQuestionTypeQuestViewController() -> WriteQuestionTypeQuestViewController
+    func makeWriteActiveTypeQuestViewController() -> WriteActiveTypeQuestViewController
+    func makeCompleteActiveTypeQuestViewController() -> CompleteActiveTypeQuestViewController
+    func makeCompleteQuestionTypeQuestViewController() -> CompleteQuestionTypeQuestViewController
+    func makeFinishJourneyViewController() -> FinishJourneyViewController
 }
 
 final class ViewControllerFactory: ViewControllerFactoryProtocol {
@@ -102,6 +109,58 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
             fatalError()
         }
         return ModifyNicknameViewController(viewModel: viewModel)
+    }
+    
+    func makeArchiveQuestViewController() -> ArchiveQuestViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        return ArchiveQuestViewController(viewModel: viewModel)
+    }
+    
+    func makeQuestTipViewController() -> QuestTipViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: QuestTipViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        return QuestTipViewController(viewModel: viewModel)
+    }
+    
+    func makeWriteQuestionTypeQuestViewController() -> WriteQuestionTypeQuestViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: WriteQuestionTypeViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        return WriteQuestionTypeQuestViewController(viewModel: viewModel)
+    }
+    
+    func makeWriteActiveTypeQuestViewController() -> WriteActiveTypeQuestViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: WriteActiveTypeViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        return WriteActiveTypeQuestViewController(viewModel: viewModel)
+    }
+    
+    func makeCompleteActiveTypeQuestViewController() -> CompleteActiveTypeQuestViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        return CompleteActiveTypeQuestViewController(viewModel: viewModel)
+    }
+    
+    func makeCompleteQuestionTypeQuestViewController() -> CompleteQuestionTypeQuestViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        return CompleteQuestionTypeQuestViewController(viewModel: viewModel)
+    }
+    
+    func makeFinishJourneyViewController() -> FinishJourneyViewController {
+        return FinishJourneyViewController()
     }
 }
 

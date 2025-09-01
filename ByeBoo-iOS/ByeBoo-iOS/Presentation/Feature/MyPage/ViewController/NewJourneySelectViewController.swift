@@ -90,6 +90,10 @@ extension NewJourneySelectViewController {
     private func journeyDidTap(_ tapRecognizer: UITapGestureRecognizer) {
         guard let journeyView = tapRecognizer.view as? OneLineTextBoxView else { return }
         ByeBooLogger.debug(journeyView.title)
-        viewModel.action(.selectedJourneyDidTap(journey: journeyView.title))
+        
+        let viewController = ViewControllerFactory.shared.makeQuestStartViewController()
+        viewController.configure(journeyTitle: journeyView.title)
+        viewController.modalPresentationStyle = .fullScreen
+        self.present(viewController, animated: false)
     }
 }

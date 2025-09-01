@@ -6,7 +6,7 @@
 //
 
 struct UserQuestStatusResponseDTO: Decodable {
-    let todayComplete: Bool
+    let todayComplete: Bool?
     let count: Int
     let userCurrentStatus: HomeStateData
 }
@@ -14,7 +14,7 @@ struct UserQuestStatusResponseDTO: Decodable {
 extension UserQuestStatusResponseDTO {
     func toEntity() -> UserQuestStatusEntity {
         return .init(
-            todayComplete: todayComplete,
+            todayComplete: todayComplete ?? false,
             currentStatus: HomeState.toHomeState(userCurrentStatus),
             questCount: count
         )

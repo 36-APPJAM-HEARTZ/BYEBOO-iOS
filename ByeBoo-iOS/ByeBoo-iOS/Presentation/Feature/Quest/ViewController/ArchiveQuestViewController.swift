@@ -14,19 +14,12 @@ final class ArchiveQuestViewController: BaseViewController {
     private let viewModel: CompleteQuestViewModel
     private var cancellables = Set<AnyCancellable>()
     
-    private let questID: Int
-    private let questType: QuestType
+    private var questID: Int = 1
+    private var questType: QuestType = .activation
     
-    init(
-        viewModel: CompleteQuestViewModel,
-        questID: Int,
-        questType: QuestType
+    init(viewModel: CompleteQuestViewModel
     ) {
         self.viewModel = viewModel
-        self.questID = questID
-        self.questType = questType
-        rootView = ArchiveQuestView(type: questType)
-        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -95,5 +88,13 @@ extension ArchiveQuestViewController: Dismissible {
     func close() {
         self.tabBarController?.tabBar.isHidden = false
         self.navigationController?.popViewController(animated: false)
+    }
+}
+
+extension ArchiveQuestViewController {
+    func configure(questID: Int, questType: QuestType) {
+        self.questID = questID
+        self.questType = questType
+        rootView = ArchiveQuestView(type: questType)
     }
 }

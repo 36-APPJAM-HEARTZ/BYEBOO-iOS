@@ -61,8 +61,14 @@ final class HomeViewController: BaseViewController {
 extension HomeViewController {
     @objc
     private func headerDidTap() {
-        guard tabBarController?.viewControllers?[safe: 1] != nil else { return }
-        navigationController?.tabBarController?.selectedIndex = 1
+        switch state {
+        case .beforeJourneyStart, .beforeQuest, .afterQuest:
+            guard tabBarController?.viewControllers?[safe: 1] != nil else { return }
+            navigationController?.tabBarController?.selectedIndex = 1
+        case .afterJourney:
+            let viewController = ViewControllerFactory.shared.makeNewJourneySelectViewController()
+            navigationController?.pushViewController(viewController, animated: false)
+        }
     }
     
     @objc
@@ -114,9 +120,13 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
                 case let (_, .success(journey), .failure(.notFoundQuest)):
                     self?.rootView.updateState(.beforeJourneyStart, journey.title)
                     self?.state = .beforeJourneyStart
-                    
+                case let (_, .failure(.notFoundQuest), .success(state)):
+                    self?.rootView.updateState(state.currentStatus)
+                    self?.state = state.currentStatus
                 case (_, .failure(let error), _), (_, _, .failure(let error)):
                     self?.handleError(error)
+                default:
+                    ByeBooLogger.error(ByeBooError.unknownError)
                 }
             }
             .store(in: &cancellables)

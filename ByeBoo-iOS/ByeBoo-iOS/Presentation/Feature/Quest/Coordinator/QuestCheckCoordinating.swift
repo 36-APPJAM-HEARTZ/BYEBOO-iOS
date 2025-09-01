@@ -12,4 +12,5 @@ protocol QuestCheckCoordinating {
     func presentQuestModal(quest: QuestEntity?)
     func moveQuestTip(quest: QuestEntity?)
     func moveWriteQuest(quest: QuestEntity)
+    func moveFinishQuest()
 }
