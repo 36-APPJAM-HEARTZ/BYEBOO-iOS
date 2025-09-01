@@ -31,6 +31,7 @@ final class HomeHeaderView: BaseView {
             configuration.image = .questionMark
             configuration.contentInsets = .zero
             $0.configuration = configuration
+            $0.alpha = 0
         }
         helperImageView.do {
             $0.image = .helper
@@ -64,6 +65,10 @@ final class HomeHeaderView: BaseView {
             $0.top.equalTo(helperButton.snp.bottom).offset(4.adjustedH)
             $0.trailing.equalToSuperview().inset(24.adjustedW)
         }
+        
+        self.snp.makeConstraints {
+            $0.height.greaterThanOrEqualTo(200.adjustedH)
+        }
     }
 }
 
@@ -81,6 +86,10 @@ extension HomeHeaderView {
     }
     
     func updateState(_ state: HomeState, _ journeyTitle: String? = nil) {
+        if state == .beforeJourneyStart {
+            helperButton.alpha = 1
+        }
+        
         if state.hasProgress {
             if journeyProgressView == nil {
                 journeyProgressView = JourneyProgressView()
@@ -100,26 +109,27 @@ extension HomeHeaderView {
                 $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
                 $0.bottom.equalToSuperview()
             }
-            
             helperButton.alpha = 0
-        } else {
-            helperButton.alpha = 1
         }
         
         homeStateView.updateState(state, journeyTitle)
     }
     
     func startHelperAnimation() {
-        if !state.hasProgress {
-            helperImageView.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
-            UIView.animate(
-                withDuration: 1,
-                delay: 0.3,
-                usingSpringWithDamping: 0.4,
-                initialSpringVelocity: 0.6
-            ) {
-                self.helperImageView.alpha = 1
-                self.helperImageView.transform = .identity
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            guard let self else { return }
+            
+            if !state.hasProgress {
+                helperImageView.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+                UIView.animate(
+                    withDuration: 1,
+                    delay: 0.3,
+                    usingSpringWithDamping: 0.4,
+                    initialSpringVelocity: 0.6
+                ) {
+                    self.helperImageView.alpha = 1
+                    self.helperImageView.transform = .identity
+                }
             }
         }
     }
