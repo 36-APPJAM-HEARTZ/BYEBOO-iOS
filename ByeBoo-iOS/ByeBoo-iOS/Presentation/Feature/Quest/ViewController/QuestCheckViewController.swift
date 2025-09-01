@@ -149,7 +149,7 @@ extension QuestCheckViewController {
         self.questsCheckView.questCollectionView.reloadData()
         
         guard let step = quests.steps.first else { return }
-        if quests.currentStep > step.quests.count {
+        if quests.currentStep < step.quests.count {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.scrollToStep()
             }
@@ -163,12 +163,8 @@ extension QuestCheckViewController {
             if let _ = step.quests.firstIndex(where: { $0.questNumber == viewModel.currentStep }) {
                 // MARK: - 마지막 스텝 진입 시 맨 아래로 스크롤
                 if step.stepNumber == QuestCheckViewController.lastStep {
-                    let maxOffsetY = collectionView.contentSize.height - collectionView.bounds.height + 30
-                    let bottomOffset = CGPoint(
-                        x: 0,
-                        y: max(maxOffsetY, 0)
-                    )
-                    collectionView.setContentOffset(bottomOffset, animated: true)
+                    let lastIndexPath = calculateLastIndexPath(collectionView: collectionView)
+                    collectionView.scrollToItem(at: lastIndexPath, at: .bottom, animated: true)
                     return
                 }
                 
@@ -177,6 +173,14 @@ extension QuestCheckViewController {
                 return
             }
         }
+    }
+    
+    private func calculateLastIndexPath(collectionView: UICollectionView) -> IndexPath {
+        let lastSection = collectionView.numberOfSections - 1
+        let lastItem = collectionView.numberOfItems(inSection: lastSection) - 1
+        let lastIndexPath = IndexPath(item: lastItem, section: lastSection)
+        
+        return lastIndexPath
     }
 }
 
