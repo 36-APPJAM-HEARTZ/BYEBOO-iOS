@@ -116,11 +116,13 @@ extension HomeHeaderView {
     }
     
     func startHelperAnimation() {
+        helperImageView.alpha = 0
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
             guard let self else { return }
             
             if !state.hasProgress {
-                helperImageView.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+                helperImageView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
                 UIView.animate(
                     withDuration: 1,
                     delay: 0.3,
