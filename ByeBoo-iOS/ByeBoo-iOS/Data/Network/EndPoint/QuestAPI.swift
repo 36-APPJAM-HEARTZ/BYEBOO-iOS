@@ -43,10 +43,8 @@ extension QuestAPI: EndPoint {
             return "/answer/\(questID)"
         case .progressingQuests:
             return "/all/progress"
-        case .journey:
+        case .journey, .postJourney:
             return "/journey"
-        case .postJourney(let journey):
-            return "/journey=\(journey.key)"
         }
     }
     
@@ -77,7 +75,12 @@ extension QuestAPI: EndPoint {
     }
     
     var queryParameters: [String : String]? {
-        return nil
+        switch self {
+        case .postJourney(let journey):
+            return ["journey": journey.key]
+        default:
+            return nil
+        }
     }
     
     var bodyParameters: Parameters? {
