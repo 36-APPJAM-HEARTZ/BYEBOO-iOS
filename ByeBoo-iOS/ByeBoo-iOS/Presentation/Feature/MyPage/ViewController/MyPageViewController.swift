@@ -107,6 +107,7 @@ extension MyPageViewController {
     private func viewByeBooWorldDidTap() {
         let tutorialViewController = TutorialModalViewController()
         tutorialViewController.navigationItem.hidesBackButton = true
+        tutorialViewController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(tutorialViewController, animated: false)
     }
     

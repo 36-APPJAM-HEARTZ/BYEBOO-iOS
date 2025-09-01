@@ -67,9 +67,13 @@ extension HomeViewController {
     
     @objc
     private func helperDidTap() {
-        // TODO: 수정하기
         viewModel.action(.helperTapped)
         rootView.helperDidTap()
+        
+        let tutorialViewController = TutorialModalViewController()
+        tutorialViewController.navigationItem.hidesBackButton = true
+        tutorialViewController.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(tutorialViewController, animated: false)
     }
 }
 
