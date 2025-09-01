@@ -140,7 +140,7 @@ extension QuestEntity {
     
     static func stub(index: Int) -> Self {
         return .init(
-            questId: 30 + index,
+            questId: index,
             question: "무슨 일이 있었나요?",
             questStyle: .question,
             questNumber: index + 1
