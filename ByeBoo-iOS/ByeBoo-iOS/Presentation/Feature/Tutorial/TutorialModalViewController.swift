@@ -23,6 +23,15 @@ final class TutorialModalViewController: BaseViewController {
             action: #selector(back)
         )
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        ByeBooNavigationBar.makeNavigationBar(
+            navigationItem: self.navigationItem,
+            navigationController: self.navigationController,
+            type: .none(),
+            action: #selector(back)
+        )
+    }
 }
 
 extension TutorialModalViewController: BackNavigable {

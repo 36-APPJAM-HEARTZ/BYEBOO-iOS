@@ -37,7 +37,6 @@ final class HomeViewController: BaseViewController {
         super.viewDidLoad()
         
         bind()
-        setGesture()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -47,6 +46,7 @@ final class HomeViewController: BaseViewController {
     }
     
     override func setAddTarget() {
+        setGesture()
         rootView.headerView.helperButton.addTarget(self, action: #selector(helperDidTap), for: .touchUpInside)
     }
     
@@ -67,9 +67,13 @@ extension HomeViewController {
     
     @objc
     private func helperDidTap() {
-        // TODO: 수정하기
         viewModel.action(.helperTapped)
         rootView.helperDidTap()
+        
+        let tutorialViewController = TutorialModalViewController()
+        tutorialViewController.navigationItem.hidesBackButton = true
+        tutorialViewController.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(tutorialViewController, animated: false)
     }
 }
 
