@@ -70,6 +70,7 @@ struct DefaultAuthRepository: AuthInterface {
                 AuthAPI.withdraw(header: header)
             )
         case "APPLE":
+            // TODO: - authroization code 서버에서 처리하기 
             let (_, authorizationCode) = try await network.appleRequest()
             keychainService.save(key: .authorizationCode, token: authorizationCode)
             
