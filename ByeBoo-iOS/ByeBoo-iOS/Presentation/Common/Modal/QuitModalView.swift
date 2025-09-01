@@ -77,14 +77,12 @@ final class QuitModalView: BaseView, ModalProtocol {
             cancelButton.snp.makeConstraints {
                 $0.width.equalTo(107.adjustedW)
                 $0.height.equalTo(53.adjustedH)
-                $0.trailing.equalToSuperview()
             }
         }
         
         actionButton.snp.makeConstraints {
             $0.width.equalTo(107.adjustedW)
             $0.height.equalTo(53.adjustedH)
-            $0.leading.equalToSuperview()
         }
     }
 }

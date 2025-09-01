@@ -178,7 +178,10 @@ extension WriteQuestionTypeQuestViewController: BackNavigable {
     func back() {
         tabBarController?.tabBar.isHidden = true
         
-        let action: (() -> Void) = { self.navigationController?.popViewController(animated: true) }
+        let action: (() -> Void) = {
+            self.navigationController?.popViewController(animated: true)
+            self.tabBarController?.tabBar.isHidden = false
+        }
         
         ModalBuilder(
             modalView: QuitModalView(),
