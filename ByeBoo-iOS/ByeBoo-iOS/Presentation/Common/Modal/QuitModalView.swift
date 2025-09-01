@@ -11,7 +11,7 @@ import SnapKit
 import Then
 
 final class QuitModalView: BaseView, ModalProtocol {
-    
+    var modalType: ConfirmModalType? = nil
     private let titleLabel = UILabel()
     private let secondDescriptionLabel = UILabel()
     private let buttonStackView = UIStackView()

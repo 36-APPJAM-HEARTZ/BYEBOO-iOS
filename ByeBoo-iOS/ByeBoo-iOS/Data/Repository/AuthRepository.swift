@@ -27,22 +27,24 @@ struct DefaultAuthRepository: AuthInterface {
     
     func kakaoLogin(platform: LoginPlatform) async throws {
         let authorization = try await network.kakaoRequest()
+        let _ = userDefaultsService.save("KAKAO", key: .loginPlatform)
         keychainService.save(key: .authorization, token: authorization)
         try await postLogin(platform: platform)
     }
     
     func appleLogin(platform: LoginPlatform) async throws {
-        let (identityToken, authorizationCode) = try await network.appleRequest()
+        let (identityToken, _) = try await network.appleRequest()
+        let _ = userDefaultsService.save("APPLE", key: .loginPlatform)
         keychainService.save(key: .authorization, token: identityToken)
-        keychainService.save(key: .authorizationCode, token: authorizationCode)
         try await postLogin(platform: platform)
     }
     
     
     private func postLogin(platform: LoginPlatform) async throws {
         let loginRequestDTO = LoginRequestDTO(platform: platform.rawValue)
+        let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .authorization))
         let result = try await network.request(
-            AuthAPI.login(requestDTO: loginRequestDTO),
+            AuthAPI.login(header: header, requestDTO: loginRequestDTO),
             decodingType: PostLoginResponseDTO.self
         )
         _ = userDefaultsService.save(result.isRegistered, key: .isRegistered)
@@ -50,6 +52,40 @@ struct DefaultAuthRepository: AuthInterface {
         keychainService.save(key: .refreshToken, token: result.refreshToken)
     }
     
+    func logout() async throws {
+        let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
+        try await network.request(
+            AuthAPI.logout(header: header)
+        )
+    }
+    
+    func withdraw() async throws {
+        let loginPlatform: String? = userDefaultsService.load(key: .loginPlatform)
+        guard let loginPlatform = loginPlatform else { return }
+        
+        switch loginPlatform {
+        case "KAKAO":
+            let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
+            return try await network.request(
+                AuthAPI.withdraw(header: header)
+            )
+        case "APPLE":
+            // TODO: - authroization code 서버에서 처리하기 
+            let (_, authorizationCode) = try await network.appleRequest()
+            keychainService.save(key: .authorizationCode, token: authorizationCode)
+            
+            let header: HeaderType = .withAuthCode(
+                acessToken: keychainService.load(key: .accessToken),
+                authorizationCode: keychainService.load(key: .authorizationCode)
+            )
+            
+            return try await network.request(
+                AuthAPI.withdraw(header: header)
+            )
+        default :
+            return
+        }
+    }
 }
 
 
@@ -58,5 +94,11 @@ struct MockAuthRepository: AuthInterface {
     }
     
     func appleLogin(platform: LoginPlatform) async throws {
+    }
+    
+    func logout() async throws {
+    }
+    
+    func withdraw() async throws {
     }
 }

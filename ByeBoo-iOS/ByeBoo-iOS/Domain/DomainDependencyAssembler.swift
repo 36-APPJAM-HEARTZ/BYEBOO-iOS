@@ -108,6 +108,14 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultKakaoLoginUseCase(repository: authRepository)
         }
         
+        DIContainer.shared.register(type: LogoutUseCase.self) { _ in
+            return DefaultLogoutUseCase(repository: authRepository)
+        }
+        
+        DIContainer.shared.register(type: WithdrawUseCase.self) { _ in
+            return DefaultWithdrawUseCase(repository: authRepository)
+        }
+        
         DIContainer.shared.register(type: CalculateRemainingTimeUseCase.self) { _ in
             return DefaultCalculateRemainingTimeUseCase()
         }
