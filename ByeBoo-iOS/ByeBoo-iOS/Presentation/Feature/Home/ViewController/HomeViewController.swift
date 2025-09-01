@@ -61,8 +61,14 @@ final class HomeViewController: BaseViewController {
 extension HomeViewController {
     @objc
     private func headerDidTap() {
-        guard tabBarController?.viewControllers?[safe: 1] != nil else { return }
-        navigationController?.tabBarController?.selectedIndex = 1
+        switch state {
+        case .beforeJourneyStart, .beforeQuest, .afterQuest:
+            guard tabBarController?.viewControllers?[safe: 1] != nil else { return }
+            navigationController?.tabBarController?.selectedIndex = 1
+        case .afterJourney:
+            let viewController = ViewControllerFactory.shared.makeNewJourneySelectViewController()
+            navigationController?.pushViewController(viewController, animated: false)
+        }
     }
     
     @objc

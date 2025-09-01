@@ -35,7 +35,7 @@ final class JourneyListView: BaseView {
         self.isFinished = isFinished
         self.journeyList = journeyList
         
-        if journeyList.isEmpty {
+        if journeyList.isEmpty && isFinished {
             emptyLabel = UILabel()
             journeyListView = nil
         } else {
@@ -74,7 +74,6 @@ final class JourneyListView: BaseView {
             $0.isUserInteractionEnabled = true
         }
         emptyLabel?.do {
-            // TODO: 미완료 일 때 text 바뀌어야 하는데 앱잼 내에 구현 X
             $0.text = "아직 완료된 여정이 없어요!"
             $0.font = FontManager.body3R16.font
             $0.textColor = .grayscale300
@@ -90,10 +89,33 @@ final class JourneyListView: BaseView {
         addSubviews(
             stackView
         )
+        
+        if let journeyListView {
+            addSubviews(journeyListView)
+            
+            journeyListView.snp.makeConstraints {
+                $0.top.equalTo(stackView.snp.bottom).offset(16.adjustedH)
+                $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+                $0.bottom.equalToSuperview().inset(16.adjustedH)
+            }
+        }
+        
         stackView.addArrangedSubviews(
             titleLabel,
             countLabel
         )
+        
+        if !isFinished {
+            journeyListView?.addArrangedSubview(prepareView)
+            prepareView.addSubview(prepareTitleLabel)
+            
+            prepareView.snp.makeConstraints {
+                $0.height.equalTo(62.adjustedH)
+            }
+            prepareTitleLabel.snp.makeConstraints {
+                $0.center.equalToSuperview()
+            }
+        }
         
         if let emptyLabel {
             addSubview(emptyLabel)
