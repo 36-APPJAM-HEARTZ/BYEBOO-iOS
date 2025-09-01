@@ -58,19 +58,6 @@ extension NewJourneySelectViewController: ToastPresentable, ToastErrorHandler {
                 }
             }
             .store(in: &cancellables)
-        
-//        viewModel.output.postJourneyPublisher
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] result in
-//                switch result {
-//                case .success:
-//                    guard self?.tabBarController?.viewControllers?[safe: 1] != nil else { return }
-//                    self?.navigationController?.tabBarController?.selectedIndex = 1
-//                case .failure(let error):
-//                    ByeBooLogger.debug(error)
-//                }
-//            }
-//            .store(in: &cancellables)
     }
 }
 
@@ -103,7 +90,6 @@ extension NewJourneySelectViewController {
     private func journeyDidTap(_ tapRecognizer: UITapGestureRecognizer) {
         guard let journeyView = tapRecognizer.view as? OneLineTextBoxView else { return }
         ByeBooLogger.debug(journeyView.title)
-//        viewModel.action(.selectedJourneyDidTap(journey: journeyView.title))
         
         let viewController = ViewControllerFactory.shared.makeQuestStartViewController()
         viewController.configure(journeyTitle: journeyView.title)
