@@ -72,6 +72,8 @@ struct DefaultAuthRepository: AuthInterface {
         try await network.request(
             AuthAPI.logout(header: header)
         )
+        
+        removeUserInfo()
     }
     
     func withdraw() async throws {
@@ -81,9 +83,10 @@ struct DefaultAuthRepository: AuthInterface {
         switch loginPlatform {
         case "KAKAO":
             let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
-            return try await network.request(
+            try await network.request(
                 AuthAPI.withdraw(header: header)
             )
+            removeUserInfo()
         case "APPLE":
             // TODO: - authroization code 서버에서 처리하기 
             let (_, authorizationCode) = try await network.appleRequest()
@@ -94,15 +97,27 @@ struct DefaultAuthRepository: AuthInterface {
                 authorizationCode: keychainService.load(key: .authorizationCode)
             )
             
-            return try await network.request(
+            try await network.request(
                 AuthAPI.withdraw(header: header)
             )
+            removeUserInfo()
         default :
             return
         }
     }
 }
 
+extension DefaultAuthRepository {
+    private func removeUserInfo() {
+        for key in KeyType.allCases {
+            keychainService.delete(key: key)
+        }
+        
+        for key in UserDefaultsKey.allCases {
+            _ = userDefaultsService.delete(key: key)
+        }
+    }
+}
 
 struct MockAuthRepository: AuthInterface {
     func kakaoLogin(platform: LoginPlatform) async throws  {

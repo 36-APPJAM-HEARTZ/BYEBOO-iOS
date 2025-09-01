@@ -8,7 +8,7 @@
 import Foundation
 import Security
 
-enum KeyType: String {
+enum KeyType: String, CaseIterable {
     case authorization
     case accessToken
     case refreshToken
