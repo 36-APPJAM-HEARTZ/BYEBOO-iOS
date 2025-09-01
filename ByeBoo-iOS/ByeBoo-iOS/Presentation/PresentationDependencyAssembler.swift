@@ -196,9 +196,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         DIContainer.shared.register(type: LoginViewModel.self) { container in
             guard let socialLoginUseCase = container.resolve(type: SocialLoginUseCase.self),
-                  let getIsRegisteredUseCase = container.resolve(type: GetIsRegisteredUseCase.self),
-                  let tokenReissueUseCase = container.resolve(type: TokenReissueUseCase.self),
-                  let autoLoginUseCase = container.resolve(type: AutoLoginUseCase.self)
+                  let getIsRegisteredUseCase = container.resolve(type: GetIsRegisteredUseCase.self)
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -206,10 +204,19 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             
             return LoginViewModel(
                 socialLoginUseCase: socialLoginUseCase,
-                getIsRegisteredUseCase: getIsRegisteredUseCase,
-                tokenReissueUseCase: tokenReissueUseCase,
-                autoLoginUseCase: autoLoginUseCase
+                getIsRegisteredUseCase: getIsRegisteredUseCase
             )
+        }
+        
+        DIContainer.shared.register(type: SplashViewModel.self) { container in
+            guard let tokenReissueUseCase = container.resolve(type: TokenReissueUseCase.self),
+                  let autoLoginUseCase = container.resolve(type: AutoLoginUseCase.self)
+            else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return SplashViewModel(autoLoginUseCase: autoLoginUseCase, tokenReissueUseCase: tokenReissueUseCase)
         }
         
     }
