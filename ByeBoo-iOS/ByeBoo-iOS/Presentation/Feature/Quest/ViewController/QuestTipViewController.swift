@@ -29,7 +29,7 @@ final class QuestTipViewController: BaseViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -49,20 +49,6 @@ final class QuestTipViewController: BaseViewController {
     private func setAction() {
         rootView?.closeButton.addTarget(self, action: #selector(closeButtonDidTap), for: .touchUpInside)
     }
-    
-    private func bind() {
-        viewModel.output.questTipPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] result in
-                switch result {
-                case .success(let entity):
-                    self?.rootView?.bind(with: entity)
-                case .failure(let error):
-                    ByeBooLogger.debug(error)
-                }
-            }
-            .store(in: &cancellables)
-    }
 }
 
 extension QuestTipViewController {
@@ -73,10 +59,19 @@ extension QuestTipViewController {
     }
 }
 
-extension QuestTipViewController {
-    func configure(questID: Int, questType: QuestType) {
-        self.questID = questID
-        self.questType = questType
-        rootView = QuestTipView(questType: questType)
+extension QuestTipViewController: ToastPresentable, ToastErrorHandler {
+    
+    private func bind() {
+        viewModel.output.questTipPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let entity):
+                    self?.rootView.bind(with: entity)
+                case .failure(let error):
+                    self?.handleError(error)
+                }
+            }
+            .store(in: &cancellables)
     }
 }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol selectUnCompletedJourneyProtocol: AnyObject {
+protocol SelectUnCompletedJourneyProtocol: AnyObject {
     func addGesture()
 }
 
@@ -26,7 +26,7 @@ final class JourneyListView: BaseView {
     private let isFinished: Bool
     private let journeyList: [JourneyEntity]
     
-    weak var delegate: selectUnCompletedJourneyProtocol?
+    weak var delegate: SelectUnCompletedJourneyProtocol?
     
     init(
         isFinished: Bool,

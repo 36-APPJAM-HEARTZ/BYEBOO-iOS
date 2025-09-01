@@ -44,6 +44,9 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
         
         bind()
     }
+}
+
+extension CompleteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandler {
     
     private func bind() {
         viewModel.output.resultPublisher
@@ -53,7 +56,7 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
                 case .success(let entity):
                     self?.rootView.bind(with: entity)
                 case .failure(let error):
-                    ByeBooLogger.debug(error)
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)

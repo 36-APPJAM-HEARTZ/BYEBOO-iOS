@@ -43,7 +43,9 @@ final class NewJourneySelectViewController: BaseViewController {
         
         bind()
     }
-        
+}
+
+extension NewJourneySelectViewController: ToastPresentable, ToastErrorHandler {
     private func bind() {
         viewModel.output.newJourneyPublisher
             .receive(on: DispatchQueue.main)
@@ -52,7 +54,7 @@ final class NewJourneySelectViewController: BaseViewController {
                 case .success(let entity):
                     self?.rootView.bind(with: entity)
                 case .failure(let error):
-                    ByeBooLogger.debug(error)
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)
@@ -83,7 +85,7 @@ extension NewJourneySelectViewController: BackNavigable {
     }
 }
 
-extension NewJourneySelectViewController: selectUnCompletedJourneyProtocol {
+extension NewJourneySelectViewController: SelectUnCompletedJourneyProtocol {
     func addGesture() {
         guard let journeyStack = rootView.unCompleteListView.journeyListView else { return }
 

@@ -58,22 +58,15 @@ final class QuestStartViewController: BaseViewController {
     }
 }
 
-extension QuestStartViewController: BackNavigable {
-    func back() {
-        if let presentingVC = self.presentingViewController {
-            if let tabBarController = presentingVC as? UITabBarController {
-                self.dismiss(animated: false)
-                tabBarController.selectedIndex = 0
-            }
-        }
-    }
-}
-
 extension QuestStartViewController {
+    
     @objc
     func questStartButtonDidTap() {
         viewModel.action(.buttonDidTap)
     }
+}
+
+extension QuestStartViewController: ToastPresentable, ToastErrorHandler {
     
     private func bind() {
         Publishers.CombineLatest(
@@ -85,8 +78,10 @@ extension QuestStartViewController {
             switch (name, journey) {
             case let (.success(name), .success(journey)):
                 self?.rootView.updateDescription(nickname: name, journey: journey.title)
+            case (_, .failure(let error)):
+                self?.handleError(error)
             default:
-                break
+                ByeBooLogger.error(ByeBooError.unknownError)
             }
         }
         .store(in: &cancellables)
@@ -98,10 +93,21 @@ extension QuestStartViewController {
                 case .success:
                     self?.onStartedQuest?()
                     self?.dismiss(animated: false)
-                case .failure(let failure):
-                    ByeBooLogger.error(failure)
+                case .failure(let error):
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)
+    }
+}
+
+extension QuestStartViewController: BackNavigable {
+    func back() {
+        if let presentingVC = self.presentingViewController {
+            if let tabBarController = presentingVC as? UITabBarController {
+                self.dismiss(animated: false)
+                tabBarController.selectedIndex = 0
+            }
+        }
     }
 }

@@ -119,6 +119,9 @@ extension WriteQuestionTypeQuestViewController {
         viewController.modalPresentationStyle = .fullScreen
         self.present(viewController, animated: false)
     }
+}
+
+extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHandler {
     
     private func bind() {
         viewModel.output.questInfoResultPublisher
@@ -133,8 +136,8 @@ extension WriteQuestionTypeQuestViewController {
                         questStyle: quest.questStyle,
                         question: quest.question
                     )
-                case .failure(let failure):
-                    ByeBooLogger.error(failure)
+                case .failure(let error):
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)
@@ -148,8 +151,8 @@ extension WriteQuestionTypeQuestViewController {
                     viewController.configure(questID: self?.questID ?? 1, questNumber: self?.questNumber ?? 1)
                     self?.bottomSheetViewController.dismiss(animated: true)
                     self?.navigationController?.pushViewController(viewController, animated: true)
-                case .failure(let failure):
-                    ByeBooLogger.error(failure)
+                case .failure(let error):
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)

@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-final class QuestsViewModel {
+final class ProgressingQuestsViewModel {
     
     private let cancellables = Set<AnyCancellable>()
     private let nameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>.init()
@@ -20,7 +20,6 @@ final class QuestsViewModel {
     private(set) var output: Output
     
     private let progressingQuestsUseCase: GetProgressingQuestsUseCase
-    private let getUserIDUseCase: GetUserIDUseCase
     private let getUserNameUseCase: GetUserNameUseCase
     private let fetchUserJourneyUseCase: FetchUserJourneyUseCase
     private let calculateRemainingTimeUseCase: CalculateRemainingTimeUseCase
@@ -30,13 +29,11 @@ final class QuestsViewModel {
     
     init(
         progressingQuestsUseCase: GetProgressingQuestsUseCase,
-        getUserIDUseCase: GetUserIDUseCase,
         getUserNameUseCase: GetUserNameUseCase,
         fetchUserJourneyUseCase: FetchUserJourneyUseCase,
         calculateRemainingTimeUseCase: CalculateRemainingTimeUseCase
     ) {
         self.progressingQuestsUseCase = progressingQuestsUseCase
-        self.getUserIDUseCase = getUserIDUseCase
         self.getUserNameUseCase = getUserNameUseCase
         self.fetchUserJourneyUseCase = fetchUserJourneyUseCase
         self.calculateRemainingTimeUseCase = calculateRemainingTimeUseCase
@@ -50,7 +47,7 @@ final class QuestsViewModel {
         )
     }
     
-    private func getUseName() {
+    private func getUserName() {
         let name = getUserNameUseCase.execute()
         nameSubject.send(.success(name))
     }
@@ -88,6 +85,8 @@ final class QuestsViewModel {
     }
     
     private func setQuestTimer() {
+        if !isQuestLocked { return }
+        
         var remainingSeconds = calculateRemainingTimeUseCase.calculateRemainingTime(
             questOpenTime: questsEntity?.questOpenTime,
             currentTime: questsEntity?.currentTime
@@ -130,7 +129,7 @@ final class QuestsViewModel {
     }
 }
 
-extension QuestsViewModel {
+extension ProgressingQuestsViewModel {
     
     var steps: [StepEntity] { questsEntity?.steps ?? [] }
     var currentStep: Int { questsEntity?.currentStep ?? 0 }
@@ -183,7 +182,7 @@ extension QuestsViewModel {
     }
 }
 
-extension QuestsViewModel: ViewModelType {
+extension ProgressingQuestsViewModel: ViewModelType {
     
     enum Input {
         case questViewWillAppear
@@ -202,7 +201,7 @@ extension QuestsViewModel: ViewModelType {
         switch trigger {
         case .questViewWillAppear:
             loadingSubject.send(true)
-            getUseName()
+            getUserName()
             fetchUserJourney()
             fetchProgressingQuests()
         case .questOpen:
