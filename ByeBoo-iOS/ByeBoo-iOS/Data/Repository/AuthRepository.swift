@@ -48,6 +48,9 @@ struct DefaultAuthRepository: AuthInterface {
             decodingType: PostLoginResponseDTO.self
         )
         _ = userDefaultsService.save(result.isRegistered, key: .isRegistered)
+        _ = userDefaultsService.save(result.name ?? "" , key: .userName)
+        _ = userDefaultsService.save(result.journey ?? "", key: .journey)
+        _ = userDefaultsService.save(result.journeyStatus ?? "", key: .journeyStatus)
         keychainService.save(key: .accessToken, token: result.accessToken)
         keychainService.save(key: .refreshToken, token: result.refreshToken)
     }
