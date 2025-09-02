@@ -59,14 +59,16 @@ struct DefaultAuthRepository: AuthInterface {
         try await network.tokenReissue()
     }
     
-    func hasTokens() -> Bool {
+    func autoLogin() async throws -> Bool {
         let isOnboardingCompleted: Bool = userDefaultsService.load(key: .isOnboardingCompleted) ?? false
-
+        ByeBooLogger.debug(isOnboardingCompleted)
+        
         if !keychainService.load(key: .accessToken).isEmpty
             && !keychainService.load(key: .refreshToken).isEmpty
             && isOnboardingCompleted
         {
             ByeBooLogger.debug("정보 있음")
+            try await network.tokenReissue()
             return true
         } else {
             ByeBooLogger.debug("정보 없음")
@@ -146,7 +148,7 @@ struct MockAuthRepository: AuthInterface {
     func reissue() async throws {
     }
     
-    func hasTokens() -> Bool {
+    func autoLogin() async throws -> Bool {
         return false
     }
     

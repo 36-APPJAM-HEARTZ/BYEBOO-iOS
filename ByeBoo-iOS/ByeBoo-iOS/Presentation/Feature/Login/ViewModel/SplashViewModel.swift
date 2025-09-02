@@ -20,14 +20,11 @@ final class SplashViewModel {
     
     private var cancellables = Set<AnyCancellable>()
     private let autoLoginUseCase: AutoLoginUseCase
-    private let tokenReissueUseCase: TokenReissueUseCase
     
     init(
-        autoLoginUseCase: AutoLoginUseCase,
-        tokenReissueUseCase: TokenReissueUseCase
+        autoLoginUseCase: AutoLoginUseCase
     ) {
         self.autoLoginUseCase = autoLoginUseCase
-        self.tokenReissueUseCase = tokenReissueUseCase
     }
 }
 
@@ -55,8 +52,7 @@ extension SplashViewModel {
         ByeBooLogger.debug("자동로그인 실행")
         Task {
             do {
-                if autoLoginUseCase.execute() {
-                    try await tokenReissueUseCase.execute()
+                if try await autoLoginUseCase.execute() {
                     autoLoginSubject.send(.success(()))
                     ByeBooLogger.debug("자동로그인 성공")
                 }
