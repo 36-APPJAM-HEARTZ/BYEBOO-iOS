@@ -92,7 +92,7 @@ extension QuestStartView {
                 \(nickname)님의 상황에 꼭 맞춘
                 \(journey) 여정의 퀘스트 30개를 드릴게요.\n
                 제가 드리는 퀘스트와 함께
-                이별을 극복해나가요 !
+                이별을 극복해 나가요!
                 """.makeTitle(
                     rangedText: "\(nickname)",
                     font: FontManager.body1Sb16.font,
