@@ -42,6 +42,7 @@ struct DefaultUsersRepository: UsersInterface {
         )
         let _ = userDefaultsService.save(result.id, key: .userID)
         let _ = userDefaultsService.save(result.name, key: .userName)
+        let _ = userDefaultsService.save(true, key: .isOnboardingCompleted)
         return result.toEntity()
     }
     

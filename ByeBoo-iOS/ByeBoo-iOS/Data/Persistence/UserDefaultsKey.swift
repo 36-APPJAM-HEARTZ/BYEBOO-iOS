@@ -10,6 +10,7 @@ import Foundation
 enum UserDefaultsKey: String, CaseIterable {
     case userName
     case userID
+    case isOnboardingCompleted
     case isHelperShown
     case isRegistered
     case loginPlatform
