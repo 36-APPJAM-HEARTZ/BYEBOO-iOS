@@ -27,6 +27,10 @@ final class SplashViewController: BaseViewController {
         view = rootView
         viewModel.action(.viewDidLoad)
         bind()
+//                let key = DefaultKeychainService()
+//                key.delete(key: .authorization)
+//                key.delete(key: .accessToken)
+//                key.delete(key: .refreshToken)
     }
 }
 

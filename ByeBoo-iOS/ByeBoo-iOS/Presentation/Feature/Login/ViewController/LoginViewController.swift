@@ -61,7 +61,7 @@ extension LoginViewController {
                     if isRegisterd {
                         nextViewController = BottomNavigationViewController()
                     } else {
-                        nextViewController = ViewControllerFactory.shared.makeTermsViewController()
+                        nextViewController = UINavigationController(rootViewController: ViewControllerFactory.shared.makeTermsViewController())
                     }
                     
                     if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
