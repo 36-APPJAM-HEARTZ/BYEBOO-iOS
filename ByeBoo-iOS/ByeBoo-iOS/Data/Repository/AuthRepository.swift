@@ -64,7 +64,7 @@ struct DefaultAuthRepository: AuthInterface {
             ByeBooLogger.debug("정보 있음")
             return true
         } else {
-            ByeBooLogger.debug("정보 업음")
+            ByeBooLogger.debug("정보 없음")
             return false
         }
     }
