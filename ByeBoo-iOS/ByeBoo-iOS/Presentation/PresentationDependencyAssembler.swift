@@ -208,5 +208,16 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             )
         }
         
+        DIContainer.shared.register(type: CompletedQuestsViewModel.self) { container in
+            guard let fetchCompletedQuestsUseCase = container.resolve(type: FetchCompletedQuestsUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return CompletedQuestsViewModel(
+                getUserNameUseCase: getUserNameUseCase,
+                fetchCompletedQuestsUseCase: fetchCompletedQuestsUseCase
+            )
+        }
     }
 }

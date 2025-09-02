@@ -119,5 +119,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: CalculateRemainingTimeUseCase.self) { _ in
             return DefaultCalculateRemainingTimeUseCase()
         }
+        
+        DIContainer.shared.register(type: FetchCompletedQuestsUseCase.self) { _ in
+            return DefaultFetchCompletedQuestsUseCase(repository: questRepository)
+        }
     }
 }
