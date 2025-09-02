@@ -27,9 +27,10 @@ final class LoginViewController: BaseViewController {
     override func viewDidLoad() {
         view = rootView
         setAddTarget()
+        
         bind()
     }
-    
+        
     override func setAddTarget() {
         rootView.kakaoLoginButton.addTarget(self, action: #selector(kakaoLoginButtonDidTap) , for: .touchUpInside)
         rootView.appleLoginButton.addTarget(self, action: #selector(appleLoginButtonDidTap), for: .touchUpInside)
@@ -52,7 +53,7 @@ extension LoginViewController {
     private func bind() {
         viewModel.output.isRegisteredPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] result in
+            .sink { result in
                 switch result {
                 case .success(let isRegisterd):
                     ByeBooLogger.debug(isRegisterd)
@@ -60,9 +61,19 @@ extension LoginViewController {
                     if isRegisterd {
                         nextViewController = BottomNavigationViewController()
                     } else {
-                        nextViewController = ViewControllerFactory.shared.makeInformationViewController()
+                        nextViewController = ViewControllerFactory.shared.makeTermsViewController()
                     }
-                    self?.navigationController?.setViewControllers([nextViewController], animated: false)
+                    
+                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                       let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                        
+                        ViewControllerUtils.setRootViewController(
+                            window: window,
+                            viewController: nextViewController,
+                            withAnimation: true
+                        )
+                    }
+                    
                 case .failure(let error):
                     ByeBooLogger.debug(error)
                 }

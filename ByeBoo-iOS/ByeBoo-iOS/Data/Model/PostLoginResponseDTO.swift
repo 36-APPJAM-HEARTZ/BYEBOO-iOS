@@ -9,4 +9,7 @@ struct PostLoginResponseDTO: Decodable {
     let accessToken: String
     let refreshToken: String
     let isRegistered: Bool
+    let name: String?
+    let journey: String?
+    let journeyStatus: String?
 }

@@ -11,7 +11,7 @@ final class LookBackJourneyView: BaseView {
     
     private let titleLabel = UILabel()
     private let divider = SectionDividerView()
-    private let journeyView: JourneyListView
+    private(set) var journeyView: JourneyListView
     
     private var journeyList: [JourneyEntity]
     

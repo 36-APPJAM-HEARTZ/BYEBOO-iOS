@@ -48,8 +48,25 @@ struct DefaultAuthRepository: AuthInterface {
             decodingType: PostLoginResponseDTO.self
         )
         _ = userDefaultsService.save(result.isRegistered, key: .isRegistered)
+        _ = userDefaultsService.save(result.name ?? "" , key: .userName)
+        _ = userDefaultsService.save(result.journey ?? "", key: .journey)
+        _ = userDefaultsService.save(result.journeyStatus ?? "", key: .journeyStatus)
         keychainService.save(key: .accessToken, token: result.accessToken)
         keychainService.save(key: .refreshToken, token: result.refreshToken)
+    }
+    
+    func reissue() async throws {
+        try await network.tokenReissue()
+    }
+    
+    func hasTokens() -> Bool {
+        if !keychainService.load(key: .accessToken).isEmpty && !keychainService.load(key: .refreshToken).isEmpty {
+            ByeBooLogger.debug("정보 있음")
+            return true
+        } else {
+            ByeBooLogger.debug("정보 업음")
+            return false
+        }
     }
     
     func logout() async throws {
@@ -57,6 +74,8 @@ struct DefaultAuthRepository: AuthInterface {
         try await network.request(
             AuthAPI.logout(header: header)
         )
+        
+        removeTokenInfo()
     }
     
     func withdraw() async throws {
@@ -66,9 +85,10 @@ struct DefaultAuthRepository: AuthInterface {
         switch loginPlatform {
         case "KAKAO":
             let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
-            return try await network.request(
+            try await network.request(
                 AuthAPI.withdraw(header: header)
             )
+            removeTokenInfo()
         case "APPLE":
             // TODO: - authroization code 서버에서 처리하기 
             let (_, authorizationCode) = try await network.appleRequest()
@@ -79,21 +99,47 @@ struct DefaultAuthRepository: AuthInterface {
                 authorizationCode: keychainService.load(key: .authorizationCode)
             )
             
-            return try await network.request(
+            try await network.request(
                 AuthAPI.withdraw(header: header)
             )
+            removeTokenInfo()
+            removeUserInfo()
         default :
             return
         }
     }
 }
 
+extension DefaultAuthRepository {
+    private func removeTokenInfo() {
+        for key in KeyType.allCases {
+            let token = keychainService.load(key: key)
+                if !token.isEmpty {
+                    ByeBooLogger.debug("remove 실행: \(key.rawValue)")
+                    keychainService.delete(key: key)
+            }
+        }
+    }
+    
+    private func removeUserInfo() {
+        for key in UserDefaultsKey.allCases {
+            let _ = userDefaultsService.delete(key: key)
+        }
+    }
+}
 
 struct MockAuthRepository: AuthInterface {
     func kakaoLogin(platform: LoginPlatform) async throws  {
     }
     
     func appleLogin(platform: LoginPlatform) async throws {
+    }
+    
+    func reissue() async throws {
+    }
+    
+    func hasTokens() -> Bool {
+        return false
     }
     
     func logout() async throws {

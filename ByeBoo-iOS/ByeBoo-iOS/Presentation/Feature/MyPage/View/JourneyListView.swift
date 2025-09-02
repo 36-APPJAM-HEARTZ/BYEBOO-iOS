@@ -11,12 +11,17 @@ protocol SelectUnCompletedJourneyProtocol: AnyObject {
     func addGesture()
 }
 
+protocol SelectCompletedJourneyProtocol: AnyObject {
+    func addGesture()
+}
+
 final class JourneyListView: BaseView {
 
     private let stackView = UIStackView()
     private let titleLabel = UILabel()
     private let countLabel = UILabel()
     private(set) var journeyListView: UIStackView?
+    private(set) var journeyViews: [OneLineTextBoxView] = []
     
     private let emptyLabel: UILabel?
     
@@ -27,6 +32,7 @@ final class JourneyListView: BaseView {
     private let journeyList: [JourneyEntity]
     
     weak var delegate: SelectUnCompletedJourneyProtocol?
+    weak var completeJourneyDelegate: SelectCompletedJourneyProtocol?
     
     init(
         isFinished: Bool,
@@ -165,12 +171,17 @@ extension JourneyListView {
                     tagType: isFinished ? .word3Gray : .word3Purple,
                     isHighlighted: !isFinished
                 )
-                journeyListView?.addArrangedSubview(journeyView)
+                //journeyListView?.addArrangedSubview(journeyView)
                 journeyView.snp.makeConstraints {
                     $0.height.equalTo(60.adjustedH)
                 }
                 journeyView.isUserInteractionEnabled = true
+                journeyViews.append(journeyView)
             }
+            journeyViews.forEach {
+                journeyListView?.addArrangedSubview($0)
+            }
+            completeJourneyDelegate?.addGesture()
             
             if !isFinished {
                 journeyListView?.addArrangedSubview(prepareView)

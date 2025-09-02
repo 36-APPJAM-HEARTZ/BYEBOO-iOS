@@ -14,7 +14,7 @@ final class QuestCheckViewController: BaseViewController {
     
     private static let lastStep = 5
     
-    private let questsCheckView = QuestsCheckView()
+    private let questsCheckView = ViewAllQuestBaseView(headerView: QuestCheckHeaderView())
     private let viewModel: ProgressingQuestsViewModel
     var coordinator: QuestCheckCoordinating?
     private var cancellable = Set<AnyCancellable>()
@@ -143,11 +143,11 @@ extension QuestCheckViewController {
         journey: JourneyEntity,
         quests: ProgressingQuestsEntity
     ) {
-        self.questsCheckView.questCheckHeaderView.updateHeader(
+        self.questsCheckView.questCheckHeaderView.configure(
             nickname: name,
-            journey: journey.title
+            journey: journey.title,
+            period: "\(quests.progressPeriod)"
         )
-        self.questsCheckView.questCheckHeaderView.updatePeriod(quests.progressPeriod)
         self.questsCheckView.questCollectionView.reloadData()
         
         guard let step = quests.steps.first else { return }

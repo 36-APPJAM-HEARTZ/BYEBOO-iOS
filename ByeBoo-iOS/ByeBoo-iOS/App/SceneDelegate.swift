@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         DIContainer.shared.dependencyInject()
       
-        let viewController = ViewControllerFactory.shared.makeLoginViewController()
+        let viewController = ViewControllerFactory.shared.makeSplashViewController()
         let navigationController = UINavigationController(rootViewController: viewController)
         let window = UIWindow(windowScene: windowScene)
         window.rootViewController = navigationController

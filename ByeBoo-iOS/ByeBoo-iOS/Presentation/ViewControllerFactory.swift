@@ -18,6 +18,8 @@ protocol ViewControllerFactoryProtocol {
     func makeNewJourneySelectViewController() -> NewJourneySelectViewController
     func makeLoginViewController() -> LoginViewController
     func makeModifyNicknameViewController() -> ModifyNicknameViewController
+    func makeTermsViewController() -> TermsViewController
+    func makeSplashViewController() -> SplashViewController
     func makeArchiveQuestViewController() -> ArchiveQuestViewController
     func makeQuestTipViewController() -> QuestTipViewController
     func makeWriteQuestionTypeQuestViewController() -> WriteQuestionTypeQuestViewController
@@ -111,6 +113,18 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
         return ModifyNicknameViewController(viewModel: viewModel)
     }
     
+    func makeTermsViewController() -> TermsViewController {
+        return TermsViewController()
+    }
+    
+    func makeSplashViewController() -> SplashViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: SplashViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        return SplashViewController(viewModel: viewModel)
+    }
+    
     func makeArchiveQuestViewController() -> ArchiveQuestViewController {
         guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
             DIErrorHandle()
@@ -161,6 +175,14 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
     
     func makeFinishJourneyViewController() -> FinishJourneyViewController {
         return FinishJourneyViewController()
+    }
+    
+    func makeCompletedQuestsViewController() -> CompletedQuestsViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: CompletedQuestsViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        return CompletedQuestsViewController(viewModel: viewModel)
     }
 }
 
