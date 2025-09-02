@@ -27,6 +27,19 @@ final class SplashViewController: BaseViewController {
         view = rootView
         viewModel.action(.viewDidLoad)
         bind()
+        setAddTarget()
+    }
+    
+    override func setAddTarget() {
+        rootView.keychaindelete.addTarget(self, action: #selector(keychainDelete), for: .touchUpInside)
+    }
+    
+    @objc private func keychainDelete() {
+        let keychain = DefaultKeychainService()
+        for key in KeyType.allCases {
+            keychain.delete(key: key)
+        }
+        ByeBooLogger.debug("키체인 삭제 완료")
     }
 }
 
