@@ -13,7 +13,7 @@ final class LookBackJourneyViewController: BaseViewController {
     private let rootView: LookBackJourneyView
     private let viewModel: LookBackJourneyViewModel
     private var cancellables = Set<AnyCancellable>()
-    
+        
     override func loadView() {
         view = rootView
     }
@@ -22,7 +22,6 @@ final class LookBackJourneyViewController: BaseViewController {
         self.viewModel = viewModel
         rootView = LookBackJourneyView(journeyList: [])
         super.init(nibName: nil, bundle: nil)
-    
     }
     
     required init?(coder: NSCoder) {
@@ -31,7 +30,7 @@ final class LookBackJourneyViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         viewModel.action(.lookBackJourneyDidLoad)
         
         ByeBooNavigationBar.makeNavigationBar(
@@ -42,6 +41,30 @@ final class LookBackJourneyViewController: BaseViewController {
         )
         
         bind()
+        rootView.journeyView.completeJourneyDelegate = self
+    }
+}
+
+extension LookBackJourneyViewController: SelectCompletedJourneyProtocol {
+    
+    func addGesture() {
+        if let views = rootView.journeyView.journeyListView?.arrangedSubviews {
+            for (_, view) in views.enumerated() {
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(journeyViewDidTap(_:)))
+                view.addGestureRecognizer(tapGesture)
+            }
+        }
+    }
+    
+    @objc
+    private func journeyViewDidTap(_ gesture: UITapGestureRecognizer) {
+        guard let view = gesture.view as? OneLineTextBoxView else { return }
+        
+        let completedQuestsViewController = ViewControllerFactory.shared.makeCompletedQuestsViewController()
+        completedQuestsViewController.configure(journey: view.title)
+        completedQuestsViewController.navigationItem.hidesBackButton = true
+        
+        self.navigationController?.pushViewController(completedQuestsViewController, animated: false)
     }
 }
 
