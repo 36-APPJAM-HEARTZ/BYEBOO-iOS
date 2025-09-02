@@ -77,7 +77,7 @@ extension NewJourneySelectViewController: SelectUnCompletedJourneyProtocol {
         guard let journeyStack = rootView.unCompleteListView.journeyListView else { return }
 
         ByeBooLogger.debug(journeyStack)
-        journeyStack.arrangedSubviews.forEach { journey in
+        journeyStack.arrangedSubviews.dropLast().forEach { journey in
             let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(journeyDidTap))
             journey.addGestureRecognizer(tapRecognizer)
             journey.isUserInteractionEnabled = true

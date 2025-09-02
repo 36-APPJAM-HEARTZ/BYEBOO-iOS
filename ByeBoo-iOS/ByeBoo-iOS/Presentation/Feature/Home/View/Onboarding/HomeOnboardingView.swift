@@ -83,13 +83,13 @@ final class HomeOnboardingView: BaseView {
 
 extension HomeOnboardingView {
     func startAnimation() {
-        UIView.transition(with: self.speechBoxView, duration: 0.5, options: .transitionCrossDissolve) {
+        UIView.transition(with: self.speechBoxView, duration: 0.8, options: .transitionCrossDissolve) {
             self.speechBoxView.updateText("바이부에 오신 걸 환영해요!")
         } completion: { _ in
-            UIView.transition(with: self.speechBoxView, duration: 0.5, options: .transitionCrossDissolve) {
+            UIView.transition(with: self.speechBoxView, duration: 0.8, options: .transitionCrossDissolve) {
                 self.speechBoxView.updateText("저는 보리라고 해요.")
             } completion: { _ in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
                     UIView.transition(with: self.speechBoxView, duration: 1, options: .transitionCrossDissolve) {
                         self.speechBoxView.updateText("여정을 시작하러 가볼까요?")
                         

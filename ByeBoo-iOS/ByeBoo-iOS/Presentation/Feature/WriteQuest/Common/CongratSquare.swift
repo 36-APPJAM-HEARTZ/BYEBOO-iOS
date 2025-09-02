@@ -41,7 +41,7 @@ final class CongratSquare: BaseView {
         
         descriptionLabel.do {
             $0.font = FontManager.body3R16.font
-            $0.text = "기특해요 !\n점점 극복해나가고 있어요 :)"
+            $0.text = "기특해요!\n점점 극복해 나가고 있어요 :)"
             $0.textColor = .grayscale300
             $0.numberOfLines = 2
             $0.textAlignment = .center

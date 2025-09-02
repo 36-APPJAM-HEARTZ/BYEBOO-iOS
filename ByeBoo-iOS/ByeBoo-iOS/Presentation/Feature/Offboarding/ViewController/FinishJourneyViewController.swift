@@ -9,7 +9,7 @@ import UIKit
 
 final class FinishJourneyViewController: BaseViewController {
 
-    let rootView = FinishJourneyView()
+    private let rootView = FinishJourneyView()
     
     override func loadView() {
         view = rootView
@@ -19,6 +19,7 @@ final class FinishJourneyViewController: BaseViewController {
         super.viewDidLoad()
         
         self.navigationItem.hidesBackButton = true
+        tabBarController?.tabBar.isHidden = true
         
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
@@ -34,7 +35,6 @@ final class FinishJourneyViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tabBarController?.tabBar.isHidden = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
