@@ -94,6 +94,14 @@ struct DefaultQuestRepository: QuestsInterface {
         )
     }
     
+    func fetchCompletedQuests(journey: JourneyType) async throws -> CompletedQuestsEntity {
+        let result = try await network.request(
+            QuestAPI.completedQuests(journey: journey),
+            decodingType: CompletedQuestsResponseDTO.self
+        )
+        return result.toEntity()
+    }
+    
     // MARK: private function
     
     private func makeSignedURL(imageKey: String) async throws -> String {
@@ -164,5 +172,9 @@ struct MockQuestsRepository: QuestsInterface {
     
     func postNewJourney(journey: JourneyType) async throws {
         
+    }
+    
+    func fetchCompletedQuests(journey: JourneyType) async throws -> CompletedQuestsEntity {
+        return .stub()
     }
 }

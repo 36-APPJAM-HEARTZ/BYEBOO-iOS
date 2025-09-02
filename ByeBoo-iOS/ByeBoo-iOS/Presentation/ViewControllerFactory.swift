@@ -176,6 +176,14 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
     func makeFinishJourneyViewController() -> FinishJourneyViewController {
         return FinishJourneyViewController()
     }
+    
+    func makeCompletedQuestsViewController() -> CompletedQuestsViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: CompletedQuestsViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        return CompletedQuestsViewController(viewModel: viewModel)
+    }
 }
 
 extension ViewControllerFactory {

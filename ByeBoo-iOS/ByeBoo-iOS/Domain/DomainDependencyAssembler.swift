@@ -120,6 +120,10 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultCalculateRemainingTimeUseCase()
         }
         
+        DIContainer.shared.register(type: FetchCompletedQuestsUseCase.self) { _ in
+            return DefaultFetchCompletedQuestsUseCase(repository: questRepository)
+        }
+      
         DIContainer.shared.register(type: TokenReissueUseCase.self) { _ in
             return DefaultTokenReissueUseCase(repository: authRepository)
         }

@@ -22,4 +22,5 @@ protocol QuestsInterface {
     func getLookBackJourney() async throws -> [JourneyEntity]
     func getNewJourney() async throws -> LookBackJourneyEntity
     func postNewJourney(journey: JourneyType) async throws
+    func fetchCompletedQuests(journey: JourneyType) async throws -> CompletedQuestsEntity
 }

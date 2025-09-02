@@ -208,6 +208,17 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             )
         }
         
+        DIContainer.shared.register(type: CompletedQuestsViewModel.self) { container in
+            guard let fetchCompletedQuestsUseCase = container.resolve(type: FetchCompletedQuestsUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            return CompletedQuestsViewModel(
+                getUserNameUseCase: getUserNameUseCase,
+                fetchCompletedQuestsUseCase: fetchCompletedQuestsUseCase
+            )
+        }
+                                                                          
         DIContainer.shared.register(type: SplashViewModel.self) { container in
             guard let tokenReissueUseCase = container.resolve(type: TokenReissueUseCase.self),
                   let autoLoginUseCase = container.resolve(type: AutoLoginUseCase.self)
@@ -215,9 +226,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
-            
             return SplashViewModel(autoLoginUseCase: autoLoginUseCase, tokenReissueUseCase: tokenReissueUseCase)
-        }
-        
+        }        
     }
 }
