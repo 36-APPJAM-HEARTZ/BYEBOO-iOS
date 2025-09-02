@@ -90,6 +90,7 @@ extension InformationBaseView {
             self.progressView = ProgressBarView(type: self.progressBarType)
             
             self.setUI()
+            self.setStyle()
             self.setLayout()
             
             UIView.animate(withDuration: 0.2) {
