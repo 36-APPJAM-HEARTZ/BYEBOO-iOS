@@ -7,10 +7,12 @@
 
 import Foundation
 
-enum UserDefaultsKey: String {
+enum UserDefaultsKey: String, CaseIterable {
     case userName
     case userID
     case isHelperShown
     case isRegistered
     case loginPlatform
+    case journey
+    case journeyStatus
 }

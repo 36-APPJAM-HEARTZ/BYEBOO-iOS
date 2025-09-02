@@ -119,5 +119,13 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: CalculateRemainingTimeUseCase.self) { _ in
             return DefaultCalculateRemainingTimeUseCase()
         }
+        
+        DIContainer.shared.register(type: TokenReissueUseCase.self) { _ in
+            return DefaultTokenReissueUseCase(repository: authRepository)
+        }
+        
+        DIContainer.shared.register(type: AutoLoginUseCase.self) { _ in
+            return DefaultAutoLoginUseCase(repository: authRepository)
+        }
     }
 }
