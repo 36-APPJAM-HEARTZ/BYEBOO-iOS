@@ -50,6 +50,10 @@ final class ModifyNicknameViewController: BaseViewController {
         )
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(false)
+    }
+    
     private func focusTextField() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
             self.rootView.nicknameTextField.nicknameField.becomeFirstResponder()
