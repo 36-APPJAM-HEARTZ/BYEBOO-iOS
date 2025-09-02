@@ -1,8 +1,8 @@
 //
-//  QuestCheckView.swift
+//  ViewAllQuestBaseView.swift
 //  ByeBoo-iOS
 //
-//  Created by APPLE on 7/11/25.
+//  Created by APPLE on 9/1/25.
 //
 
 import UIKit
@@ -10,13 +10,22 @@ import UIKit
 import SnapKit
 import Then
 
-final class QuestsCheckView: BaseView {
+final class ViewAllQuestBaseView: BaseView {
     
-    private(set) var questCheckHeaderView = QuestCheckHeaderView()
+    private(set) var questCheckHeaderView: QuestHeaderBaseView
     private(set) var questCollectionView = UICollectionView(
         frame: .zero,
         collectionViewLayout: CollectionViewFactory.createLayout()
     )
+    
+    init(headerView: QuestHeaderBaseView) {
+        self.questCheckHeaderView = headerView
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func setUI() {
         addSubviews(
