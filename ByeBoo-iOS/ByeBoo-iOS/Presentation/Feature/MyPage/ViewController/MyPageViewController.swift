@@ -64,13 +64,14 @@ final class MyPageViewController: BaseViewController {
     }
     
     private func setGesture() {
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewByeBooWorldDidTap))
+        let lookBackTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(lookBackButtonDidTap))
+        let viewUniversetapRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewByeBooWorldDidTap))
         rootView.myRecordView.textBoxView.do {
-            $0.addGestureRecognizer(tapRecognizer)
+            $0.addGestureRecognizer(lookBackTapRecognizer)
             $0.isUserInteractionEnabled = true
         }
         rootView.worldView.textBoxView.do {
-            $0.addGestureRecognizer(tapRecognizer)
+            $0.addGestureRecognizer(viewUniversetapRecognizer)
             $0.isUserInteractionEnabled = true
         }
     }
