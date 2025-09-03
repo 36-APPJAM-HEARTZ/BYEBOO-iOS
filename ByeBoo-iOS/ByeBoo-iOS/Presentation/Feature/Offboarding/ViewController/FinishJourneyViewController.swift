@@ -35,9 +35,6 @@ final class FinishJourneyViewController: BaseViewController {
         
         viewModel.action(.viewDidLoad)
         
-        self.navigationItem.hidesBackButton = true
-        tabBarController?.tabBar.isHidden = true
-        
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
@@ -52,12 +49,14 @@ final class FinishJourneyViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        self.navigationItem.hidesBackButton = true
+        tabBarController?.tabBar.isHidden = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
-        tabBarController?.tabBar.isHidden = false
     }
     
     override func setAddTarget() {
@@ -86,8 +85,7 @@ extension FinishJourneyViewController: Dismissible {
     func close() {
         if let tabBar = tabBarController {
             navigationController?.popViewController(animated: false)
-            guard tabBar.viewControllers?[safe: 0] != nil else { return }
-            tabBar.selectedIndex = 0
+            ViewControllerUtils.changeSelectedIndex(index: 0)
         }
     }
 }
@@ -98,6 +96,7 @@ extension FinishJourneyViewController {
         ByeBooLogger.debug("starbuttontapped")
         
         let viewController = ViewControllerFactory.shared.makeNewJourneySelectViewController()
+        viewController.hidesBottomBarWhenPushed = true
         
         guard let navigationController else {
             ByeBooLogger.error(ByeBooError.navigationControllerMissing)
@@ -111,6 +110,7 @@ extension FinishJourneyViewController {
         ByeBooLogger.debug("lookBackButtonTapped")
         
         let viewController = ViewControllerFactory.shared.makeLookBackJourneyViewController()
+        viewController.hidesBottomBarWhenPushed = true
         
         guard let navigationController else {
             ByeBooLogger.error(ByeBooError.navigationControllerMissing)
@@ -127,7 +127,6 @@ extension FinishJourneyViewController {
             return
         }
         
-        guard tabBarController?.viewControllers?[safe: 0] != nil else { return }
-        navigationController.tabBarController?.selectedIndex = 0
+        ViewControllerUtils.changeSelectedIndex(index: 0)
     }
 }
