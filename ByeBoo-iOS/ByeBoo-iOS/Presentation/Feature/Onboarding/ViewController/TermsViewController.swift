@@ -95,7 +95,7 @@ extension TermsViewController {
     
     @objc
     private func privacyViewMoreButtonDidTap() {
-        ExternalLink.serviceTerm.openURL(for: self)
+        ExternalLink.privacyPolicy.openURL(for: self)
     }
     
     @objc
