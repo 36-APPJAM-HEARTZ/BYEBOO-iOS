@@ -91,15 +91,15 @@ final class MyPageView: BaseView {
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
         inquireView.snp.makeConstraints {
-            $0.top.equalTo(divider2.snp.bottom).offset(24.5.adjustedH)
+            $0.top.equalTo(divider2.snp.bottom).offset(8.adjustedH)
             $0.horizontalEdges.equalToSuperview()
         }
         termAndPolicyView.snp.makeConstraints {
-            $0.top.equalTo(inquireView.snp.bottom).offset(24.5.adjustedH)
+            $0.top.equalTo(inquireView.snp.bottom)
             $0.horizontalEdges.equalToSuperview()
         }
         accountView.snp.makeConstraints {
-            $0.top.equalTo(termAndPolicyView.snp.bottom).offset(24.5.adjustedH)
+            $0.top.equalTo(termAndPolicyView.snp.bottom)
             $0.horizontalEdges.equalToSuperview()
             $0.bottom.equalToSuperview().inset(24.5.adjustedH)
         }
