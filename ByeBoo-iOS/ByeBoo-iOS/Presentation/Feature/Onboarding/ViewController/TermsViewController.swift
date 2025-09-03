@@ -24,21 +24,13 @@ final class TermsViewController: BaseViewController {
             action: #selector(allCheckButtonDidTap),
             for: .touchUpInside
         )
-        rootView.serviceAgreeView.checkButton.addTarget(
-            self,
-            action: #selector(detailCheckButtonDidTap),
-            for: .touchUpInside
-        )
-        rootView.privacyAgreeView.checkButton.addTarget(
-            self,
-            action: #selector(detailCheckButtonDidTap),
-            for: .touchUpInside
-        )
-        rootView.ageAgreeView.checkButton.addTarget(
-            self,
-            action: #selector(detailCheckButtonDidTap),
-            for: .touchUpInside
-        )
+        [rootView.serviceAgreeView, rootView.privacyAgreeView, rootView.ageAgreeView].forEach {
+            $0.checkButton.addTarget(
+                self,
+                action: #selector(detailCheckButtonDidTap),
+                for: .touchUpInside
+            )
+        }
         rootView.serviceAgreeView.viewMoreButton.addTarget(
             self,
             action: #selector(serviceViewMoreButtonDidTap),
