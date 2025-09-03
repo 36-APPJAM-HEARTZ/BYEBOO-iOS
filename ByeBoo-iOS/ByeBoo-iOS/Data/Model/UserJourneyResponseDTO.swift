@@ -15,7 +15,8 @@ extension UserJourneyResponseDTO {
         return .init(
             title: self.journey,
             description: self.description,
-            style: nil
+            style: nil,
+            questType: nil
         )
     }
 }
