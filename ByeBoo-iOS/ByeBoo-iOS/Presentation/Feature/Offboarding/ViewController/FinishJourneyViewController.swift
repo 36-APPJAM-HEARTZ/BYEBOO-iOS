@@ -6,10 +6,24 @@
 //
 
 import UIKit
+import Combine
 
 final class FinishJourneyViewController: BaseViewController {
 
     private let rootView = FinishJourneyView()
+    private let viewModel: FinishJourneyViewModel
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(viewModel: FinishJourneyViewModel) {
+        self.viewModel = viewModel
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = rootView
@@ -17,6 +31,9 @@ final class FinishJourneyViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        bind()
+        
+        viewModel.action(.viewDidLoad)
         
         self.navigationItem.hidesBackButton = true
         tabBarController?.tabBar.isHidden = true
@@ -50,6 +67,18 @@ final class FinishJourneyViewController: BaseViewController {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(homeLabelDidTap))
         rootView.backHomeLabel.addGestureRecognizer(tapRecognizer)
         rootView.backHomeLabel.isUserInteractionEnabled = true
+    }
+}
+
+extension FinishJourneyViewController {
+    private func bind() {
+        viewModel.output.userNamePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] name in
+                self?.rootView.updateText(nickname: name)
+            }
+            .store(in: &cancellables)
+
     }
 }
 
