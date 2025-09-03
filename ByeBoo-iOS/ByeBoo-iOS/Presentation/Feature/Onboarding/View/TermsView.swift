@@ -12,7 +12,7 @@ final class TermsView: BaseView {
     private let backgroundImageView = UIImageView()
     private let mainTitleLabel = UILabel()
     private let subTitleLabel = UILabel()
-    private let allAgreeView = UIView()
+    private(set) var allAgreeView = UIView()
     private(set) var allCheckButton = UIButton()
     private let allAgreeLabel = UILabel()
     private(set) var serviceAgreeView = DetailTermsView(title: "서비스 이용약관 동의", isHiddenViewMore: false)
