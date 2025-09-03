@@ -8,6 +8,10 @@
 import UIKit
 import Combine
 
+protocol StartModalDelegate: AnyObject {
+    func dismissModal()
+}
+
 final class QuestStartViewController: BaseViewController {
     
     private let viewModel: QuestStartViewModel
@@ -15,6 +19,8 @@ final class QuestStartViewController: BaseViewController {
     private let rootView = QuestStartView()
     
     private var journeyTitle: String = ""
+    
+    weak var delegate: StartModalDelegate?
     
     init(viewModel: QuestStartViewModel) {
         self.viewModel = viewModel
@@ -93,9 +99,8 @@ extension QuestStartViewController: ToastPresentable, ToastErrorHandler {
             .sink { [weak self] result in
                 switch result {
                 case .success:
+                    self?.delegate?.dismissModal()
                     self?.dismiss(animated: false)
-                    guard self?.tabBarController?.viewControllers?[safe: 1] != nil else { return }
-                    self?.navigationController?.tabBarController?.selectedIndex = 1
                 case .failure(let error):
                     self?.handleError(error)
                 }

@@ -31,6 +31,8 @@ final class NewJourneySelectViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
     
+        bind()
+        
         rootView.unCompleteListView.delegate = self
         viewModel.action(.newJourneyDidLoad)
         
@@ -40,8 +42,6 @@ final class NewJourneySelectViewController: BaseViewController {
             type: .back(),
             action: #selector(back)
         )
-        
-        bind()
     }
 }
 
@@ -94,6 +94,14 @@ extension NewJourneySelectViewController {
         let viewController = ViewControllerFactory.shared.makeQuestStartViewController()
         viewController.configure(journeyTitle: journeyView.title)
         viewController.modalPresentationStyle = .fullScreen
+        viewController.delegate = self
         self.present(viewController, animated: false)
+    }
+}
+
+extension NewJourneySelectViewController: StartModalDelegate {
+    func dismissModal() {
+        navigationController?.popToRootViewController(animated: false)
+        ViewControllerUtils.changeSelectedIndex(index: 0)
     }
 }
