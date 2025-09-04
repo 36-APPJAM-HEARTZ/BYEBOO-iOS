@@ -59,12 +59,19 @@ struct DefaultAuthRepository: AuthInterface {
         try await network.tokenReissue()
     }
     
-    func hasTokens() -> Bool {
-        if !keychainService.load(key: .accessToken).isEmpty && !keychainService.load(key: .refreshToken).isEmpty {
+    func autoLogin() async throws -> Bool {
+        let isOnboardingCompleted: Bool = userDefaultsService.load(key: .isOnboardingCompleted) ?? false
+        ByeBooLogger.debug(isOnboardingCompleted)
+        
+        if !keychainService.load(key: .accessToken).isEmpty
+            && !keychainService.load(key: .refreshToken).isEmpty
+            && isOnboardingCompleted
+        {
             ByeBooLogger.debug("정보 있음")
+            try await network.tokenReissue()
             return true
         } else {
-            ByeBooLogger.debug("정보 업음")
+            ByeBooLogger.debug("정보 없음")
             return false
         }
     }
@@ -76,6 +83,7 @@ struct DefaultAuthRepository: AuthInterface {
         )
         
         removeTokenInfo()
+        removeUserInfo(excludedKeys: [.isOnboardingCompleted, .isHelperShown])
     }
     
     func withdraw() async throws {
@@ -89,6 +97,7 @@ struct DefaultAuthRepository: AuthInterface {
                 AuthAPI.withdraw(header: header)
             )
             removeTokenInfo()
+            removeUserInfo()
         case "APPLE":
             // TODO: - authroization code 서버에서 처리하기 
             let (_, authorizationCode) = try await network.appleRequest()
@@ -115,15 +124,16 @@ extension DefaultAuthRepository {
         for key in KeyType.allCases {
             let token = keychainService.load(key: key)
                 if !token.isEmpty {
-                    ByeBooLogger.debug("remove 실행: \(key.rawValue)")
                     keychainService.delete(key: key)
             }
         }
     }
     
-    private func removeUserInfo() {
+    private func removeUserInfo(excludedKeys: [UserDefaultsKey] = []) {
         for key in UserDefaultsKey.allCases {
+            guard !excludedKeys.contains(key) else { continue }
             let _ = userDefaultsService.delete(key: key)
+            ByeBooLogger.debug("\(key) 삭제")
         }
     }
 }
@@ -138,7 +148,7 @@ struct MockAuthRepository: AuthInterface {
     func reissue() async throws {
     }
     
-    func hasTokens() -> Bool {
+    func autoLogin() async throws -> Bool {
         return false
     }
     

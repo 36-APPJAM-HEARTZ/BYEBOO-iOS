@@ -63,8 +63,7 @@ extension HomeViewController {
     private func headerDidTap() {
         switch state {
         case .beforeJourneyStart, .beforeQuest, .afterQuest:
-            guard tabBarController?.viewControllers?[safe: 1] != nil else { return }
-            navigationController?.tabBarController?.selectedIndex = 1
+            ViewControllerUtils.changeSelectedIndex(index: 1)
         case .afterJourney:
             let viewController = ViewControllerFactory.shared.makeNewJourneySelectViewController()
             navigationController?.pushViewController(viewController, animated: false)

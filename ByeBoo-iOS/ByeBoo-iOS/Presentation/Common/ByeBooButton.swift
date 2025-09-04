@@ -34,7 +34,7 @@ enum ByeBooButtonType {
     var textColor: UIColor {
         switch self {
         case .sub:
-                .primary300
+                .primary400
         case .outline:
                 .grayscale200
         case .enabled:

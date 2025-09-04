@@ -23,11 +23,12 @@ final class FinishJourneyView: BaseView {
     let lookBackButton = ByeBooButton(titleText: "완료한 여정 다시보기", type: .sub)
     let backHomeLabel = UILabel()
     
-    private let animationText: [String] = [
+    private var animationText: [String] = [
         "무려 30개의 퀘스트를 완료했어요.\n끝까지 포기하지 않고 극복하기 위해 노력한\n하츠핑님이 너무 대단해요.",
         "지금의 하츠핑님은, 처음보다 성장했을 거예요.",
         "만약 아직 정리되지 못한 감정이 남아있다면,\n또 다른 새로운 여정을 시작해볼까요?"
     ]
+    
     override func setStyle() {
         backgroundImageView.do {
             $0.image = .bgLight
@@ -63,7 +64,7 @@ final class FinishJourneyView: BaseView {
         secondTextLabel.do {
             $0.text = animationText[1]
             $0.numberOfLines = 0
-            $0.font = FontManager.cap2R12.font
+            $0.font = FontManager.cap1M12.font
             $0.textColor = .secondary5050
             $0.textAlignment = .center
         }
@@ -71,7 +72,7 @@ final class FinishJourneyView: BaseView {
         thirdTextLabel.do {
             $0.text = animationText[2]
             $0.numberOfLines = 0
-            $0.font = FontManager.cap2R12.font
+            $0.font = FontManager.cap1M12.font
             $0.textColor = .secondary5050
             $0.textAlignment = .center
             $0.alpha = 0
@@ -148,7 +149,7 @@ extension FinishJourneyView {
             self.firstTextLabel.alpha = 0
             
             let animation = CGAffineTransform(translationX: 0, y: -50)
-            self.secondTextLabel.transform = animation.scaledBy(x: 1.2, y: 1.2)
+            self.secondTextLabel.transform = animation.scaledBy(x: 1.3, y: 1.3)
             
             self.thirdTextLabel.alpha = 1
             self.thirdTextLabel.transform = CGAffineTransform(translationX: 0, y: -50)
@@ -158,9 +159,19 @@ extension FinishJourneyView {
                 self.secondTextLabel.transform = CGAffineTransform(translationX: 0, y: -70)
                 self.secondTextLabel.alpha = 0
                 
-                let animation = CGAffineTransform(translationX: 0, y: -100)
-                self.thirdTextLabel.transform = animation.scaledBy(x: 1.2, y: 1.2)
+                let animation = CGAffineTransform(translationX: 0, y: -90)
+                self.thirdTextLabel.transform = animation.scaledBy(x: 1.3, y: 1.3)
             })
         }
+    }
+}
+
+extension FinishJourneyView {
+    func updateText(nickname: String) {
+        animationText = [
+            "무려 30개의 퀘스트를 완료했어요.\n끝까지 포기하지 않고 극복하기 위해 노력한\n\(nickname)님이 너무 대단해요.",
+            "지금의 \(nickname)님은, 처음보다 성장했을 거예요.",
+            "만약 아직 정리되지 못한 감정이 남아있다면,\n또 다른 새로운 여정을 시작해볼까요?"
+        ]
     }
 }

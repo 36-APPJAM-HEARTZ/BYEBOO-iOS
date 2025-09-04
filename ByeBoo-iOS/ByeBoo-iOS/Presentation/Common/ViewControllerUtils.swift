@@ -27,4 +27,13 @@ struct ViewControllerUtils {
             })
         }
     }
+    
+    static func changeSelectedIndex(index: Int) {
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first(where: { $0.isKeyWindow }),
+           let tabBarController = window.rootViewController as? UITabBarController {
+            guard tabBarController.viewControllers?[safe: index] != nil else { return }
+            tabBarController.selectedIndex = index
+        }
+    }
 }
