@@ -63,6 +63,15 @@ enum ByeBooButtonType {
             false
         }
     }
+    
+    var font: UIFont {
+        switch self {
+        case .sub, .enabled:
+            FontManager.body2M16.font
+        case .outline, .disabled, .disabled2:
+            FontManager.body3R16.font
+        }
+    }
 }
 
 final class ByeBooButton: UIButton {
@@ -80,7 +89,7 @@ final class ByeBooButton: UIButton {
         
         self.setTitle(titleText, for: .normal)
         self.setTitleColor(type.textColor, for: .normal)
-        self.titleLabel?.font = FontManager.body2M16.font
+        self.titleLabel?.font = type.font
         self.backgroundColor = type.backgroundColor
         self.layer.borderWidth = 1
         self.layer.borderColor = type.borderColor

@@ -16,7 +16,7 @@ final class MyPageFeatureView: BaseView {
     init(title: String, features: [MyPageDetailFeatureType]) {
         titleLabel.text = title
         super.init(frame: .zero)
-
+        
         setFeatureButtons(features: features)
     }
     
@@ -60,13 +60,12 @@ final class MyPageFeatureView: BaseView {
     
     override func setLayout() {
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16.adjustedH)
+            $0.top.equalToSuperview().offset(24.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
         featureStackView.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(16.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-            $0.bottom.equalToSuperview().inset(24.5.adjustedH)
+            $0.horizontalEdges.bottom.equalToSuperview().inset(24.adjustedW)
         }
     }
 }

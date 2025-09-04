@@ -52,18 +52,20 @@ final class MyPageViewController: BaseViewController {
             action: #selector(moveButtonDidTap),
             for: .touchUpInside
         )
-        rootView.inquireView.featureButtons.forEach {
-            $0.addTarget(self, action: #selector(featureButtonDidTap(_:)), for: .touchUpInside)
-        }
-        rootView.termAndPolicyView.featureButtons.forEach {
-            $0.addTarget(self, action: #selector(featureButtonDidTap(_:)), for: .touchUpInside)
-        }
-        rootView.accountView.featureButtons.forEach {
-            $0.addTarget(self, action: #selector(featureButtonDidTap(_:)), for: .touchUpInside)
+        [rootView.inquireView, rootView.termAndPolicyView, rootView.accountView].forEach {
+            $0.featureButtons.forEach {
+                $0.addTarget(self, action: #selector(featureButtonDidTap(_:)), for: .touchUpInside)
+            }
         }
     }
     
     private func setGesture() {
+        let nicknameTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(moveButtonDidTap))
+        rootView.nameView.do {
+            $0.addGestureRecognizer(nicknameTapRecognizer)
+            $0.isUserInteractionEnabled = true
+        }
+        
         let lookBackTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(lookBackButtonDidTap))
         let viewUniversetapRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewByeBooWorldDidTap))
         rootView.myRecordView.textBoxView.do {
@@ -72,16 +74,6 @@ final class MyPageViewController: BaseViewController {
         }
         rootView.worldView.textBoxView.do {
             $0.addGestureRecognizer(viewUniversetapRecognizer)
-        }
-        let recordTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(lookBackButtonDidTap))
-        let worldTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewByeBooWorldDidTap))
-        rootView.myRecordView.textBoxView.do {
-            $0.addGestureRecognizer(recordTapRecognizer)
-            $0.isUserInteractionEnabled = true
-        }
-        rootView.worldView.textBoxView.do {
-            $0.addGestureRecognizer(worldTapRecognizer)
-            $0.isUserInteractionEnabled = true
         }
     }
 }
