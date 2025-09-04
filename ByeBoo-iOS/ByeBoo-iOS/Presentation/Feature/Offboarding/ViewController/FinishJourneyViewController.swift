@@ -6,10 +6,24 @@
 //
 
 import UIKit
+import Combine
 
 final class FinishJourneyViewController: BaseViewController {
 
-    let rootView = FinishJourneyView()
+    private let rootView = FinishJourneyView()
+    private let viewModel: FinishJourneyViewModel
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(viewModel: FinishJourneyViewModel) {
+        self.viewModel = viewModel
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = rootView
@@ -17,8 +31,9 @@ final class FinishJourneyViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        bind()
         
-        self.navigationItem.hidesBackButton = true
+        viewModel.action(.viewDidLoad)
         
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
@@ -34,13 +49,14 @@ final class FinishJourneyViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        self.navigationItem.hidesBackButton = true
         tabBarController?.tabBar.isHidden = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
-        tabBarController?.tabBar.isHidden = false
     }
     
     override func setAddTarget() {
@@ -53,12 +69,23 @@ final class FinishJourneyViewController: BaseViewController {
     }
 }
 
+extension FinishJourneyViewController {
+    private func bind() {
+        viewModel.output.userNamePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] name in
+                self?.rootView.updateText(nickname: name)
+            }
+            .store(in: &cancellables)
+
+    }
+}
+
 extension FinishJourneyViewController: Dismissible {
     func close() {
         if let tabBar = tabBarController {
             navigationController?.popViewController(animated: false)
-            guard tabBar.viewControllers?[safe: 0] != nil else { return }
-            tabBar.selectedIndex = 0
+            ViewControllerUtils.changeSelectedIndex(index: 0)
         }
     }
 }
@@ -69,6 +96,7 @@ extension FinishJourneyViewController {
         ByeBooLogger.debug("starbuttontapped")
         
         let viewController = ViewControllerFactory.shared.makeNewJourneySelectViewController()
+        viewController.hidesBottomBarWhenPushed = true
         
         guard let navigationController else {
             ByeBooLogger.error(ByeBooError.navigationControllerMissing)
@@ -82,6 +110,7 @@ extension FinishJourneyViewController {
         ByeBooLogger.debug("lookBackButtonTapped")
         
         let viewController = ViewControllerFactory.shared.makeLookBackJourneyViewController()
+        viewController.hidesBottomBarWhenPushed = true
         
         guard let navigationController else {
             ByeBooLogger.error(ByeBooError.navigationControllerMissing)
@@ -98,7 +127,6 @@ extension FinishJourneyViewController {
             return
         }
         
-        guard tabBarController?.viewControllers?[safe: 0] != nil else { return }
-        navigationController.tabBarController?.selectedIndex = 0
+        ViewControllerUtils.changeSelectedIndex(index: 0)
     }
 }

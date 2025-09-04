@@ -229,9 +229,9 @@ final class DefaultNetworkService: NSObject, NetworkService {
     
     private func responseLogger<T>(_ response: DataResponse<T, AFError>) {
         ByeBooLogger.network("[Response Start]")
-        ByeBooLogger.network("StatusCode: \(response.response!.statusCode)")
-        ByeBooLogger.network("Header: \(response.response!.headers)")
-        ByeBooLogger.network("Description: \(response.response!.description)")
+        ByeBooLogger.network("StatusCode: \(response.response?.statusCode)")
+        ByeBooLogger.network("Header: \(response.response?.headers)")
+        ByeBooLogger.network("Description: \(response.response?.description)")
     }
     
     private func handleError(_ statusCode: Int, _ errorResponse: String) -> ByeBooError {

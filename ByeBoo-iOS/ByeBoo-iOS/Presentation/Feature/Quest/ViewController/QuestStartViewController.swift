@@ -8,6 +8,11 @@
 import UIKit
 import Combine
 
+protocol StartModalDelegate: AnyObject {
+    func startAndDismissModal()
+    func backDismissModal()
+}
+
 final class QuestStartViewController: BaseViewController {
     
     private let viewModel: QuestStartViewModel
@@ -15,6 +20,8 @@ final class QuestStartViewController: BaseViewController {
     private let rootView = QuestStartView()
     
     private var journeyTitle: String = ""
+    
+    weak var delegate: StartModalDelegate?
     
     init(viewModel: QuestStartViewModel) {
         self.viewModel = viewModel
@@ -36,7 +43,7 @@ final class QuestStartViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         bind()
         setGesture()
         viewModel.action(.viewDidLoad)
@@ -93,9 +100,8 @@ extension QuestStartViewController: ToastPresentable, ToastErrorHandler {
             .sink { [weak self] result in
                 switch result {
                 case .success:
+                    self?.delegate?.startAndDismissModal()
                     self?.dismiss(animated: false)
-                    guard self?.tabBarController?.viewControllers?[safe: 1] != nil else { return }
-                    self?.navigationController?.tabBarController?.selectedIndex = 1
                 case .failure(let error):
                     self?.handleError(error)
                 }
@@ -106,14 +112,12 @@ extension QuestStartViewController: ToastPresentable, ToastErrorHandler {
 
 extension QuestStartViewController: BackNavigable {
     func back() {
-        if let presentingVC = self.presentingViewController {
-            if let tabBarController = presentingVC as? UITabBarController {
-                self.dismiss(animated: false)
-                tabBarController.selectedIndex = 0
-            } else {
-                self.dismiss(animated: false)
-            }
+        if let delegate = self.delegate {
+            delegate.backDismissModal()
+        } else {
+            ViewControllerUtils.changeSelectedIndex(index: 0)
         }
+        self.dismiss(animated: false)
     }
 }
 extension QuestStartViewController {

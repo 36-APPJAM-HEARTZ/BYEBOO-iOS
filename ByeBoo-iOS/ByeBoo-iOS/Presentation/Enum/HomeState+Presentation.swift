@@ -26,7 +26,7 @@ extension HomeState {
         case .beforeJourneyStart:
             "제가 옆에서 함께할게요!"
         case .beforeQuest:
-            "퀘스트를 하고나면 한층 더 성장할 거에요."
+            "퀘스트를 하고 나면 한층 더 성장할 거에요."
         case .afterQuest:
             "잘하셨어요! 내일 또 만나요."
         case .afterJourney:

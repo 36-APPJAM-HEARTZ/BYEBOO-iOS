@@ -80,18 +80,8 @@ extension CompleteActiveTypeQuestViewController: ToastPresentable, ToastErrorHan
 extension CompleteActiveTypeQuestViewController: Dismissible {
     
     func close() {
-        // TODO: 매직 넘버 바꾸기
-        if questNumber == 30 {
-            let modalBuilder = ModalBuilder(
-                modalView: CongrateModalView(),
-                action: modalAction,
-                rootViewController: self
-            )
-            modalBuilder.present()
-        } else {
-            tabBarController?.tabBar.isHidden = false
-            self.navigationController?.popToRootViewController(animated: false)
-        }
+        tabBarController?.tabBar.isHidden = false
+        self.navigationController?.popToRootViewController(animated: false)
     }
     
     private func modalAction() {
