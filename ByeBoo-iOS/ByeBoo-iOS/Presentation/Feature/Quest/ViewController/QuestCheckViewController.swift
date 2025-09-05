@@ -151,7 +151,7 @@ extension QuestCheckViewController {
         self.questsCheckView.questCollectionView.reloadData()
         
         guard let step = quests.steps.first else { return }
-        if quests.currentStep < step.quests.count {
+        if quests.currentStep > step.quests.count {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.scrollToStep()
             }
