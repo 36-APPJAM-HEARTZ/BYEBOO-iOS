@@ -18,6 +18,10 @@ final class LoginView: BaseView {
     private(set) var appleLoginButton = UIButton()
     private(set) var kakaoLoginButton = UIButton()
     
+    private var logoTopConstraint: Constraint?
+    private var appleButtonTopConstraint: Constraint?
+    private var kakaoButtonTopConstraint: Constraint?
+    
     override func setStyle() {
         backgroundImageView.do {
             $0.image = .bgLight
@@ -29,10 +33,12 @@ final class LoginView: BaseView {
         
         appleLoginButton.do {
             $0.setImage(.appleLoginButton, for: .normal)
+            $0.alpha = 0
         }
         
         kakaoLoginButton.do {
             $0.setImage(.kakaoLoginButton, for: .normal)
+            $0.alpha = 0
         }
     }
     
@@ -51,18 +57,35 @@ final class LoginView: BaseView {
         }
         
         logoImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(265.adjustedH)
+            self.logoTopConstraint = $0.top.equalToSuperview().inset(336.adjustedH).constraint
             $0.centerX.equalToSuperview()
+            $0.height.equalTo(53.adjustedH)
         }
         
         appleLoginButton.snp.makeConstraints {
-            $0.top.equalTo(logoImageView.snp.bottom).offset(314.adjustedH)
+            self.appleButtonTopConstraint = $0.top.equalToSuperview().offset(UIScreen.main.bounds.height + 100).constraint
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
+            $0.height.equalTo(53.adjustedH)
         }
         
         kakaoLoginButton.snp.makeConstraints {
-            $0.top.equalTo(appleLoginButton.snp.bottom).offset(16.adjustedH)
+            self.kakaoButtonTopConstraint = $0.top.equalToSuperview().offset(UIScreen.main.bounds.height + 100).constraint
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
+        }
+    }
+    
+    func startAnimation() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.logoTopConstraint?.update(inset: 265.adjustedH)
+            self.appleButtonTopConstraint?.update(offset: 265.adjustedH + 57.adjustedH + 314.adjustedH)
+            self.kakaoButtonTopConstraint?.update(offset: 265.adjustedH + 57.adjustedH + 314.adjustedH + 53 + 16.adjustedH)
+
+            
+            UIView.animate(withDuration: 0.6, delay: 0, options: [.curveEaseOut]) {
+                self.appleLoginButton.alpha = 1
+                self.kakaoLoginButton.alpha = 1
+                self.layoutIfNeeded()
+            }
         }
     }
 }
