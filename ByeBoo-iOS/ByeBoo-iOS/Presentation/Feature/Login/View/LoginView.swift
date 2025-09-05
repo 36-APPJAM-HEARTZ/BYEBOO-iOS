@@ -10,15 +10,6 @@ import UIKit
 import SnapKit
 import Then
 
-//enum ConstraintMetric {
-//    static let logoFirstTop = 336.adjustedH
-//    static let logoChangedTop = 265.adjustedH
-//    static let logoHeight = 57.adjustedH
-//    static let logoToAppleButtonTop = 314.adjustedH
-//    static let buttonHeight = 53.adjustedH
-//    static let buttonSpacing = 16.adjustedH
-//}
-
 final class LoginView: BaseView {
     
     private let backgroundImageView = UIImageView()
