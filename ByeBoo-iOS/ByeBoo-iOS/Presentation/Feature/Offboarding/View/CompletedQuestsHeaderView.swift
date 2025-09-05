@@ -12,7 +12,7 @@ final class CompletedQuestsHeaderView: QuestHeaderBaseView {
     }
     
     override func configure(nickname: String, journey: String, period: String) {
-        titleLabel.text = "\(nickname)님의\n\(journey) 여정이에요."
+        titleLabel.text = "\(nickname)님의\n\(journey)이에요."
         periodTag.updateText(period)
     }
 }
