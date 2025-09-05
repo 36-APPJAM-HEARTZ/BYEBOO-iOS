@@ -33,26 +33,48 @@ struct DefaultAuthRepository: AuthInterface {
     }
     
     func appleLogin(platform: LoginPlatform) async throws {
-        let (identityToken, _) = try await network.appleRequest()
+        let (identityToken, authorizationCode) = try await network.appleRequest()
         let _ = userDefaultsService.save("APPLE", key: .loginPlatform)
         keychainService.save(key: .authorization, token: identityToken)
+        keychainService.save(key: .authorizationCode, token: authorizationCode)
         try await postLogin(platform: platform)
     }
     
     
     private func postLogin(platform: LoginPlatform) async throws {
         let loginRequestDTO = LoginRequestDTO(platform: platform.rawValue)
-        let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .authorization))
+        let header: HeaderType
+        
+        let loginPlatform: String? = userDefaultsService.load(key: .loginPlatform)
+        guard let loginPlatform = loginPlatform else { return }
+        
+        switch loginPlatform {
+        case "KAKAO":
+            header = .withAuth(acessToken: keychainService.load(key: .authorization))
+        case "APPLE":
+            header = .withAuthCode(
+                acessToken: keychainService.load(key: .accessToken),
+                authorizationCode: keychainService.load(key: .authorizationCode)
+            )
+        default:
+            return
+        }
+       
         let result = try await network.request(
             AuthAPI.login(header: header, requestDTO: loginRequestDTO),
             decodingType: PostLoginResponseDTO.self
         )
+        
         _ = userDefaultsService.save(result.isRegistered, key: .isRegistered)
         _ = userDefaultsService.save(result.name ?? "" , key: .userName)
         _ = userDefaultsService.save(result.journey ?? "", key: .journey)
         _ = userDefaultsService.save(result.journeyStatus ?? "", key: .journeyStatus)
+        
         keychainService.save(key: .accessToken, token: result.accessToken)
         keychainService.save(key: .refreshToken, token: result.refreshToken)
+        
+        keychainService.delete(key: .authorization)
+        keychainService.delete(key: .authorizationCode)
     }
     
     func reissue() async throws {
@@ -87,35 +109,12 @@ struct DefaultAuthRepository: AuthInterface {
     }
     
     func withdraw() async throws {
-        let loginPlatform: String? = userDefaultsService.load(key: .loginPlatform)
-        guard let loginPlatform = loginPlatform else { return }
-        
-        switch loginPlatform {
-        case "KAKAO":
-            let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
-            try await network.request(
-                AuthAPI.withdraw(header: header)
-            )
-            removeTokenInfo()
-            removeUserInfo()
-        case "APPLE":
-            // TODO: - authroization code 서버에서 처리하기 
-            let (_, authorizationCode) = try await network.appleRequest()
-            keychainService.save(key: .authorizationCode, token: authorizationCode)
-            
-            let header: HeaderType = .withAuthCode(
-                acessToken: keychainService.load(key: .accessToken),
-                authorizationCode: keychainService.load(key: .authorizationCode)
-            )
-            
-            try await network.request(
-                AuthAPI.withdraw(header: header)
-            )
-            removeTokenInfo()
-            removeUserInfo()
-        default :
-            return
-        }
+        let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
+        try await network.request(
+            AuthAPI.withdraw(header: header)
+        )
+        removeTokenInfo()
+        removeUserInfo()
     }
 }
 
