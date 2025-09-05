@@ -66,9 +66,9 @@ final class LoginView: BaseView {
         }
         
         logoImageView.snp.makeConstraints {
-            self.logoTopConstraint = $0.top.equalToSuperview().inset(ConstraintMetric.logoFirstTop).constraint
+            self.logoTopConstraint = $0.top.equalToSuperview().inset(336.adjustedH).constraint
             $0.centerX.equalToSuperview()
-            $0.height.equalTo(ConstraintMetric.logoHeight)
+            $0.height.equalTo(53.adjustedH)
         }
         
         appleLoginButton.snp.makeConstraints {
@@ -85,14 +85,10 @@ final class LoginView: BaseView {
     
     func startAnimation() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.logoTopConstraint?.update(inset: ConstraintMetric.logoChangedTop)
-            self.appleButtonTopConstraint?.update(
-                offset: ConstraintMetric.logoChangedTop + ConstraintMetric.logoHeight + ConstraintMetric.logoToAppleButtonTop
-            )
-            self.kakaoButtonTopConstraint?.update(
-                offset: ConstraintMetric.logoChangedTop + ConstraintMetric.logoHeight + ConstraintMetric.logoToAppleButtonTop + ConstraintMetric.buttonHeight + ConstraintMetric.buttonSpacing
-            )
-
+            self.logoTopConstraint?.update(inset: 265.adjustedH)
+            self.appleButtonTopConstraint?.update(offset: 265.adjustedH + 57.adjustedH + 314.adjustedH)
+            self.kakaoButtonTopConstraint?.update(offset: 265.adjustedH + 57.adjustedH + 314.adjustedH + 53 + 16.adjustedH)
+            
             
             UIView.animate(withDuration: 0.6, delay: 0, options: [.curveEaseOut]) {
                 self.appleLoginButton.alpha = 1
