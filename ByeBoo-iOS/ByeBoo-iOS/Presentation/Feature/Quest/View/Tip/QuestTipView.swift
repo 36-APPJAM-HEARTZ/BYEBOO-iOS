@@ -100,7 +100,7 @@ final class QuestTipView: BaseView {
         titleLabel.do {
             $0.text = "퀘스트 작성 TIP"
             $0.textColor = .white
-            $0.font = FontManager.sub1Sb20.font
+            $0.font = FontManager.cap1M12.font
         }
         
         closeButton.do { 
@@ -116,7 +116,7 @@ final class QuestTipView: BaseView {
         
         questLabel.do {
             $0.font = FontManager.body6R14.font
-            $0.textColor = .grayscale300
+            $0.textColor = .grayscale500
         }
         
         title.do {

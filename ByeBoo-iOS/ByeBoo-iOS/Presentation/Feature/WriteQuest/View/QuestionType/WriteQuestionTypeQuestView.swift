@@ -18,15 +18,22 @@ final class WriteQuestionTypeQuestView: BaseView {
         title: ""
     )
     private(set) var questTextField = QuestTextField(type: .question)
+    private let descriptionView = UIStackView()
     private let descriptionLabel = UILabel()
+    private let errorIcon = UIImageView()
     private(set) var confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
     
     override func setUI() {
         addSubviews(
             title,
             questTextField,
-            descriptionLabel,
+            descriptionView,
             confirmButton
+        )
+        
+        descriptionView.addArrangedSubviews(
+            errorIcon,
+            descriptionLabel
         )
         setDelegate()
     }
@@ -34,8 +41,18 @@ final class WriteQuestionTypeQuestView: BaseView {
     override func setStyle() {
         backgroundColor = .grayscale900
         
+        descriptionView.do {
+            $0.axis = .horizontal
+            $0.spacing = 3.adjustedW
+        }
+        
+        errorIcon.do {
+            $0.image = .error
+            $0.contentMode = .scaleAspectFit
+        }
+        
         descriptionLabel.do {
-            $0.text = "* 10글자 이상 작성해 주세요."
+            $0.text = "10글자 이상 작성해 주세요."
             $0.font = FontManager.cap2R12.font
             $0.textColor = .grayscale400
             $0.textAlignment = .center
@@ -62,7 +79,7 @@ final class WriteQuestionTypeQuestView: BaseView {
             $0.height.equalTo(290.adjustedH)
         }
         
-        descriptionLabel.snp.makeConstraints {
+        descriptionView.snp.makeConstraints {
             $0.top.equalTo(questTextField.snp.bottom).offset(16.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedW)
         }
