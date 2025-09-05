@@ -45,7 +45,7 @@ final class EmotionBottomSheetViewController: BaseViewController {
         if !isFirstTouch {
             isFirstTouch = true
             rootView.emotionChips.forEach {
-                $0.updateChipState(.defaultState)
+                $0.updateChipState(.unselected)
                 $0.updateChipUI()
             }
         }

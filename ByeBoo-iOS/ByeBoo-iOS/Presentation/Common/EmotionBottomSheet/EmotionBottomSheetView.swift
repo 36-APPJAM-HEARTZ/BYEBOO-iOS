@@ -11,7 +11,6 @@ import SnapKit
 import Then
 
 final class EmotionBottomSheetView: BaseView {
-    private let grabber = UIImageView()
     private let titleLabel = UILabel()
     private let emotionChipFirstStackView = UIStackView()
     private let emotionChipSecondStackView = UIStackView()
@@ -21,7 +20,6 @@ final class EmotionBottomSheetView: BaseView {
     
     override func setUI() {
         addSubviews(
-            grabber,
             titleLabel,
             emotionChipFirstStackView,
             emotionChipSecondStackView,
@@ -44,11 +42,6 @@ final class EmotionBottomSheetView: BaseView {
     override func setStyle() {
         backgroundColor = .grayscale90080
         
-        grabber.do {
-            $0.image = .homeIndicator
-            $0.contentMode = .scaleAspectFit
-        }
-        
         titleLabel.do {
             $0.text = "퀘스트를 완료한 후,\n어떤 감정이 느껴지시나요?"
             $0.numberOfLines = 2
@@ -67,15 +60,8 @@ final class EmotionBottomSheetView: BaseView {
     }
     
     override func setLayout() {
-        grabber.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(32.adjustedH)
-            $0.centerX.equalToSuperview()
-            $0.width.equalTo(80.adjustedW)
-            $0.height.equalTo(6.adjustedH)
-        }
-        
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(grabber.snp.bottom).offset(33.adjustedH)
+            $0.top.equalToSuperview().offset(23.adjustedH)
             $0.centerX.equalToSuperview()
             $0.height.equalTo(96.adjustedH)
         }
@@ -86,7 +72,7 @@ final class EmotionBottomSheetView: BaseView {
         }
         
         emotionChipSecondStackView.snp.makeConstraints {
-            $0.top.equalTo(emotionChipFirstStackView.snp.bottom).offset(20.adjustedH)
+            $0.top.equalTo(emotionChipFirstStackView.snp.bottom).offset(24.adjustedH)
             $0.centerX.equalToSuperview()
         }
         

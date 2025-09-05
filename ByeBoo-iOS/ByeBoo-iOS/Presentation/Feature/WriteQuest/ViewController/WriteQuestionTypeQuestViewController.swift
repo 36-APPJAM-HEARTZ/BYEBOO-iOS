@@ -103,8 +103,8 @@ extension WriteQuestionTypeQuestViewController {
         
         bottomSheetViewController.delegate = self
         if let sheet = bottomSheetViewController.sheetPresentationController{
-            sheet.detents = [.custom { _ in 515.adjustedH }]
-            sheet.prefersGrabberVisible = false
+            sheet.detents = [.custom { _ in 471.adjustedH }]
+            sheet.prefersGrabberVisible = true
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
             sheet.preferredCornerRadius = 8
         }
