@@ -27,7 +27,7 @@ final class LoginViewController: BaseViewController {
     override func viewDidLoad() {
         view = rootView
         setAddTarget()
-        
+        rootView.startAnimation()
         bind()
     }
         
