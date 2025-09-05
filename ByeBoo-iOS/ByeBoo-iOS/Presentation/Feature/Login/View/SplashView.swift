@@ -39,7 +39,7 @@ final class SplashView: BaseView {
         }
         
         logoImageView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(265.adjustedH)
+            $0.top.equalToSuperview().inset(336.adjustedH)
             $0.centerX.equalToSuperview()
         }
         
