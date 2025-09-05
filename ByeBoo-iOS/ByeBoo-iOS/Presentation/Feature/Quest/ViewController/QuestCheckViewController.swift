@@ -34,10 +34,12 @@ final class QuestCheckViewController: BaseViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        view.alpha = 0
         super.viewWillAppear(animated)
         
         self.navigationController?.navigationBar.isHidden = true
+        if let tabBarController = self.tabBarController {
+            tabBarController.tabBar.isHidden = false
+        }
         
         bind()
         viewModel.action(.questViewWillAppear)
@@ -151,7 +153,7 @@ extension QuestCheckViewController {
         self.questsCheckView.questCollectionView.reloadData()
         
         guard let step = quests.steps.first else { return }
-        if quests.currentStep < step.quests.count {
+        if quests.currentStep > step.quests.count {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.scrollToStep()
             }

@@ -16,7 +16,7 @@ protocol SelectCompletedJourneyProtocol: AnyObject {
 }
 
 final class JourneyListView: BaseView {
-
+    
     private let stackView = UIStackView()
     private let titleLabel = UILabel()
     private let countLabel = UILabel()
@@ -157,7 +157,7 @@ extension JourneyListView {
                 $0.axis = .vertical
                 $0.isUserInteractionEnabled = true
             }
-        
+            
             journeyListView?.snp.makeConstraints {
                 $0.top.equalTo(stackView.snp.bottom).offset(16.adjustedH)
                 $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
@@ -171,7 +171,6 @@ extension JourneyListView {
                     tagType: isFinished ? .word3Gray : .word3Purple,
                     isHighlighted: !isFinished
                 )
-                //journeyListView?.addArrangedSubview(journeyView)
                 journeyView.snp.makeConstraints {
                     $0.height.equalTo(60.adjustedH)
                 }
@@ -198,7 +197,7 @@ extension JourneyListView {
             delegate?.addGesture()
         }
     }
-
+    
     func updateCountLabel(count: Int) {
         countLabel.text = "\(count)개"
     }

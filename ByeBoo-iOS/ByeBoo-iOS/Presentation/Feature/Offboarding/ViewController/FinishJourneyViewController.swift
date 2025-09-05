@@ -83,7 +83,7 @@ extension FinishJourneyViewController {
 
 extension FinishJourneyViewController: Dismissible {
     func close() {
-        if let tabBar = tabBarController {
+        if let tabBarController {
             navigationController?.popViewController(animated: false)
             ViewControllerUtils.changeSelectedIndex(index: 0)
         }

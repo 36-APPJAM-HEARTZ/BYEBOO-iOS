@@ -49,6 +49,6 @@ extension JourneyType {
     }
     
     static func titleToEnum(_ title: String) -> Self? {
-        return Self.allCases.first { $0.title == title }
+        return Self.allCases.first { $0.title == title || $0.description == title }
     }
 }

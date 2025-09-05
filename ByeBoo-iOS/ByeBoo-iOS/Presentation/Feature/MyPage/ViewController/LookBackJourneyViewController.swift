@@ -43,6 +43,18 @@ final class LookBackJourneyViewController: BaseViewController {
         bind()
         rootView.journeyView.completeJourneyDelegate = self
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        // 다음 화면으로 이동할 때 헤더 타입을 미리 변경하여 flick 방지
+        if isMovingFromParent {
+            ByeBooNavigationBar.replaceHeaderType(
+                from: self.navigationController ?? UINavigationController(),
+                headerType: .clear
+            )
+        }
+    }
 }
 
 extension LookBackJourneyViewController: SelectCompletedJourneyProtocol {
@@ -87,6 +99,6 @@ extension LookBackJourneyViewController: ToastPresentable, ToastErrorHandler {
 
 extension LookBackJourneyViewController: BackNavigable {
     func back() {
-        navigationController?.popViewController(animated: true)
+        navigationController?.popViewController(animated: false)
     }
 }

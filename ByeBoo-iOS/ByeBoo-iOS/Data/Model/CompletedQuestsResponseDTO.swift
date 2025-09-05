@@ -27,7 +27,7 @@ struct CompletedQuestDTO: Decodable {
 extension CompletedQuestsResponseDTO {
     func toEntity() -> CompletedQuestsEntity {
         .init(
-            progressPeriod: "2025-08-28 ~ 2025-09-01",
+            progressPeriod: progressPeriod,
             currentStep: nil,
             steps: steps.map { $0.toEntity() }
         )

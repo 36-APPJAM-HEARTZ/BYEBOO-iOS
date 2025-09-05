@@ -48,12 +48,26 @@ struct ByeBooNavigationBar {
         registerBarAppearance(barAppearance, to: navigationController)
     }
     
+    static func replaceHeaderType(
+        from navigationController: UINavigationController,
+        headerType: NavigationHeaderType
+    ) {
+        let barAppearance = setBarAppearance(headerType: headerType)
+        registerBarAppearance(barAppearance, to: navigationController)
+    }
+    
     private static func makeBasicBarAppearance(type: NavigationBarType) -> UINavigationBarAppearance {
-        let barAppearance = UINavigationBarAppearance()
+        let headerType = setHeaderType(barType: type)
+        let barAppearance = setBarAppearance(headerType: headerType)
         
+        return barAppearance
+    }
+    
+    private static func setHeaderType(barType: NavigationBarType) -> NavigationHeaderType {
         let headerType: NavigationHeaderType
-        switch type {
-        case .back(let header), 
+        
+        switch barType {
+        case .back(let header),
              .close(let header),
              .none(let header),
              .title(_, let header),
@@ -61,7 +75,11 @@ struct ByeBooNavigationBar {
              .titleAndBack(_, let header):
             headerType = header
         }
-        
+        return headerType
+    }
+    
+    private static func setBarAppearance(headerType: NavigationHeaderType) -> UINavigationBarAppearance {
+        let barAppearance = UINavigationBarAppearance()
         barAppearance.do {
             switch headerType {
             case .clear:
