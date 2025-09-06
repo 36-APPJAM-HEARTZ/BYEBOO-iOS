@@ -20,7 +20,6 @@ protocol NetworkService {
     func request(image: Data, signedURL: String) async throws
     func kakaoRequest() async throws -> String
     func appleRequest() async throws -> (String, String)
-    func tokenReissue() async throws
 }
 
 final class DefaultNetworkService: NSObject, NetworkService {
@@ -35,12 +34,19 @@ final class DefaultNetworkService: NSObject, NetworkService {
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             guard let self else { return }
             
+            let authRepository = DefaultAuthRepository(
+                network: DefaultNetworkService(),
+                keychainService: DefaultKeychainService(),
+                userDefaultsService: DefaultUserDefaultService()
+            )
+            
             AF.request(
                 endPoint.requestURL,
                 method: endPoint.method,
                 parameters: endPoint.bodyParameters,
                 encoding: endPoint.parameterEncoding,
-                headers: endPoint.headers.value
+                headers: endPoint.headers.value,
+                interceptor: NetworkInterceptor(authRepository: authRepository)
             )
             .validate()
             .responseDecodable(of: BaseResponse<T>.self) { [weak self] response in
@@ -59,28 +65,6 @@ final class DefaultNetworkService: NSObject, NetworkService {
                        let statusCode = response.response?.statusCode,
                        let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
                         let error = self?.handleError(statusCode, errorResponse.message)
-                        
-                        if statusCode == 401 && endPoint.path != "/reissue" {
-                            Task {
-                                guard let self else { return }
-                                do {
-                                    try await self.tokenReissue()
-                                } catch {
-                                    ByeBooLogger.debug("tokenReissue 실패")
-                                    continuation.resume(throwing: error)
-                                    return
-                                }
-                                
-                                do {
-                                    let retried = try await self.request(endPoint, decodingType: decodingType)
-                                    continuation.resume(returning: retried)
-                                } catch {
-                                    continuation.resume(throwing: error)
-                                }
-                            }
-                            return
-                        }
-                        
                         ByeBooLogger.error(error ?? .unknownError)
                         continuation.resume(throwing: error ?? .unknownError)
                     } else {
@@ -99,12 +83,19 @@ final class DefaultNetworkService: NSObject, NetworkService {
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             guard let self else { return }
             
+            let authRepository = DefaultAuthRepository(
+                network: DefaultNetworkService(),
+                keychainService: DefaultKeychainService(),
+                userDefaultsService: DefaultUserDefaultService()
+            )
+            
             AF.request(
                 endPoint.requestURL,
                 method: endPoint.method,
                 parameters: endPoint.bodyParameters,
                 encoding: endPoint.parameterEncoding,
-                headers: endPoint.headers.value
+                headers: endPoint.headers.value,
+                interceptor: NetworkInterceptor(authRepository: authRepository)
             )
             .validate()
             .responseDecodable(of: EmptyResponse.self) { [weak self] response in
@@ -118,21 +109,6 @@ final class DefaultNetworkService: NSObject, NetworkService {
                        let statusCode = response.response?.statusCode,
                        let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
                         let error = self?.handleError(statusCode, errorResponse.message)
-                        
-                        if statusCode == 401 {
-                            Task {
-                                do {
-                                    guard let self else { return }
-                                    try await self.tokenReissue()
-                                    try await self.request(endPoint)
-                                    continuation.resume(returning: ())
-                                } catch {
-                                    continuation.resume(throwing: error)
-                                }
-                            }
-                            return
-                        }
-                        
                         ByeBooLogger.error(error ?? .unknownError)
                         continuation.resume(throwing: error ?? .unknownError)
                     } else {
@@ -207,18 +183,7 @@ final class DefaultNetworkService: NSObject, NetworkService {
             controller.performRequests()
         }
     }
-    
-    func tokenReissue() async throws {
-        let keychainService = DefaultKeychainService()
-        let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .refreshToken))
-        let result = try await request(
-            AuthAPI.reissue(header: header),
-            decodingType: TokenReissueResponseDTO.self
-        )
-        keychainService.save(key: .accessToken, token: result.accessToken)
-        keychainService.save(key: .refreshToken, token: result.refreshToken)
-    }
-    
+        
     private func requestLogger(_ endPoint: EndPoint) {
         ByeBooLogger.network("[Reqeust Start]")
         ByeBooLogger.network("URL: \(endPoint.requestURL)")
