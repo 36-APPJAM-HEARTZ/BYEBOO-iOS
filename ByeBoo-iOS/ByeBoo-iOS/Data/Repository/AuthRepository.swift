@@ -50,10 +50,12 @@ struct DefaultAuthRepository: AuthInterface {
         
         switch loginPlatform {
         case "KAKAO":
+            ByeBooLogger.debug("카카오 post login")
             header = .withAuth(acessToken: keychainService.load(key: .authorization))
         case "APPLE":
+            ByeBooLogger.debug("apple post login")
             header = .withAuthCode(
-                acessToken: keychainService.load(key: .accessToken),
+                acessToken: keychainService.load(key: .authorization),
                 authorizationCode: keychainService.load(key: .authorizationCode)
             )
         default:
