@@ -22,7 +22,7 @@ final class NetworkInterceptor: RequestInterceptor {
         for session: Alamofire.Session,
         completion: @escaping @Sendable (Result<URLRequest, any Error>) -> Void) {
             completion(.success(urlRequest))
-    }
+        }
     
     func retry(
         _ request: Alamofire.Request,
