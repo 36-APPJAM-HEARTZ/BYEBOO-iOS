@@ -30,12 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         self.window = window
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(navigateLoginViewController),
-            name: .navigateLoginViewController,
-            object: nil
-        )
+        addNotificationObserver()
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
@@ -55,6 +50,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) { }
     
     func sceneDidEnterBackground(_ scene: UIScene) { }
+    
+    private func addNotificationObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(navigateLoginViewController),
+            name: .navigateLoginViewController,
+            object: nil
+        )
+    }
     
     @objc private func navigateLoginViewController() {
         guard let window = window else { return }
