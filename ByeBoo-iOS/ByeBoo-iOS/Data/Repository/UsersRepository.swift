@@ -83,8 +83,6 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func getIsHelperShown() -> Bool? {
-        // TODO: 항상 helper 말풍선 뜨도록 임시 조치 -> 추후 삭제
-        _ = userDefaultsService.save(false, key: .isHelperShown)
         return userDefaultsService.load(key: .isHelperShown)
     }
     
