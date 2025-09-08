@@ -67,7 +67,7 @@ final class HomeHeaderView: BaseView {
         }
         
         self.snp.makeConstraints {
-            $0.height.greaterThanOrEqualTo(200.adjustedH)
+            $0.height.greaterThanOrEqualTo(100.adjustedH)
         }
     }
 }
@@ -86,6 +86,9 @@ extension HomeHeaderView {
     }
     
     func updateState(_ state: HomeState, _ journeyTitle: String? = nil) {
+        helperImageView.alpha = 0
+        homeStateView.updateState(state, journeyTitle)
+        
         if state == .beforeJourneyStart {
             helperButton.alpha = 1
         }
@@ -110,9 +113,18 @@ extension HomeHeaderView {
                 $0.bottom.equalToSuperview()
             }
             helperButton.alpha = 0
+        } else {
+            stackView.subviews.dropFirst().forEach {
+                stackView.removeArrangedSubview($0)
+                $0.removeFromSuperview()
+            }
+            journeyProgressView = nil
+            stackView.snp.remakeConstraints {
+                $0.top.equalToSuperview().inset(72.adjustedH)
+                $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+                $0.bottom.equalToSuperview()
+            }
         }
-        
-        homeStateView.updateState(state, journeyTitle)
     }
     
     func startHelperAnimation() {

@@ -11,21 +11,27 @@ import Lottie
 
 final class HomeView: BaseView {
 
-    private let backgroundImageView = LottieAnimationView(name: "bori_home")
+    private let backgroundImageView = UIImageView()
+    private let homeBori = LottieAnimationView(name: "bori_home")
     private(set) var headerView = HomeHeaderView()
     private let speechBoxView = SpeechTextBoxView(title: "")
     
     override func setStyle() {
         backgroundImageView.do {
+            $0.image = .bgHome
+            $0.contentMode = .scaleAspectFill
+        }
+        
+        homeBori.do {
             $0.play()
             $0.loopMode = .loop
-            $0.contentMode = .scaleAspectFill
         }
     }
 
     override func setUI() {
         addSubviews(
             backgroundImageView,
+            homeBori,
             headerView,
             speechBoxView
         )
@@ -35,13 +41,16 @@ final class HomeView: BaseView {
         backgroundImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        
+        homeBori.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview().inset(40.adjustedW)
+            $0.bottom.equalToSuperview().offset(160.adjustedH)
+        }
         headerView.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.horizontalEdges.equalToSuperview()
         }
         speechBoxView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(316.adjustedH)
+            $0.bottom.equalTo(homeBori.snp.top).offset(200.adjustedH)
             $0.horizontalEdges.equalToSuperview()
         }
     }

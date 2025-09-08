@@ -51,7 +51,7 @@ final class FinishJourneyViewController: BaseViewController {
         super.viewWillAppear(animated)
         
         self.navigationItem.hidesBackButton = true
-        tabBarController?.tabBar.isHidden = true
+        tabBarController?.hidesBottomBarWhenPushed = true
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -75,6 +75,7 @@ extension FinishJourneyViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] name in
                 self?.rootView.updateText(nickname: name)
+                
             }
             .store(in: &cancellables)
 

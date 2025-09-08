@@ -102,7 +102,6 @@ extension NewJourneySelectViewController {
 extension NewJourneySelectViewController: StartModalDelegate {
     func startAndDismissModal() {
         navigationController?.popToRootViewController(animated: false)
-        ViewControllerUtils.changeSelectedIndex(index: 1)
     }
     
     func backDismissModal() { }
