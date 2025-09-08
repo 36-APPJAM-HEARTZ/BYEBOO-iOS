@@ -70,7 +70,7 @@ final class DefaultNetworkService: NSObject, NetworkService {
                                     continuation.resume(throwing: error)
                                     return
                                 }
-
+                                
                                 do {
                                     let retried = try await self.request(endPoint, decodingType: decodingType)
                                     continuation.resume(returning: retried)
@@ -255,7 +255,7 @@ final class DefaultNetworkService: NSObject, NetworkService {
 }
 
 extension DefaultNetworkService: ASAuthorizationControllerDelegate, ASAuthorizationControllerPresentationContextProviding {
-
+    
     func presentationAnchor(for controller: ASAuthorizationController) -> ASPresentationAnchor {
         guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
               let window = windowScene.windows.first
@@ -271,7 +271,10 @@ extension DefaultNetworkService: ASAuthorizationControllerDelegate, ASAuthorizat
     ) {
         guard let credential = authorization.credential as? ASAuthorizationAppleIDCredential,
               let identityToken = credential.identityToken,
-              let authorizationCode = credential.authorizationCode else { return }
+              let authorizationCode = credential.authorizationCode else {
+            continuation?.resume(throwing: ByeBooError.appleLoginError)
+            return
+        }
         
         let identityTokenString = String(data: identityToken, encoding: .utf8) ?? ""
         let authorizationCodeString = String(data: authorizationCode, encoding: .utf8) ?? ""
