@@ -168,10 +168,7 @@ extension FinishJourneyView {
 
 extension FinishJourneyView {
     func updateText(nickname: String) {
-        animationText = [
-            "무려 30개의 퀘스트를 완료했어요.\n끝까지 포기하지 않고 극복하기 위해 노력한\n\(nickname)님이 너무 대단해요.",
-            "지금의 \(nickname)님은, 처음보다 성장했을 거예요.",
-            "만약 아직 정리되지 못한 감정이 남아있다면,\n또 다른 새로운 여정을 시작해볼까요?"
-        ]
+        firstTextLabel.text = "무려 30개의 퀘스트를 완료했어요.\n끝까지 포기하지 않고 극복하기 위해 노력한\n\(nickname)님이 너무 대단해요."
+        secondTextLabel.text = "지금의 \(nickname)님은, 처음보다 성장했을 거예요."
     }
 }

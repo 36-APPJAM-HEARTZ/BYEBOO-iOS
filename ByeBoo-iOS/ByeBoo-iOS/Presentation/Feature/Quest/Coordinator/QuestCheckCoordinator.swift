@@ -23,7 +23,7 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     
     func moveFinishQuest() {
         let viewController = ViewControllerFactory.shared.makeFinishJourneyViewController()
-        rootViewController?.hidesBottomBarWhenPushed = true
+        viewController.hidesBottomBarWhenPushed = true
         rootViewController?.navigationController?.pushViewController(viewController, animated: false)
     }
     
