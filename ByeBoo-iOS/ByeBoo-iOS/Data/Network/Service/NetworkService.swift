@@ -24,7 +24,7 @@ protocol NetworkService {
 
 final class DefaultNetworkService: NSObject, NetworkService {
     private var continuation: CheckedContinuation<(String, String), Error>?
-    
+        
     func request<T: Decodable>(
         _ endPoint: EndPoint,
         decodingType: T.Type

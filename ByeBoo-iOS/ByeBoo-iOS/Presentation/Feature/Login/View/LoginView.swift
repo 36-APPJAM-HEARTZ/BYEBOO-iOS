@@ -29,6 +29,7 @@ final class LoginView: BaseView {
         
         logoImageView.do {
             $0.image = .logo
+            $0.contentMode = .scaleAspectFit
         }
         
         appleLoginButton.do {
