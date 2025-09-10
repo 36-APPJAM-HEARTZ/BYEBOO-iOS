@@ -22,6 +22,7 @@ final class SplashView: BaseView {
         
         logoImageView.do {
             $0.image = .logo
+            $0.contentMode = .scaleAspectFit
         }
     }
     
@@ -41,6 +42,7 @@ final class SplashView: BaseView {
         logoImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(336.adjustedH)
             $0.centerX.equalToSuperview()
+            $0.height.equalTo(53.adjustedH)
         }
         
         keychaindelete.snp.makeConstraints {

@@ -80,7 +80,13 @@ struct DefaultAuthRepository: AuthInterface {
     }
     
     func reissue() async throws {
-        try await network.tokenReissue()
+        let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .refreshToken))
+        let result = try await network.request(
+            AuthAPI.reissue(header: header),
+            decodingType: TokenReissueResponseDTO.self
+        )
+        keychainService.save(key: .accessToken, token: result.accessToken)
+        keychainService.save(key: .refreshToken, token: result.refreshToken)
     }
     
     func autoLogin() async throws -> Bool {
@@ -92,7 +98,7 @@ struct DefaultAuthRepository: AuthInterface {
             && isOnboardingCompleted
         {
             ByeBooLogger.debug("정보 있음")
-            try await network.tokenReissue()
+            try await reissue()
             return true
         } else {
             ByeBooLogger.debug("정보 없음")

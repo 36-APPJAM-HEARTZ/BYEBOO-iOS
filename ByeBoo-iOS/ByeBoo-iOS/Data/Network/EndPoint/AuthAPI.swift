@@ -53,7 +53,7 @@ extension AuthAPI: EndPoint {
         }
     }
     
-    var parameterEncoding: any Alamofire.ParameterEncoding {
+    var parameterEncoding: any ParameterEncoding {
         switch self {
         case .login, .reissue:
             return JSONEncoding.default
@@ -67,9 +67,9 @@ extension AuthAPI: EndPoint {
         nil
     }
     
-    var bodyParameters: Alamofire.Parameters? {
+    var bodyParameters: Parameters? {
         switch self {
-        case .login(_, let dto):
+        case let .login(_, dto):
             return try? dto.toDictionary()
         case .reissue, .logout, .withdraw:
             return nil

@@ -29,6 +29,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.makeKeyAndVisible()
         
         self.window = window
+        
+        addNotificationObserver()
     }
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
@@ -49,5 +51,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func sceneDidEnterBackground(_ scene: UIScene) { }
     
+    private func addNotificationObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(navigateLoginViewController),
+            name: .navigateLoginViewController,
+            object: nil
+        )
+    }
+    
+    @objc private func navigateLoginViewController() {
+        guard let window = window else { return }
+        let viewController = ViewControllerFactory.shared.makeLoginViewController()
+        
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+            
+            ViewControllerUtils.setRootViewController(
+                window: window,
+                viewController: viewController,
+                withAnimation: true
+            )
+        }
+    }
 }
-
