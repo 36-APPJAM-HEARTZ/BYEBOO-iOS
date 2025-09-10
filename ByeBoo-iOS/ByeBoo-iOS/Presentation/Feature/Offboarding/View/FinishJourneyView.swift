@@ -56,7 +56,7 @@ final class FinishJourneyView: BaseView {
         firstTextLabel.do {
             $0.text = animationText[0]
             $0.numberOfLines = 0
-            $0.font = FontManager.body6R14.font
+            $0.font = FontManager.body5M14.font
             $0.textColor = .secondary50
             $0.textAlignment = .center
         }

@@ -122,7 +122,11 @@ extension HomeHeaderView {
             stackView.snp.remakeConstraints {
                 $0.top.equalToSuperview().inset(72.adjustedH)
                 $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-                $0.bottom.equalToSuperview()
+            }
+            self.snp.makeConstraints {
+                $0.top.equalToSuperview()
+                $0.horizontalEdges.equalToSuperview()
+                $0.bottom.equalTo(helperButton.snp.bottom)
             }
         }
     }

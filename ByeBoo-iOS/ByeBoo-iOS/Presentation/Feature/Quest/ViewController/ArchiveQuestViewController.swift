@@ -86,7 +86,6 @@ extension ArchiveQuestViewController: ToastPresentable, ToastErrorHandler {
 
 extension ArchiveQuestViewController: Dismissible {
     func close() {
-        self.tabBarController?.tabBar.isHidden = false
         self.navigationController?.popViewController(animated: false)
     }
 }

@@ -30,7 +30,7 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     func moveArchive(quest: QuestEntity?) {
         let archiveQuestViewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
         archiveQuestViewController.configure(questID: quest?.questId ?? 1, questType: quest?.questStyle ?? .activation)
-        rootViewController?.tabBarController?.tabBar.isHidden = true
+        archiveQuestViewController.hidesBottomBarWhenPushed = true
         rootViewController?.navigationController?.pushViewController(archiveQuestViewController, animated: false)
     }
     

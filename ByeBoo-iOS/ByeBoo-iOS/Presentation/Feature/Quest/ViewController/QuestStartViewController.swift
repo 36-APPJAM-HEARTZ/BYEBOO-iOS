@@ -36,15 +36,6 @@ final class QuestStartViewController: BaseViewController {
         view = rootView
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        tabBarController?.tabBar.isHidden = true
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        tabBarController?.tabBar.isHidden = false
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
