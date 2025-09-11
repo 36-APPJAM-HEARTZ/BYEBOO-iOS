@@ -29,18 +29,6 @@ final class SplashViewController: BaseViewController {
         bind()
         setAddTarget()
     }
-    
-    override func setAddTarget() {
-        rootView.keychaindelete.addTarget(self, action: #selector(keychainDelete), for: .touchUpInside)
-    }
-    
-    @objc private func keychainDelete() {
-        let keychain = DefaultKeychainService()
-        for key in KeyType.allCases {
-            keychain.delete(key: key)
-        }
-        ByeBooLogger.debug("키체인 삭제 완료")
-    }
 }
 
 extension SplashViewController {
@@ -63,16 +51,18 @@ extension SplashViewController {
                         )
                     }
                 case .failure(_):
-                    let nextViewController = ViewControllerFactory.shared.makeLoginViewController()
-                    
-                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                       let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        let nextViewController = ViewControllerFactory.shared.makeLoginViewController()
                         
-                        ViewControllerUtils.setRootViewController(
-                            window: window,
-                            viewController: nextViewController,
-                            withAnimation: true
-                        )
+                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                            
+                            ViewControllerUtils.setRootViewController(
+                                window: window,
+                                viewController: nextViewController,
+                                withAnimation: true
+                            )
+                        }
                     }
                 }
             }
