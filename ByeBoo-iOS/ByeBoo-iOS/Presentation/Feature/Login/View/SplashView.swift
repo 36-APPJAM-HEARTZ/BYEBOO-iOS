@@ -14,10 +14,11 @@ import Then
 final class SplashView: BaseView {
     private let backgroundImageView = UIImageView()
     private let logoImageView = UIImageView()
-    let keychaindelete = UIButton()
+    
     override func setStyle() {
         backgroundImageView.do {
             $0.image = .bgLight
+            $0.contentMode = .scaleAspectFit
         }
         
         logoImageView.do {
@@ -29,8 +30,7 @@ final class SplashView: BaseView {
     override func setUI() {
         addSubviews(
             backgroundImageView,
-            logoImageView,
-            keychaindelete
+            logoImageView
         )
     }
     
@@ -42,11 +42,8 @@ final class SplashView: BaseView {
         logoImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(336.adjustedH)
             $0.centerX.equalToSuperview()
+            $0.width.equalTo(223.adjustedW)
             $0.height.equalTo(53.adjustedH)
-        }
-        
-        keychaindelete.snp.makeConstraints {
-            $0.center.equalToSuperview()
         }
     }
 }

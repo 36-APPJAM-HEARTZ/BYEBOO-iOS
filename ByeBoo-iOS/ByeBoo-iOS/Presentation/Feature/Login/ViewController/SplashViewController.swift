@@ -23,23 +23,14 @@ final class SplashViewController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func loadView() {
+        self.view = rootView
+    }
+    
     override func viewDidLoad() {
-        view = rootView
         viewModel.action(.viewDidLoad)
         bind()
         setAddTarget()
-    }
-    
-    override func setAddTarget() {
-        rootView.keychaindelete.addTarget(self, action: #selector(keychainDelete), for: .touchUpInside)
-    }
-    
-    @objc private func keychainDelete() {
-        let keychain = DefaultKeychainService()
-        for key in KeyType.allCases {
-            keychain.delete(key: key)
-        }
-        ByeBooLogger.debug("키체인 삭제 완료")
     }
 }
 
@@ -59,20 +50,22 @@ extension SplashViewController {
                         ViewControllerUtils.setRootViewController(
                             window: window,
                             viewController: nextViewController,
-                            withAnimation: true
+                            withAnimation: false
                         )
                     }
                 case .failure(_):
-                    let nextViewController = ViewControllerFactory.shared.makeLoginViewController()
-                    
-                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                       let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        let nextViewController = ViewControllerFactory.shared.makeLoginViewController()
                         
-                        ViewControllerUtils.setRootViewController(
-                            window: window,
-                            viewController: nextViewController,
-                            withAnimation: true
-                        )
+                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                            
+                            ViewControllerUtils.setRootViewController(
+                                window: window,
+                                viewController: nextViewController,
+                                withAnimation: false
+                            )
+                        }
                     }
                 }
             }
