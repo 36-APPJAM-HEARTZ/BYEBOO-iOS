@@ -23,11 +23,8 @@ final class SplashViewController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func loadView() {
-        self.view = rootView
-    }
-    
     override func viewDidLoad() {
+        view = rootView
         viewModel.action(.viewDidLoad)
         bind()
         setAddTarget()
@@ -50,7 +47,7 @@ extension SplashViewController {
                         ViewControllerUtils.setRootViewController(
                             window: window,
                             viewController: nextViewController,
-                            withAnimation: false
+                            withAnimation: true
                         )
                     }
                 case .failure(_):
@@ -63,7 +60,7 @@ extension SplashViewController {
                             ViewControllerUtils.setRootViewController(
                                 window: window,
                                 viewController: nextViewController,
-                                withAnimation: false
+                                withAnimation: true
                             )
                         }
                     }
