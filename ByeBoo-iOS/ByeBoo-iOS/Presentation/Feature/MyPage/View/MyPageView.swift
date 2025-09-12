@@ -12,7 +12,7 @@ import Then
 
 final class MyPageView: BaseView {
     
-    private let scrollView = UIScrollView()
+    private(set) var scrollView = UIScrollView()
     private let contentView = UIView()
     private(set) var nameView = OneLineTextBoxView(title: "")
     private(set) var moveButton = UIButton()

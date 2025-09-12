@@ -32,6 +32,7 @@ final class MyPageViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewModel.action(.viewWillAppear)
+        rootView.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
     }
     
     override func viewDidLoad() {
