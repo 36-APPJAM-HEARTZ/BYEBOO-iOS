@@ -66,6 +66,7 @@ extension HomeViewController {
             ViewControllerUtils.changeSelectedIndex(index: 1)
         case .afterJourney:
             let viewController = ViewControllerFactory.shared.makeNewJourneySelectViewController()
+            viewController.hidesBottomBarWhenPushed = true
             navigationController?.pushViewController(viewController, animated: false)
         }
     }
