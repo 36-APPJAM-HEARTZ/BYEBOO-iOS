@@ -155,25 +155,37 @@ extension QuestCheckViewController {
     }
     
     private func scrollToStep() {
+        guard let sectionIndex = findCurrentStepSectionIndex(),
+              let step = viewModel.getStep(section: sectionIndex) else { return }
+       
+        if step.stepNumber == QuestCheckViewController.lastStep {
+            scrollToBottom()
+            return
+        }
+        scrollToHeader(at: sectionIndex)
+    }
+    
+    private func findCurrentStepSectionIndex() -> Int? {
         for (sectionIndex, step) in viewModel.steps.enumerated() {
-            let collectionView = questsCheckView.questCollectionView
-            
-            if let _ = step.quests.firstIndex(where: { $0.questNumber == viewModel.currentStep }) {
-                // MARK: - 마지막 스텝 진입 시 맨 아래로 스크롤
-                if step.stepNumber == QuestCheckViewController.lastStep {
-                    let extraOffset: CGFloat = 80
-                    let maxOffset = collectionView.contentSize.height - collectionView.bounds.height
-                    let targetOffset = max(maxOffset + extraOffset, 0)
-                    
-                    collectionView.setContentOffset(CGPoint(x: 0, y: targetOffset), animated: true)
-                    return
-                }
-                
-                // MARK: - 다음 스텝으로 넘어간 경우 해당 STEP으로 스크롤
-                collectionView.scrollToHeader(at: sectionIndex)
-                return
+            if step.quests.contains(where: { $0.questNumber == viewModel.currentStep }) {
+                return sectionIndex
             }
         }
+        return nil
+    }
+    
+    private func scrollToBottom() {
+        let collectionView = questsCheckView.questCollectionView
+        let extraOffset: CGFloat = 80
+        let maxOffset = collectionView.contentSize.height - collectionView.bounds.height
+        let targetOffset = max(maxOffset + extraOffset, 0)
+        
+        collectionView.setContentOffset(CGPoint(x: 0, y: targetOffset), animated: true)
+    }
+    
+    private func scrollToHeader(at sectionIndex: Int) {
+        let collectionView = questsCheckView.questCollectionView
+        collectionView.scrollToHeader(at: sectionIndex)
     }
 }
 
