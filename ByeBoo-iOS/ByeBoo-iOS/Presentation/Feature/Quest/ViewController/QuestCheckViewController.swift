@@ -158,7 +158,7 @@ extension QuestCheckViewController {
         guard let sectionIndex = findCurrentStepSectionIndex(),
               let step = viewModel.getStep(section: sectionIndex) else { return }
        
-        if step.stepNumber == QuestCheckViewController.lastStep {
+        if isLastStep(stepNumber: step.stepNumber) {
             scrollToBottom()
             return
         }
@@ -172,6 +172,10 @@ extension QuestCheckViewController {
             }
         }
         return nil
+    }
+    
+    private func isLastStep(stepNumber: Int) -> Bool {
+        stepNumber == QuestCheckViewController.lastStep
     }
     
     private func scrollToBottom() {
