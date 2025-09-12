@@ -37,7 +37,7 @@ final class ViewAllQuestBaseView: BaseView {
     override func setLayout() {
         questCheckHeaderView.snp.makeConstraints {
             $0.leading.trailing.equalToSuperview()
-            if let questCheckHeaderView = questCheckHeaderView as? QuestCheckHeaderView {
+            if questCheckHeaderView is QuestCheckHeaderView {
                 $0.top.equalToSuperview()
                 return
             }
