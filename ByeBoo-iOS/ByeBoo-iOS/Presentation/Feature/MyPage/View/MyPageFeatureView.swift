@@ -46,7 +46,7 @@ final class MyPageFeatureView: BaseView {
         }
         featureStackView.do {
             $0.axis = .vertical
-            $0.spacing = 16
+            $0.spacing = 14
             $0.alignment = .leading
         }
     }
