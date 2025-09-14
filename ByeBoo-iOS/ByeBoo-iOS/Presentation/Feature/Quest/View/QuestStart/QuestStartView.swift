@@ -99,7 +99,8 @@ extension QuestStartView {
                 """.makeTitle(
                     rangedText: "\(nickname)",
                     font: FontManager.body1Sb16.font,
-                    baseFont: FontManager.body3R16.font
+                    baseFont: FontManager.body3R16.font,
+                    originalTitleColor: .grayscale300
                 )
     }
 }
