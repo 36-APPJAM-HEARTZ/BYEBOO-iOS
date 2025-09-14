@@ -30,7 +30,7 @@ final class InformationBaseView: BaseView {
     
     override func setStyle() {
         backgroundImageView.do {
-            $0.image = .bgNoLight
+            $0.image = .bgDark
             $0.contentMode = .scaleAspectFill
         }
         

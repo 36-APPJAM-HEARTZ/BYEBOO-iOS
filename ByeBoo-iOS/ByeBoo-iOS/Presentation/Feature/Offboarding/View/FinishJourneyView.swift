@@ -26,18 +26,18 @@ final class FinishJourneyView: BaseView {
     private var animationText: [String] = [
         "무려 30개의 퀘스트를 완료했어요.\n끝까지 포기하지 않고 극복하기 위해 노력한\n하츠핑님이 너무 대단해요.",
         "지금의 하츠핑님은, 처음보다 성장했을 거예요.",
-        "만약 아직 정리되지 못한 감정이 남아있다면,\n또 다른 새로운 여정을 시작해볼까요?"
+        "만약 아직 정리되지 못한 감정이 남아있다면,\n또 다른 새로운 여정을 시작해 볼까요?"
     ]
     
     override func setStyle() {
         backgroundImageView.do {
-            $0.image = .bgLight
+            $0.image = .bgDark
         }
         backgroundView.do {
             $0.backgroundColor = .black80
         }
         titleLabel.do {
-            $0.text = "🎉감정 직면 여정을 완료했어요!🎉"
+            $0.text = "🎉 감정 직면 여정을 완료했어요! 🎉"
             $0.font = FontManager.sub2Sb18.font
             $0.textColor = .secondary300
             $0.textAlignment = .center
@@ -167,8 +167,10 @@ extension FinishJourneyView {
 }
 
 extension FinishJourneyView {
-    func updateText(nickname: String) {
+    func updateText(nickname: String, journey: String) {
         firstTextLabel.text = "무려 30개의 퀘스트를 완료했어요.\n끝까지 포기하지 않고 극복하기 위해 노력한\n\(nickname)님이 너무 대단해요."
         secondTextLabel.text = "지금의 \(nickname)님은, 처음보다 성장했을 거예요."
+        
+        titleLabel.text = "🎉 \(journey) 여정을 완료했어요! 🎉"
     }
 }

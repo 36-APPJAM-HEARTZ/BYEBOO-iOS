@@ -24,7 +24,7 @@ final class TermsView: BaseView {
     
     override func setStyle() {
         backgroundImageView.do {
-            $0.image = .bgNoLight
+            $0.image = .bgDark
         }
         mainTitleLabel.do {
             $0.text = "필수 약관에 동의해 주세요"

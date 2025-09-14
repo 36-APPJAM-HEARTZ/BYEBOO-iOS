@@ -15,7 +15,7 @@ final class ActionView: BaseView {
     private let photoView = UIImageView()
     private let descriptionView: TextBoxView
     private let placeholderView = UIImageView()
-    private let thinkTextView =  IconOneLineTextView(iconType: .think,text: "이렇게 완료했어요" )
+    private let thinkTextView =  IconOneLineTextView(iconType: .action,text: "이렇게 완료했어요" )
     private let descriptionText: String
     private let photoURL: String
     

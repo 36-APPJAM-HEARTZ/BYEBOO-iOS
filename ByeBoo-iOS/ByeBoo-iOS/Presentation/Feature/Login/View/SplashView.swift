@@ -17,7 +17,7 @@ final class SplashView: BaseView {
     
     override func setStyle() {
         backgroundImageView.do {
-            $0.image = .bgLight
+            $0.image = .bgDark
             $0.contentMode = .scaleAspectFit
         }
         
