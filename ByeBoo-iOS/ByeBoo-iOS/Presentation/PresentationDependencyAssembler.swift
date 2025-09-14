@@ -228,8 +228,14 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: FinishJourneyViewModel.self) { container in
+            guard let getLastJourneyUseCase = container.resolve(type: GetLastJourneyUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
             return FinishJourneyViewModel(
-                getUserNameUseCase: getUserNameUseCase
+                getUserNameUseCase: getUserNameUseCase,
+                getLastJourneyUseCase: getLastJourneyUseCase
             )
         }
     }

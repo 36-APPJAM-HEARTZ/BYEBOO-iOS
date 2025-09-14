@@ -19,4 +19,5 @@ protocol UsersInterface {
     func fetchQuestStatus() async throws -> UserQuestStatusEntity
     func startJourney() async throws
     func getIsRegistered() -> Bool
+    func getLastJourneyType() -> JourneyType
 }

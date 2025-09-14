@@ -71,14 +71,16 @@ final class FinishJourneyViewController: BaseViewController {
 
 extension FinishJourneyViewController {
     private func bind() {
-        viewModel.output.userNamePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] name in
-                self?.rootView.updateText(nickname: name)
-                
-            }
-            .store(in: &cancellables)
-
+        
+        Publishers.CombineLatest(
+            viewModel.output.userNamePublisher,
+            viewModel.output.lastJourneyPublisher
+        )
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] name, journey in
+            self?.rootView.updateText(nickname: name, journey: journey)
+        }
+        .store(in: &cancellables)
     }
 }
 

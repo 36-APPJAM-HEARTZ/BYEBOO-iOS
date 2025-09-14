@@ -127,5 +127,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: AutoLoginUseCase.self) { _ in
             return DefaultAutoLoginUseCase(repository: authRepository)
         }
+        
+        DIContainer.shared.register(type: GetLastJourneyUseCase.self) { _ in
+            return DefaultGetLastJourneyUseCase(repository: userRepository)
+        }
     }
 }
