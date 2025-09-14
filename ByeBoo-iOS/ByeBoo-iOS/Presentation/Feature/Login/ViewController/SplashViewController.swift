@@ -39,16 +39,18 @@ extension SplashViewController {
             .sink { result in
                 switch result {
                 case .success:
-                    let nextViewController = BottomNavigationViewController()
-                    
-                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                       let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        let nextViewController = BottomNavigationViewController()
                         
-                        ViewControllerUtils.setRootViewController(
-                            window: window,
-                            viewController: nextViewController,
-                            withAnimation: true
-                        )
+                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                            
+                            ViewControllerUtils.setRootViewController(
+                                window: window,
+                                viewController: nextViewController,
+                                withAnimation: true
+                            )
+                        }
                     }
                 case .failure(_):
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
