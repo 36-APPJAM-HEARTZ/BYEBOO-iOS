@@ -63,7 +63,7 @@ final class QuestTipView: BaseView {
             
             guard tips[safe: index] != nil else { return }
             
-            let iconType: [IconType] = questType == .activation ? [.write, .shoe, .change] : [.write, .think, .change]
+            let iconType: [IconType] = questType == .activation ? [.write, .action, .change] : [.write, .think, .change]
             
             let iconTitleLabel = IconOneLineTextView(iconType: iconType[index], text: tipQuestion[index])
             let textView = TextBoxView(title: tip.tipAnswer)

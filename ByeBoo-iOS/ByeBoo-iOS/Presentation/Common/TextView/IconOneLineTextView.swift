@@ -14,7 +14,7 @@ enum IconType {
     case think
     case write
     case change
-    case shoe
+    case action
     
     var iconImage: UIImageView {
         switch self {
@@ -24,7 +24,7 @@ enum IconType {
             return UIImageView(image: .write)
         case .change:
             return UIImageView(image: .change)
-        case .shoe:
+        case .action:
             return UIImageView(image: .shoeIcon)
         }
     }
