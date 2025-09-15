@@ -35,13 +35,7 @@ final class QuestTipViewController: BaseViewController {
         
         self.navigationItem.hidesBackButton = true
         viewModel.action(.questTipDidLoad(questID: questID))
-        
-        ByeBooNavigationBar.makeNavigationBar(
-            navigationItem: self.navigationItem,
-            navigationController: self.navigationController,
-            type: .none()
-        )
-        
+                
         setAction()
         bind()
     }

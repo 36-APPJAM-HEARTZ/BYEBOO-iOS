@@ -43,6 +43,7 @@ struct DefaultUsersRepository: UsersInterface {
         let _ = userDefaultsService.save(result.id, key: .userID)
         let _ = userDefaultsService.save(result.name, key: .userName)
         let _ = userDefaultsService.save(true, key: .isOnboardingCompleted)
+        ByeBooLogger.debug("유저 정보 저장 완료")
         return result.toEntity()
     }
     

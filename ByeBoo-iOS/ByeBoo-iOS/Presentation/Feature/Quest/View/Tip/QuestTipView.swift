@@ -63,7 +63,7 @@ final class QuestTipView: BaseView {
             
             guard tips[safe: index] != nil else { return }
             
-            let iconType: [IconType] = [.write, .think, .change]
+            let iconType: [IconType] = questType == .activation ? [.write, .action, .change] : [.write, .think, .change]
             
             let iconTitleLabel = IconOneLineTextView(iconType: iconType[index], text: tipQuestion[index])
             let textView = TextBoxView(title: tip.tipAnswer)
@@ -100,7 +100,7 @@ final class QuestTipView: BaseView {
         titleLabel.do {
             $0.text = "퀘스트 작성 TIP"
             $0.textColor = .white
-            $0.font = FontManager.cap1M12.font
+            $0.font = FontManager.sub1Sb20.font
         }
         
         closeButton.do { 
