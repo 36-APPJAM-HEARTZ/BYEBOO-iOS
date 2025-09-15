@@ -8,7 +8,11 @@
 import AuthenticationServices
 import Foundation
 
-struct DefaultAuthRepository: AuthInterface {
+protocol TokenReissue {
+    func reissue() async throws
+}
+
+struct DefaultAuthRepository: AuthInterface, TokenReissue {
     private let network: NetworkService
     private let keychainService: KeychainService
     private let userDefaultsService: UserDefaultService
@@ -145,7 +149,7 @@ extension DefaultAuthRepository {
     }
 }
 
-struct MockAuthRepository: AuthInterface {
+struct MockAuthRepository: AuthInterface, TokenReissue {
     func kakaoLogin(platform: LoginPlatform) async throws  {
     }
     
