@@ -19,12 +19,17 @@ extension String {
         return String(self.prefix(limit))
     }
     
-    func makeTitle(rangedText: String, font: UIFont? = nil, baseFont: UIFont? = nil) -> NSMutableAttributedString {
+    func makeTitle(
+        rangedText: String,
+        font: UIFont? = nil,
+        baseFont: UIFont? = nil,
+        originalTitleColor: UIColor? = nil
+    ) -> NSMutableAttributedString {
         let attributedString = NSMutableAttributedString(string: self)
         
         attributedString.addAttribute(
             .foregroundColor,
-            value: UIColor.grayscale50,
+            value: originalTitleColor ?? UIColor.grayscale50,
             range: NSRange(location: 0, length: self.count)
         )
         if let baseFont = baseFont {

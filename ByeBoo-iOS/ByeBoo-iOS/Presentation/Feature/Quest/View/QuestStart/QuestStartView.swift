@@ -28,7 +28,10 @@ final class QuestStartView: BaseView {
             $0.isUserInteractionEnabled = true
         }
         titleLabel.do {
-            $0.attributedText = "QUEST JOURNEY\nSTART!".makeTitle(rangedText: "QUEST JOURNEY")
+            $0.attributedText = "QUEST JOURNEY\nSTART!".makeTitle(
+                rangedText: "QUEST JOURNEY",
+                originalTitleColor: .primary100
+            )
             $0.textAlignment = .center
             $0.font = FontManager.head1M24.font
             $0.numberOfLines = 2
@@ -96,7 +99,8 @@ extension QuestStartView {
                 """.makeTitle(
                     rangedText: "\(nickname)",
                     font: FontManager.body1Sb16.font,
-                    baseFont: FontManager.body3R16.font
+                    baseFont: FontManager.body3R16.font,
+                    originalTitleColor: .grayscale300
                 )
     }
 }
