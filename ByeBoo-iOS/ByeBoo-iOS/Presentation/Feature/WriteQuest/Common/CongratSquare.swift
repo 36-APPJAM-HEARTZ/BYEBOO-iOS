@@ -27,7 +27,10 @@ final class CongratSquare: BaseView {
         }
         
         titleLabel.do {
-            $0.attributedText = "QUEST\nCOMPLETE!".makeTitle(rangedText: "QUEST")
+            $0.attributedText = "QUEST\nCOMPLETE!".makeTitle(
+                rangedText: "QUEST",
+                originalTitleColor: .primary100
+            )
             $0.font = FontManager.head1M24.font
             $0.numberOfLines = 2
             $0.textAlignment = .center
