@@ -29,7 +29,7 @@ final class QuitModalView: BaseView, ModalProtocol {
         )
         
         if let dismissButton = dismissButton {
-            buttonStackView.addArrangedSubviews(dismissButton, actionButton)
+            buttonStackView.addArrangedSubviews(actionButton, dismissButton)
         }
     }
     
