@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Final_Bg-1 1.svg",
+      "filename" : "home_ex_2 6.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "home_ex_2 6@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "home_ex_2 6@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

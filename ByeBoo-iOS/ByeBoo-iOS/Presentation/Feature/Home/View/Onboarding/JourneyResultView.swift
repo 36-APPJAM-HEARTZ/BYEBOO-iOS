@@ -18,7 +18,7 @@ final class JourneyResultView: BaseView {
     
     override func setStyle() {
         backgroundImageView.do {
-            $0.image = .bgLight
+            $0.image = .bgDark
         }
         backgroundView.do {
             $0.backgroundColor = .black50

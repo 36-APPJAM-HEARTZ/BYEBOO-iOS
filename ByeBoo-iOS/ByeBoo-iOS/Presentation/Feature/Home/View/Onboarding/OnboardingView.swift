@@ -21,7 +21,7 @@ final class OnboardingView: BaseView {
     }
     
     override func setStyle() {
-        backgroundImageView.image = .bgOnboarding
+        backgroundImageView.image = .bgDark
     }
     
     override func setUI() {

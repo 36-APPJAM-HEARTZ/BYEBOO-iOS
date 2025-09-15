@@ -14,13 +14,21 @@ final class FinishJourneyViewModel {
     private(set) var output: Output
     
     private let getUserNameUseCase: GetUserNameUseCase
+    private let getLastJourneyUseCase: GetLastJourneyUseCase
     
     private let userNameSubject: PassthroughSubject<String, Never> = .init()
+    private let lastJourneySubject: PassthroughSubject<String, Never> = .init()
     
-    init(getUserNameUseCase: GetUserNameUseCase) {
+    init(
+        getUserNameUseCase: GetUserNameUseCase,
+        getLastJourneyUseCase: GetLastJourneyUseCase
+    ) {
         self.getUserNameUseCase = getUserNameUseCase
+        self.getLastJourneyUseCase = getLastJourneyUseCase
         
-        output = Output(userNamePublisher: userNameSubject.eraseToAnyPublisher()
+        output = Output(
+            userNamePublisher: userNameSubject.eraseToAnyPublisher(),
+            lastJourneyPublisher: lastJourneySubject.eraseToAnyPublisher()
         )
     }
 }
@@ -32,12 +40,14 @@ extension FinishJourneyViewModel: ViewModelType {
     
     struct Output {
         let userNamePublisher: AnyPublisher<String, Never>
+        let lastJourneyPublisher: AnyPublisher<String, Never>
     }
     
     func action(_ trigger: Input) {
         switch trigger {
         case .viewDidLoad:
             getUserName()
+            getLastJourney()
         }
     }
 }
@@ -46,5 +56,10 @@ extension FinishJourneyViewModel {
     private func getUserName() {
         let name = getUserNameUseCase.execute()
         userNameSubject.send(name)
+    }
+    
+    private func getLastJourney() {
+        let journey = getLastJourneyUseCase.execute()
+        lastJourneySubject.send(journey.title)
     }
 }

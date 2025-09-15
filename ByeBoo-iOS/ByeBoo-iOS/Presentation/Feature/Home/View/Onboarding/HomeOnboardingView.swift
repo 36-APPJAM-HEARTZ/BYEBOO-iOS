@@ -20,7 +20,7 @@ final class HomeOnboardingView: BaseView {
     
     override func setStyle() {
         backgroundImageView.do {
-            $0.image = .bgLight
+            $0.image = .bgDark
         }
         backgroundView.do {
             $0.backgroundColor = .black80
@@ -36,7 +36,7 @@ final class HomeOnboardingView: BaseView {
             $0.play()
             $0.loopMode = .loop
             $0.contentMode = .scaleAspectFill
-            $0.isUserInteractionEnabled = true
+            $0.isUserInteractionEnabled = false
         }
         foregroundView.do {
             $0.backgroundColor = .black
@@ -95,6 +95,7 @@ extension HomeOnboardingView {
                         
                         self.descriptionLabel.alpha = 1
                         self.descriptionLabel.transform = CGAffineTransform(translationX: 0, y: -37.adjustedH)
+                        self.characterLottie.isUserInteractionEnabled = true
                     }
                 }
             }

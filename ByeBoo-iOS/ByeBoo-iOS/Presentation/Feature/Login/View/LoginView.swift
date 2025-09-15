@@ -24,7 +24,7 @@ final class LoginView: BaseView {
     
     override func setStyle() {
         backgroundImageView.do {
-            $0.image = .bgLight
+            $0.image = .bgDark
         }
         
         logoImageView.do {

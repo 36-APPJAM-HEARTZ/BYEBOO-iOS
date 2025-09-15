@@ -32,12 +32,12 @@ final class NewJourneySelectView: BaseView {
         backgroundColor = .grayscale900
         
         titleLabel.do {
-            $0.text = "어떤 여정을 시작해볼까요?"
+            $0.text = "어떤 여정을 시작해 볼까요?"
             $0.font = FontManager.head1M24.font
             $0.textColor = .grayscale50
         }
         descriptionLabel.do {
-            $0.text = "각 여정 당 30개의 퀘스트를 제공해드려요"
+            $0.text = "각 여정 당 30개의 퀘스트를 제공해 드려요"
             $0.font = FontManager.body6R14.font
             $0.textColor = .grayscale400
         }

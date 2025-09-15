@@ -98,6 +98,11 @@ struct DefaultUsersRepository: UsersInterface {
         let _ = userDefaultsService.save(result.name, key: .userName)
         return result.name
     }
+    
+    func getLastJourneyType() -> JourneyType {
+        let journey: String? = userDefaultsService.load(key: .journey)
+        return JourneyType.keyToEnum(journey ?? "") ?? .face
+    }
 }
 
 struct MockUserRepository: UsersInterface {
@@ -167,6 +172,10 @@ struct MockUserRepository: UsersInterface {
     
     func modifyUserNickname(name: String) -> String {
         "하쵸핑"
+    }
+    
+    func getLastJourneyType() -> JourneyType {
+        .process
     }
 }
 

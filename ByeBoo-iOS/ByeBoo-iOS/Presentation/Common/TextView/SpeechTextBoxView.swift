@@ -27,6 +27,8 @@ final class SpeechTextBoxView: BaseView {
     override func setStyle() {
         image.do {
             $0.image = .speechBubble
+            $0.contentMode = .scaleAspectFit
+            $0.clipsToBounds = false
         }
         
         titleLabel.do {
@@ -46,7 +48,6 @@ final class SpeechTextBoxView: BaseView {
         image.snp.makeConstraints {
             $0.width.equalTo(327.adjustedW)
             $0.centerX.equalToSuperview()
-            $0.height.equalTo(62.adjustedH)
             $0.verticalEdges.equalToSuperview()
         }
         titleLabel.snp.makeConstraints {
