@@ -8,6 +8,8 @@
 import Combine
 import UIKit
 
+import Mixpanel
+
 final class NewJourneySelectViewController: BaseViewController {
         
     private let rootView: NewJourneySelectView
@@ -42,6 +44,8 @@ final class NewJourneySelectViewController: BaseViewController {
             type: .back(),
             action: #selector(back)
         )
+        
+        Mixpanel.mainInstance().track(event: QuestEvents.Name.journeyNewPageView)
     }
 }
 
@@ -96,6 +100,13 @@ extension NewJourneySelectViewController {
         viewController.modalPresentationStyle = .fullScreen
         viewController.delegate = self
         self.present(viewController, animated: false)
+        
+        let journeyType = JourneyType.titleToEnum(journeyView.title) ?? .face
+        let property = QuestEvents.NewJourneyProperty(newJourneyType: journeyType.mixpanelKey)
+        Mixpanel.mainInstance().track(
+            event: QuestEvents.Name.journeyNewClick,
+            properties: property.dictionary
+        )
     }
 }
 

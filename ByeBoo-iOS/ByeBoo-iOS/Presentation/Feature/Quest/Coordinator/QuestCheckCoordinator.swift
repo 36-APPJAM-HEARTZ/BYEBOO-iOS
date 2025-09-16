@@ -60,7 +60,7 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     
     func moveQuestTip(quest: QuestEntity?) {
         let questTipViewController = ViewControllerFactory.shared.makeQuestTipViewController()
-        questTipViewController.configure(questID: quest?.questId ?? 1, questType: quest?.questStyle ?? .activation)
+        questTipViewController.bind(questID: quest?.questId ?? 1, questType: quest?.questStyle ?? .activation, questNumber: quest?.questNumber ?? 1)
         questTipViewController.modalPresentationStyle = .fullScreen
         let topViewController = UIApplication.shared.topViewController()
         topViewController?.present(questTipViewController, animated: false)

@@ -8,6 +8,7 @@
 import UIKit
 
 import Lottie
+import Mixpanel
 
 final class HomeOnboardingViewController: BaseViewController {
     
@@ -70,6 +71,8 @@ extension HomeOnboardingViewController {
                 rootView.revertPressAnimation()
             }
             pressStartTime = nil
+            
+            Mixpanel.mainInstance().track(event: CommonEvents.Name.onboardingComplete)
         default:
             break
         }

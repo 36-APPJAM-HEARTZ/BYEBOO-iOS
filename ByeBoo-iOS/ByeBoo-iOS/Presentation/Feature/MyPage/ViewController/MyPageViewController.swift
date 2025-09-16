@@ -8,6 +8,8 @@
 import Combine
 import UIKit
 
+import Mixpanel
+
 final class MyPageViewController: BaseViewController {
     
     private let viewModel: MyPageViewModel
@@ -140,6 +142,8 @@ extension MyPageViewController {
         let lookBackJourneyViewController = ViewControllerFactory.shared.makeLookBackJourneyViewController()
         lookBackJourneyViewController.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(lookBackJourneyViewController, animated: true)
+        
+        Mixpanel.mainInstance().track(event: MyPageEvents.Name.myPageJourneyReviewClick)
     }
     
     @objc
@@ -148,6 +152,8 @@ extension MyPageViewController {
         tutorialViewController.navigationItem.hidesBackButton = true
         tutorialViewController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(tutorialViewController, animated: false)
+        
+        Mixpanel.mainInstance().track(event: MyPageEvents.Name.tutorialButtonClick)
     }
     
     @objc
@@ -215,8 +221,12 @@ extension MyPageViewController {
             switch modalType{
             case .logout:
                 self.viewModel.action(.logoutActionButtonDidTap)
+                
+                Mixpanel.mainInstance().track(event: MyPageEvents.Name.logoutConfirmClick)
             case .withdraw:
                 self.viewModel.action(.withdrawActionButtonDidTap)
+                
+                Mixpanel.mainInstance().track(event: MyPageEvents.Name.withdrawConfirmClick)
             }
         }
         

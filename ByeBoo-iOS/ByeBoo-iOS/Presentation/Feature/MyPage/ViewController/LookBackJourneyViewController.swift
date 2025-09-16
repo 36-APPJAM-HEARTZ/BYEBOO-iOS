@@ -8,6 +8,8 @@
 import Combine
 import UIKit
 
+import Mixpanel
+
 final class LookBackJourneyViewController: BaseViewController {
     
     private let rootView: LookBackJourneyView
@@ -42,6 +44,8 @@ final class LookBackJourneyViewController: BaseViewController {
         
         bind()
         rootView.journeyView.completeJourneyDelegate = self
+        
+        Mixpanel.mainInstance().track(event: QuestEvents.Name.journeyReviewPageView)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

@@ -8,12 +8,16 @@
 import UIKit
 
 import SnapKit
+import Mixpanel
 
 final class EmotionBottomSheetViewController: BaseViewController {
     private let rootView = EmotionBottomSheetView()
     private var selectedChip: ByeBooEmotionChip?
     private var isFirstTouch: Bool = false
     weak var delegate: BottomSheetProtocol?
+    
+    private var questNumber: Int = 0
+    private var questType: QuestType = .activation
     
     override func loadView() {
         view = rootView
@@ -76,5 +80,23 @@ final class EmotionBottomSheetViewController: BaseViewController {
         self.delegate?.saveEmotionState(emotionState: selectedEmotion)
         self.delegate?.saveQuest()
         rootView.confirmButton.isEnabled = false
+        
+        let property = QuestEvents.QuestWriteFinishWithEmotionProperty(
+            questEndAt: Date().toString(),
+            questNumber: questNumber,
+            questType: questType.mixpanelKey,
+            afterEmotionType: selectedEmotion.emotionText
+        )
+        Mixpanel.mainInstance().track(
+            event: QuestEvents.Name.questWriteSuccess,
+            properties: property.dictionary
+        )
+    }
+}
+
+extension EmotionBottomSheetViewController {
+    func bind(questNumber: Int, questType: QuestType) {
+        self.questNumber = questNumber
+        self.questType = questType
     }
 }

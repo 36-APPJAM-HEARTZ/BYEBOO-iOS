@@ -9,6 +9,8 @@ import AuthenticationServices
 import Combine
 import UIKit
 
+import Mixpanel
+
 final class LoginViewController: BaseViewController {
     
     private let rootView = LoginView()
@@ -41,11 +43,27 @@ extension LoginViewController{
     @objc
     private func kakaoLoginButtonDidTap() {
         viewModel.action(.socialLoginButtonDidTap(platform: .KAKAO))
+        let property = CommonEvents.LoginProperty(
+            isLoginComplete: true,
+            logintype: LoginPlatform.KAKAO.mixpanelKey
+        )
+        Mixpanel.mainInstance().track(
+            event: CommonEvents.Name.login,
+            properties: property.dictionary
+        )
     }
     
     @objc
     private func appleLoginButtonDidTap() {
         viewModel.action(.socialLoginButtonDidTap(platform: .APPLE))
+        let property = CommonEvents.LoginProperty(
+            isLoginComplete: true,
+            logintype: LoginPlatform.APPLE.mixpanelKey
+        )
+        Mixpanel.mainInstance().track(
+            event: CommonEvents.Name.login,
+            properties: property.dictionary
+        )
     }
 }
 

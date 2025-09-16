@@ -8,6 +8,8 @@
 import UIKit
 import Combine
 
+import Mixpanel
+
 protocol StartModalDelegate: AnyObject {
     func startAndDismissModal()
     func backDismissModal()
@@ -20,6 +22,8 @@ final class QuestStartViewController: BaseViewController {
     private let rootView = QuestStartView()
     
     private var journeyTitle: String = ""
+    private var isFirst: Bool = true
+    private var journeyType: JourneyType = .face
     
     weak var delegate: StartModalDelegate?
     
@@ -42,6 +46,22 @@ final class QuestStartViewController: BaseViewController {
         bind()
         setGesture()
         viewModel.action(.viewDidLoad)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        let property = QuestEvents.QuestStartProperty(
+            journeyStartAt: Date().toString(),
+            journeyType: journeyType.mixpanelKey,
+            isFirstJourney: isFirst
+        )
+        Mixpanel.mainInstance().track(
+            event: QuestEvents.Name.journeyStartPageView,
+            properties: property.dictionary
+        )
+        
+        if isFirst { isFirst.toggle() }
     }
     
     override func setAddTarget() {

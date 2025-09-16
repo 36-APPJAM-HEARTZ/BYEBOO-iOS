@@ -9,6 +9,7 @@ import Combine
 import UIKit
 
 import SnapKit
+import Mixpanel
 
 final class CompletedQuestsViewController: BaseViewController {
     
@@ -47,6 +48,12 @@ final class CompletedQuestsViewController: BaseViewController {
             navigationController: self.navigationController,
             type: .close(header: .black),
             action: #selector(close)
+        )
+        let journeyType = JourneyType.titleToEnum(journeyTitle ?? "") ?? .face
+        let property = QuestEvents.QuestAllLookBackProperty(reviewJourneyType: journeyType.mixpanelKey)
+        Mixpanel.mainInstance().track(
+            event: QuestEvents.Name.journeyReviewAllPageView,
+            properties: property.dictionary
         )
     }
     
