@@ -8,6 +8,7 @@
 import UIKit
 
 import KakaoSDKCommon
+import Mixpanel
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -19,6 +20,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             KakaoSDK.initSDK(appKey: kakaoNativeAppKey)
         } else {
             fatalError("카카오 네이티브 앱 키 없음")
+        }
+        
+        if let mixpanelToken = Bundle.main.object(forInfoDictionaryKey: "MIXPANEL_TOKEN") as? String {
+            Mixpanel.initialize(token: mixpanelToken, trackAutomaticEvents: true)
+        } else {
+            ByeBooLogger.debug("믹스 패널 토큰 없음")
         }
         
         return true
