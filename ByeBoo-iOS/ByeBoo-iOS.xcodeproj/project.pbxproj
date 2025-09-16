@@ -13,6 +13,7 @@
 		51691DED2E5CB059008CCEC6 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 51691DEC2E5CB059008CCEC6 /* KakaoSDKAuth */; };
 		51691DEF2E5CB059008CCEC6 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 51691DEE2E5CB059008CCEC6 /* KakaoSDKUser */; };
 		CB5A49882E1EAAD400851C87 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = CB5A49872E1EAAD400851C87 /* Kingfisher */; };
+		CBB032A72E7925FC00C0855E /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = CBB032A62E7925FC00C0855E /* Mixpanel */; };
 		CBF009C82E1D889D003F9DFE /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = CBF009C72E1D889D003F9DFE /* Lottie */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +69,7 @@
 				51691DEF2E5CB059008CCEC6 /* KakaoSDKUser in Frameworks */,
 				CBF009C82E1D889D003F9DFE /* Lottie in Frameworks */,
 				CB5A49882E1EAAD400851C87 /* Kingfisher in Frameworks */,
+				CBB032A72E7925FC00C0855E /* Mixpanel in Frameworks */,
 				51691DED2E5CB059008CCEC6 /* KakaoSDKAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -127,6 +129,7 @@
 				CB5A49872E1EAAD400851C87 /* Kingfisher */,
 				51691DEC2E5CB059008CCEC6 /* KakaoSDKAuth */,
 				51691DEE2E5CB059008CCEC6 /* KakaoSDKUser */,
+				CBB032A62E7925FC00C0855E /* Mixpanel */,
 			);
 			productName = "ByeBoo-iOS";
 			productReference = CB41808B2E0925D2001E7BCB /* ByeBoo-iOS.app */;
@@ -190,6 +193,7 @@
 				CBF009C62E1D889D003F9DFE /* XCRemoteSwiftPackageReference "lottie-ios" */,
 				CB5A49862E1EAAD400851C87 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				51691DEB2E5CB059008CCEC6 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+				CBB032A52E7925FC00C0855E /* XCRemoteSwiftPackageReference "mixpanel-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CB41808C2E0925D2001E7BCB /* Products */;
@@ -560,6 +564,14 @@
 				minimumVersion = 8.4.0;
 			};
 		};
+		CBB032A52E7925FC00C0855E /* XCRemoteSwiftPackageReference "mixpanel-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mixpanel/mixpanel-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		CBF009C62E1D889D003F9DFE /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/airbnb/lottie-ios";
@@ -600,6 +612,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CB5A49862E1EAAD400851C87 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		CBB032A62E7925FC00C0855E /* Mixpanel */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CBB032A52E7925FC00C0855E /* XCRemoteSwiftPackageReference "mixpanel-swift" */;
+			productName = Mixpanel;
 		};
 		CBF009C72E1D889D003F9DFE /* Lottie */ = {
 			isa = XCSwiftPackageProductDependency;
