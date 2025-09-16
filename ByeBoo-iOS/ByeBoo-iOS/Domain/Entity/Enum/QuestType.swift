@@ -13,3 +13,14 @@ enum QuestType: CaseIterable {
     case question
     case activation
 }
+
+extension QuestType {
+    var mixpanelKey: String {
+        switch self {
+        case .question:
+            "질문형"
+        case .activation:
+            "행동형"
+        }
+    }
+}

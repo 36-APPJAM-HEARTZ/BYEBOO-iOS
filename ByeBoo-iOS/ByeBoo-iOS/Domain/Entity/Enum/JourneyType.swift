@@ -13,3 +13,14 @@ enum JourneyType: CaseIterable {
     case face
     case process
 }
+
+extension JourneyType {
+    var mixpanelKey: String {
+        switch self {
+        case .face:
+            "감정 직면"
+        case .process:
+            "감정 정리"
+        }
+    }
+}
