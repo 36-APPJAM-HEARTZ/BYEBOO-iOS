@@ -29,6 +29,7 @@ final class DefaultNetworkService: NSObject, NetworkService {
     init(interceptor: NetworkInterceptor) {
         self.interceptor = interceptor
     }
+    
     func request<T: Decodable>(
         _ endPoint: EndPoint,
         decodingType: T.Type
@@ -37,12 +38,6 @@ final class DefaultNetworkService: NSObject, NetworkService {
         
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             guard let self else { return }
-            
-//            let authRepository = DefaultAuthRepository(
-//                network: DefaultNetworkService(),
-//                keychainService: DefaultKeychainService(),
-//                userDefaultsService: DefaultUserDefaultService()
-//            )
             
             AF.request(
                 endPoint.requestURL,
@@ -86,13 +81,7 @@ final class DefaultNetworkService: NSObject, NetworkService {
         
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             guard let self else { return }
-            
-//            let authRepository = DefaultAuthRepository(
-//                network: DefaultNetworkService(),
-//                keychainService: DefaultKeychainService(),
-//                userDefaultsService: DefaultUserDefaultService()
-//            )
-            
+    
             AF.request(
                 endPoint.requestURL,
                 method: endPoint.method,
