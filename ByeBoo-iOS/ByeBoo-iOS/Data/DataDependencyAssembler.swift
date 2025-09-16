@@ -8,11 +8,19 @@
 import Foundation
 
 struct DataDependencyAssembler: DependencyAssembler {
-    private let networkService: NetworkService = DefaultNetworkService()
-    private let keychainService: KeychainService = DefaultKeychainService()
-    private let userDefaultService: UserDefaultService = DefaultUserDefaultService()
+    //    private let keychainService: KeychainService = DefaultKeychainService()
+    //    private let userDefaultService: UserDefaultService = DefaultUserDefaultService()
+    //    private lazy var tokenService: TokenService = DefaultTokenService(keychainService: keychainService)
+    //    private lazy var interceptor = NetworkInterceptor(tokenService: tokenService)
+    //    private lazy var networkService: NetworkService = DefaultNetworkService(interceptor: interceptor)
     
     func assemble() {
+        let keychainService = DefaultKeychainService()
+        let userDefaultService = DefaultUserDefaultService()
+        let tokenService = DefaultTokenService(keychainService: keychainService)
+        let interceptor = NetworkInterceptor(tokenService: tokenService)
+        let networkService = DefaultNetworkService(interceptor: interceptor)
+        
         DIContainer.shared.register(type: UsersInterface.self) { _ in
             return DefaultUsersRepository(network: networkService, userDefaultsService: userDefaultService)
         }
@@ -22,7 +30,7 @@ struct DataDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: AuthInterface.self) { _ in
-            return DefaultAuthRepository(network: networkService, keychainService: keychainService, userDefaultsService: userDefaultService)
+            return DefaultAuthRepository(network: networkService, keychainService: keychainService, userDefaultsService: userDefaultService, tokenService: tokenService)
         }
     }
 }
