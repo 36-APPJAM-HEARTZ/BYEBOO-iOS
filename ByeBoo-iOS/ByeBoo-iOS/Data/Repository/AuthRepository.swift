@@ -71,6 +71,7 @@ struct DefaultAuthRepository: AuthInterface {
         _ = userDefaultsService.save(result.name ?? "" , key: .userName)
         _ = userDefaultsService.save(result.journey ?? "", key: .journey)
         _ = userDefaultsService.save(result.journeyStatus ?? "", key: .journeyStatus)
+        _ = userDefaultsService.save(result.userId, key: .userID)
         
         keychainService.save(key: .accessToken, token: result.accessToken)
         keychainService.save(key: .refreshToken, token: result.refreshToken)
