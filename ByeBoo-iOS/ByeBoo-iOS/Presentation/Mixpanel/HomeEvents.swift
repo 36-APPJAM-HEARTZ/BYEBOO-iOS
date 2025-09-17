@@ -12,7 +12,9 @@ struct HomeEvents {
         static let homePageView = "home_pageview"
         static let tutorialIconClick = "tutorial_icon_click"
     }
-    
+}
+
+extension HomeEvents {
     struct HomePageProperty: MixpanelProperty {
         let isFirstPageView: Bool
         let journeyType: String

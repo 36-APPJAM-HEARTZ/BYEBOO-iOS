@@ -16,7 +16,9 @@ struct CommonEvents {
         static let journeyCardComplete = "journey_card_complete"
         static let onboardingComplete = "onboarding_complete"
     }
-    
+}
+
+extension CommonEvents {
     struct LoginProperty: MixpanelProperty {
         let isLoginComplete: Bool
         let logintype: String

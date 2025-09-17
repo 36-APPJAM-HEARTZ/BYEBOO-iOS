@@ -23,7 +23,9 @@ struct QuestEvents {
         static let journeyReviewPageView = "journey_review_pageview"
         static let journeyReviewAllPageView = "journey_review_pageview"
     }
-    
+}
+
+extension QuestEvents {
     struct QuestStartEnterProperty: MixpanelProperty {
         let journeyType: String
         
