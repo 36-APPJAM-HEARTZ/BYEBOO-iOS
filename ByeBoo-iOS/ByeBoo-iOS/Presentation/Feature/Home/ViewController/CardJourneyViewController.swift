@@ -61,6 +61,8 @@ extension CardJourneyViewController {
     private func confirmLabelDidTap() {
         let property = CommonEvents.JourneyTypeProperty(journeyType: journeyType.mixpanelKey)
         Mixpanel.mainInstance().track(event: CommonEvents.Name.journeyCardComplete, properties: property.dictionary)
+        let userProperty = UserEvents.UserFirstJourneyTypeProperty(userFirstJourneyType: journeyType.mixpanelKey)
+        Mixpanel.mainInstance().people.set(properties: userProperty.dictionary)
         
         let viewController = HomeOnboardingViewController()
         viewController.navigationItem.hidesBackButton = true

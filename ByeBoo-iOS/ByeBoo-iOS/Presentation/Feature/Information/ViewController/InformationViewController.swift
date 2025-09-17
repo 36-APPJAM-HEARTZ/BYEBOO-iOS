@@ -97,6 +97,8 @@ extension InformationViewController {
                 let feeling = Feeling.allCases[index]
                 viewModel.action(.feelingButtonDidTap(feeling))
                 Mixpanel.mainInstance().track(event: CommonEvents.Name.currentEmotionComplete)
+                let userProperty = UserEvents.CurrentEmotionProperty(currentEmotion: feeling.mixpanelKey)
+                Mixpanel.mainInstance().people.set(properties: userProperty.dictionary)
             }
         }
         move(view: selectQuestView, progress: .third)

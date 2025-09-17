@@ -88,9 +88,11 @@ final class EmotionBottomSheetViewController: BaseViewController {
             afterEmotionType: selectedEmotion.emotionText
         )
         Mixpanel.mainInstance().track(
-            event: QuestEvents.Name.questWriteSuccess,
+            event: QuestEvents.Name.questSuccess,
             properties: property.dictionary
         )
+        let userProperty = UserEvents.CurrentQuestNumberProperty(currentQuestNumber: questNumber)
+        Mixpanel.mainInstance().people.set(properties: userProperty.dictionary)
     }
 }
 
