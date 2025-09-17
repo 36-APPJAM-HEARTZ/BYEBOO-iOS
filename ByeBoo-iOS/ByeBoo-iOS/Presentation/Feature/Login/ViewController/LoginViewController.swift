@@ -9,11 +9,14 @@ import AuthenticationServices
 import Combine
 import UIKit
 
+import Mixpanel
+
 final class LoginViewController: BaseViewController {
     
     private let rootView = LoginView()
     private let viewModel: LoginViewModel
     private var cancellables = Set<AnyCancellable>()
+    private var platform: LoginPlatform = .KAKAO
     
     init(viewModel: LoginViewModel) {
         self.viewModel = viewModel
@@ -40,11 +43,13 @@ final class LoginViewController: BaseViewController {
 extension LoginViewController{
     @objc
     private func kakaoLoginButtonDidTap() {
+        self.platform = .KAKAO
         viewModel.action(.socialLoginButtonDidTap(platform: .KAKAO))
     }
     
     @objc
     private func appleLoginButtonDidTap() {
+        self.platform = .APPLE
         viewModel.action(.socialLoginButtonDidTap(platform: .APPLE))
     }
 }
@@ -77,6 +82,21 @@ extension LoginViewController {
                 case .failure(let error):
                     ByeBooLogger.debug(error)
                 }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.userIDPublisher
+            .sink { [weak self] id in
+                Mixpanel.mainInstance().identify(distinctId: String(id))
+                
+                let property = CommonEvents.LoginProperty(
+                    isLoginComplete: true,
+                    logintype: self?.platform.mixpanelKey ?? LoginPlatform.KAKAO.mixpanelKey
+                )
+                Mixpanel.mainInstance().track(
+                    event: CommonEvents.Name.login,
+                    properties: property.dictionary
+                )
             }
             .store(in: &cancellables)
     }

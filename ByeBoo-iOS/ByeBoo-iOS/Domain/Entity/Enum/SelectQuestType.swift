@@ -11,3 +11,14 @@ enum SelectQuestType: CaseIterable {
     case recording
     case active
 }
+
+extension SelectQuestType {
+    var mixpanelKey: String {
+        switch self {
+        case .recording:
+            "질문형"
+        case .active:
+            "행동형"
+        }
+    }
+}

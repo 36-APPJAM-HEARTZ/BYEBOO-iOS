@@ -8,6 +8,8 @@
 import Combine
 import UIKit
 
+import Mixpanel
+
 final class WriteActiveTypeQuestViewController: BaseViewController {
     
     private let rootView = WriteActiveTypeQuestView()
@@ -64,6 +66,16 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         bind()
         presentPhotoPicker()
         viewModel.action(.viewDidLoad(quesetID: questID))
+        
+        let property = QuestEvents.QuestWriteStartProperty(
+            questStartAt: Date().toString(),
+            questNumber: questNumber,
+            questType: questType.mixpanelKey
+        )
+        Mixpanel.mainInstance().track(
+            event: QuestEvents.Name.questWritePageView,
+            properties: property.dictionary
+        )
     }
     
     override func setAddTarget() {
@@ -123,7 +135,7 @@ extension WriteActiveTypeQuestViewController {
             answerText = rootView.questTextField.textView.text
         }
         
-       
+        bottomSheetViewController.bind(questNumber: questNumber, questType: questType)
         bottomSheetViewController.delegate = self
         if let sheet =  bottomSheetViewController.sheetPresentationController{
             sheet.detents = [.custom { _ in 471.adjustedH }]
@@ -132,6 +144,16 @@ extension WriteActiveTypeQuestViewController {
             sheet.preferredCornerRadius = 8
         }
         self.present(bottomSheetViewController, animated: true)
+        
+        let property = QuestEvents.QuestWriteFinishProperty(
+            questLength: rootView.questTextField.textView.text.count,
+            questNumber: questNumber,
+            questType: questType.mixpanelKey
+        )
+        Mixpanel.mainInstance().track(
+            event: QuestEvents.Name.questWriteSuccess,
+            properties: property.dictionary
+        )
     }
     
     @objc
@@ -142,7 +164,7 @@ extension WriteActiveTypeQuestViewController {
     @objc
     private func tipTagDidTap() {
         let viewController = ViewControllerFactory.shared.makeQuestTipViewController()
-        viewController.configure(questID: questID, questType: questType)
+        viewController.bind(questID: questID, questType: questType, questNumber: questNumber)
         viewController.navigationItem.hidesBackButton = true
         viewController.modalPresentationStyle = .fullScreen
         self.present(viewController, animated: false)

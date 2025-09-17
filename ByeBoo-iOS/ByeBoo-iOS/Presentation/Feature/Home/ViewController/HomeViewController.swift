@@ -10,6 +10,7 @@ import UIKit
 
 import SnapKit
 import Then
+import Mixpanel
 
 final class HomeViewController: BaseViewController {
     
@@ -18,6 +19,8 @@ final class HomeViewController: BaseViewController {
     private let rootView = HomeView()
     
     private var state: HomeState = .beforeJourneyStart
+    private var isFirstVisit: Bool = true
+    private var journeyType: JourneyType = .face
     
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -43,6 +46,17 @@ final class HomeViewController: BaseViewController {
         super.viewWillAppear(animated)
         
         viewModel.action(.viewWillAppear)
+        
+        let property = HomeEvents.HomePageProperty(
+            isFirstPageView: isFirstVisit,
+            journeyType: journeyType.mixpanelKey
+        )
+        Mixpanel.mainInstance().track(
+            event: HomeEvents.Name.homePageView,
+            properties: property.dictionary
+        )
+        
+        if isFirstVisit { isFirstVisit.toggle() }
     }
     
     override func setAddTarget() {
@@ -75,6 +89,8 @@ extension HomeViewController {
     private func helperDidTap() {
         viewModel.action(.helperTapped)
         rootView.helperDidTap()
+        
+        Mixpanel.mainInstance().track(event: HomeEvents.Name.tutorialIconClick)
         
         let tutorialViewController = TutorialModalViewController()
         tutorialViewController.navigationItem.hidesBackButton = true
@@ -116,10 +132,11 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
                         progress: state.questCount,
                         journey: journey.title
                     )
-                    
+                    self?.journeyType = JourneyType.titleToEnum(journey.title) ?? .face
                 case let (_, .success(journey), .failure(.notFoundQuest)):
                     self?.rootView.updateState(.beforeJourneyStart, journey.title)
                     self?.state = .beforeJourneyStart
+                    self?.journeyType = JourneyType.titleToEnum(journey.title) ?? .face
                 case let (_, .failure(.notFoundQuest), .success(state)):
                     self?.rootView.updateState(state.currentStatus)
                     self?.state = state.currentStatus

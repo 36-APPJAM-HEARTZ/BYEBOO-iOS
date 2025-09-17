@@ -8,6 +8,8 @@
 import Combine
 import UIKit
 
+import Mixpanel
+
 final class InformationViewController: BaseViewController {
     
     private let inputNicknameView = InputNicknameView()
@@ -83,6 +85,7 @@ extension InformationViewController {
         if let nickname = inputNicknameView.nicknameTextField.nicknameField.text,
            !nickname.isEmpty {
             viewModel.action(.nicknameButtonDidTap(nickname))
+            Mixpanel.mainInstance().track(event: CommonEvents.Name.nicknameComplete)
         }
         move(view: selectEmotionView, progress: .second)
     }
@@ -93,6 +96,9 @@ extension InformationViewController {
             if Feeling.allCases.indices.contains(index) {
                 let feeling = Feeling.allCases[index]
                 viewModel.action(.feelingButtonDidTap(feeling))
+                Mixpanel.mainInstance().track(event: CommonEvents.Name.currentEmotionComplete)
+                let userProperty = UserEvents.CurrentEmotionProperty(currentEmotion: feeling.mixpanelKey)
+                Mixpanel.mainInstance().people.set(properties: userProperty.dictionary)
             }
         }
         move(view: selectQuestView, progress: .third)
@@ -104,6 +110,11 @@ extension InformationViewController {
             if SelectQuestType.allCases.indices.contains(index) {
                 let quest = SelectQuestType.allCases[index]
                 viewModel.action(.questButtonDidTap(quest))
+                let property = CommonEvents.SelectQuestTypeProperty(questType: quest.mixpanelKey)
+                Mixpanel.mainInstance().track(
+                    event: CommonEvents.Name.questTypeComplete,
+                    properties: property.dictionary
+                )
             }
         }
     }

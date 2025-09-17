@@ -9,3 +9,14 @@ enum LoginPlatform: String {
     case KAKAO
     case APPLE
 }
+
+extension LoginPlatform {
+    var mixpanelKey: String {
+        switch self {
+        case .KAKAO:
+            "Kakao"
+        case .APPLE:
+            "Apple"
+        }
+    }
+}

@@ -19,6 +19,9 @@ final class QuestCheckViewController: BaseViewController {
     var coordinator: QuestCheckCoordinating?
     private var cancellable = Set<AnyCancellable>()
     
+    private var journeyType: JourneyType = .face
+    private var isFirst: Bool = true
+    
     init(viewModel: ProgressingQuestsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -40,6 +43,13 @@ final class QuestCheckViewController: BaseViewController {
         
         bind()
         viewModel.action(.questViewWillAppear)
+        
+        let property = QuestEvents.QuestMainProperty(
+            journeyType: journeyType.mixpanelKey,
+            isFirstPageView: isFirst
+        )
+        
+        if isFirst { isFirst.toggle() }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -87,6 +97,7 @@ extension QuestCheckViewController: ToastPresentable, ToastErrorHandler {
             switch (name, journey, quests) {
             case let (.success(name), .success(journey), .success(quests)):
                 self?.updateQuestMainUI(name: name, journey: journey, quests: quests)
+                self?.journeyType = JourneyType.titleToEnum(journey.title) ?? .face
             case (.success(_), .success(_), .failure(_)):
                 self?.coordinator?.moveQuestStart()
             case (.success(_), .failure(_), .failure(_)):

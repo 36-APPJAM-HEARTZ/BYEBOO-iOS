@@ -8,12 +8,15 @@
 import UIKit
 import Combine
 
+import Mixpanel
+
 final class FinishJourneyViewController: BaseViewController {
 
     private let rootView = FinishJourneyView()
     private let viewModel: FinishJourneyViewModel
     
     private var cancellables = Set<AnyCancellable>()
+    private var journeyType: JourneyType = .face
     
     init(viewModel: FinishJourneyViewModel) {
         self.viewModel = viewModel
@@ -45,6 +48,15 @@ final class FinishJourneyViewController: BaseViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.rootView.startParagraphAnimation()
         }
+        
+        let property = QuestEvents.JourneyFinishProperty(
+            journeyEndAt: Date().toString(),
+            journeyType: journeyType.mixpanelKey
+        )
+        Mixpanel.mainInstance().track(
+            event: QuestEvents.Name.journeyCompletePageView,
+            properties: property.dictionary
+            )
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -79,6 +91,7 @@ extension FinishJourneyViewController {
         .receive(on: DispatchQueue.main)
         .sink { [weak self] name, journey in
             self?.rootView.updateText(nickname: name, journey: journey)
+            self?.journeyType = JourneyType.titleToEnum(journey) ?? .face
         }
         .store(in: &cancellables)
     }

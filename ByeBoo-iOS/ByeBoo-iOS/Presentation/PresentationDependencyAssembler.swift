@@ -195,7 +195,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         DIContainer.shared.register(type: LoginViewModel.self) { container in
             guard let socialLoginUseCase = container.resolve(type: SocialLoginUseCase.self),
-                  let getIsRegisteredUseCase = container.resolve(type: GetIsRegisteredUseCase.self)
+                  let getIsRegisteredUseCase = container.resolve(type: GetIsRegisteredUseCase.self),
+                  let getUserIDUseCase = container.resolve(type: GetUserIDUseCase.self)
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -203,7 +204,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             
             return LoginViewModel(
                 socialLoginUseCase: socialLoginUseCase,
-                getIsRegisteredUseCase: getIsRegisteredUseCase
+                getIsRegisteredUseCase: getIsRegisteredUseCase,
+                getUserIDUseCase: getUserIDUseCase
             )
         }
         

@@ -5,6 +5,8 @@
 //  Created by APPLE on 8/23/25.
 //
 
+import Mixpanel
+
 final class TutorialModalViewController: BaseViewController {
     
     private let rootView = TutorialModalView()
@@ -22,6 +24,8 @@ final class TutorialModalViewController: BaseViewController {
             type: .close(header: .black),
             action: #selector(back)
         )
+        
+        Mixpanel.mainInstance().track(event: MyPageEvents.Name.tutorialPageView)
     }
     
     override func viewWillDisappear(_ animated: Bool) {

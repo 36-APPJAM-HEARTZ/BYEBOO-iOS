@@ -8,6 +8,8 @@
 import Combine
 import UIKit
 
+import Mixpanel
+
 final class QuestTipViewController: BaseViewController {
     
     private var rootView: QuestTipView?
@@ -16,6 +18,7 @@ final class QuestTipViewController: BaseViewController {
     
     private var questID: Int = 1
     private var questType: QuestType = .activation
+    private var questNumber: Int = 0
     
     override func loadView() {
         view = rootView
@@ -38,6 +41,12 @@ final class QuestTipViewController: BaseViewController {
                 
         setAction()
         bind()
+        
+        let property = QuestEvents.QuestTipProperty(questNumber: questNumber)
+        Mixpanel.mainInstance().track(
+            event: QuestEvents.Name.questTipPageView,
+            properties: property.dictionary
+        )
     }
     
     private func setAction() {
@@ -54,10 +63,11 @@ extension QuestTipViewController {
 }
 
 extension QuestTipViewController {
-    func configure(questID: Int, questType: QuestType) {
+    func bind(questID: Int, questType: QuestType, questNumber: Int) {
         self.questID = questID
         self.questType = questType
         rootView = QuestTipView(questType: questType)
+        self.questNumber = questNumber
     }
 }
 
