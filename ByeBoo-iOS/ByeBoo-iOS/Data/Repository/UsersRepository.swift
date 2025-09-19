@@ -40,7 +40,7 @@ struct DefaultUsersRepository: UsersInterface {
             UsersAPI.sendUser(requestDTO: userRequestDTO),
             decodingType: UserResponseDTO.self
         )
-        let _ = userDefaultsService.save(result.id, key: .userId)
+        let _ = userDefaultsService.save(result.id, key: .userID)
         let _ = userDefaultsService.save(result.name, key: .userName)
         let _ = userDefaultsService.save(true, key: .isOnboardingCompleted)
         ByeBooLogger.debug("유저 정보 저장 완료")
@@ -76,7 +76,7 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func getUserID() -> Int? {
-        userDefaultsService.load(key: .userId)
+        userDefaultsService.load(key: .userID)
     }
     
     func setHelperShown() {

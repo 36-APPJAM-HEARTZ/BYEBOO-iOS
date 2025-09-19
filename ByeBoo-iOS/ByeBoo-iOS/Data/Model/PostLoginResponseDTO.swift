@@ -12,5 +12,4 @@ struct PostLoginResponseDTO: Decodable {
     let name: String?
     let journey: String?
     let journeyStatus: String?
-    let userId: Int
 }
