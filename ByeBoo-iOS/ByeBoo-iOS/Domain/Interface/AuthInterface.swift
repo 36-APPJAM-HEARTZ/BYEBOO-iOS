@@ -10,7 +10,6 @@ import Foundation
 protocol AuthInterface {
     func kakaoLogin(platform: LoginPlatform) async throws
     func appleLogin(platform: LoginPlatform) async throws
-    func reissue() async throws
     func autoLogin() async throws -> Bool
     func logout() async throws
     func withdraw() async throws

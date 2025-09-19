@@ -29,7 +29,7 @@ final class CardJourneyView: BaseView {
             $0.backgroundColor = .black50
         }
         tipDescriptionLabel.do {
-            $0.text = "카드를 뒤집어서 내용을 확인해주세요!"
+            $0.text = "카드를 뒤집어서 내용을 확인해 주세요!"
             $0.font = FontManager.body3R16.font
             $0.textColor = .white50
         }

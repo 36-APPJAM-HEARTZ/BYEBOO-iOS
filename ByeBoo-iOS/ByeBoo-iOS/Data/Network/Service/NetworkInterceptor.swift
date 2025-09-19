@@ -10,11 +10,13 @@ import Foundation
 import Alamofire
 
 final class NetworkInterceptor: RequestInterceptor {
-    private let authRepository: DefaultAuthRepository
+    private let tokenService: TokenService
     private let retryLimit = 3
     
-    init(authRepository: DefaultAuthRepository) {
-        self.authRepository = authRepository
+    init(
+        tokenService: TokenService
+    ) {
+        self.tokenService = tokenService
     }
     
     func adapt(
@@ -40,7 +42,7 @@ final class NetworkInterceptor: RequestInterceptor {
             
             Task {
                 do {
-                    try await self.authRepository.reissue()
+                    try await self.tokenService.reissue()
                     ByeBooLogger.debug("401 Error -> 토큰 재발급 성공")
                     completion(.retry)
                 } catch {

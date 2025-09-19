@@ -12,15 +12,18 @@ struct DefaultAuthRepository: AuthInterface {
     private let network: NetworkService
     private let keychainService: KeychainService
     private let userDefaultsService: UserDefaultService
+    private let tokenService: TokenService
     
     init(
         network: NetworkService,
         keychainService: KeychainService,
-        userDefaultsService: UserDefaultService
+        userDefaultsService: UserDefaultService,
+        tokenService: TokenService
     ) {
         self.network = network
         self.keychainService = keychainService
         self.userDefaultsService = userDefaultsService
+        self.tokenService = tokenService
     }
     
     // MARK: Network
@@ -80,16 +83,6 @@ struct DefaultAuthRepository: AuthInterface {
         keychainService.delete(key: .authorizationCode)
     }
     
-    func reissue() async throws {
-        let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .refreshToken))
-        let result = try await network.request(
-            AuthAPI.reissue(header: header),
-            decodingType: TokenReissueResponseDTO.self
-        )
-        keychainService.save(key: .accessToken, token: result.accessToken)
-        keychainService.save(key: .refreshToken, token: result.refreshToken)
-    }
-    
     func autoLogin() async throws -> Bool {
         let isOnboardingCompleted: Bool = userDefaultsService.load(key: .isOnboardingCompleted) ?? false
         ByeBooLogger.debug(isOnboardingCompleted)
@@ -99,7 +92,7 @@ struct DefaultAuthRepository: AuthInterface {
             && isOnboardingCompleted
         {
             ByeBooLogger.debug("정보 있음")
-            try await reissue()
+            try await tokenService.reissue()
             return true
         } else {
             ByeBooLogger.debug("정보 없음")
@@ -146,14 +139,11 @@ extension DefaultAuthRepository {
     }
 }
 
-struct MockAuthRepository: AuthInterface {
+struct MockAuthRepository: AuthInterface{
     func kakaoLogin(platform: LoginPlatform) async throws  {
     }
     
     func appleLogin(platform: LoginPlatform) async throws {
-    }
-    
-    func reissue() async throws {
     }
     
     func autoLogin() async throws -> Bool {

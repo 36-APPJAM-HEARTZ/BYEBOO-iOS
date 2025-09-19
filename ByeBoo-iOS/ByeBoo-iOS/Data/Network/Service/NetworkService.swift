@@ -24,7 +24,12 @@ protocol NetworkService {
 
 final class DefaultNetworkService: NSObject, NetworkService {
     private var continuation: CheckedContinuation<(String, String), Error>?
-        
+    private let interceptor: NetworkInterceptor
+    
+    init(interceptor: NetworkInterceptor) {
+        self.interceptor = interceptor
+    }
+    
     func request<T: Decodable>(
         _ endPoint: EndPoint,
         decodingType: T.Type
@@ -34,19 +39,13 @@ final class DefaultNetworkService: NSObject, NetworkService {
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             guard let self else { return }
             
-            let authRepository = DefaultAuthRepository(
-                network: DefaultNetworkService(),
-                keychainService: DefaultKeychainService(),
-                userDefaultsService: DefaultUserDefaultService()
-            )
-            
             AF.request(
                 endPoint.requestURL,
                 method: endPoint.method,
                 parameters: endPoint.bodyParameters,
                 encoding: endPoint.parameterEncoding,
                 headers: endPoint.headers.value,
-                interceptor: NetworkInterceptor(authRepository: authRepository)
+                interceptor: endPoint.requestURL.path == "/auth/reissue" ? nil : interceptor
             )
             .validate()
             .responseDecodable(of: BaseResponse<T>.self) { [weak self] response in
@@ -82,20 +81,14 @@ final class DefaultNetworkService: NSObject, NetworkService {
         
         return try await withCheckedThrowingContinuation { [weak self] continuation in
             guard let self else { return }
-            
-            let authRepository = DefaultAuthRepository(
-                network: DefaultNetworkService(),
-                keychainService: DefaultKeychainService(),
-                userDefaultsService: DefaultUserDefaultService()
-            )
-            
+    
             AF.request(
                 endPoint.requestURL,
                 method: endPoint.method,
                 parameters: endPoint.bodyParameters,
                 encoding: endPoint.parameterEncoding,
                 headers: endPoint.headers.value,
-                interceptor: NetworkInterceptor(authRepository: authRepository)
+                interceptor: endPoint.requestURL.path == "/auth/reissue" ? nil : interceptor
             )
             .validate()
             .responseDecodable(of: EmptyResponse.self) { [weak self] response in
