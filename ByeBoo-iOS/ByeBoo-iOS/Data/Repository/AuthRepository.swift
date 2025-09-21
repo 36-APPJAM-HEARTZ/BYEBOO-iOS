@@ -96,7 +96,7 @@ struct DefaultAuthRepository: AuthInterface {
             return true
         } else {
             ByeBooLogger.debug("정보 없음")
-            removeTokenInfo()
+            clearKeychain()
             return false
         }
     }
