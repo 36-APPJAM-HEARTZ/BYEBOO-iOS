@@ -32,6 +32,7 @@ final class SplashViewModel {
 extension SplashViewModel {
     enum Input {
         case viewDidLoad
+        case timeout
     }
     
     struct Output {
@@ -42,6 +43,8 @@ extension SplashViewModel {
         switch trigger {
         case .viewDidLoad:
             autoLogin()
+        case .timeout:
+            clearKeyChain()
         }
     }
     
@@ -52,7 +55,7 @@ extension SplashViewModel {
         ByeBooLogger.debug("자동로그인 실행")
         Task {
             do {
-                if try await autoLoginUseCase.execute() {
+                if try await autoLoginUseCase.autoLogin() {
                     autoLoginSubject.send(.success(()))
                     ByeBooLogger.debug("자동로그인 성공")
                 }
@@ -68,5 +71,10 @@ extension SplashViewModel {
                 ByeBooLogger.error(error as ByeBooError)
             }
         }
+    }
+    
+    private func clearKeyChain() {
+        ByeBooLogger.debug("키체인 정보 모두 삭제")
+        autoLoginUseCase.clearKeychain()
     }
 }

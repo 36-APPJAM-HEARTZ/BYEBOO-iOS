@@ -8,7 +8,8 @@
 import Foundation
 
 protocol AutoLoginUseCase {
-    func execute() async throws -> Bool
+    func autoLogin() async throws -> Bool
+    func clearKeychain()
 }
 
 struct DefaultAutoLoginUseCase: AutoLoginUseCase {
@@ -18,7 +19,11 @@ struct DefaultAutoLoginUseCase: AutoLoginUseCase {
         self.repository = repository
     }
     
-    func execute()  async throws  -> Bool {
+    func autoLogin()  async throws  -> Bool {
         return try await repository.autoLogin()
+    }
+    
+    func clearKeychain() {
+        repository.clearKeychain()
     }
 }
