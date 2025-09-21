@@ -9,6 +9,7 @@ import Combine
 import UIKit
 
 import SnapKit
+import Mixpanel
 
 final class QuestCheckViewController: BaseViewController {
     
@@ -47,6 +48,10 @@ final class QuestCheckViewController: BaseViewController {
         let property = QuestEvents.QuestMainProperty(
             journeyType: journeyType.mixpanelKey,
             isFirstPageView: isFirst
+        )
+        Mixpanel.mainInstance().track(
+            event: QuestEvents.Name.questPageView,
+            properties: property.dictionary
         )
         
         if isFirst { isFirst.toggle() }
@@ -97,7 +102,6 @@ extension QuestCheckViewController: ToastPresentable, ToastErrorHandler {
             switch (name, journey, quests) {
             case let (.success(name), .success(journey), .success(quests)):
                 self?.updateQuestMainUI(name: name, journey: journey, quests: quests)
-                self?.journeyType = JourneyType.titleToEnum(journey.title) ?? .face
             case (.success(_), .success(_), .failure(_)):
                 self?.coordinator?.moveQuestStart()
             case (.success(_), .failure(_), .failure(_)):
@@ -215,6 +219,11 @@ extension QuestCheckViewController: UICollectionViewDelegate {
         }
         if questNumber < currentStep {
             coordinator?.moveArchive(quest: quest)
+            let property = QuestEvents.QuestBoxClickProperty(questNumber: questNumber)
+            Mixpanel.mainInstance().track(
+                event: QuestEvents.Name.questBoxClick,
+                properties: property.dictionary
+            )
         }
         if questNumber == currentStep && !viewModel.isQuestLocked {
             coordinator?.presentQuestModal(quest: quest)

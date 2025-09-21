@@ -12,16 +12,16 @@ struct QuestEvents {
         static let journeyStartPageView = "journey_start_pageview"
         static let journeyStartClick = "journey_start_click"
         static let questPageView = "quest_pageview"
-        static let questWritePageView = "quest_pageview"
+        static let questWritePageView = "quest_write_pageview"
         static let questWriteSuccess = "quest_write_success"
         static let questSuccess = "quest_success"
         static let questTipPageView = "quest_tip_pageview"
         static let questBoxClick = "quest_box_click"
         static let journeyCompletePageView = "journey_complete_pageview"
         static let journeyNewPageView = "journey_new_pageview"
-        static let journeyNewClick = "journey_new_pageview"
+        static let journeyNewClick = "journey_new_click"
         static let journeyReviewPageView = "journey_review_pageview"
-        static let journeyReviewAllPageView = "journey_review_pageview"
+        static let journeyReviewAllPageView = "journey_review_all_pageview"
     }
 }
 
@@ -152,6 +152,16 @@ extension QuestEvents {
         var dictionary: [String : any MixpanelType] {
             [
                 "review_journey_type": reviewJourneyType
+            ]
+        }
+    }
+    
+    struct QuestBoxClickProperty: MixpanelProperty {
+        let questNumber: Int
+        
+        var dictionary: [String : any MixpanelType] {
+            [
+                "quest_number": questNumber
             ]
         }
     }
