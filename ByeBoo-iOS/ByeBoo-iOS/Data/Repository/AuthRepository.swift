@@ -119,8 +119,10 @@ struct DefaultAuthRepository: AuthInterface {
         clearKeychain()
         removeUserInfo()
     }
-    
-    func clearKeychain() {
+}
+
+extension DefaultAuthRepository {
+    private func clearKeychain() {
         for key in KeyType.allCases {
             let token = keychainService.load(key: key)
                 if !token.isEmpty {
@@ -129,9 +131,7 @@ struct DefaultAuthRepository: AuthInterface {
             }
         }
     }
-}
-
-extension DefaultAuthRepository {
+    
     private func removeUserInfo(excludedKeys: [UserDefaultsKey] = []) {
         for key in UserDefaultsKey.allCases {
             guard !excludedKeys.contains(key) else { continue }

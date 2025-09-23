@@ -81,7 +81,6 @@ extension SplashViewController {
 
 extension SplashViewController {
     private func timeoutFallback() {
-        viewModel.action(.timeout)
         let nextViewController = ViewControllerFactory.shared.makeLoginViewController()
         
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,

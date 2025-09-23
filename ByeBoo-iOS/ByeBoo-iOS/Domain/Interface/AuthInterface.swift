@@ -13,5 +13,4 @@ protocol AuthInterface {
     func autoLogin() async throws -> Bool
     func logout() async throws
     func withdraw() async throws
-    func clearKeychain()
 }
