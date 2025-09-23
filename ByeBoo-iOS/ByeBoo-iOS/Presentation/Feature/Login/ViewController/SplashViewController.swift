@@ -28,6 +28,13 @@ final class SplashViewController: BaseViewController {
         viewModel.action(.viewDidLoad)
         bind()
         setAddTarget()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [weak self] in
+            guard let self = self else { return }
+            if self.cancellables.isEmpty {
+                timeoutFallback()
+            }
+        }
     }
 }
 
@@ -69,5 +76,21 @@ extension SplashViewController {
                 }
             }
             .store(in: &cancellables)
+    }
+}
+
+extension SplashViewController {
+    private func timeoutFallback() {
+        let nextViewController = ViewControllerFactory.shared.makeLoginViewController()
+        
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+            
+            ViewControllerUtils.setRootViewController(
+                window: window,
+                viewController: nextViewController,
+                withAnimation: true
+            )
+        }
     }
 }

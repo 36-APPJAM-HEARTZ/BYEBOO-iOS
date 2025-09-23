@@ -15,16 +15,18 @@ struct ViewControllerUtils {
             return
         }
         
-        if let snapshot = window.snapshotView(afterScreenUpdates: true) {
-            viewController.view.addSubview(snapshot)
-            window.rootViewController = viewController
-            window.makeKeyAndVisible()
-            
-            UIView.animate(withDuration: 0.4, animations: {
-                snapshot.layer.opacity = 0
-            }, completion: { _ in
-                snapshot.removeFromSuperview()
-            })
+        DispatchQueue.main.async{
+            if let snapshot = window.snapshotView(afterScreenUpdates: true) {
+                viewController.view.addSubview(snapshot)
+                window.rootViewController = viewController
+                window.makeKeyAndVisible()
+                
+                UIView.animate(withDuration: 0.4, animations: {
+                    snapshot.layer.opacity = 0
+                }, completion: { _ in
+                    snapshot.removeFromSuperview()
+                })
+            }
         }
     }
     

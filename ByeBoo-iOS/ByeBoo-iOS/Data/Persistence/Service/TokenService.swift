@@ -38,6 +38,7 @@ final class DefaultTokenService: TokenService {
             )
             .validate()
             .responseDecodable(of: BaseResponse<TokenReissueResponseDTO>.self) { [weak self] response in
+                guard let self else { return }
                 switch response.result {
                 case .success(let data):
                     guard let data = data.data else {
@@ -46,10 +47,15 @@ final class DefaultTokenService: TokenService {
                         return
                     }
                     ByeBooLogger.debug("토큰 재발급 완료")
-                    self?.keychainService.save(key: .accessToken, token: data.accessToken)
-                    self?.keychainService.save(key: .refreshToken, token: data.refreshToken)
+                    self.keychainService.save(key: .accessToken, token: data.accessToken)
+                    self.keychainService.save(key: .refreshToken, token: data.refreshToken)
                     continuation.resume(returning: ())
                 case .failure(let error):
+                    ByeBooLogger.debug("토큰 재발급 실패, 키체인 삭제 후 로그인으로 이동")
+                    self.clearKeychain()
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .navigateLoginViewController, object: nil)
+                    }
                     if let data = response.data,
                        let statusCode = response.response?.statusCode,
                        let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
@@ -60,6 +66,18 @@ final class DefaultTokenService: TokenService {
                         continuation.resume(throwing: ByeBooError.decodingError)
                     }
                 }
+            }
+        }
+    }
+}
+
+extension DefaultTokenService {
+    private func clearKeychain() {
+        for key in KeyType.allCases {
+            let token = keychainService.load(key: key)
+                if !token.isEmpty {
+                    keychainService.delete(key: key)
+                    ByeBooLogger.debug("\(key) 삭제")
             }
         }
     }

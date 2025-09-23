@@ -46,8 +46,6 @@ final class NetworkInterceptor: RequestInterceptor {
                     ByeBooLogger.debug("401 Error -> 토큰 재발급 성공")
                     completion(.retry)
                 } catch {
-                    ByeBooLogger.debug("401 Error -> 토큰 재발급 실패, 로그인VC로 이동")
-                    NotificationCenter.default.post(name: .navigateLoginViewController, object: nil)
                     completion(.doNotRetryWithError(error))
                 }
             }

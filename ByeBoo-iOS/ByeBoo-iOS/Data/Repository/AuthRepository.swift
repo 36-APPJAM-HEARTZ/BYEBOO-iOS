@@ -96,6 +96,7 @@ struct DefaultAuthRepository: AuthInterface {
             return true
         } else {
             ByeBooLogger.debug("정보 없음")
+            clearKeychain()
             return false
         }
     }
@@ -106,7 +107,7 @@ struct DefaultAuthRepository: AuthInterface {
             AuthAPI.logout(header: header)
         )
         
-        removeTokenInfo()
+        clearKeychain()
         removeUserInfo(excludedKeys: [.isOnboardingCompleted, .isHelperShown])
     }
     
@@ -115,17 +116,18 @@ struct DefaultAuthRepository: AuthInterface {
         try await network.request(
             AuthAPI.withdraw(header: header)
         )
-        removeTokenInfo()
+        clearKeychain()
         removeUserInfo()
     }
 }
 
 extension DefaultAuthRepository {
-    private func removeTokenInfo() {
+    private func clearKeychain() {
         for key in KeyType.allCases {
             let token = keychainService.load(key: key)
                 if !token.isEmpty {
                     keychainService.delete(key: key)
+                    ByeBooLogger.debug("\(key) 삭제")
             }
         }
     }
@@ -154,5 +156,8 @@ struct MockAuthRepository: AuthInterface{
     }
     
     func withdraw() async throws {
+    }
+    
+    func clearKeychain() {
     }
 }
