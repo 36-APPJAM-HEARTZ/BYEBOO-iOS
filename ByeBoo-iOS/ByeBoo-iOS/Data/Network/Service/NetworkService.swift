@@ -45,7 +45,7 @@ final class DefaultNetworkService: NSObject, NetworkService {
                 parameters: endPoint.bodyParameters,
                 encoding: endPoint.parameterEncoding,
                 headers: endPoint.headers.value,
-                interceptor: endPoint.requestURL.path == "/auth/reissue" ? nil : interceptor
+                interceptor: interceptor
             )
             .validate()
             .responseDecodable(of: BaseResponse<T>.self) { [weak self] response in

@@ -53,7 +53,9 @@ final class DefaultTokenService: TokenService {
                 case .failure(let error):
                     ByeBooLogger.debug("토큰 재발급 실패, 키체인 삭제 후 로그인으로 이동")
                     self.clearKeychain()
-                    NotificationCenter.default.post(name: .navigateLoginViewController, object: nil)
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .navigateLoginViewController, object: nil)
+                    }
                     if let data = response.data,
                        let statusCode = response.response?.statusCode,
                        let errorResponse = try? JSONDecoder().decode(EmptyResponse.self, from: data) {
