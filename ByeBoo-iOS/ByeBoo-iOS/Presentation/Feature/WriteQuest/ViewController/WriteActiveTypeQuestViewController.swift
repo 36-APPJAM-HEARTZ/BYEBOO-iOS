@@ -51,6 +51,11 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
             selector: #selector(textViewMoveDown),
             name: UIResponder.keyboardWillHideNotification, object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appWillEnterForeground),
+            name: UIApplication.willEnterForegroundNotification, object: nil
+        )
     }
     
     override func viewDidLoad() {
@@ -76,6 +81,13 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
             event: QuestEvents.Name.questWritePageView,
             properties: property.dictionary
         )
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     
     override func setAddTarget() {
@@ -123,6 +135,13 @@ extension WriteActiveTypeQuestViewController {
     private func textViewMoveDown() {
         self.isKeyboardUsed = false
         self.view.transform = .identity
+    }
+    
+    @objc
+    private func appWillEnterForeground() {
+        self.view.endEditing(true)
+        self.view.transform = .identity
+        self.isKeyboardUsed = false
     }
     
     @objc
