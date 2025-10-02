@@ -14,7 +14,6 @@ final class LoginViewModel: NSObject {
     private var socialLoginAuthSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private var isRegisteredSubject: PassthroughSubject<Result<Bool, ByeBooError>, Never> = .init()
     private var getUserIDSubject: PassthroughSubject<Int, Never> = .init()
-    private let keychainService = DefaultKeychainService()
     
     var output: Output {
         Output(
