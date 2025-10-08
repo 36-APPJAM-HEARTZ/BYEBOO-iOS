@@ -51,6 +51,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
             selector: #selector(textViewMoveDown),
             name: UIResponder.keyboardWillHideNotification, object: nil
         )
+        isKeyboardUsed = false
     }
     
     override func viewDidLoad() {
@@ -76,6 +77,12 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
             event: QuestEvents.Name.questWritePageView,
             properties: property.dictionary
         )
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     override func setAddTarget() {
@@ -108,21 +115,28 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
 extension WriteActiveTypeQuestViewController {
     @objc
     private func textViewMoveUp(_ notification: NSNotification) {
-        if !self.isKeyboardUsed {
-            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-                UIView.animate(withDuration: 0.3, animations: {
-                    let offsetY = keyboardSize.height
+        if self.view.window?.frame.origin.y == 0 && !isKeyboardUsed{
+            if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+                let keyboardHeight = keyboardFrame.cgRectValue.height
+                let safeAreaBottom = view.safeAreaInsets.bottom
+                let offsetY = keyboardHeight - safeAreaBottom
+                
+                UIView.animate(withDuration: 0.3) {
                     self.rootView.transform = CGAffineTransform(translationX: 0, y: -offsetY)
-                })
-                self.isKeyboardUsed = true
+                }
+                
+                isKeyboardUsed = true
             }
         }
+        
     }
     
     @objc
-    private func textViewMoveDown() {
-        self.isKeyboardUsed = false
-        self.view.transform = .identity
+    private func textViewMoveDown(_ notification: NSNotification) {
+        UIView.animate(withDuration: 0.3) {
+            self.rootView.transform = .identity
+        }
+        isKeyboardUsed = false
     }
     
     @objc
