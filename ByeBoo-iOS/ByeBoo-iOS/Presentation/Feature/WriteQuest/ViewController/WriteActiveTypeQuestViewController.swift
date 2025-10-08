@@ -115,23 +115,30 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
 extension WriteActiveTypeQuestViewController {
     @objc
     private func textViewMoveUp(_ notification: NSNotification) {
-        if !self.isKeyboardUsed {
-            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-                UIView.animate(withDuration: 0.3, animations: {
-                    let offsetY = keyboardSize.height
+        if self.view.window?.frame.origin.y == 0 && !isKeyboardUsed{
+            if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+                let keyboardHeight = keyboardFrame.cgRectValue.height
+                let safeAreaBottom = view.safeAreaInsets.bottom
+                let offsetY = keyboardHeight - safeAreaBottom
+                
+                UIView.animate(withDuration: 0.3) {
                     self.rootView.transform = CGAffineTransform(translationX: 0, y: -offsetY)
-                })
-                self.isKeyboardUsed = true
+                }
+                
+                isKeyboardUsed = true
             }
         }
+        
     }
     
     @objc
-    private func textViewMoveDown() {
-        self.isKeyboardUsed = false
-        self.view.transform = .identity
+    private func textViewMoveDown(_ notification: NSNotification) {
+        UIView.animate(withDuration: 0.3) {
+            self.rootView.transform = .identity
+        }
+        isKeyboardUsed = false
     }
-        
+    
     @objc
     private func confirmButtonDidTap() {
         if rootView.questTextField.textView.text == rootView.questTextField.placeholder ||

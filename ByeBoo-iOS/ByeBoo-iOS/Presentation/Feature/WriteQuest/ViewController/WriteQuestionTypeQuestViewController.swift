@@ -39,7 +39,7 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
         view = rootView
     }
     
-    override func viewWillAppear(_ animated: Bool) {        
+    override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(textViewMoveUp),
@@ -99,23 +99,29 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
 extension WriteQuestionTypeQuestViewController {
     @objc
     private func textViewMoveUp(_ notification: NSNotification) {
-        if !self.isKeyboardUsed{
-            if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-                UIView.animate(withDuration: 0.3, animations: {
-                    let offsetY = keyboardSize.height - self.rootView.safeAreaInsets.bottom * 4
-                    self.rootView.transform = CGAffineTransform(translationX: 0, y: -offsetY)
-                    self.isKeyboardUsed = true
-                })
+        if self.view.window?.frame.origin.y == 0 && !isKeyboardUsed{
+            if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+                let keyboardHeight = keyboardFrame.cgRectValue.height
+                let safeAreaBottom = view.safeAreaInsets.bottom
+                let offsetY = keyboardHeight - safeAreaBottom
+                
+                UIView.animate(withDuration: 0.3) {
+                    self.rootView.transform = CGAffineTransform(translationX: 0, y: -offsetY * 0.5)
+                }
+                
+                isKeyboardUsed = true
             }
         }
     }
     
     @objc
-    private func textViewMoveDown() {
+    private func textViewMoveDown(_ notification: NSNotification) {
+        UIView.animate(withDuration: 0.3) {
+            self.rootView.transform = .identity
+        }
         isKeyboardUsed = false
-        self.rootView.transform = .identity
     }
-
+    
     @objc
     private func confirmButtonDidTap() {
         answerText = rootView.questTextField.textView.text
@@ -220,7 +226,7 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
             questID: questID,
             answer: answerText,
             emotionState: emotionState
-            )
+        )
         )
     }
 }
