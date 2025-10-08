@@ -50,11 +50,7 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
             selector: #selector(textViewMoveDown),
             name: UIResponder.keyboardWillHideNotification, object: nil
         )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(appWillEnterForeground),
-            name: UIApplication.willEnterForegroundNotification, object: nil
-        )
+        isKeyboardUsed = false
     }
     
     override func viewDidLoad() {
@@ -84,7 +80,6 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
         super.viewWillDisappear(animated)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
     }
     
     override func setAddTarget() {
@@ -120,14 +115,7 @@ extension WriteQuestionTypeQuestViewController {
         isKeyboardUsed = false
         self.rootView.transform = .identity
     }
-    
-    @objc
-    private func appWillEnterForeground() {
-        self.view.endEditing(true)
-        self.view.transform = .identity
-        self.isKeyboardUsed = false
-    }
-    
+
     @objc
     private func confirmButtonDidTap() {
         answerText = rootView.questTextField.textView.text

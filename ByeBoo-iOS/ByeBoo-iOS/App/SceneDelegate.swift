@@ -21,7 +21,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
         DIContainer.shared.dependencyInject()
-      
+        
         let viewController = ViewControllerFactory.shared.makeSplashViewController()
         let navigationController = UINavigationController(rootViewController: viewController)
         let window = UIWindow(windowScene: windowScene)
@@ -41,13 +41,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
     
-    func sceneDidDisconnect(_ scene: UIScene) { }
+    func sceneDidDisconnect(_ scene: UIScene) {
+        NotificationCenter.default.removeObserver(self, name: .appWillEnterForeground, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .navigateLoginViewController, object: nil)
+    }
     
     func sceneDidBecomeActive(_ scene: UIScene) { }
     
     func sceneWillResignActive(_ scene: UIScene) { }
     
-    func sceneWillEnterForeground(_ scene: UIScene) { }
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        NotificationCenter.default.post(name: .appWillEnterForeground, object: nil)
+    }
     
     func sceneDidEnterBackground(_ scene: UIScene) { }
     
@@ -58,9 +63,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             name: .navigateLoginViewController,
             object: nil
         )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(resetKeyboardAndViewTransform),
+            name: .appWillEnterForeground,
+            object: nil
+        )
     }
     
-    @objc private func navigateLoginViewController() {
+    @objc
+    private func navigateLoginViewController() {
         guard let window = window else { return }
         let viewController = ViewControllerFactory.shared.makeLoginViewController()
         
@@ -73,5 +86,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 withAnimation: true
             )
         }
+    }
+    
+    @objc
+    private func resetKeyboardAndViewTransform() {
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let window = windowScene.windows.first(where: { $0.isKeyWindow }) else { return }
+        
+        window.endEditing(true)
+        window.rootViewController?.view.transform = .identity
     }
 }
