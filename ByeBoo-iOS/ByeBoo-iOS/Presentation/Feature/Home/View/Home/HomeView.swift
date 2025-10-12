@@ -50,7 +50,7 @@ final class HomeView: BaseView {
             $0.horizontalEdges.equalToSuperview()
         }
         speechBoxView.snp.makeConstraints {
-            $0.bottom.equalTo(homeBori.snp.top).offset(200.adjustedH)
+            $0.bottom.equalTo(homeBori.snp.top).offset(180.adjustedH)
             $0.horizontalEdges.equalToSuperview()
         }
     }
