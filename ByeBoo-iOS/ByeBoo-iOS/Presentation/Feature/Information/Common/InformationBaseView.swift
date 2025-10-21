@@ -99,17 +99,13 @@ extension InformationBaseView {
         })
     }
     
-    private func updateNicknameViewNextButton(view: InputNicknameView) {
+    func updateNicknameViewNextButton(view: InputNicknameView) {
         view.nicknameTextField.onRegex = { [weak self] condition in
             if condition {
                 self?.nextButton.updateType(.enabled)
                 return
             }
             self?.nextButton.updateType(.disabled2)
-        }
-        
-        if let currentText = view.nicknameTextField.nicknameField.text {
-            updateButtonWhenBack(condition: currentText.isValidNickname)
         }
     }
     
@@ -135,7 +131,7 @@ extension InformationBaseView {
         updateButtonWhenBack(condition: hasSelected)
     }
     
-    private func updateButtonWhenBack(condition: Bool) {
+    func updateButtonWhenBack(condition: Bool) {
         if condition {
             self.nextButton.updateType(.enabled)
             return

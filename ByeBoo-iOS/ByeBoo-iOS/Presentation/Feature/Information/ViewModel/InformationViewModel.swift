@@ -10,6 +10,7 @@ import Combine
 final class InformationViewModel {
     
     private var cancellables = Set<AnyCancellable>()
+    private let nicknameValidationSubject = CurrentValueSubject<Bool, Never>(false)
     private let userInformationSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>()
     private let userNameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>()
     private(set) var output: Output
@@ -19,17 +20,21 @@ final class InformationViewModel {
     private var currentQuestStyle: SelectQuestType?
     private var user: UserEntity = UserEntity(id: 1, name: "")
     
+    private let checkValidNicknameUseCase: CheckValidNicknameUseCase
     private let sendUserUseCase: SendUserUseCase
     private let getUserNameUseCase: GetUserNameUseCase
     
     init(
+        checkValidNicknameUseCase: CheckValidNicknameUseCase,
         sendUserUseCase: SendUserUseCase,
         getUserNameUseCase: GetUserNameUseCase
     ) {
+        self.checkValidNicknameUseCase = checkValidNicknameUseCase
         self.sendUserUseCase = sendUserUseCase
         self.getUserNameUseCase = getUserNameUseCase
         
         self.output = Output(
+            nicknameValidationPublisher: nicknameValidationSubject.eraseToAnyPublisher(),
             userInformationPublisher: userInformationSubject.eraseToAnyPublisher(),
             userNamePublisher: userNameSubject.eraseToAnyPublisher()
         )
@@ -67,18 +72,23 @@ final class InformationViewModel {
 extension InformationViewModel: ViewModelType {
     
     enum Input {
+        case editingNickname(String)
         case nicknameButtonDidTap(String)
         case feelingButtonDidTap(Feeling)
         case questButtonDidTap(SelectQuestType)
     }
     
     struct Output {
+        let nicknameValidationPublisher: AnyPublisher<Bool, Never>
         let userInformationPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
         let userNamePublisher: AnyPublisher<Result<String, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
         switch trigger {
+        case .editingNickname(let nickname):
+            let isValidNickname = checkValidNicknameUseCase.execute(nickname: nickname)
+            nicknameValidationSubject.send(isValidNickname)
         case .nicknameButtonDidTap(let nickname):
             currentNickname = nickname
         case .feelingButtonDidTap(let feeling):

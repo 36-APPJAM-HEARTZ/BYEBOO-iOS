@@ -57,12 +57,14 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: InformationViewModel.self) { container in
-            guard let sendUserUseCase = container.resolve(type: SendUserUseCase.self) else {
+            guard let sendUserUseCase = container.resolve(type: SendUserUseCase.self),
+                  let checkValidNicknameUseCase = container.resolve(type: CheckValidNicknameUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
             return InformationViewModel(
+                checkValidNicknameUseCase: checkValidNicknameUseCase,
                 sendUserUseCase: sendUserUseCase,
                 getUserNameUseCase: getUserNameUseCase
             )
@@ -219,7 +221,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 fetchCompletedQuestsUseCase: fetchCompletedQuestsUseCase
             )
         }
-                                                                          
+        
         DIContainer.shared.register(type: SplashViewModel.self) { container in
             guard let autoLoginUseCase = container.resolve(type: AutoLoginUseCase.self)
             else {

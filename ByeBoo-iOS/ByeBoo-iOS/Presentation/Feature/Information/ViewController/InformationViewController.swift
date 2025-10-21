@@ -66,6 +66,18 @@ final class InformationViewController: BaseViewController {
             action: #selector(nextButtonDidTap),
             for: .touchUpInside
         )
+        inputNicknameView.nicknameTextField.onTextChange = { [weak self] text in
+            guard let self = self else { return }
+            
+            self.inputNicknameView.nicknameStateView.letterCountLabel.text = "\(text.count)/\(5)"
+            self.viewModel.action(.editingNickname(text))
+            self.viewModel.output.nicknameValidationPublisher
+                .sink { result in
+                    self.inputNicknameView.nicknameTextField.changeNicknameState(text: text, isValid: result)
+                    self.informationBaseView.updateButtonWhenBack(condition: result)
+                }
+                .store(in: &cancellables)
+        }
     }
 }
 
