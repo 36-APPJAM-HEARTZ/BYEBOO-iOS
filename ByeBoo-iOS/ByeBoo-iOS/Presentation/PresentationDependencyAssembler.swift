@@ -185,14 +185,16 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: ModifyNicknameViewModel.self) { container in
-            guard let modifyNicknameUseCase = container.resolve(type: ModifyNicknameUseCase.self)
+            guard let checkValidNicknameUseCase = container.resolve(type: CheckValidNicknameUseCase.self),
+                  let modifyNicknameUseCase = container.resolve(type: ModifyNicknameUseCase.self)
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
             return ModifyNicknameViewModel(
-                useCase: modifyNicknameUseCase
+                checkValidNicknameUseCase: checkValidNicknameUseCase,
+                modifyNicknameUseCase: modifyNicknameUseCase
             )
         }
         DIContainer.shared.register(type: LoginViewModel.self) { container in

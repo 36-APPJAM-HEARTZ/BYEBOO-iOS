@@ -48,6 +48,21 @@ final class ModifyNicknameViewController: BaseViewController {
             action: #selector(confirmButtonDidTap),
             for: .touchUpInside
         )
+        rootView.nicknameTextField.onTextChange = { [weak self] text in
+            guard let self = self else { return }
+            
+            self.rootView.do {
+                $0.nicknameStateView.isHidden = false
+                $0.nicknameStateView.letterCountLabel.text = "\(text.count)/\(5)"
+                $0.confirmButton.isHidden = false
+            }
+            self.viewModel.action(.editingNickname(text))
+            self.viewModel.output.checkValidNameResult
+                .sink { result in
+                    self.rootView.nicknameTextField.changeNicknameState(text: text, isValid: result)
+                }
+                .store(in: &cancellables)
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
