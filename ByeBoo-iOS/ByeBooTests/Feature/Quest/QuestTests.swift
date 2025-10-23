@@ -109,3 +109,13 @@ struct QuestTests {
         
         #expect(questsRepository.postNewJourneyCalled)
     }
+    
+    @Test("🏁 완료된 여정의 퀘스트 조회 ✅ success")
+    func fetchCompletedQuests__success() async throws {
+        let fetchCompletedQuestsUseCase = DefaultFetchCompletedQuestsUseCase(repository: questsRepository)
+        
+        let result = try await fetchCompletedQuestsUseCase.execute(journey: .face)
+        
+        #expect(result == CompletedQuestsEntity.stub())
+    }
+}
