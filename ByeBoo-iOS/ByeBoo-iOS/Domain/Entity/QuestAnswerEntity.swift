@@ -18,7 +18,7 @@ struct QuestAnswerEntity {
     var emotionDescription: String
 }
 
-extension QuestAnswerEntity {
+extension QuestAnswerEntity: Equatable {
     static func stub() -> QuestAnswerEntity {
         return .init(
             stepNumber: 1,

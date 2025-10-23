@@ -18,11 +18,7 @@ struct QuestTests {
         
         let result = try await fetchProgressingQuestsUseCase.execute()
         
-        #expect(result.currentStep == 30)
-        #expect(result.progressPeriod == 30)
-        #expect(result.questOpenTime == nil)
-        #expect(result.currentTime == nil)
-        #expect(result.steps.count == 5)
+        #expect(result == ProgressingQuestsEntity.stub())
     }
     
     @Test("🏁 단일 퀘스트 조회 ✅ success")
@@ -31,11 +27,7 @@ struct QuestTests {
         
         let result = try await getQuestInfoUseCase.execute(questID: 1)
         
-        #expect(result.step == "1")
-        #expect(result.stepNumber == 1)
-        #expect(result.questNumber == 1)
-        #expect(result.questStyle == "quest style")
-        #expect(result.question == "question")
+        #expect(result == QuestInfoEntity.stub())
     }
     
     @Test("🏁 퀘스트에 대한 사용자 답변 조회 ✅ success")
@@ -44,13 +36,7 @@ struct QuestTests {
         
         let result = try await fetchQuestAnswerUseCase.execute(questID: 1)
         
-        #expect(result.stepNumber == 1)
-        #expect(result.questNumber == 1)
-        #expect(result.createdAt == "2025-07-18")
-        #expect(result.question == "어쩌구 저쩌구 question")
-        #expect(result.answer == "답변입니다 ~")
-        #expect(result.questEmotionState == "mock emotion state")
-        #expect(result.emotionDescription == "mock emotion description")
+        #expect(result == QuestAnswerEntity.stub())
     }
     
     @Test("🏁 퀘스트 팁 조회 ✅ success")
@@ -59,11 +45,7 @@ struct QuestTests {
         
         let result = try await fetchQuestTipUseCase.fetchQuestTips(questID: 1)
         
-        #expect(result.step == "감정 정리하기")
-        #expect(result.stepNumber == 1)
-        #expect(result.questNumber == 10)
-        #expect(result.question == "연애에서 반복됐던 문제 패턴 3가지를 생각해보아요.")
-        #expect(result.tips.count == 3)
+        #expect(result == QuestTipDataEntity.stub())
     }
     
     
@@ -73,8 +55,6 @@ struct QuestTests {
         
         let result = try await fetchCompletedQuestsUseCase.execute(journey: .face)
         
-        #expect(result.progressPeriod == "2025-08-28 ~ 2025-09-01")
-        #expect(result.currentStep == nil)
-        #expect(result.steps.count == 5)
+        #expect(result == CompletedQuestsEntity.stub())
     }
 }
