@@ -91,4 +91,13 @@ struct QuestTests {
         
         #expect(questsRepository.postQuestionQuestCalled)
     }
+    
+    @Test("🏁 완료한 여정 돌아보기 ✅ success")
+    func fetchLookBackJourney_success() async throws {
+        let getLookBackJourneyUseCase = DefaultGetLookBackJourneyUseCase(lookBackJourneyRepository: questsRepository)
+        
+        let result = try await getLookBackJourneyUseCase.execute()
+        
+        #expect(result == [JourneyEntity.stub()])
+    }
 }
