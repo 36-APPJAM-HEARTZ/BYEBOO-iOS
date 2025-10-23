@@ -5,6 +5,7 @@
 //  Created by APPLE on 10/23/25.
 //
 
+import UIKit
 import Testing
 @testable import ByeBoo_iOS
 
@@ -57,4 +58,23 @@ struct QuestTests {
         
         #expect(result == CompletedQuestsEntity.stub())
     }
-}
+    
+    @Test("🏁 활동형 퀘스트 등록을 호출했을 때 ✅ postActiveQuestCalled == true")
+    func postActiveQuest__postActiveQuestCalledFalse() async throws {
+        guard let image = UIImage(systemName: "pencil")?.jpegData(compressionQuality: 0.1) else {
+            return
+        }
+        let questsRepository = MockQuestsRepository()
+        let saveQuestActiveUseCase = DefaultSaveQuestActiveUseCase(questActiveRepository: questsRepository)
+        
+        let _ = try await saveQuestActiveUseCase.execute(
+            questID: 1,
+            answer: "answer",
+            emotionState: "emotionState",
+            image: image,
+            imageKey: "imageKey"
+        )
+        
+        #expect(questsRepository.postActiveQuestCalled)
+    }
+    
