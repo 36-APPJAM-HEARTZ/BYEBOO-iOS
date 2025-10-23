@@ -25,6 +25,19 @@ struct QuestTests {
         #expect(result.steps.count == 5)
     }
     
+    @Test("🏁 단일 퀘스트 조회 ✅ success")
+    func fetchQuestInformation__success() async throws {
+        let getQuestInfoUseCase = DefaultGetQuestInfoUseCase(questInfoReposiroty: questsRepository)
+        
+        let result = try await getQuestInfoUseCase.execute(questID: 1)
+        
+        #expect(result.step == "1")
+        #expect(result.stepNumber == 1)
+        #expect(result.questNumber == 1)
+        #expect(result.questStyle == "quest style")
+        #expect(result.question == "question")
+    }
+    
     @Test("🏁 완료된 여정의 퀘스트 조회 ✅ success")
     func fetchCompletedQuests__success() async throws {
         let fetchCompletedQuestsUseCase = DefaultFetchCompletedQuestsUseCase(repository: questsRepository)
