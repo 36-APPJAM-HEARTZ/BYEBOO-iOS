@@ -53,6 +53,20 @@ struct QuestTests {
         #expect(result.emotionDescription == "mock emotion description")
     }
     
+    @Test("🏁 퀘스트 팁 조회 ✅ success")
+    func fetchQuestTip__success() async throws {
+        let fetchQuestTipUseCase = DefaultQuestTipUseCase(questTipRepository: questsRepository)
+        
+        let result = try await fetchQuestTipUseCase.fetchQuestTips(questID: 1)
+        
+        #expect(result.step == "감정 정리하기")
+        #expect(result.stepNumber == 1)
+        #expect(result.questNumber == 10)
+        #expect(result.question == "연애에서 반복됐던 문제 패턴 3가지를 생각해보아요.")
+        #expect(result.tips.count == 3)
+    }
+    
+    
     @Test("🏁 완료된 여정의 퀘스트 조회 ✅ success")
     func fetchCompletedQuests__success() async throws {
         let fetchCompletedQuestsUseCase = DefaultFetchCompletedQuestsUseCase(repository: questsRepository)
