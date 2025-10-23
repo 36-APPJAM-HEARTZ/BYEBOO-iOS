@@ -12,7 +12,7 @@ struct LookBackJourneyEntity {
     let completedJourneys: [JourneyEntity]
 }
 
-extension LookBackJourneyEntity {
+extension LookBackJourneyEntity: Equatable {
     static func stub() -> LookBackJourneyEntity {
         return .init(
             inCompletedCount: 1,

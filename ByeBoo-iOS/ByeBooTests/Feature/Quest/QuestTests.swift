@@ -49,16 +49,6 @@ struct QuestTests {
         #expect(result == QuestTipDataEntity.stub())
     }
     
-    
-    @Test("🏁 완료된 여정의 퀘스트 조회 ✅ success")
-    func fetchCompletedQuests__success() async throws {
-        let fetchCompletedQuestsUseCase = DefaultFetchCompletedQuestsUseCase(repository: questsRepository)
-        
-        let result = try await fetchCompletedQuestsUseCase.execute(journey: .face)
-        
-        #expect(result == CompletedQuestsEntity.stub())
-    }
-    
     @Test("🏁 활동형 퀘스트 등록을 호출했을 때 ✅ postActiveQuestCalled == true")
     func postActiveQuest__postActiveQuestCalledFalse() async throws {
         guard let image = UIImage(systemName: "pencil")?.jpegData(compressionQuality: 0.1) else {
@@ -100,4 +90,14 @@ struct QuestTests {
         
         #expect(result == [JourneyEntity.stub()])
     }
+    
+    @Test("🏁 새로운 여정 조회 ✅ success")
+    func fetchNewJourney__success() async throws {
+        let getNewJourneyUseCase = DefaultGetNewJourneyUseCase(lookBackJourneyRepository: questsRepository)
+        
+        let result = try await getNewJourneyUseCase.execute()
+        
+        #expect(result == LookBackJourneyEntity.stub())
+    }
+    
 }
