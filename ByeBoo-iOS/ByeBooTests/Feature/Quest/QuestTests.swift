@@ -38,6 +38,21 @@ struct QuestTests {
         #expect(result.question == "question")
     }
     
+    @Test("🏁 퀘스트에 대한 사용자 답변 조회 ✅ success")
+    func fetchQuestAnswer__success() async throws {
+        let fetchQuestAnswerUseCase = DefaultQuestAnswerUseCase(questAnswerRepository: questsRepository)
+        
+        let result = try await fetchQuestAnswerUseCase.execute(questID: 1)
+        
+        #expect(result.stepNumber == 1)
+        #expect(result.questNumber == 1)
+        #expect(result.createdAt == "2025-07-18")
+        #expect(result.question == "어쩌구 저쩌구 question")
+        #expect(result.answer == "답변입니다 ~")
+        #expect(result.questEmotionState == "mock emotion state")
+        #expect(result.emotionDescription == "mock emotion description")
+    }
+    
     @Test("🏁 완료된 여정의 퀘스트 조회 ✅ success")
     func fetchCompletedQuests__success() async throws {
         let fetchCompletedQuestsUseCase = DefaultFetchCompletedQuestsUseCase(repository: questsRepository)
