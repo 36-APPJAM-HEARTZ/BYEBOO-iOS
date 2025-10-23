@@ -12,13 +12,13 @@ protocol SaveQuestTypeUseCase {
 }
 
 struct DefaultSaveQuestTypeUseCase: SaveQuestTypeUseCase {
-    private let repqository: QuestsInterface
+    private let repository: QuestsInterface
     
-    init(repqository: QuestsInterface) {
-        self.repqository = repqository
+    init(repository: QuestsInterface) {
+        self.repository = repository
     }
     
     func execute(questID: Int, answer: String, emotionState: String) async throws {
-        try await repqository.postQuestionQuest(questID: questID, answer: answer, emotionState: emotionState)
+        try await repository.postQuestionQuest(questID: questID, answer: answer, emotionState: emotionState)
     }
 }
