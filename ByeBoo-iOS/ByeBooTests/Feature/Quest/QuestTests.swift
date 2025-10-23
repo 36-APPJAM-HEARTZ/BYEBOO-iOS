@@ -78,3 +78,17 @@ struct QuestTests {
         #expect(questsRepository.postActiveQuestCalled)
     }
     
+    @Test("🏁 질문형 퀘스트 등록을 호출했을 때 ✅ postQuestionQuestCalled == true")
+    func postActiveQuest__postQuestionQuestCalledFalse() async throws {
+        let questsRepository = MockQuestsRepository()
+        let saveQuestTypeUseCase = DefaultSaveQuestTypeUseCase(repository: questsRepository)
+        
+        let _ = try await saveQuestTypeUseCase.execute(
+            questID: 1,
+            answer: "answer",
+            emotionState: "emotionState"
+        )
+        
+        #expect(questsRepository.postQuestionQuestCalled)
+    }
+}
