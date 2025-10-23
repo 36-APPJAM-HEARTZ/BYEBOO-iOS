@@ -83,7 +83,7 @@ struct QuestTests {
     }
     
     @Test("🏁 완료한 여정 돌아보기 ✅ success")
-    func fetchLookBackJourney_success() async throws {
+    func fetchLookBackJourney__success() async throws {
         let getLookBackJourneyUseCase = DefaultGetLookBackJourneyUseCase(lookBackJourneyRepository: questsRepository)
         
         let result = try await getLookBackJourneyUseCase.execute()
@@ -100,4 +100,12 @@ struct QuestTests {
         #expect(result == LookBackJourneyEntity.stub())
     }
     
-}
+    @Test("🏁 새로운 여정 시작하기를 호출했을 때 ✅ postNewJourneyCalled == true")
+    func postNewJourney__success() async throws {
+        let questsRepository = MockQuestsRepository()
+        let fetchNewJourneyUseCase = DefaultFetchNewJourneyUseCase(fetchNewJourneyRepository: questsRepository)
+        
+        let _ = try await fetchNewJourneyUseCase.execute(journey: .face)
+        
+        #expect(questsRepository.postNewJourneyCalled)
+    }
