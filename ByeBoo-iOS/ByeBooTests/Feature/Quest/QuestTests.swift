@@ -5,13 +5,15 @@
 //  Created by APPLE on 10/23/25.
 //
 
+import Combine
 import UIKit
 import Testing
 @testable import ByeBoo_iOS
 
 struct QuestTests {
     
-    private let questsRepository = MockQuestsRepository()
+    private let questsRepository: QuestsInterface = MockQuestsRepository()
+    private let userRepository: UsersInterface = MockUserRepository()
     
     @Test("🏁 진행 중인 퀘스트 조회 ✅ success")
     func fetchProgressingQuests__success() async throws {
@@ -117,5 +119,66 @@ struct QuestTests {
         let result = try await fetchCompletedQuestsUseCase.execute(journey: .face)
         
         #expect(result == CompletedQuestsEntity.stub())
+    }
+    
+    @Test("🏁 questOpenTime == nil이고 currentTime == nil이면 ✅ 퀘스트 열려있음(false)")
+    func questOpenTimeIsNil_currenetTimeIsNil__false() {
+        let calculateRemainingTimeUseCase = DefaultCalculateRemainingTimeUseCase()
+        
+        let result = calculateRemainingTimeUseCase.isQuestLocked(questOpenTime: nil, currentTime: nil)
+        
+        #expect(result == false)
+    }
+    
+    @Test("🏁 questOpenTime != nil이고 currentTime != nil이면 ✅ 퀘스트 닫혀있음(true)")
+    func questOpenTimeIsNotNil_currenetTimeIsNotNil__true() {
+        let calculateRemainingTimeUseCase = DefaultCalculateRemainingTimeUseCase()
+        
+        let result = calculateRemainingTimeUseCase.isQuestLocked(questOpenTime: Date(), currentTime: Date())
+        
+        #expect(result == true)
+    }
+    
+    @Test("🏁 currentTime과 questOpenTime이 3초 차이일 때 ✅ calculateRemainingTime 결과 = 3초")
+    func whenCurrentTimeAndQuestOpenTimeDifferBy3seconds__calculateRemainingTimeResultIs3seconds() {
+        let calculateRemainingTimeUseCase = DefaultCalculateRemainingTimeUseCase()
+        let currentTime = Date()
+        
+        let result = calculateRemainingTimeUseCase.calculateRemainingTime(
+            questOpenTime: currentTime.addingTimeInterval(3),
+            currentTime: currentTime
+        )
+        
+        #expect(result == 3)
+    }
+    
+    
+    @Test
+    func when3secondsLater__questOpen() async throws {
+        let progressingQuestsViewModel = ProgressingQuestsViewModel(
+            progressingQuestsUseCase: MockGetProgressingQuestsUseCase(),
+            getUserNameUseCase: DefaultGetUserNameUseCase(repository: userRepository),
+            fetchUserJourneyUseCase: DefaultFetchUserJourneyUseCase(repository: userRepository),
+            calculateRemainingTimeUseCase: DefaultCalculateRemainingTimeUseCase()
+        )
+        var cancellables = Set<AnyCancellable>()
+        var receivedEndTimerError = false
+
+        progressingQuestsViewModel.output.timePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .failure(let err) where err == .endTimer:
+                    receivedEndTimerError = true
+                default:
+                    break
+                }
+            }
+            .store(in: &cancellables)
+        
+        progressingQuestsViewModel.action(.questViewWillAppear)
+        try? await Task.sleep(for: .seconds(4))
+        
+        #expect(receivedEndTimerError)
     }
 }

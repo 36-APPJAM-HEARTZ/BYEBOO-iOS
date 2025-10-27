@@ -21,3 +21,10 @@ struct DefaultGetProgressingQuestsUseCase: GetProgressingQuestsUseCase {
         return try await repository.fetchProgressingQuests()
     }
 }
+
+struct MockGetProgressingQuestsUseCase: GetProgressingQuestsUseCase {
+    
+    func execute() async throws -> ProgressingQuestsEntity {
+        return .stub()
+    }
+}
