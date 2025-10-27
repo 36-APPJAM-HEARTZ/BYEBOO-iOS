@@ -153,22 +153,21 @@ struct QuestTests {
     }
     
     
-    @Test
+    @Test("🏁 3초 후 타이머가 종료되었을 때 ✅ endTimer 에러 방출")
     func when3secondsLater__questOpen() async throws {
-        let progressingQuestsViewModel = ProgressingQuestsViewModel(
-            progressingQuestsUseCase: MockGetProgressingQuestsUseCase(),
+        let viewModel = ProgressingQuestsViewModel(
+            progressingQuestsUseCase: DefaultGetProgressingQuestsUseCase(repository: questsRepository),
             getUserNameUseCase: DefaultGetUserNameUseCase(repository: userRepository),
             fetchUserJourneyUseCase: DefaultFetchUserJourneyUseCase(repository: userRepository),
             calculateRemainingTimeUseCase: DefaultCalculateRemainingTimeUseCase()
         )
         var cancellables = Set<AnyCancellable>()
         var receivedEndTimerError = false
-
-        progressingQuestsViewModel.output.timePublisher
-            .receive(on: DispatchQueue.main)
+        
+        viewModel.output.timePublisher
             .sink { result in
                 switch result {
-                case .failure(let err) where err == .endTimer:
+                case let .failure(error) where error == .endTimer:
                     receivedEndTimerError = true
                 default:
                     break
@@ -176,8 +175,8 @@ struct QuestTests {
             }
             .store(in: &cancellables)
         
-        progressingQuestsViewModel.action(.questViewWillAppear)
-        try? await Task.sleep(for: .seconds(4))
+        viewModel.action(.questViewWillAppear)
+        try await Task.sleep(for: .seconds(4))
         
         #expect(receivedEndTimerError)
     }
