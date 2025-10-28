@@ -8,7 +8,7 @@
 import Foundation
 
 protocol LogoutUseCase {
-    func execute() async throws
+    func execute() async throws -> Bool
 }
 
 struct DefaultLogoutUseCase: LogoutUseCase {
@@ -18,7 +18,7 @@ struct DefaultLogoutUseCase: LogoutUseCase {
         self.repository = repository
     }
     
-    func execute() async throws {
+    func execute() async throws -> Bool {
         return try await repository.logout()
     }
 }

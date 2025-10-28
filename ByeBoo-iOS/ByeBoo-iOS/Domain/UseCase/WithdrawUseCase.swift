@@ -8,7 +8,7 @@
 import Foundation
 
 protocol WithdrawUseCase {
-    func execute() async throws
+    func execute() async throws -> Bool
 }
 
 struct DefaultWithdrawUseCase: WithdrawUseCase {
@@ -18,7 +18,7 @@ struct DefaultWithdrawUseCase: WithdrawUseCase {
         self.repository = repository
     }
     
-    func execute() async throws {
+    func execute() async throws -> Bool {
         return try await repository.withdraw()
     }
 }
