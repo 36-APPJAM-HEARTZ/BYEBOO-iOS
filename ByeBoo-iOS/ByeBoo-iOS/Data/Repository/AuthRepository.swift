@@ -101,7 +101,7 @@ struct DefaultAuthRepository: AuthInterface {
         }
     }
     
-    func logout() async throws {
+    func logout() async throws -> Bool {
         let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
         try await network.request(
             AuthAPI.logout(header: header)
@@ -109,15 +109,17 @@ struct DefaultAuthRepository: AuthInterface {
         
         clearKeychain()
         removeUserInfo(excludedKeys: [.isOnboardingCompleted, .isHelperShown])
+        return true
     }
     
-    func withdraw() async throws {
+    func withdraw() async throws -> Bool {
         let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
         try await network.request(
             AuthAPI.withdraw(header: header)
         )
         clearKeychain()
         removeUserInfo()
+        return true
     }
 }
 
@@ -170,12 +172,19 @@ final class MockAuthRepository: AuthInterface {
     func appleLogin(platform: LoginPlatform) async throws {}
     
     func autoLogin() async throws -> Bool {
-        return false
+        isAutoLoginCalled = true
+        return true
     }
     
-    func logout() async throws {}
+    func logout() async throws -> Bool {
+        isLogoutCalled = true
+        return true
+    }
     
-    func withdraw() async throws {}
+    func withdraw() async throws -> Bool {
+        isWithdrawCalled = true
+        return true
+    }
     
     func clearKeychain() {}
     
