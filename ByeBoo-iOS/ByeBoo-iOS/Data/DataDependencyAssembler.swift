@@ -36,6 +36,15 @@ struct DataDependencyAssembler: DependencyAssembler {
 }
 
 struct MockDataDependencyAssembler: DependencyAssembler {
+    
+    private let keychainService: KeychainService = MockKeychainService()
+    private let userDefaultService: UserDefaultService = MockUserDefaultService()
+    private let networkService: NetworkService
+    
+    init() {
+        self.networkService = MockNetWorkService(userAPI: MockUserAPI(isAvailable: true))
+    }
+    
     func assemble() {
         DIContainer.shared.register(type: UsersInterface.self) { _ in
             return MockUserRepository()
@@ -46,7 +55,11 @@ struct MockDataDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: AuthInterface.self) { _ in
-            return MockAuthRepository()
+            return MockAuthRepository(
+                network: networkService,
+                userDefaultsService: userDefaultService,
+                keychainService: keychainService
+            )
         }
     }
 }
