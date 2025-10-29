@@ -19,7 +19,7 @@ struct SocialLoginTests {
         arguments: [true, false]
     )
     func postIDTokenFromKakaoServer__success(isKakaoAvailable: Bool) throws {
-        let networkService = MockNetWorkService(userAPI: MockUserAPI(isAvailable: isKakaoAvailable))
+        let networkService = MockNetworkService(userAPI: MockUserAPI(isAvailable: isKakaoAvailable))
         
         let idToken = try networkService.kakaoRequest()
         
@@ -30,7 +30,7 @@ struct SocialLoginTests {
     func kakaoLogin__success() async throws {
         // Given
         let dto = PostLoginResponseDTO.stub()
-        let networkService = MockNetWorkService(userAPI: MockUserAPI(isAvailable: true))
+        let networkService = MockNetworkService(userAPI: MockUserAPI(isAvailable: true))
         let authRepository = MockAuthRepository(
             network: networkService,
             userDefaultsService: userDefaultsService,

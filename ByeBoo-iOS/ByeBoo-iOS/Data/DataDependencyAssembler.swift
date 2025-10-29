@@ -42,7 +42,7 @@ struct MockDataDependencyAssembler: DependencyAssembler {
     private let networkService: NetworkService
     
     init() {
-        self.networkService = MockNetWorkService(userAPI: MockUserAPI(isAvailable: true))
+        self.networkService = MockNetworkService(userAPI: MockUserAPI(isAvailable: true))
     }
     
     func assemble() {

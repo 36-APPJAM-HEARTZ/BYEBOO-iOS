@@ -250,7 +250,7 @@ extension DefaultNetworkService: ASAuthorizationControllerDelegate, ASAuthorizat
     }
 }
 
-final class MockNetWorkService: NetworkService {
+final class MockNetworkService: NetworkService {
     
     private(set) var kakaoRequestCalled = false
     private let userAPI: UserAPIManager
