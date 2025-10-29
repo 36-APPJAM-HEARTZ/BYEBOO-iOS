@@ -30,7 +30,7 @@ struct UserAPI: UserAPIManager {
     }
 }
 
-final class MockUserAPI: UserAPIManager {
+struct MockUserAPI: UserAPIManager {
     
     private let isAvailable: Bool
     private let oAuthToken = OAuthTokenFactory.makeOAuthToken()
