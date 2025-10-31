@@ -141,23 +141,57 @@ extension DefaultAuthRepository {
     }
 }
 
-struct MockAuthRepository: AuthInterface{
-    func kakaoLogin(platform: LoginPlatform) async throws  {
+final class MockAuthRepository: AuthInterface {
+    
+    private(set) var kakaoLoginCalled = false
+    private let network: NetworkService
+    private let userDefaultsService: UserDefaultService
+    private let keychainService: KeychainService
+    
+    init(
+        network: NetworkService,
+        userDefaultsService: UserDefaultService,
+        keychainService: KeychainService
+    ) {
+        self.network = network
+        self.userDefaultsService = userDefaultsService
+        self.keychainService = keychainService
     }
     
-    func appleLogin(platform: LoginPlatform) async throws {
+    func kakaoLogin(platform: LoginPlatform) async throws  {
+        kakaoLoginCalled = true
+        
+        let authorization = try await network.kakaoRequest()
+        let _ = userDefaultsService.save("KAKAO", key: .loginPlatform)
+        keychainService.save(key: .authorization, token: authorization)
+        try await postLogin(platform: platform)
     }
+    
+    func appleLogin(platform: LoginPlatform) async throws {}
     
     func autoLogin() async throws -> Bool {
         return false
     }
     
-    func logout() async throws {
-    }
+    func logout() async throws {}
     
-    func withdraw() async throws {
-    }
+    func withdraw() async throws {}
     
-    func clearKeychain() {
+    func clearKeychain() {}
+    
+    private func postLogin(platform: LoginPlatform) async throws {
+        let postLoginResult = PostLoginResponseDTO.stub()
+        
+        _ = userDefaultsService.save(postLoginResult.isRegistered, key: .isRegistered)
+        _ = userDefaultsService.save(postLoginResult.name ?? "" , key: .userName)
+        _ = userDefaultsService.save(postLoginResult.journey ?? "", key: .journey)
+        _ = userDefaultsService.save(postLoginResult.journeyStatus ?? "", key: .journeyStatus)
+        _ = userDefaultsService.save(postLoginResult.userId, key: .userID)
+        
+        keychainService.save(key: .accessToken, token: postLoginResult.accessToken)
+        keychainService.save(key: .refreshToken, token: postLoginResult.refreshToken)
+        
+        keychainService.delete(key: .authorization)
+        keychainService.delete(key: .authorizationCode)
     }
 }

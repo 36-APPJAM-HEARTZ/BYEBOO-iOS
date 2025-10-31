@@ -24,7 +24,7 @@ struct CompletedQuestEntity {
     let questNumber: Int
 }
 
-extension CompletedQuestsEntity {
+extension CompletedQuestsEntity: Equatable {
         
     static func stub() -> Self {
         return .init(
@@ -37,7 +37,7 @@ extension CompletedQuestsEntity {
     }
 }
 
-extension CompletedStepEntity {
+extension CompletedStepEntity: Equatable {
     
     static func stub(stepNumber: Int) -> Self {
         let startIndex = (stepNumber - 1) * 6
@@ -62,7 +62,7 @@ extension CompletedStepEntity {
     }
 }
 
-extension CompletedQuestEntity {
+extension CompletedQuestEntity: Equatable {
     
     static func stub(index: Int) -> Self {
         return .init(

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum ByeBooError: Error, LocalizedError {
+enum ByeBooError: Error, LocalizedError, Equatable {
     case DIFailedError
     case decodingError
     case URLError

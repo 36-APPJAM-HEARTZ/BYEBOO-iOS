@@ -47,7 +47,7 @@ enum NicknameFieldType {
 
 final class ByeBooNicknameTextField: BaseView {
     
-    let nicknameField = UITextField()
+    private(set) var nicknameField = UITextField()
     let deleteAllTextButton = UIButton()
     
     var onTextChange: ((String) -> Void)?
@@ -87,16 +87,13 @@ final class ByeBooNicknameTextField: BaseView {
     }
     
     private func setAction() {
-        nicknameField.addTarget(
-            self,
-            action: #selector(nicknameFieldDidTap),
-            for: .editingDidBegin
-        )
-        nicknameField.addTarget(
-            self,
-            action: #selector(nicknameFieldDidChange),
-            for: .editingChanged
-        )
+        [UIControl.Event.editingDidBegin, UIControl.Event.editingChanged].forEach { event in
+            nicknameField.addTarget(
+                self,
+                action: #selector(nicknameFieldDidChange),
+                for: event
+            )
+        }
         deleteAllTextButton.addTarget(
             self,
             action: #selector(deleteAllTextButtonDidTap),
@@ -129,19 +126,13 @@ final class ByeBooNicknameTextField: BaseView {
         }
     }
 }
+
 extension ByeBooNicknameTextField {
     
     func setTextFieldStyle(_ type: NicknameFieldType) {
         nicknameField.do {
             $0.layer.borderWidth = type.borderWidth
             $0.layer.borderColor = type.borderColor
-        }
-    }
-    
-    @objc
-    private func nicknameFieldDidTap() {
-        if let text = nicknameField.text {
-            changeNicknameState(text: text)
         }
     }
     
@@ -153,8 +144,6 @@ extension ByeBooNicknameTextField {
             
             let trimmedText = trimText(text)
             self.onTextChange?(trimmedText)
-            
-            changeNicknameState(text: trimmedText)
         }
     }
     
@@ -162,7 +151,7 @@ extension ByeBooNicknameTextField {
     private func deleteAllTextButtonDidTap() {
         let blank = ""
         nicknameField.text = blank
-        changeNicknameState(text: blank)
+        changeNicknameState(text: blank, isValid: true)
     }
     
     private func trimText(_ text: String?) -> String {
@@ -177,11 +166,11 @@ extension ByeBooNicknameTextField {
         return ""
     }
     
-    private func changeNicknameState(text: String) {
+    func changeNicknameState(text: String, isValid: Bool) {
         let currentType: NicknameFieldType
         if text.isEmpty {
             currentType = .onBeginEditing
-        } else if !text.isValidNickname {
+        } else if !isValid {
             currentType = .error
         } else {
             currentType = .normal

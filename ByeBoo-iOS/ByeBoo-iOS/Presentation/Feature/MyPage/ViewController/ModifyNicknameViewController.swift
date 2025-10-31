@@ -14,7 +14,7 @@ final class ModifyNicknameViewController: BaseViewController {
     
     private let viewModel: ModifyNicknameViewModel
     private var cancellables = Set<AnyCancellable>()
-            
+    
     init(viewModel: ModifyNicknameViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -48,6 +48,16 @@ final class ModifyNicknameViewController: BaseViewController {
             action: #selector(confirmButtonDidTap),
             for: .touchUpInside
         )
+        rootView.nicknameTextField.onTextChange = { [weak self] text in
+            guard let self = self else { return }
+            
+            self.rootView.do {
+                $0.nicknameStateView.isHidden = false
+                $0.nicknameStateView.letterCountLabel.text = "\(text.count)/\(5)"
+                $0.confirmButton.isHidden = false
+            }
+            self.viewModel.action(.editingNickname(text))
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -72,22 +82,39 @@ extension ModifyNicknameViewController {
 
 extension ModifyNicknameViewController: ToastPresentable, ToastErrorHandler {
     
-    private func bind() {
-        viewModel.output.nameResult
-            .receive(on: DispatchQueue.main)
-            .sink { result in
-            switch result {
-            case .success:
-                self.back()
-            case .failure(let error):
-                self.handleError(error)
-            }
-        }.store(in: &cancellables)
-    }
-    
     func updateName(_ name: String?) {
         guard let name = name else { return }
         rootView.configure(name)
+    }
+    
+    private func bind() {
+        bindModifyNameResult()
+        bindNicknameValidation()
+    }
+    
+    private func bindModifyNameResult() {
+        viewModel.output.nameResult
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success:
+                    self?.back()
+                case .failure(let error):
+                    self?.handleError(error)
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func bindNicknameValidation() {
+        viewModel.output.checkValidNameResult
+            .sink { [weak self] result in
+                guard let text = self?.rootView.nicknameTextField.nicknameField.text else {
+                    return
+                }
+                self?.rootView.nicknameTextField.changeNicknameState(text: text, isValid: result)
+            }
+            .store(in: &cancellables)
     }
 }
 

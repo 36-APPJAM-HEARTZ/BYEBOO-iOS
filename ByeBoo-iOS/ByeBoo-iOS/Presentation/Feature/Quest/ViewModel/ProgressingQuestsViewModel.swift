@@ -96,7 +96,9 @@ final class ProgressingQuestsViewModel {
         timeCancellabels = Timer.publish(every: 1.0, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
-                guard let self = self else { return }
+                guard let self = self else {
+                    return
+                }
 
                 if remainingSeconds > 0 {
                     remainingSeconds -= 1

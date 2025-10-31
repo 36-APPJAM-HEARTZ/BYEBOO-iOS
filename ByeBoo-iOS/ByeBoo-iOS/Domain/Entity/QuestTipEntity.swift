@@ -20,7 +20,7 @@ struct QuestTipEntity {
     let tipAnswer: String
 }
 
-extension QuestTipDataEntity {
+extension QuestTipDataEntity: Equatable {
     static func stub() -> QuestTipDataEntity {
         return .init(
             step: "감정 정리하기",
@@ -32,7 +32,7 @@ extension QuestTipDataEntity {
     }
 }
 
-extension QuestTipEntity {
+extension QuestTipEntity: Equatable {
     static func stub() -> [QuestTipEntity] {
         return [
             .init(
