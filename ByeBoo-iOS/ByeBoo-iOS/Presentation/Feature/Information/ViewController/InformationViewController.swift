@@ -71,12 +71,6 @@ final class InformationViewController: BaseViewController {
             
             self.inputNicknameView.nicknameStateView.letterCountLabel.text = "\(text.count)/\(5)"
             self.viewModel.action(.editingNickname(text))
-            self.viewModel.output.nicknameValidationPublisher
-                .sink { result in
-                    self.inputNicknameView.nicknameTextField.changeNicknameState(text: text, isValid: result)
-                    self.informationBaseView.updateButtonWhenBack(condition: result)
-                }
-                .store(in: &cancellables)
         }
     }
 }
@@ -135,6 +129,11 @@ extension InformationViewController {
 extension InformationViewController: ToastPresentable, ToastErrorHandler {
     
     private func bind() {
+        bindUserInformation()
+        bindNicknameValidation()
+    }
+    
+    private func bindUserInformation() {
         viewModel.output.userInformationPublisher
             .sink { [weak self] result in
                 switch result {
@@ -143,6 +142,18 @@ extension InformationViewController: ToastPresentable, ToastErrorHandler {
                 case .failure(let error):
                     self?.handleError(error)
                 }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func bindNicknameValidation() {
+        viewModel.output.nicknameValidationPublisher
+            .sink { [weak self] result in
+                guard let text = self?.inputNicknameView.nicknameTextField.nicknameField.text else {
+                    return
+                }
+                self?.inputNicknameView.nicknameTextField.changeNicknameState(text: text, isValid: result)
+                self?.informationBaseView.updateButtonWhenBack(condition: result)
             }
             .store(in: &cancellables)
     }
