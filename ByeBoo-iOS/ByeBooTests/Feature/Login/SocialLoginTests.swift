@@ -102,7 +102,7 @@ struct SocialLoginTests {
         let refreshToken: String? = keychainService.load(key: .refreshToken)
         
         #expect(authRepository.appleLoginCalled)
-        #expect(networkService.appleRequestCalleed)
+        #expect(networkService.appleRequestCalled)
         #expect(platform == LoginPlatform.APPLE.rawValue)
         #expect(isRegistered == true)
         #expect(userName == dto.name)
