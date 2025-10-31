@@ -103,9 +103,16 @@ struct DefaultAuthRepository: AuthInterface {
     
     func logout() async throws -> Bool {
         let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
-        try await network.request(
-            AuthAPI.logout(header: header)
-        )
+        
+        do {
+            try await network.request(
+                AuthAPI.logout(header: header)
+            )
+        }
+        catch (let error) {
+            ByeBooLogger.debug("Logout failed: \(error)")
+            return false
+        }
         
         clearKeychain()
         removeUserInfo(excludedKeys: [.isOnboardingCompleted, .isHelperShown])
@@ -114,9 +121,17 @@ struct DefaultAuthRepository: AuthInterface {
     
     func withdraw() async throws -> Bool {
         let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
-        try await network.request(
-            AuthAPI.withdraw(header: header)
-        )
+        
+        do {
+            try await network.request(
+                AuthAPI.withdraw(header: header)
+            )
+        }
+        catch (let error) {
+            ByeBooLogger.debug("Logout failed: \(error)")
+            return false
+        }
+        
         clearKeychain()
         removeUserInfo()
         return true
