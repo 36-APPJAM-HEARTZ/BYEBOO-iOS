@@ -25,59 +25,6 @@ final class MyPageFeatureView: BaseView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setFeatureButtons(features: [MyPageDetailFeatureType]) {
-        features.forEach { [weak self] feature in
-            guard let self = self else { return }
-            
-            let featureButton = self.createFeatureButton(feature: feature.rawValue)
-            self.featureButtons.append(featureButton)
-            
-            if feature == .questOpenNotice {
-                let noticeView = createNoticeView(featureButton: featureButton)
-                self.featureStackView.addArrangedSubview(noticeView)
-                return
-            }
-            self.featureStackView.addArrangedSubview(featureButton)
-        }
-    }
-    
-    private func createFeatureButton(feature: String) -> UIButton {
-        let featureButton = UIButton()
-        featureButton.do {
-            $0.setTitle(feature, for: .normal)
-            $0.titleLabel?.font = FontManager.body3R16.font
-            $0.setTitleColor(.grayscale50, for: .normal)
-            $0.backgroundColor = .clear
-        }
-        
-        return featureButton
-    }
-    
-    private func createNoticeView(featureButton: UIButton) -> UIView {
-        let noticeView = UIView()
-        noticeView.addSubviews(featureButton, noticeSwitch)
-        makeNoticeViewConstraints(featureButton: featureButton)
-        noticeView.do {
-            $0.layer.borderColor = UIColor.red.cgColor
-            $0.layer.borderWidth = 1
-        }
-        return noticeView
-    }
-    
-    private func makeNoticeViewConstraints(featureButton: UIButton) {
-        featureButton.snp.makeConstraints {
-            $0.verticalEdges.equalToSuperview()
-            $0.leading.equalToSuperview()
-        }
-        noticeSwitch.snp.makeConstraints {
-            $0.verticalEdges.equalToSuperview()
-            $0.leading.equalTo(featureButton.snp.trailing).offset(175.adjustedW)
-            $0.trailing.equalToSuperview()
-            $0.width.equalTo(48.adjustedW)
-            $0.height.equalTo(28.adjustedH)
-        }
-    }
-    
     override func setStyle() {
         titleLabel.do {
             $0.font = FontManager.body1Sb16.font
@@ -110,6 +57,55 @@ final class MyPageFeatureView: BaseView {
         featureStackView.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(16.adjustedH)
             $0.horizontalEdges.bottom.equalToSuperview().inset(24.adjustedW)
+        }
+    }
+    
+    private func setFeatureButtons(features: [MyPageDetailFeatureType]) {
+        features
+            .map {
+                let featureButton = self.createFeatureButton(feature: $0.rawValue)
+                self.featureButtons.append(featureButton)
+                
+                return ($0 == .questOpenNotice) ? createNoticeView(
+                    featureButton: featureButton
+                ) : featureButton
+            }
+            .forEach {
+                featureStackView.addArrangedSubview($0)
+            }
+    }
+    
+    private func createFeatureButton(feature: String) -> UIButton {
+        let featureButton = UIButton()
+        featureButton.do {
+            $0.setTitle(feature, for: .normal)
+            $0.titleLabel?.font = FontManager.body3R16.font
+            $0.setTitleColor(.grayscale50, for: .normal)
+            $0.backgroundColor = .clear
+        }
+        
+        return featureButton
+    }
+    
+    private func createNoticeView(featureButton: UIButton) -> UIView {
+        let noticeView = UIView()
+        noticeView.addSubviews(featureButton, noticeSwitch)
+        makeNoticeViewConstraints(featureButton: featureButton)
+        
+        return noticeView
+    }
+    
+    private func makeNoticeViewConstraints(featureButton: UIButton) {
+        featureButton.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview()
+            $0.leading.equalToSuperview()
+        }
+        noticeSwitch.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview()
+            $0.leading.equalTo(featureButton.snp.trailing).offset(175.adjustedW)
+            $0.trailing.equalToSuperview()
+            $0.width.equalTo(48.adjustedW)
+            $0.height.equalTo(28.adjustedH)
         }
     }
 }
