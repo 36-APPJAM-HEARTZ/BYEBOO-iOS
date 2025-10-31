@@ -9,7 +9,7 @@ import KakaoSDKAuth
 
 struct MockOAuthToken {
     
-    static func stub() -> OAuthToken {
+    static func kakaoStub() -> OAuthToken {
         return .init(
             accessToken: "accessToken",
             tokenType: "tokenType",
@@ -17,5 +17,9 @@ struct MockOAuthToken {
             scope: nil,
             scopes: nil
         )
+    }
+    
+    static func appleStub() -> (String, String) {
+        return ("identityToken", "authorizationCode")
     }
 }

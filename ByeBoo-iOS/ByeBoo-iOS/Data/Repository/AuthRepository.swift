@@ -161,6 +161,7 @@ extension DefaultAuthRepository {
 final class MockAuthRepository: AuthInterface {
     
     private(set) var kakaoLoginCalled = false
+    private(set) var appleLoginCalled = false
     private(set) var isAutoLoginCalled = false
     private(set) var isLogoutCalled = false
     private(set) var isWithdrawCalled = false
@@ -188,7 +189,15 @@ final class MockAuthRepository: AuthInterface {
         try await postLogin(platform: platform)
     }
     
-    func appleLogin(platform: LoginPlatform) async throws {}
+    func appleLogin(platform: LoginPlatform) async throws {
+        appleLoginCalled = true
+        
+        var (identityToken, authorizationCode) = try await network.appleRequest()
+        let _ = userDefaultsService.save("APPLE", key: .loginPlatform)
+        keychainService.save(key: .authorization, token: identityToken)
+        keychainService.save(key: .authorizationCode, token: authorizationCode)
+        try await postLogin(platform: platform)
+    }
     
     func autoLogin() async throws -> Bool {
         isAutoLoginCalled = true
