@@ -255,6 +255,7 @@ final class MockNetworkService: NetworkService {
     private(set) var kakaoRequestCalled = false
     private(set) var appleRequestCalleed = false
     private let userAPI: UserAPIManager
+    private let appleLoginManager = MockAppleLoginManager()
     
     init(userAPI: UserAPIManager) {
         self.userAPI = userAPI
@@ -297,7 +298,7 @@ final class MockNetworkService: NetworkService {
         var identity: String?
         var authorization: String?
         
-        userAPI.loginWithApple { identityToken, authorizationCode, error in
+        appleLoginManager.loginWithApple { identityToken, authorizationCode, error in
             identity = identityToken
             authorization = authorizationCode
         }

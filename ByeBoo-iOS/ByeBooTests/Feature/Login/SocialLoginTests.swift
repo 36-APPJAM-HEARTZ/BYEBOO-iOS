@@ -10,8 +10,9 @@ import Testing
 
 struct SocialLoginTests {
     
-    private let accessToken = MockOAuthToken.kakaoStub().accessToken
-    private var (identityTokenTest, authorizationCodeTest) = MockOAuthToken.appleStub()
+    private let accessToken = MockOAuthToken.stub().accessToken
+    private let identityTokenTest = AppleToken.stub().identityToken
+    private let authorizationCodeTest = AppleToken.stub().authorizationCode
     private let userDefaultsService = MockUserDefaultService()
     private let keychainService = MockKeychainService()
     
