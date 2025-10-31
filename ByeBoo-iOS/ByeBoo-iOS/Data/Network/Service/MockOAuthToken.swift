@@ -7,9 +7,9 @@
 
 import KakaoSDKAuth
 
-struct OAuthTokenFactory {
+struct MockOAuthToken {
     
-    static func makeOAuthToken() -> OAuthToken {
+    static func stub() -> OAuthToken {
         return .init(
             accessToken: "accessToken",
             tokenType: "tokenType",

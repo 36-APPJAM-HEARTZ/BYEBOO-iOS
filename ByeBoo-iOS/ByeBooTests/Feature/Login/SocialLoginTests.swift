@@ -10,7 +10,7 @@ import Testing
 
 struct SocialLoginTests {
     
-    private let accessToken = OAuthTokenFactory.makeOAuthToken().accessToken
+    private let accessToken = MockOAuthToken.stub().accessToken
     private let userDefaultsService = MockUserDefaultService()
     private let keychainService = MockKeychainService()
     

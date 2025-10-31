@@ -33,7 +33,7 @@ struct UserAPI: UserAPIManager {
 struct MockUserAPI: UserAPIManager {
     
     private let isAvailable: Bool
-    private let oAuthToken = OAuthTokenFactory.makeOAuthToken()
+    private let oAuthToken = MockOAuthToken.stub()
     
     init(isAvailable: Bool) {
         self.isAvailable = isAvailable
