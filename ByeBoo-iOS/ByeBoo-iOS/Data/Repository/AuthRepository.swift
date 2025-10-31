@@ -146,6 +146,10 @@ extension DefaultAuthRepository {
 final class MockAuthRepository: AuthInterface {
     
     private(set) var kakaoLoginCalled = false
+    private(set) var isAutoLoginCalled = false
+    private(set) var isLogoutCalled = false
+    private(set) var isWithdrawCalled = false
+    
     private let network: NetworkService
     private let userDefaultsService: UserDefaultService
     private let keychainService: KeychainService
