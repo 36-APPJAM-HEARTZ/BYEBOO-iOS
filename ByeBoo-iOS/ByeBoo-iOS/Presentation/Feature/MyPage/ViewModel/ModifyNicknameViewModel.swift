@@ -11,7 +11,7 @@ final class ModifyNicknameViewModel: ViewModelType {
     
     private var cancellables = Set<AnyCancellable>()
     private var userNameSubject: PassthroughSubject<Result<String, ByeBooError>, Never> = .init()
-    private var checkValidNameSubject = CurrentValueSubject<Bool, Never>(false)
+    private var checkValidNameSubject = CurrentValueSubject<Bool, Never>(true)
     
     private(set) var output: Output
     
