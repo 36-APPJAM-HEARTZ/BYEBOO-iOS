@@ -253,6 +253,7 @@ extension DefaultNetworkService: ASAuthorizationControllerDelegate, ASAuthorizat
 final class MockNetworkService: NetworkService {
     
     private(set) var kakaoRequestCalled = false
+    private(set) var appleRequestCalled = false
     private let userAPI: UserAPIManager
     
     init(userAPI: UserAPIManager) {
@@ -291,7 +292,25 @@ final class MockNetworkService: NetworkService {
     }
     
     func appleRequest() throws -> (String, String) {
-        // To-Do: 추후 구현
-        return ("", "")
+        appleRequestCalled = true
+        
+        let identityToken = AppleToken.stub().identityToken
+        let authorizationCode = AppleToken.stub().authorizationCode
+       
+        return (identityToken, authorizationCode)
+    }
+}
+
+struct AppleToken {
+    let identityToken: String
+    let authorizationCode: String
+}
+
+extension AppleToken {
+    static func stub() -> AppleToken {
+        .init(
+            identityToken: "identityToken",
+            authorizationCode: "authorizationCode"
+        )
     }
 }
