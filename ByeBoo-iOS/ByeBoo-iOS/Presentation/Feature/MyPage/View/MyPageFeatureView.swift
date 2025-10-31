@@ -12,6 +12,7 @@ final class MyPageFeatureView: BaseView {
     private let titleLabel = UILabel()
     private let featureStackView = UIStackView()
     private(set) var featureButtons: [UIButton] = []
+    private(set) var noticeSwitch = UISwitch()
     
     init(title: String, features: [MyPageDetailFeatureType]) {
         titleLabel.text = title
@@ -26,15 +27,54 @@ final class MyPageFeatureView: BaseView {
     
     private func setFeatureButtons(features: [MyPageDetailFeatureType]) {
         features.forEach { [weak self] feature in
-            let featureButton = UIButton()
-            featureButton.do {
-                $0.setTitle(feature.rawValue, for: .normal)
-                $0.titleLabel?.font = FontManager.body3R16.font
-                $0.setTitleColor(.grayscale50, for: .normal)
-                $0.backgroundColor = .clear
+            guard let self = self else { return }
+            
+            let featureButton = self.createFeatureButton(feature: feature.rawValue)
+            self.featureButtons.append(featureButton)
+            
+            if feature == .questOpenNotice {
+                let noticeView = createNoticeView(featureButton: featureButton)
+                self.featureStackView.addArrangedSubview(noticeView)
+                return
             }
-            self?.featureButtons.append(featureButton)
-            self?.featureStackView.addArrangedSubview(featureButton)
+            self.featureStackView.addArrangedSubview(featureButton)
+        }
+    }
+    
+    private func createFeatureButton(feature: String) -> UIButton {
+        let featureButton = UIButton()
+        featureButton.do {
+            $0.setTitle(feature, for: .normal)
+            $0.titleLabel?.font = FontManager.body3R16.font
+            $0.setTitleColor(.grayscale50, for: .normal)
+            $0.backgroundColor = .clear
+        }
+        
+        return featureButton
+    }
+    
+    private func createNoticeView(featureButton: UIButton) -> UIView {
+        let noticeView = UIView()
+        noticeView.addSubviews(featureButton, noticeSwitch)
+        makeNoticeViewConstraints(featureButton: featureButton)
+        noticeView.do {
+            $0.layer.borderColor = UIColor.red.cgColor
+            $0.layer.borderWidth = 1
+        }
+        return noticeView
+    }
+    
+    private func makeNoticeViewConstraints(featureButton: UIButton) {
+        featureButton.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview()
+            $0.leading.equalToSuperview()
+        }
+        noticeSwitch.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview()
+            $0.leading.equalTo(featureButton.snp.trailing).offset(175.adjustedW)
+            $0.trailing.equalToSuperview()
+            $0.width.equalTo(48.adjustedW)
+            $0.height.equalTo(28.adjustedH)
         }
     }
     
@@ -48,6 +88,10 @@ final class MyPageFeatureView: BaseView {
             $0.axis = .vertical
             $0.spacing = 14
             $0.alignment = .leading
+        }
+        noticeSwitch.do {
+            $0.onTintColor = .primary300
+            $0.tintColor = .grayscale600
         }
     }
     
