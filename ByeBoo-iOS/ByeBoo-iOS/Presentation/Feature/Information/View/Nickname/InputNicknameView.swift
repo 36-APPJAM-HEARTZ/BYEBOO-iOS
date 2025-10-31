@@ -22,7 +22,7 @@ final class InputNicknameView: BaseView {
     private let subTitleLabel = UILabel()
     private let nicknameFieldView = UIView()
     private(set) var nicknameTextField = ByeBooNicknameTextField(.onBeginEditing)
-    private let nicknameStateView = NicknameStateView()
+    private(set) var nicknameStateView = NicknameStateView()
     
     init() {
         super.init(frame: .zero)
@@ -105,9 +105,6 @@ final class InputNicknameView: BaseView {
     }
     
     private func setAction() {
-        nicknameTextField.onTextChange = { [weak self] text in
-            self?.nicknameStateView.letterCountLabel.text = "\(text.count)/\(5)"
-        }
         nicknameTextField.onStateChange = { [weak self] type in
             self?.nicknameStateView.updateNicknameState(type)
         }

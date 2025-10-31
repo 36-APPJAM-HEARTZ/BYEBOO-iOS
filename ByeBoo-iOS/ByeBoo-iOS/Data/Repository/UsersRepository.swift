@@ -172,7 +172,7 @@ struct MockUserRepository: UsersInterface {
     }
     
     func modifyUserNickname(name: String) -> String {
-        "하쵸핑"
+        name
     }
     
     func getLastJourneyType() -> JourneyType {

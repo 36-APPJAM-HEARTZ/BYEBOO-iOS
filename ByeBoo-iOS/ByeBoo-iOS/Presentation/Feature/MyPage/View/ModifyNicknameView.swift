@@ -11,7 +11,7 @@ final class ModifyNicknameView: BaseView {
     
     private let nicknameLabel = UILabel()
     private(set) var nicknameTextField = ByeBooNicknameTextField(.onBeginEditing)
-    private let nicknameStateView = NicknameStateView()
+    private(set) var nicknameStateView = NicknameStateView()
     private(set) var confirmButton = ByeBooButton(titleText: "완료", type: .disabled)
     
     init() {
@@ -74,11 +74,6 @@ final class ModifyNicknameView: BaseView {
     }
     
     private func setAction() {
-        nicknameTextField.onTextChange = { [weak self] text in
-            self?.nicknameStateView.isHidden = false
-            self?.nicknameStateView.letterCountLabel.text = "\(text.count)/\(5)"
-            self?.confirmButton.isHidden = false
-        }
         nicknameTextField.onStateChange = { [weak self] type in
             self?.nicknameStateView.updateNicknameState(type)
         }

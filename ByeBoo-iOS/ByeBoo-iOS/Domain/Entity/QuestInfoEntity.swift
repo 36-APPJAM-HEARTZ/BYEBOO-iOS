@@ -15,7 +15,7 @@ struct QuestInfoEntity {
     var question: String
 }
 
-extension QuestInfoEntity {
+extension QuestInfoEntity: Equatable {
     static func stub() -> QuestInfoEntity {
         return .init(
             step: "1",

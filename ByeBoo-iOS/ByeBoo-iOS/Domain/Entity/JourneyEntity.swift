@@ -14,7 +14,7 @@ struct JourneyEntity {
     let questType: QuestType?
 }
 
-extension JourneyEntity {
+extension JourneyEntity: Equatable {
     static func stub() -> Self {
         return .init(title: "감정 직면", description: "설명", style: .face, questType: .question)
     }

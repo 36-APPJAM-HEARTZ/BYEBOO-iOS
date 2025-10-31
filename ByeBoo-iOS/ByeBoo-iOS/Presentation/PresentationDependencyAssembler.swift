@@ -57,12 +57,14 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: InformationViewModel.self) { container in
-            guard let sendUserUseCase = container.resolve(type: SendUserUseCase.self) else {
+            guard let sendUserUseCase = container.resolve(type: SendUserUseCase.self),
+                  let checkValidNicknameUseCase = container.resolve(type: CheckValidNicknameUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
             return InformationViewModel(
+                checkValidNicknameUseCase: checkValidNicknameUseCase,
                 sendUserUseCase: sendUserUseCase,
                 getUserNameUseCase: getUserNameUseCase
             )
@@ -183,14 +185,16 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: ModifyNicknameViewModel.self) { container in
-            guard let modifyNicknameUseCase = container.resolve(type: ModifyNicknameUseCase.self)
+            guard let checkValidNicknameUseCase = container.resolve(type: CheckValidNicknameUseCase.self),
+                  let modifyNicknameUseCase = container.resolve(type: ModifyNicknameUseCase.self)
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
             return ModifyNicknameViewModel(
-                useCase: modifyNicknameUseCase
+                checkValidNicknameUseCase: checkValidNicknameUseCase,
+                modifyNicknameUseCase: modifyNicknameUseCase
             )
         }
         DIContainer.shared.register(type: LoginViewModel.self) { container in
@@ -219,7 +223,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 fetchCompletedQuestsUseCase: fetchCompletedQuestsUseCase
             )
         }
-                                                                          
+        
         DIContainer.shared.register(type: SplashViewModel.self) { container in
             guard let autoLoginUseCase = container.resolve(type: AutoLoginUseCase.self)
             else {

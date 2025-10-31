@@ -26,3 +26,27 @@ struct DefaultKeychainService: KeychainService {
         KeychainManager.delete(key: key)
     }
 }
+
+final class MockKeychainService: KeychainService {
+    
+    private var store: [KeyType: Any] = [:]
+    
+    func save(key: KeyType, token: String) {
+        store[key] = token
+    }
+    
+    func load(key: KeyType) -> String {
+        guard let value = store[key] as? String else {
+            return ""
+        }
+        return value
+    }
+    
+    func delete(key: KeyType) {
+        store.removeValue(forKey: key)
+    }
+    
+    func deleteAll() {
+        store.removeAll()
+    }
+}

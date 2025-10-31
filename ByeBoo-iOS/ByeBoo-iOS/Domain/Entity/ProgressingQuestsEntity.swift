@@ -28,22 +28,30 @@ struct QuestEntity {
     let questNumber: Int
 }
 
-extension ProgressingQuestsEntity {
-        
+extension ProgressingQuestsEntity: Equatable {
+    
     static func stub() -> Self {
+        let currentTime = Date()
+        
         return .init(
             progressPeriod: 30,
             currentStep: 30,
-            questOpenTime: nil,
-            currentTime: nil,
+            questOpenTime: currentTime.addingTimeInterval(3),
+            currentTime: currentTime,
             steps: (1...5).map { step in
                 StepEntity.stub(stepNumber: step)
             }
         )
     }
+    
+    static func ==(lhs: ProgressingQuestsEntity, rhs: ProgressingQuestsEntity) -> Bool {
+        return lhs.progressPeriod == rhs.progressPeriod &&
+        lhs.currentStep == rhs.currentStep &&
+        lhs.steps == rhs.steps
+    }
 }
 
-extension StepEntity {
+extension StepEntity: Equatable {
     
     static func stub(stepNumber: Int) -> Self {
         let startIndex = (stepNumber - 1) * 6
@@ -68,7 +76,7 @@ extension StepEntity {
     }
 }
 
-extension QuestEntity {
+extension QuestEntity: Equatable {
     
     static func stub(index: Int) -> Self {
         return .init(

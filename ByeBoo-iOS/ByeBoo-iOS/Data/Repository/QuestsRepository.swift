@@ -137,7 +137,12 @@ struct DefaultQuestRepository: QuestsInterface {
     }
 }
 
-struct MockQuestsRepository: QuestsInterface {
+final class MockQuestsRepository: QuestsInterface {
+    
+    private(set) var postActiveQuestCalled = false
+    private(set) var postQuestionQuestCalled = false
+    private(set) var postNewJourneyCalled = false
+    
     func fetchProgressingQuests() async throws -> ProgressingQuestsEntity {
         return .stub()
     }
@@ -155,11 +160,11 @@ struct MockQuestsRepository: QuestsInterface {
     }
     
     func postActiveQuest(questID: Int, answer: String, emotionState: String, image: Data, imageKey: String) async throws {
-        
+        self.postActiveQuestCalled = true
     }
     
     func postQuestionQuest(questID: Int, answer: String, emotionState: String) async throws {
-        
+        self.postQuestionQuestCalled = true
     }
     
     func getLookBackJourney() async throws -> [JourneyEntity]{
@@ -171,7 +176,7 @@ struct MockQuestsRepository: QuestsInterface {
     }
     
     func postNewJourney(journey: JourneyType) async throws {
-        
+        self.postNewJourneyCalled = true
     }
     
     func fetchCompletedQuests(journey: JourneyType) async throws -> CompletedQuestsEntity {

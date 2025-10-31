@@ -29,16 +29,27 @@ struct DefaultUserDefaultService: UserDefaultService {
     }
 }
 
-struct MockUserDefaultService: UserDefaultService {
+final class MockUserDefaultService: UserDefaultService {
+    
+    private var store: [UserDefaultsKey: Any] = [:]
+    
     func save(_ value: Any, key: UserDefaultsKey) -> Bool {
+        store[key] = value
         return true
     }
     
     func load<T>(key: UserDefaultsKey) -> T? {
-        return 96 as? T
+        return store[key] as? T
     }
     
     func delete(key: UserDefaultsKey) -> Bool {
+        guard let _ = store.removeValue(forKey: key) else {
+            return false
+        }
         return true
+    }
+    
+    func deleteAll() {
+        store.removeAll()
     }
 }
