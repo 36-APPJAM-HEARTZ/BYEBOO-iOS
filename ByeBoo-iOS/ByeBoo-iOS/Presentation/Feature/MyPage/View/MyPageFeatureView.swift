@@ -18,7 +18,7 @@ final class MyPageFeatureView: BaseView {
         titleLabel.text = title
         super.init(frame: .zero)
         
-        setFeatureButtons(features: features)
+        setFeatures(features)
     }
     
     required init?(coder: NSCoder) {
@@ -34,7 +34,6 @@ final class MyPageFeatureView: BaseView {
         featureStackView.do {
             $0.axis = .vertical
             $0.spacing = 14
-            $0.alignment = .leading
         }
         noticeSwitch.do {
             $0.onTintColor = .primary300
@@ -60,15 +59,18 @@ final class MyPageFeatureView: BaseView {
         }
     }
     
-    private func setFeatureButtons(features: [MyPageDetailFeatureType]) {
+    private func setFeatures(_ features: [MyPageDetailFeatureType]) {
         features
             .map {
                 let featureButton = self.createFeatureButton(feature: $0.rawValue)
                 self.featureButtons.append(featureButton)
-                
-                return ($0 == .questOpenNotice) ? createNoticeView(
-                    featureButton: featureButton
-                ) : featureButton
+                                
+                if $0 == .questOpenNotice {
+                    featureStackView.alignment = .fill
+                    return createNoticeView(button: featureButton)
+                }
+                featureStackView.alignment = .leading
+                return featureButton
             }
             .forEach {
                 featureStackView.addArrangedSubview($0)
@@ -87,23 +89,22 @@ final class MyPageFeatureView: BaseView {
         return featureButton
     }
     
-    private func createNoticeView(featureButton: UIButton) -> UIView {
+    private func createNoticeView(button: UIButton) -> UIView {
         let noticeView = UIView()
-        noticeView.addSubviews(featureButton, noticeSwitch)
-        makeNoticeViewConstraints(featureButton: featureButton)
+        noticeView.addSubviews(button, noticeSwitch)
+        makeNoticeViewConstraints(button: button)
         
         return noticeView
     }
     
-    private func makeNoticeViewConstraints(featureButton: UIButton) {
-        featureButton.snp.makeConstraints {
+    private func makeNoticeViewConstraints(button: UIButton) {
+        button.snp.makeConstraints {
             $0.verticalEdges.equalToSuperview()
             $0.leading.equalToSuperview()
         }
         noticeSwitch.snp.makeConstraints {
-            $0.verticalEdges.equalToSuperview()
-            $0.leading.equalTo(featureButton.snp.trailing).offset(175.adjustedW)
             $0.trailing.equalToSuperview()
+            $0.centerY.equalToSuperview()
             $0.width.equalTo(48.adjustedW)
             $0.height.equalTo(28.adjustedH)
         }
