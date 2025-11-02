@@ -24,6 +24,10 @@ final class MyPageView: BaseView {
         title: MyPageFeatureType.inquire.rawValue,
         features: MyPageFeatureType.inquire.features
     )
+    private(set) var noticeView = MyPageFeatureView(
+        title: MyPageFeatureType.notice.rawValue,
+        features: MyPageFeatureType.notice.features
+    )
     private(set) var termAndPolicyView = MyPageFeatureView(
         title: MyPageFeatureType.termAndPolicy.rawValue,
         features: MyPageFeatureType.termAndPolicy.features
@@ -50,6 +54,7 @@ final class MyPageView: BaseView {
             worldView,
             divider2,
             inquireView,
+            noticeView,
             termAndPolicyView,
             accountView
         )
@@ -94,8 +99,12 @@ final class MyPageView: BaseView {
             $0.top.equalTo(divider2.snp.bottom).offset(8.adjustedH)
             $0.horizontalEdges.equalToSuperview()
         }
-        termAndPolicyView.snp.makeConstraints {
+        noticeView.snp.makeConstraints {
             $0.top.equalTo(inquireView.snp.bottom)
+            $0.horizontalEdges.equalToSuperview()
+        }
+        termAndPolicyView.snp.makeConstraints {
+            $0.top.equalTo(noticeView.snp.bottom)
             $0.horizontalEdges.equalToSuperview()
         }
         accountView.snp.makeConstraints {
