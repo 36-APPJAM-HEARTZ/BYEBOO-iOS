@@ -15,6 +15,7 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     private let rootView = WriteQuestionTypeQuestView()
     private let viewModel: WriteQuestionTypeViewModel
     private var cancellables = Set<AnyCancellable>()
+    var questMode: QuestMode = .write
     
     private var questID: Int = 1
     private var questNumber: Int = 1
@@ -236,5 +237,13 @@ extension WriteQuestionTypeQuestViewController {
         self.questID = questID
         self.questNumber = questNumber
         self.questType = questType
+    }
+}
+
+extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
+    func getExistingQuest(quest: String?, image: String?) {
+        guard let quest = quest else { return }
+        self.answerText = quest
+        rootView.questTextField.textView.text = quest
     }
 }
