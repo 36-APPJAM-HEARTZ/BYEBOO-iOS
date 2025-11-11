@@ -31,6 +31,11 @@ final class ArchiveQuestViewController: BaseViewController {
         view = rootView
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tabBarController?.tabBar.isHidden = true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.hidesBackButton = true
@@ -100,12 +105,14 @@ extension ArchiveQuestViewController {
             let viewController = ViewControllerFactory.shared.makeWriteQuestionTypeQuestViewController()
             viewController.questMode = .edit
             viewController.getExistingQuest(quest: entity.answer, image: entity.imageUrl)
+            viewController.tabBarController?.tabBar.isHidden = true
             self.navigationController?.pushViewController(viewController, animated: false)
         } else {
-            let viewControllelr = ViewControllerFactory.shared.makeWriteActiveTypeQuestViewController()
-            viewControllelr.questMode = .edit
-            viewControllelr.getExistingQuest(quest: entity.answer, image: entity.imageUrl)
-            self.navigationController?.pushViewController(viewControllelr, animated: false)
+            let viewController = ViewControllerFactory.shared.makeWriteActiveTypeQuestViewController()
+            viewController.questMode = .edit
+            viewController.getExistingQuest(quest: entity.answer, image: entity.imageUrl)
+            viewController.tabBarController?.tabBar.isHidden = true
+            self.navigationController?.pushViewController(viewController, animated: false)
         }
     }
 }
