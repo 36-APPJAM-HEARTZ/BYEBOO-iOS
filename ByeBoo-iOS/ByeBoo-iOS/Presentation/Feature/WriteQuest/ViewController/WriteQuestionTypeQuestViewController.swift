@@ -260,7 +260,7 @@ extension WriteQuestionTypeQuestViewController {
 
 extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
     func getExistingQuest(questID: Int, quest: String?, image: String?) {
-        
+        self.viewModel.action(.viewDidLoadWhenEditMode(questID: questID))
         guard let quest = quest else { return }
         self.answerText = quest
         rootView.questTextField.textView.text = quest
