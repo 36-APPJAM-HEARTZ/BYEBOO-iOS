@@ -64,7 +64,10 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
         )
         
         bind()
-        viewModel.action(.viewDidLoad(quesetID: questID))
+        
+        if questMode == .write {
+            viewModel.action(.viewDidLoad(quesetID: questID))
+        }
         
         let property = QuestEvents.QuestWriteStartProperty(
             questStartAt: Date().toString(),
@@ -199,6 +202,7 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
             .sink { [weak self] result in
                 switch result {
                 case .success(let quest):
+                    ByeBooLogger.debug(quest)
                     self?.rootView.updateQuestTitle(
                         step: quest.step,
                         stepNum: quest.stepNumber,

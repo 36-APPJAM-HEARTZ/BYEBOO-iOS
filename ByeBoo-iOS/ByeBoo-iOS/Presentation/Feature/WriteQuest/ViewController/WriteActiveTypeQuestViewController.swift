@@ -68,7 +68,10 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         setGesture()
         bind()
         presentPhotoPicker()
-        viewModel.action(.viewDidLoad(quesetID: questID))
+        
+        if questMode == .write {
+            viewModel.action(.viewDidLoad(quesetID: questID))
+        }
         
         let property = QuestEvents.QuestWriteStartProperty(
             questStartAt: Date().toString(),
