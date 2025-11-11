@@ -70,9 +70,32 @@ enum LogLevel {
                 .error
         }
     }
+    
+    var shouldShowLogInRelease: Bool {
+        switch self {
+        case .error(let error):
+            true
+        default:
+            false
+        }
+    }
 }
 
 struct ByeBooLogger {
+    private static var isDebugMode: Bool {
+        #if DEBUG
+        return true
+        #else
+        return false
+        #endif
+    }
+    
+    private static func shouldShowLog(level: LogLevel) -> Bool {
+        if isDebugMode { return true }
+      
+        return level.shouldShowLogInRelease
+    }
+    
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
@@ -90,6 +113,8 @@ struct ByeBooLogger {
         file: String,
         function: String
     ) {
+        guard shouldShowLog(level: level) else { return }
+        
         let logger = Logger(subsystem: OSLog.subsystem, category: level.category)
         let logMessage = "\(message)"
         let fileName = (file as NSString).lastPathComponent
