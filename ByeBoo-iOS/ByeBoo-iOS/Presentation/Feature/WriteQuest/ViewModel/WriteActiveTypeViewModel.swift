@@ -27,7 +27,6 @@ struct WriteActiveTypeViewModel: ViewModelType {
         saveQuestTypeUseCase:  SaveQuestTypeUseCase,
         saveActiveTypeUseCase: SaveQuestActiveUseCase,
         getQuestInfoUseCase: GetQuestInfoUseCase
-        
     ){
         self.saveQuestTypeUseCase = saveQuestTypeUseCase
         self.saveActiveQuestUseCase = saveActiveTypeUseCase
