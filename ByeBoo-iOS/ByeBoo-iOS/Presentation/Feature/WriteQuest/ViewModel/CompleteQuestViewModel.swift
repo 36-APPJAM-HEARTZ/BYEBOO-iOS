@@ -20,6 +20,7 @@ final class CompleteQuestViewModel: ViewModelType {
     private var loadingSubject = PassthroughSubject<
         Bool, Never>()
     private(set) var entity: QuestAnswerEntity?
+    private(set) var questID: Int = 1
     
     init(
         questAnswerCase: QuestAnswerUseCase
@@ -46,6 +47,7 @@ extension CompleteQuestViewModel {
     func action(_ trigger: Input) {
         switch trigger {
         case .questAnswerDidLoad(let questID):
+            self.questID = questID
             fetchQuestAnswer(questID: questID)
         }
     }

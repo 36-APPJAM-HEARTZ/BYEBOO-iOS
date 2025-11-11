@@ -6,5 +6,5 @@
 //
 
 protocol EditQuestProtocol {
-    func getExistingQuest(quest: String?, image: String?)
+    func getExistingQuest(questID: Int, quest: String?, image: String?)
 }

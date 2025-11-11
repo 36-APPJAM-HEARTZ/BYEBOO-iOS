@@ -222,6 +222,24 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.output.questInfoWhenEditModeResultPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let quest):
+                    self?.rootView.updateQuestTitle(
+                        step: quest.step,
+                        stepNum: quest.stepNumber,
+                        questNumber: quest.questNumber,
+                        questStyle: quest.questStyle,
+                        question: quest.question
+                    )
+                case .failure(let error):
+                    self?.handleError(error)
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -301,7 +319,8 @@ extension WriteActiveTypeQuestViewController {
 }
 
 extension WriteActiveTypeQuestViewController: EditQuestProtocol {
-    func getExistingQuest(quest: String?, image: String?) {
+    func getExistingQuest(questID: Int, quest: String?, image: String?) {
+        self.viewModel.action(.viewDidLoadWhenEditMode(questID: questID))
         guard let quest = quest, let image = image else { return }
         rootView.imageContainer.selectedImageView.kf.setImage(with: URL(string: image))
         rootView.updateImageCountLabel(count: 1)

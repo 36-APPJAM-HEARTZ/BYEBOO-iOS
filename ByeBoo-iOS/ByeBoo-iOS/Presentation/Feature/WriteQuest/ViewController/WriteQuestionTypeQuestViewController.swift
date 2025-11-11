@@ -193,6 +193,24 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.output.questInfoResultPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let quest):
+                    self?.rootView.updateQuestTitle(
+                        step: quest.step,
+                        stepNum: quest.stepNumber,
+                        questNumber: quest.questNumber,
+                        questStyle: quest.questStyle,
+                        question: quest.question
+                    )
+                case .failure(let error):
+                    self?.handleError(error)
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -241,7 +259,8 @@ extension WriteQuestionTypeQuestViewController {
 }
 
 extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
-    func getExistingQuest(quest: String?, image: String?) {
+    func getExistingQuest(questID: Int, quest: String?, image: String?) {
+        
         guard let quest = quest else { return }
         self.answerText = quest
         rootView.questTextField.textView.text = quest

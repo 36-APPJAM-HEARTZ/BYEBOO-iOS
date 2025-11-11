@@ -34,13 +34,14 @@ struct WriteActiveTypeViewModel: ViewModelType {
         
         output = Output(
             questInfoResultPublisher: questInfoResultSubject.eraseToAnyPublisher(),
-            didSuccessPostPublisher: didSuccessPostSubject.eraseToAnyPublisher()
+            didSuccessPostPublisher: didSuccessPostSubject.eraseToAnyPublisher(),
+            questInfoWhenEditModeResultPublisher: questInfoResultSubject.eraseToAnyPublisher()
         )
     }
     
     func action(_ trigger: Input) {
         switch trigger {
-        case .viewDidLoad(let questID):
+        case .viewDidLoad(let questID), .viewDidLoadWhenEditMode(let questID):
             getQuestInfo(questID: questID)
         case .didTapCompleteButton(
             let questID,
@@ -70,11 +71,13 @@ extension WriteActiveTypeViewModel {
             image: UIImage,
             imageKey: String
         )
+        case viewDidLoadWhenEditMode(questID: Int)
     }
     
     struct Output {
         let questInfoResultPublisher: AnyPublisher<Result<QuestInfoEntity, ByeBooError>, Never>
         let didSuccessPostPublisher:  AnyPublisher<Result<Void, ByeBooError>, Never>
+        let questInfoWhenEditModeResultPublisher: AnyPublisher<Result<QuestInfoEntity, ByeBooError>, Never>
     }
 }
 
