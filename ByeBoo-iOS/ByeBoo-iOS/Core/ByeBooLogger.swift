@@ -73,7 +73,7 @@ enum LogLevel {
     
     var shouldShowLogInRelease: Bool {
         switch self {
-        case .error(let error):
+        case .error:
             true
         default:
             false
