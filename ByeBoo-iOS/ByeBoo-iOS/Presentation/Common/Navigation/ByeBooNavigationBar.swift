@@ -20,6 +20,7 @@ enum NavigationBarType: Equatable {
     case close(header: NavigationHeaderType = .clear)
     case titleAndClose(String, header: NavigationHeaderType = .clear)
     case titleAndBack(String, header: NavigationHeaderType = .clear)
+    case editAndClose(header: NavigationHeaderType = .clear)
     case none(header: NavigationHeaderType = .clear)
 }
 
@@ -29,7 +30,8 @@ struct ByeBooNavigationBar {
         navigationItem: UINavigationItem,
         navigationController: UINavigationController?,
         type: NavigationBarType,
-        action: Selector? = nil
+        action: Selector? = nil,
+        secondAction: Selector? = nil
     ) {
         
         let barAppearance = makeBasicBarAppearance(type: type)
@@ -42,7 +44,8 @@ struct ByeBooNavigationBar {
             navigationItem: navigationItem,
             topViewController: topViewController,
             type: type,
-            action: action
+            action: action,
+            secondAction: secondAction
         )
         
         registerBarAppearance(barAppearance, to: navigationController)
@@ -72,6 +75,7 @@ struct ByeBooNavigationBar {
              .none(let header),
              .title(_, let header),
              .titleAndClose(_, let header),
+             .editAndClose(let header),
              .titleAndBack(_, let header):
             headerType = header
         }
@@ -100,7 +104,8 @@ struct ByeBooNavigationBar {
         navigationItem: UINavigationItem,
         topViewController: BaseViewController,
         type: NavigationBarType,
-        action: Selector?
+        action: Selector?,
+        secondAction: Selector? = nil
     ) {
         switch type {
         case .back:
@@ -140,6 +145,19 @@ struct ByeBooNavigationBar {
             )
             navigationItem.leftBarButtonItem = backButtonItem
             
+        case .editAndClose:
+            let editButtonItem = makeBarButtonItem(
+                image: .edit,
+                target: topViewController,
+                action: secondAction
+            )
+            navigationItem.leftBarButtonItem = editButtonItem
+            makeCloseButtonItem(
+                image: .xicon,
+                target: topViewController,
+                navigationItem: navigationItem,
+                action: action
+            )
         case .none:
             let emptyItem = makeBarButtonItem(
                 image: UIImage(),
