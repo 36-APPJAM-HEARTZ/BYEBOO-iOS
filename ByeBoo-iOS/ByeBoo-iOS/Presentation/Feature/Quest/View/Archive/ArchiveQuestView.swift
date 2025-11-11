@@ -25,7 +25,7 @@ final class ArchiveQuestView: BaseView {
     private let actionView: ActionView?
     private let feelView = FeelView(emotionType: "", descriptionText: "")
     
-    private let type: QuestType
+    private(set) var type: QuestType
     
     init(type: QuestType) {
         self.type = type
