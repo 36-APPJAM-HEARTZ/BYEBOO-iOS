@@ -245,5 +245,10 @@ extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
         guard let quest = quest else { return }
         self.answerText = quest
         rootView.questTextField.textView.text = quest
+        
+        let textCount = quest.count
+        rootView.questTextField.textCount.text = "(\(textCount)/\(rootView.questTextField.limitCount))"
+        rootView.questTextField.isPlaceholderActive = false
+        rootView.changeStyle(count: Int(textCount))
     }
 }
