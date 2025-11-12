@@ -327,7 +327,6 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
         guard let quest = quest, let image = image else { return }
         rootView.imageContainer.selectedImageView.kf.setImage(with: URL(string: image))
         rootView.updateImageCountLabel(count: 1)
-        rootView.changeStyle(count: 1)
         rootView.imageContainer.changeIconHidden()
         
         if quest.isEmpty {
