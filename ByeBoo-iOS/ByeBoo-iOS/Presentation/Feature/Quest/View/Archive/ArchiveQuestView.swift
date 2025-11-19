@@ -87,7 +87,7 @@ final class ArchiveQuestView: BaseView {
         }
         
         headerView.snp.makeConstraints {
-            $0.top.equalTo(16)
+            $0.top.equalTo(16.adjustedH)
             $0.horizontalEdges.equalToSuperview()
         }
         
