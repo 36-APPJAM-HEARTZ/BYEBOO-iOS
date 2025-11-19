@@ -12,7 +12,7 @@ import Lottie
 final class HomeView: BaseView {
 
     private let backgroundImageView = UIImageView()
-    private let homeBori = LottieAnimationView(name: "bori_home")
+    private(set) var homeBori = LottieAnimationView(name: "bori_home")
     private(set) var headerView = HomeHeaderView()
     private let speechBoxView = SpeechTextBoxView(title: "")
     
