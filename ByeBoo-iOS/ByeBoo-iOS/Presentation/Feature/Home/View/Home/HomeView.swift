@@ -43,14 +43,16 @@ final class HomeView: BaseView {
         }
         homeBori.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview().inset(40.adjustedW)
-            $0.bottom.equalToSuperview().offset(160.adjustedH)
+            $0.width.equalTo(295.adjustedW)
+            $0.height.equalTo(337.adjustedH)
+            $0.bottom.equalToSuperview().offset(-31.adjustedH)
         }
         headerView.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.horizontalEdges.equalToSuperview()
         }
         speechBoxView.snp.makeConstraints {
-            $0.bottom.equalTo(homeBori.snp.top).offset(180.adjustedH)
+            $0.bottom.equalTo(homeBori.snp.top).offset(-40.adjustedH)
             $0.horizontalEdges.equalToSuperview()
         }
     }
