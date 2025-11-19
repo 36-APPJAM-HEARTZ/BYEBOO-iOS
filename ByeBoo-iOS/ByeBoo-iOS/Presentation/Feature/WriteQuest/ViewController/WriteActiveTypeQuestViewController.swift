@@ -323,7 +323,7 @@ extension WriteActiveTypeQuestViewController {
 
 extension WriteActiveTypeQuestViewController: EditQuestProtocol {
     func getExistingQuest(questID: Int, quest: String?, image: String?) {
-        self.viewModel.action(.viewDidLoadWhenEditMode(questID: questID))
+        self.viewModel.action(.navigateFromArchiveViewController(questID: questID))
         guard let quest = quest, let image = image else { return }
         rootView.imageContainer.selectedImageView.kf.setImage(with: URL(string: image))
         rootView.updateImageCountLabel(count: 1)

@@ -41,7 +41,7 @@ struct WriteActiveTypeViewModel: ViewModelType {
     
     func action(_ trigger: Input) {
         switch trigger {
-        case .viewDidLoad(let questID), .viewDidLoadWhenEditMode(let questID):
+        case .viewDidLoad(let questID), .navigateFromArchiveViewController(let questID):
             getQuestInfo(questID: questID)
         case .didTapCompleteButton(
             let questID,
@@ -71,7 +71,7 @@ extension WriteActiveTypeViewModel {
             image: UIImage,
             imageKey: String
         )
-        case viewDidLoadWhenEditMode(questID: Int)
+        case navigateFromArchiveViewController(questID: Int)
     }
     
     struct Output {

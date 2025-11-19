@@ -101,8 +101,9 @@ extension ArchiveQuestViewController {
         
         guard let entity = viewModel.entity else { return }
 
+        var viewController: ( BaseViewController & EditQuestProtocol )
         if rootView.type == .question {
-            let viewController = ViewControllerFactory.shared.makeWriteQuestionTypeQuestViewController()
+            viewController = ViewControllerFactory.shared.makeWriteQuestionTypeQuestViewController() as WriteQuestionTypeQuestViewController
             viewController.questMode = .edit
             viewController.getExistingQuest(questID: self.viewModel.questID ,quest: entity.answer, image: entity.imageUrl)
             viewController.tabBarController?.tabBar.isHidden = true
@@ -113,6 +114,14 @@ extension ArchiveQuestViewController {
             viewController.getExistingQuest(questID: self.viewModel.questID, quest: entity.answer, image: entity.imageUrl)
             viewController.tabBarController?.tabBar.isHidden = true
             self.navigationController?.pushViewController(viewController, animated: false)
+        }
+    }
+    
+    private func setNavigateViewController(type: QuestType) -> UIViewController {
+        if type == .question {
+            return ViewControllerFactory.shared.makeWriteQuestionTypeQuestViewController()
+        } else {
+            return ViewControllerFactory.shared.makeWriteActiveTypeQuestViewController()
         }
     }
 }
