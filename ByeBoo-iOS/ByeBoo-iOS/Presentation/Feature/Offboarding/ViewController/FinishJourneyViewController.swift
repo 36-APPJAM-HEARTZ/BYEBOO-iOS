@@ -109,8 +109,6 @@ extension FinishJourneyViewController: Dismissible {
 extension FinishJourneyViewController {
     @objc
     private func startButtonDidTap() {
-        ByeBooLogger.debug("starbuttontapped")
-        
         let viewController = ViewControllerFactory.shared.makeNewJourneySelectViewController()
         viewController.hidesBottomBarWhenPushed = true
         
@@ -123,8 +121,6 @@ extension FinishJourneyViewController {
     
     @objc
     private func lookBackButtonDidTap() {
-        ByeBooLogger.debug("lookBackButtonTapped")
-        
         let viewController = ViewControllerFactory.shared.makeLookBackJourneyViewController()
         viewController.hidesBottomBarWhenPushed = true
         
@@ -137,7 +133,6 @@ extension FinishJourneyViewController {
     
     @objc
     private func homeLabelDidTap() {
-        ByeBooLogger.debug("homeLabelTapped")
         guard let navigationController else {
             ByeBooLogger.error(ByeBooError.navigationControllerMissing)
             return

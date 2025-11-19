@@ -92,7 +92,7 @@ extension HomeViewController {
     
     @objc
     private func helperDidTap() {
-        viewModel.action(.helperTapped)
+        viewModel.action(.helperDidTap)
         rootView.helperDidTap()
         
         Mixpanel.mainInstance().track(event: HomeEvents.Name.tutorialIconClick)

@@ -58,7 +58,7 @@ final class HomeViewModel {
 extension HomeViewModel: ViewModelType {
     enum Input {
         case viewWillAppear
-        case helperTapped
+        case helperDidTap
     }
     
     struct Output {
@@ -78,7 +78,7 @@ extension HomeViewModel: ViewModelType {
             fetchJourney()
             
             getUserResult()
-        case .helperTapped:
+        case .helperDidTap:
             setHelperShown()
         }
     }
