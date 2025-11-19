@@ -12,6 +12,10 @@ import Then
 
 final class EmotionBottomSheetView: BaseView {
     private let titleLabel = UILabel()
+    private let warningStackView = UIStackView()
+    private let warningIcon = UIImageView()
+    private let warningLabel = UILabel()
+    
     private let emotionChipFirstStackView = UIStackView()
     private let emotionChipSecondStackView = UIStackView()
     
@@ -23,8 +27,11 @@ final class EmotionBottomSheetView: BaseView {
             titleLabel,
             emotionChipFirstStackView,
             emotionChipSecondStackView,
-            confirmButton
+            confirmButton,
+            warningStackView
         )
+        
+        warningStackView.addArrangedSubviews(warningIcon, warningLabel)
         
         ByeBooEmotion.allCases.enumerated().forEach { _, emotion in
             let chip = ByeBooEmotionChip(emotionType: emotion)
@@ -50,24 +57,50 @@ final class EmotionBottomSheetView: BaseView {
             $0.textAlignment = .center
         }
         
+        warningStackView.do {
+            $0.axis = .horizontal
+            $0.spacing = 3.adjustedW
+        }
+        
+        warningIcon.do {
+            $0.image = .error
+            $0.contentMode = .scaleAspectFit
+        }
+        
+        warningLabel.do {
+            $0.text = "퀘스트 완료 후에는 감정을 수정할 수 없어요"
+            $0.font = FontManager.cap2R12.font
+            $0.textColor = .grayscale400
+        }
+        
         [emotionChipFirstStackView, emotionChipSecondStackView].forEach {
             $0.do {
                 $0.axis = .horizontal
                 $0.spacing = 20.adjustedW
             }
         }
+        
         setBlurEffect()
     }
     
     override func setLayout() {
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(23.adjustedH)
+            $0.top.equalToSuperview().offset(53.adjustedH)
             $0.centerX.equalToSuperview()
-            $0.height.equalTo(96.adjustedH)
+            $0.height.equalTo(62.adjustedH)
+        }
+        
+        warningStackView.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom).offset(16.adjustedH)
+            $0.centerX.equalToSuperview()
+        }
+        
+        warningIcon.snp.makeConstraints {
+            $0.width.height.equalTo(16.adjustedW)
         }
         
         emotionChipFirstStackView.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(3.adjustedH)
+            $0.top.equalTo(warningStackView.snp.bottom).offset(16.adjustedH)
             $0.centerX.equalToSuperview()
         }
         
