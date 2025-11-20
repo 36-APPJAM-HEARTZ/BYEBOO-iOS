@@ -109,7 +109,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: SocialLoginUseCase.self) { _ in
-            return DefaultKakaoLoginUseCase(repository: authRepository)
+            return DefaultSocialLoginUseCase(repository: authRepository)
         }
         
         DIContainer.shared.register(type: LogoutUseCase.self) { _ in

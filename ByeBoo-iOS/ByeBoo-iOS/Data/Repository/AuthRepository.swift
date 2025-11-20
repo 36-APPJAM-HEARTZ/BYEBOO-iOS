@@ -101,23 +101,40 @@ struct DefaultAuthRepository: AuthInterface {
         }
     }
     
-    func logout() async throws {
+    func logout() async throws -> Bool {
         let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
-        try await network.request(
-            AuthAPI.logout(header: header)
-        )
+        
+        do {
+            try await network.request(
+                AuthAPI.logout(header: header)
+            )
+        }
+        catch (let error) {
+            ByeBooLogger.debug("Logout failed: \(error)")
+            return false
+        }
         
         clearKeychain()
         removeUserInfo(excludedKeys: [.isOnboardingCompleted, .isHelperShown])
+        return true
     }
     
-    func withdraw() async throws {
+    func withdraw() async throws -> Bool {
         let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
-        try await network.request(
-            AuthAPI.withdraw(header: header)
-        )
+        
+        do {
+            try await network.request(
+                AuthAPI.withdraw(header: header)
+            )
+        }
+        catch (let error) {
+            ByeBooLogger.debug("Logout failed: \(error)")
+            return false
+        }
+        
         clearKeychain()
         removeUserInfo()
+        return true
     }
 }
 
@@ -144,6 +161,11 @@ extension DefaultAuthRepository {
 final class MockAuthRepository: AuthInterface {
     
     private(set) var kakaoLoginCalled = false
+    private(set) var appleLoginCalled = false
+    private(set) var isAutoLoginCalled = false
+    private(set) var isLogoutCalled = false
+    private(set) var isWithdrawCalled = false
+    
     private let network: NetworkService
     private let userDefaultsService: UserDefaultService
     private let keychainService: KeychainService
@@ -167,15 +189,30 @@ final class MockAuthRepository: AuthInterface {
         try await postLogin(platform: platform)
     }
     
-    func appleLogin(platform: LoginPlatform) async throws {}
-    
-    func autoLogin() async throws -> Bool {
-        return false
+    func appleLogin(platform: LoginPlatform) async throws {
+        appleLoginCalled = true
+        
+        var (identityToken, authorizationCode) = try await network.appleRequest()
+        let _ = userDefaultsService.save("APPLE", key: .loginPlatform)
+        keychainService.save(key: .authorization, token: identityToken)
+        keychainService.save(key: .authorizationCode, token: authorizationCode)
+        try await postLogin(platform: platform)
     }
     
-    func logout() async throws {}
+    func autoLogin() async throws -> Bool {
+        isAutoLoginCalled = true
+        return true
+    }
     
-    func withdraw() async throws {}
+    func logout() async throws -> Bool {
+        isLogoutCalled = true
+        return true
+    }
+    
+    func withdraw() async throws -> Bool {
+        isWithdrawCalled = true
+        return true
+    }
     
     func clearKeychain() {}
     

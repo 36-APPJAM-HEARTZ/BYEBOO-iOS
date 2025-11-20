@@ -11,7 +11,7 @@ protocol SocialLoginUseCase {
     func execute(platform: LoginPlatform) async throws
 }
 
-struct DefaultKakaoLoginUseCase: SocialLoginUseCase {
+struct DefaultSocialLoginUseCase: SocialLoginUseCase {
     private var repository: AuthInterface
     
     init(repository: AuthInterface) {

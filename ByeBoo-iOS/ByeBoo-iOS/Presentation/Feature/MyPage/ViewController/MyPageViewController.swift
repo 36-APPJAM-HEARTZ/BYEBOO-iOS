@@ -179,6 +179,8 @@ extension MyPageViewController {
             ExternalLink.inquire.openURL(for: self)
         case .makeService:
             ExternalLink.makeService.openURL(for: self)
+        case .questOpenNotice:
+            break
         case .privacyPolicy:
             ExternalLink.privacyPolicy.openURL(for: self)
         case .serviceTerm:

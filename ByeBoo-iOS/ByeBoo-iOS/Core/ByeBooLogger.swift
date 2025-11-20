@@ -70,14 +70,41 @@ enum LogLevel {
                 .error
         }
     }
+    
+    var shouldShowLogInRelease: Bool {
+        switch self {
+        case .error:
+            true
+        default:
+            false
+        }
+    }
 }
 
 struct ByeBooLogger {
-    static let dateFormatter = DateFormatter()
-    static var date: String {
-        dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        return dateFormatter.string(from: Date())
+    private static var isDebugMode: Bool {
+        #if DEBUG
+        return true
+        #else
+        return false
+        #endif
+    }
+    
+    private static func shouldShowLog(level: LogLevel) -> Bool {
+        if isDebugMode { return true }
+      
+        return level.shouldShowLogInRelease
+    }
+    
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
+    
+    private static var timestamp: String {
+        dateFormatter.string(from: Date())
     }
     
     private static func log(
@@ -86,21 +113,23 @@ struct ByeBooLogger {
         file: String,
         function: String
     ) {
+        guard shouldShowLog(level: level) else { return }
+        
         let logger = Logger(subsystem: OSLog.subsystem, category: level.category)
         let logMessage = "\(message)"
         let fileName = (file as NSString).lastPathComponent
     
         switch level {
         case .network:
-            logger.log("[🛜 Network] [Date: \(date)] [\(fileName) -> \(function)]: \(logMessage)")
+            logger.log("[🛜 Network] [Date: \(timestamp)] [\(fileName) -> \(function)]: \(logMessage)")
         case .lifeCycle:
-            logger.log("[🔄 LifeCycle] [Date: \(date)] [\(fileName) -> \(function)]: \(logMessage)")
+            logger.log("[🔄 LifeCycle] [Date: \(timestamp)] [\(fileName) -> \(function)]: \(logMessage)")
         case .debug:
-            logger.debug("[🐛 Debug] [Date: \(date)] [\(fileName) -> \(function)]: \(logMessage)")
+            logger.debug("[🐛 Debug] [Date: \(timestamp)] [\(fileName) -> \(function)]: \(logMessage)")
         case .data:
-            logger.info("[📊 Data] [Date: \(date)] [\(fileName) -> \(function)]: \(logMessage)")
+            logger.info("[📊 Data] [Date: \(timestamp)] [\(fileName) -> \(function)]: \(logMessage)")
         case .error(let error):
-            logger.error("[❌ Error] [Date: \(date)] [\(fileName) -> \(function)]: \(error.localizedDescription)")
+            logger.error("[❌ Error] [Date: \(timestamp)] [\(fileName) -> \(function)]: \(error.localizedDescription)")
         }
     }
     
