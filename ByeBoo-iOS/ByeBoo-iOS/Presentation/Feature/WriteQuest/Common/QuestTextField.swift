@@ -14,7 +14,7 @@ final class QuestTextField: BaseView {
     let textView = UITextView()
     var textCount = UILabel()
     let placeholder: String
-    private var isPlaceholderActive: Bool = true
+    var isPlaceholderActive: Bool = true
     let limitCount: Int
     var count: Int = 0
     weak var delegate: QuestCompleteProtocol?

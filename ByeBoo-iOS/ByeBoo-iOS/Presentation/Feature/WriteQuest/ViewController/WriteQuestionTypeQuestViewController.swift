@@ -15,6 +15,7 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     private let rootView = WriteQuestionTypeQuestView()
     private let viewModel: WriteQuestionTypeViewModel
     private var cancellables = Set<AnyCancellable>()
+    var questMode: QuestMode = .write
     
     private var questID: Int = 1
     private var questNumber: Int = 1
@@ -63,7 +64,10 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
         )
         
         bind()
-        viewModel.action(.viewDidLoad(quesetID: questID))
+        
+        if questMode == .write {
+            viewModel.action(.viewDidLoad(quesetID: questID))
+        }
         
         let property = QuestEvents.QuestWriteStartProperty(
             questStartAt: Date().toString(),
@@ -192,6 +196,25 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.output.questInfoResultPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let quest):
+                    ByeBooLogger.debug(quest)
+                    self?.rootView.updateQuestTitle(
+                        step: quest.step,
+                        stepNum: quest.stepNumber,
+                        questNumber: quest.questNumber,
+                        questStyle: quest.questStyle,
+                        question: quest.question
+                    )
+                case .failure(let error):
+                    self?.handleError(error)
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -236,5 +259,19 @@ extension WriteQuestionTypeQuestViewController {
         self.questID = questID
         self.questNumber = questNumber
         self.questType = questType
+    }
+}
+
+extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
+    func getExistingQuest(questID: Int, quest: String?, image: String?) {
+        self.viewModel.action(.viewDidLoadWhenEditMode(questID: questID))
+        guard let quest = quest else { return }
+        self.answerText = quest
+        rootView.questTextField.textView.text = quest
+        
+        let textCount = quest.count
+        rootView.questTextField.textCount.text = "(\(textCount)/\(rootView.questTextField.limitCount))"
+        rootView.questTextField.isPlaceholderActive = false
+        rootView.changeStyle(count: Int(textCount))
     }
 }

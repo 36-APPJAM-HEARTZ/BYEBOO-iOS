@@ -33,11 +33,9 @@ final class ArchiveQuestViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        bind()
-        viewModel.action(.questAnswerDidLoad(questID: questID))
+        self.tabBarController?.tabBar.isHidden = true
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.hidesBackButton = true
@@ -45,10 +43,10 @@ final class ArchiveQuestViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .close(header: .black),
-            action: #selector(close)
+            type: .editAndClose(header: .black),
+            action: #selector(close),
+            secondAction: #selector(editButtonDidTap)
         )
-        
         viewModel.action(.questAnswerDidLoad(questID: questID))
         bind()
     }
@@ -95,5 +93,27 @@ extension ArchiveQuestViewController {
         self.questID = questID
         self.questType = questType
         rootView = ArchiveQuestView(type: questType)
+    }
+    
+    @objc
+    private func editButtonDidTap() {
+        ByeBooLogger.debug("버튼 터치, entity: \(String(describing: viewModel.entity))")
+        
+        guard let entity = viewModel.entity else { return }
+
+        var viewController: ( BaseViewController & EditQuestProtocol )
+        viewController = setNavigateViewController(type: rootView.type)
+        viewController.questMode = .edit
+        viewController.getExistingQuest(questID: self.viewModel.questID ,quest: entity.answer, image: entity.imageUrl)
+        viewController.tabBarController?.tabBar.isHidden = true
+        self.navigationController?.pushViewController(viewController, animated: false)
+    }
+    
+    private func setNavigateViewController(type: QuestType) -> ( BaseViewController & EditQuestProtocol ) {
+        if type == .question {
+            return ViewControllerFactory.shared.makeWriteQuestionTypeQuestViewController()
+        } else {
+            return ViewControllerFactory.shared.makeWriteActiveTypeQuestViewController()
+        }
     }
 }
