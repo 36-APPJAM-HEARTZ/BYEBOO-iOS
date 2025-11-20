@@ -60,6 +60,11 @@ final class MyPageViewController: BaseViewController {
                 $0.addTarget(self, action: #selector(featureButtonDidTap(_:)), for: .touchUpInside)
             }
         }
+        rootView.noticeView.noticeSwitch.addTarget(
+            self,
+            action: #selector(noticeSwitchValueChanged(_:)),
+            for: .valueChanged
+        )
     }
     
     private func setGesture() {
@@ -171,6 +176,26 @@ extension MyPageViewController {
             return
         }
         actionFeature(type: type)
+    }
+    
+    @objc
+    private func noticeSwitchValueChanged(_ sender: UISwitch) {
+        guard sender.isOn else { return }
+        
+        sender.setOn(false, animated: true)
+        
+        let alert = UIAlertController(
+            title: "ByeBoo에서 알림을 보내려고 합니다",
+            message: "ByeBoo에서 알림을 보내도록 허용하시겠습니까?",
+            preferredStyle: .alert
+        )
+        let success = UIAlertAction(title: "확인", style: .default) { action in
+            sender.setOn(true, animated: true)
+        }
+        let cancel = UIAlertAction(title: "취소", style: .cancel)
+        
+        [success, cancel].forEach { alert.addAction($0) }
+        present(alert, animated: true, completion: nil)
     }
     
     private func actionFeature(type: MyPageDetailFeatureType) {
