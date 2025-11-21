@@ -7,4 +7,14 @@
 
 struct DialogueResponseDTO: Decodable {
     let dialogue: String
+    let tapDialogue: String
+}
+
+extension DialogueResponseDTO {
+    func toEntity() -> DialogueEntity {
+        return .init(
+            dialogue: dialogue,
+            tapDialogue: tapDialogue
+        )
+    }
 }
