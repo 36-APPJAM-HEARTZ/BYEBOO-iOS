@@ -45,7 +45,7 @@ final class HomeView: BaseView {
             $0.horizontalEdges.equalToSuperview().inset(40.adjustedW)
             $0.width.equalTo(295.adjustedW)
             $0.height.equalTo(337.adjustedH)
-            $0.bottom.equalToSuperview().offset(-31.adjustedH)
+            $0.bottom.equalToSuperview().inset(31.adjustedH)
         }
         headerView.snp.makeConstraints {
             $0.top.equalToSuperview()
