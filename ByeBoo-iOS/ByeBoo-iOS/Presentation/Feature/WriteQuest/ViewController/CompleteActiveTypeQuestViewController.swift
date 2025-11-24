@@ -77,11 +77,15 @@ extension CompleteActiveTypeQuestViewController: ToastPresentable, ToastErrorHan
     }
 }
 
-extension CompleteActiveTypeQuestViewController: Dismissible {
+extension CompleteActiveTypeQuestViewController: Dismissible, ReviewRequestProtocol {
     
     func close() {
         tabBarController?.tabBar.isHidden = false
         self.navigationController?.popToRootViewController(animated: false)
+        
+        if questNumber == 1 {
+            reviewRequest()
+        }
     }
     
     private func modalAction() {
