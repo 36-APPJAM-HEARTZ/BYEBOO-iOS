@@ -83,7 +83,7 @@ extension CompleteActiveTypeQuestViewController: Dismissible, ReviewRequestProto
         tabBarController?.tabBar.isHidden = false
         self.navigationController?.popToRootViewController(animated: false)
         
-        if questNumber == 1 {
+        if requestQuestNumber.contains(questNumber) {
             reviewRequest()
         }
     }
