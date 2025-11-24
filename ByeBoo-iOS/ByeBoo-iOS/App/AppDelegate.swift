@@ -15,18 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         sleep(1)
-        
-        if let kakaoNativeAppKey = Bundle.main.object(forInfoDictionaryKey: "KAKAO_NATIVE_APP_KEY") as? String {
-            KakaoSDK.initSDK(appKey: kakaoNativeAppKey)
-        } else {
-            fatalError("카카오 네이티브 앱 키 없음")
-        }
-        
-        if let mixpanelToken = Bundle.main.object(forInfoDictionaryKey: "MIXPANEL_TOKEN") as? String {
-            Mixpanel.initialize(token: mixpanelToken, trackAutomaticEvents: true)
-        } else {
-            ByeBooLogger.debug("믹스 패널 토큰 없음")
-        }
+
+        KakaoSDK.initSDK(appKey: ConfigManager.kakaoNativeAppKey)
+        Mixpanel.initialize(token: ConfigManager.mixpanelToken, trackAutomaticEvents: true)
         
         return true
     }

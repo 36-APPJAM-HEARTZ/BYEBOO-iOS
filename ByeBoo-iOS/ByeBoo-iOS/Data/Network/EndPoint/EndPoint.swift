@@ -33,12 +33,7 @@ protocol EndPoint {
 
 extension EndPoint {
     var requestURL: URL {
-        guard let baseURL = Bundle.main.infoDictionary?["BASE_URL"] as? String else {
-            ByeBooLogger.error(ByeBooError.URLError)
-            ByeBooLogger.debug("info에서 base url 가져오기 실패")
-            return URL(string: "")!
-        }
-        
+        let baseURL = ConfigManager.baseURL
         let urlString = baseURL + basePath + path
         
         guard var urlComponents = URLComponents(string: urlString) else {
