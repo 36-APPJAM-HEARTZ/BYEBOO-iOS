@@ -17,7 +17,7 @@ enum ByeBooError: Error, LocalizedError, Equatable {
     case navigationControllerMissing
     case noData
     case unknownError
-    case notFoundQuest
+    case notFound
     case encodingError
     case beforeJourney
     case cannotOpenPage
@@ -45,7 +45,7 @@ enum ByeBooError: Error, LocalizedError, Equatable {
             return "데이터 없음"
         case .encodingError:
             return "인코딩 실패"
-        case .notFoundQuest:
+        case .notFound:
             return "진행 중인 퀘스트가 없음"
         case .beforeJourney:
             return "여정 시작 전"

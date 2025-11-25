@@ -149,11 +149,11 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
                         journey: journey.title
                     )
                     self?.journeyType = JourneyType.titleToEnum(journey.title) ?? .face
-                case let (_, .success(journey), .failure(.notFoundQuest)):
+                case let (_, .success(journey), .failure(.notFound)):
                     self?.rootView.updateState(.beforeJourneyStart, journey.title)
                     self?.state = .beforeJourneyStart
                     self?.journeyType = JourneyType.titleToEnum(journey.title) ?? .face
-                case let (_, .failure(.notFoundQuest), .success(state)):
+                case let (_, .failure(.notFound), .success(state)):
                     self?.rootView.updateState(state.currentStatus)
                     self?.state = state.currentStatus
                 case (_, .failure(let error), _), (_, _, .failure(let error)):
