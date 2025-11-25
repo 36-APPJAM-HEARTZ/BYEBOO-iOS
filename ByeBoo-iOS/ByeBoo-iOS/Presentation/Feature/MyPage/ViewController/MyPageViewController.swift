@@ -33,18 +33,28 @@ final class MyPageViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         viewModel.action(.viewWillAppear)
         rootView.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
+        checkNoticeAuthorization()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         bind()
         
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
             type: .title("내 정보")
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(checkNoticeAuthorization),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
         )
     }
     
@@ -143,6 +153,18 @@ extension MyPageViewController {
 extension MyPageViewController {
     
     @objc
+    private func checkNoticeAuthorization() {
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            let status = settings.authorizationStatus
+            let isOn = (status == .authorized || status == .provisional || status == .ephemeral)
+            
+            DispatchQueue.main.async {
+                self?.rootView.noticeView.noticeSwitch.setOn(isOn, animated: false)
+            }
+        }
+    }
+    
+    @objc
     private func lookBackButtonDidTap() {
         let lookBackJourneyViewController = ViewControllerFactory.shared.makeLookBackJourneyViewController()
         lookBackJourneyViewController.hidesBottomBarWhenPushed = true
@@ -180,22 +202,28 @@ extension MyPageViewController {
     
     @objc
     private func noticeSwitchValueChanged(_ sender: UISwitch) {
-        guard sender.isOn else { return }
-        
-        sender.setOn(false, animated: true)
-        
-        let alert = UIAlertController(
-            title: "ByeBoo에서 알림을 보내려고 합니다",
-            message: "ByeBoo에서 알림을 보내도록 허용하시겠습니까?",
-            preferredStyle: .alert
-        )
-        let success = UIAlertAction(title: "확인", style: .default) { action in
-            sender.setOn(true, animated: true)
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            guard let self else { return }
+            
+            DispatchQueue.main.async {
+                switch settings.authorizationStatus {
+                case .notDetermined:
+                    self.requestNoticeAuthorization()
+                case .authorized, .provisional, .ephemeral:
+                    self.presentMoveSettingAlert(
+                        isOn: sender.isOn,
+                        status: .authorized
+                    )
+                case .denied:
+                    self.presentMoveSettingAlert(
+                        isOn: sender.isOn,
+                        status: .denied
+                    )
+                @unknown default:
+                    break
+                }
+            }
         }
-        let cancel = UIAlertAction(title: "취소", style: .cancel)
-        
-        [success, cancel].forEach { alert.addAction($0) }
-        present(alert, animated: true, completion: nil)
     }
     
     private func actionFeature(type: MyPageDetailFeatureType) {
@@ -275,5 +303,64 @@ extension MyPageViewController {
         
         sceneDelegate.window?.rootViewController = navigationController
         sceneDelegate.window?.makeKeyAndVisible()
+    }
+    
+    private func requestNoticeAuthorization() {
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: { [weak self] _, _ in
+                self?.checkNoticeAuthorization()
+            }
+        )
+    }
+    
+    private func presentMoveSettingAlert(
+        isOn: Bool,
+        status: NotificationPermissionStatus
+    ) {
+        let alertController = createAlertController(status: status)
+        alertController.addActions(
+            createSuccessAlertAction(),
+            createCancelAlertAction(isOn: isOn)
+        )
+        
+        DispatchQueue.main.async {
+            self.present(alertController, animated: true)
+        }
+    }
+    
+    private func createAlertController(status: NotificationPermissionStatus) -> UIAlertController {
+        UIAlertController(
+            title: status.title,
+            message: status.message,
+            preferredStyle: .alert
+        )
+    }
+    
+    private func createSuccessAlertAction() -> UIAlertAction {
+        UIAlertAction(
+           title: "설정으로 이동",
+           style: .default
+       ) { [weak self] _ in
+           self?.moveSetting()
+       }
+    }
+    
+    private func createCancelAlertAction(isOn: Bool) -> UIAlertAction {
+        UIAlertAction(
+            title: "취소",
+            style: .cancel
+        ) { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.rootView.noticeView.noticeSwitch.setOn(!isOn, animated: true)
+            }
+        }
+    }
+    
+    private func moveSetting() {
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url)
+        }
     }
 }
