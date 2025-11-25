@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		183EE0DB2ED1CB0E00154F40 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 183EE0DA2ED1CB0E00154F40 /* FirebaseAnalytics */; };
+		183EE0E12ED1D10600154F40 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 183EE0E02ED1D10600154F40 /* FirebaseMessaging */; };
+		186847F02ED5567D002827DA /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 186847EF2ED5567D002827DA /* FirebaseCore */; };
 		18A8172D2E154F3D00F68F9F /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 18A8172C2E154F3D00F68F9F /* Alamofire */; };
 		515C127F2E159D45001BA2E0 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 515C127E2E159D45001BA2E0 /* Then */; };
 		515C12822E159D77001BA2E0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 515C12812E159D77001BA2E0 /* SnapKit */; };
@@ -65,12 +68,15 @@
 			files = (
 				515C127F2E159D45001BA2E0 /* Then in Frameworks */,
 				515C12822E159D77001BA2E0 /* SnapKit in Frameworks */,
+				186847F02ED5567D002827DA /* FirebaseCore in Frameworks */,
 				18A8172D2E154F3D00F68F9F /* Alamofire in Frameworks */,
 				51691DEF2E5CB059008CCEC6 /* KakaoSDKUser in Frameworks */,
 				CBF009C82E1D889D003F9DFE /* Lottie in Frameworks */,
 				CB5A49882E1EAAD400851C87 /* Kingfisher in Frameworks */,
 				CBB032A72E7925FC00C0855E /* Mixpanel in Frameworks */,
 				51691DED2E5CB059008CCEC6 /* KakaoSDKAuth in Frameworks */,
+				183EE0E12ED1D10600154F40 /* FirebaseMessaging in Frameworks */,
+				183EE0DB2ED1CB0E00154F40 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,11 +90,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		183EE0DD2ED1D10600154F40 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		CB4180822E0925D2001E7BCB = {
 			isa = PBXGroup;
 			children = (
 				CB41808D2E0925D2001E7BCB /* ByeBoo-iOS */,
 				CBC60E422E5CA1900044CA41 /* ByeBooTests */,
+				183EE0DD2ED1D10600154F40 /* Frameworks */,
 				CB41808C2E0925D2001E7BCB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -130,6 +144,9 @@
 				51691DEC2E5CB059008CCEC6 /* KakaoSDKAuth */,
 				51691DEE2E5CB059008CCEC6 /* KakaoSDKUser */,
 				CBB032A62E7925FC00C0855E /* Mixpanel */,
+				183EE0DA2ED1CB0E00154F40 /* FirebaseAnalytics */,
+				183EE0E02ED1D10600154F40 /* FirebaseMessaging */,
+				186847EF2ED5567D002827DA /* FirebaseCore */,
 			);
 			productName = "ByeBoo-iOS";
 			productReference = CB41808B2E0925D2001E7BCB /* ByeBoo-iOS.app */;
@@ -194,6 +211,7 @@
 				CB5A49862E1EAAD400851C87 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				51691DEB2E5CB059008CCEC6 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
 				CBB032A52E7925FC00C0855E /* XCRemoteSwiftPackageReference "mixpanel-swift" */,
+				183EE0D92ED1CB0E00154F40 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CB41808C2E0925D2001E7BCB /* Products */;
@@ -256,7 +274,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "ByeBoo-iOS/ByeBoo-iOS.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "ByeBoo-iOS/ByeBoo-iOSDebug.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
@@ -264,6 +282,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z6682N5G5D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ByeBoo-iOS/Resource/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ByeBoo;
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진 업로드를 위해 갤러리 접근 권한이 필요합니다. 사진 선택을 위해 [설정]에서 접근 권한을 허용해 주세요.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -304,6 +323,8 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z6682N5G5D;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "ByeBoo-iOS/Resource/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = ByeBoo;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "사진 업로드를 위해 갤러리 접근 권한이 필요합니다. 사진 선택을 위해 [설정]에서 접근 권한을 허용해 주세요.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
@@ -529,6 +550,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		183EE0D92ED1CB0E00154F40 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.6.0;
+			};
+		};
 		18A8172B2E154F3D00F68F9F /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
@@ -588,6 +617,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		183EE0DA2ED1CB0E00154F40 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 183EE0D92ED1CB0E00154F40 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		183EE0E02ED1D10600154F40 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 183EE0D92ED1CB0E00154F40 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		186847EF2ED5567D002827DA /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 183EE0D92ED1CB0E00154F40 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
 		18A8172C2E154F3D00F68F9F /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 18A8172B2E154F3D00F68F9F /* XCRemoteSwiftPackageReference "Alamofire" */;
