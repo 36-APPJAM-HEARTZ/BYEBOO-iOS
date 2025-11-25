@@ -59,6 +59,8 @@ extension ArchiveQuestViewController: ToastPresentable, ToastErrorHandler {
             .sink { [weak self] result in
                 switch result {
                 case .success(let entity):
+                    self?.questID = entity.questNumber
+                    ByeBooLogger.debug("퀘스트 아이디 \(self?.questID)")
                     self?.rootView.updateUI(entity)
                 case .failure(let error):
                     self?.handleError(error)
@@ -104,7 +106,7 @@ extension ArchiveQuestViewController {
         var viewController: ( BaseViewController & EditQuestProtocol )
         viewController = setNavigateViewController(type: rootView.type)
         viewController.questMode = .edit
-        viewController.getExistingQuest(questID: self.viewModel.questID ,quest: entity.answer, image: entity.imageUrl)
+        viewController.getExistingQuest(questID: self.viewModel.questID ,quest: entity.answer, image: entity.imageUrl, imageKey: entity.imageKey)
         viewController.tabBarController?.tabBar.isHidden = true
         self.navigationController?.pushViewController(viewController, animated: false)
     }

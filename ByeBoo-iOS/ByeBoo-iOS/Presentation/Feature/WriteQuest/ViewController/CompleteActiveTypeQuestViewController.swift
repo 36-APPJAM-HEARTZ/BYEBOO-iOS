@@ -14,7 +14,7 @@ final class CompleteActiveTypeQuestViewController: BaseViewController {
     private var viewModel: CompleteQuestViewModel
     private var cancellables = Set<AnyCancellable>()
     
-    private var questID: Int = 1
+    private var questID: Int = 31
     private var questNumber: Int = 1
     
     override func loadView() {
@@ -55,6 +55,7 @@ extension CompleteActiveTypeQuestViewController: ToastPresentable, ToastErrorHan
             .sink { [weak self] result in
                 switch result {
                 case .success(let entity):
+                    self?.questNumber = entity.questNumber
                     self?.rootView.bind(with: entity)
                 case .failure(let error):
                     self?.handleError(error)

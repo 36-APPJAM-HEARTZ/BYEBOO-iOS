@@ -18,24 +18,29 @@ struct WriteActiveTypeViewModel: ViewModelType {
     private let saveQuestTypeUseCase: SaveQuestTypeUseCase
     private let saveActiveQuestUseCase: SaveQuestActiveUseCase
     private let getQuestInfoUseCase: GetQuestInfoUseCase
+    private let editActiveQuestUseCase: EditQuestActiveUseCase
     
     private let questInfoResultSubject: PassthroughSubject<Result<QuestInfoEntity, ByeBooError>, Never> = .init()
     private let questActiveResultSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private let didSuccessPostSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
+    private let didSuccessEditSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     
     init(
         saveQuestTypeUseCase:  SaveQuestTypeUseCase,
         saveActiveTypeUseCase: SaveQuestActiveUseCase,
-        getQuestInfoUseCase: GetQuestInfoUseCase
+        getQuestInfoUseCase: GetQuestInfoUseCase,
+        editActiveQuestUseCase: EditQuestActiveUseCase
     ){
         self.saveQuestTypeUseCase = saveQuestTypeUseCase
         self.saveActiveQuestUseCase = saveActiveTypeUseCase
         self.getQuestInfoUseCase = getQuestInfoUseCase
+        self.editActiveQuestUseCase = editActiveQuestUseCase
         
         output = Output(
             questInfoResultPublisher: questInfoResultSubject.eraseToAnyPublisher(),
             didSuccessPostPublisher: didSuccessPostSubject.eraseToAnyPublisher(),
-            questInfoWhenEditModeResultPublisher: questInfoResultSubject.eraseToAnyPublisher()
+            questInfoWhenEditModeResultPublisher: questInfoResultSubject.eraseToAnyPublisher(),
+            didSuccessEditPublisher: didSuccessEditSubject.eraseToAnyPublisher()
         )
     }
     
@@ -48,15 +53,23 @@ struct WriteActiveTypeViewModel: ViewModelType {
             let answer,
             let emotionState,
             let image,
-            let imageKey
+            let imageKey,
+            let isEdit,
+            let isImageChanged
         ):
-            postActiveType(
-                questID: questID,
-                answer: answer,
-                emotionState: emotionState,
-                image: image,
-                imageKey: imageKey
-            )
+            if isEdit {
+                guard let image else { return }
+                editActiveType(questID: questID, answer: answer, image: image, imageKey: imageKey, isImageChanged: isImageChanged)
+            } else {
+                guard let emotionState = emotionState, let image = image else { return }
+                postActiveType(
+                    questID: questID,
+                    answer: answer,
+                    emotionState: emotionState,
+                    image: image,
+                    imageKey: imageKey
+                )
+            }
         }
     }
 }
@@ -67,9 +80,11 @@ extension WriteActiveTypeViewModel {
         case didTapCompleteButton(
             questID: Int,
             answer: String,
-            emotionState: String,
-            image: UIImage,
-            imageKey: String
+            emotionState: String?,
+            image: UIImage?,
+            imageKey: String,
+            isEdit: Bool,
+            isImageChanged: Bool
         )
         case navigateFromArchiveViewController(questID: Int)
     }
@@ -78,6 +93,7 @@ extension WriteActiveTypeViewModel {
         let questInfoResultPublisher: AnyPublisher<Result<QuestInfoEntity, ByeBooError>, Never>
         let didSuccessPostPublisher:  AnyPublisher<Result<Void, ByeBooError>, Never>
         let questInfoWhenEditModeResultPublisher: AnyPublisher<Result<QuestInfoEntity, ByeBooError>, Never>
+        let didSuccessEditPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
     }
 }
 
@@ -127,4 +143,32 @@ extension WriteActiveTypeViewModel {
             }
         }
     }
+    
+    private func editActiveType(
+        questID: Int,
+        answer: String,
+        image: UIImage?,
+        imageKey: String,
+        isImageChanged: Bool
+    ){
+        Task {
+            do {
+                ByeBooLogger.debug("data size: \(image?.size)")
+                if let jpegImage = image?.jpegData(compressionQuality: 0.1) {
+                    try await editActiveQuestUseCase.execute(
+                        questID: questID,
+                        answer: answer,
+                        image: isImageChanged ? jpegImage : nil,
+                        imageKey: imageKey,
+                        isImageChanged: isImageChanged
+                    )
+                    didSuccessEditSubject.send(.success(()))
+                } else {
+                    ByeBooLogger.error(ByeBooError.noData)
+                }
+            }
+            
+        }
+    }
 }
+

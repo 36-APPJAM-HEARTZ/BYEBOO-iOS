@@ -18,7 +18,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     var questMode: QuestMode = .write
     
-    private var questID: Int = 1
+    private var questID: Int = 31
     private var questType: QuestType = .activation
     private var questNumber: Int = 1
     
@@ -26,6 +26,8 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private var emotionState: String = ""
     private var image: UIImage = UIImage()
     private var isKeyboardUsed: Bool = false
+    private var isImageChanged: Bool = false
+    private var originalImageKey: String = ""
     
     private let bottomSheetViewController = EmotionBottomSheetViewController()
     
@@ -66,6 +68,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         )
         
         setGesture()
+        setDelegate()
         bind()
         presentPhotoPicker()
         
@@ -92,6 +95,10 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     
     override func setAddTarget() {
         rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
+    }
+    
+    override func setDelegate() {
+        rootView.questTextField.delegate = self
     }
     
     private func setGesture() {
@@ -154,15 +161,20 @@ extension WriteActiveTypeQuestViewController {
             answerText = rootView.questTextField.textView.text
         }
         
-        bottomSheetViewController.bind(questNumber: questNumber, questType: questType)
-        bottomSheetViewController.delegate = self
-        if let sheet =  bottomSheetViewController.sheetPresentationController{
-            sheet.detents = [.custom { _ in 471.adjustedH }]
-            sheet.prefersGrabberVisible = true
-            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-            sheet.preferredCornerRadius = 8
+        if questMode == .edit {
+            saveQuest()
+        } else {
+            ByeBooLogger.debug(questID)
+            bottomSheetViewController.bind(questNumber: questID, questType: questType)
+            bottomSheetViewController.delegate = self
+            if let sheet =  bottomSheetViewController.sheetPresentationController{
+                sheet.detents = [.custom { _ in 471.adjustedH }]
+                sheet.prefersGrabberVisible = true
+                sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+                sheet.preferredCornerRadius = 8
+            }
+            self.present(bottomSheetViewController, animated: true)
         }
-        self.present(bottomSheetViewController, animated: true)
         
         let property = QuestEvents.QuestWriteFinishProperty(
             questLength: rootView.questTextField.textView.text.count,
@@ -198,6 +210,7 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
             .sink { [weak self] result in
                 switch result {
                 case .success(let quest):
+                    self?.questNumber = quest.questNumber
                     self?.rootView.updateQuestTitle(
                         step: quest.step,
                         stepNum: quest.stepNumber,
@@ -216,6 +229,7 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
             .sink { [weak self] result in
                 switch result {
                 case .success(()):
+                    ByeBooLogger.debug("퀘스트 아이디 \(self?.questID)")
                     let viewController = ViewControllerFactory.shared.makeCompleteActiveTypeQuestViewController()
                     viewController.configure(questID: self?.questID ?? 1, questNumber: self?.questNumber ?? 1)
                     self?.bottomSheetViewController.dismiss(animated: true)
@@ -238,6 +252,21 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                         questStyle: quest.questStyle,
                         question: quest.question
                     )
+                case .failure(let error):
+                    self?.handleError(error)
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.didSuccessEditPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(()):
+                    ByeBooLogger.debug("퀘스트 아이디 \(self?.questID)")
+                    let viewController = ViewControllerFactory.shared.makeCompleteActiveTypeQuestViewController()
+                    viewController.configure(questID: self?.questID ?? 1, questNumber: self?.questNumber ?? 1)
+                    self?.navigationController?.pushViewController(viewController, animated: true)
                 case .failure(let error):
                     self?.handleError(error)
                 }
@@ -290,6 +319,7 @@ extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, U
             rootView.updateImageCountLabel(count: rootView.imgCount)
             rootView.changeStyle(count: rootView.imgCount)
             self.image = image
+            isImageChanged = questMode == .edit ? true : false
         }
         dismiss(animated: true, completion: nil)
     }
@@ -301,14 +331,28 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
     }
     
     func saveQuest() {
-        let uuidKey = UUID().uuidString
-        ByeBooLogger.debug("UUID: \(uuidKey)")
+        var finalImageKey: String = ""
+        
+        if questMode == .edit && isImageChanged {
+            finalImageKey = UUID().uuidString
+        } else if questMode == .write {
+            originalImageKey = UUID().uuidString
+        }
+        
+        ByeBooLogger.debug("퀘스트 아이디 \(questID)")
+        ByeBooLogger.debug("텍스트 \(answerText)")
+        ByeBooLogger.debug("원래 이미지 키 \(originalImageKey)")
+        ByeBooLogger.debug("수정된 이미지 키 \(finalImageKey)")
+        
         self.viewModel.action(.didTapCompleteButton(
             questID: self.questID,
             answer: self.answerText,
             emotionState: self.emotionState,
             image: self.image,
-            imageKey: uuidKey)
+            imageKey: finalImageKey.isEmpty ? originalImageKey : finalImageKey,
+            isEdit: questMode == .edit ? true : false,
+            isImageChanged: isImageChanged
+        )
         )
     }
 }
@@ -322,10 +366,19 @@ extension WriteActiveTypeQuestViewController {
 }
 
 extension WriteActiveTypeQuestViewController: EditQuestProtocol {
-    func getExistingQuest(questID: Int, quest: String?, image: String?) {
+    func getExistingQuest(questID: Int, quest: String?, image: String?, imageKey: String?) {
         self.viewModel.action(.navigateFromArchiveViewController(questID: questID))
-        guard let quest = quest, let image = image else { return }
-        rootView.imageContainer.selectedImageView.kf.setImage(with: URL(string: image))
+        guard let quest = quest, let image = image, let imageKey = imageKey else { return }
+        self.originalImageKey = imageKey
+        rootView.imageContainer.selectedImageView.kf.setImage(with: URL(string: image)) { result in
+            switch result {
+            case .success(let value):
+                self.image = value.image
+            case .failure(let error):
+                print(error)
+            }
+        }
+        
         rootView.updateImageCountLabel(count: 1)
         rootView.imageContainer.changeIconHidden()
         
@@ -336,6 +389,18 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
             rootView.questTextField.textView.text = quest
             rootView.questTextField.textCount.text = "(\(quest.count)/\(rootView.questTextField.limitCount))"
             rootView.questTextField.isPlaceholderActive = false
+            rootView.questTextField.textViewDidChange(rootView.questTextField.textView)
+        }
+    }
+}
+
+extension WriteActiveTypeQuestViewController: QuestCompleteProtocol {
+    func changeStyleWhenEditing(changedText: String) {
+        if answerText != changedText {
+            rootView.confirmButton.updateType(.enabled)
+            self.answerText = changedText
+        } else {
+            rootView.confirmButton.updateType(.disabled)
         }
     }
 }
