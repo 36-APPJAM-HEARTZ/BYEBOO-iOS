@@ -375,7 +375,7 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
             case .success(let value):
                 self.image = value.image
             case .failure(let error):
-                print(error)
+                ByeBooLogger.debug(error)
             }
         }
         
