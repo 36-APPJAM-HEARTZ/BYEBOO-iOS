@@ -64,9 +64,10 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
         )
         
         bind()
+        setDelegate()
         
         if questMode == .write {
-            viewModel.action(.viewDidLoad(quesetID: questID))
+            viewModel.action(.viewDidLoad(quesetID: self.questID))
         }
         
         let property = QuestEvents.QuestWriteStartProperty(
@@ -97,6 +98,10 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     override func viewDidDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    override func setDelegate() {
+        rootView.questTextField.delegate = self
     }
 }
 
@@ -130,15 +135,19 @@ extension WriteQuestionTypeQuestViewController {
     private func confirmButtonDidTap() {
         answerText = rootView.questTextField.textView.text
         
-        bottomSheetViewController.bind(questNumber: questNumber, questType: questType)
-        bottomSheetViewController.delegate = self
-        if let sheet = bottomSheetViewController.sheetPresentationController{
-            sheet.detents = [.custom { _ in 471.adjustedH }]
-            sheet.prefersGrabberVisible = true
-            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-            sheet.preferredCornerRadius = 8
+        if questMode == .edit {
+            saveQuest()
+        } else {
+            bottomSheetViewController.bind(questNumber: questNumber, questType: questType)
+            bottomSheetViewController.delegate = self
+            if let sheet = bottomSheetViewController.sheetPresentationController{
+                sheet.detents = [.custom { _ in 471.adjustedH }]
+                sheet.prefersGrabberVisible = true
+                sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+                sheet.preferredCornerRadius = 8
+            }
+            self.present(bottomSheetViewController, animated: true)
         }
-        self.present(bottomSheetViewController, animated: true)
         
         let property = QuestEvents.QuestWriteFinishProperty(
             questLength: rootView.questTextField.textView.text.count,
@@ -169,6 +178,7 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
             .sink { [weak self] result in
                 switch result {
                 case .success(let quest):
+                    self?.questNumber = quest.questNumber
                     self?.rootView.updateQuestTitle(
                         step: quest.step,
                         stepNum: quest.stepNumber,
@@ -197,19 +207,14 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
             }
             .store(in: &cancellables)
         
-        viewModel.output.questInfoResultPublisher
+        viewModel.output.didSuccessEditPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 switch result {
-                case .success(let quest):
-                    ByeBooLogger.debug(quest)
-                    self?.rootView.updateQuestTitle(
-                        step: quest.step,
-                        stepNum: quest.stepNumber,
-                        questNumber: quest.questNumber,
-                        questStyle: quest.questStyle,
-                        question: quest.question
-                    )
+                case .success(()):
+                    let viewController = ViewControllerFactory.shared.makeCompleteQuestionTypeQuestViewController()
+                    viewController.configure(questID: self?.questID ?? 1, questNumber: self?.questNumber ?? 1)
+                    self?.navigationController?.pushViewController(viewController, animated: true)
                 case .failure(let error):
                     self?.handleError(error)
                 }
@@ -248,7 +253,8 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
         viewModel.action(.presentCompleteView(
             questID: questID,
             answer: answerText,
-            emotionState: emotionState
+            emotionState: emotionState,
+            isEdit: questMode == .edit ? true : false
         )
         )
     }
@@ -263,7 +269,7 @@ extension WriteQuestionTypeQuestViewController {
 }
 
 extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
-    func getExistingQuest(questID: Int, quest: String?, image: String?) {
+    func getExistingQuest(questID: Int, quest: String?, image: String?, imageKey: String?) {
         self.viewModel.action(.viewDidLoadWhenEditMode(questID: questID))
         guard let quest = quest else { return }
         self.answerText = quest
@@ -273,5 +279,16 @@ extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
         rootView.questTextField.textCount.text = "(\(textCount)/\(rootView.questTextField.limitCount))"
         rootView.questTextField.isPlaceholderActive = false
         rootView.changeStyle(count: Int(textCount))
+        rootView.questTextField.textViewDidChange(rootView.questTextField.textView)
+    }
+}
+
+extension WriteQuestionTypeQuestViewController: QuestCompleteProtocol {
+    func changeStyleWhenEditing(changedText: String) {
+        if answerText != changedText {
+            rootView.confirmButton.updateType(.enabled)
+        } else {
+            rootView.confirmButton.updateType(.disabled)
+        }
     }
 }

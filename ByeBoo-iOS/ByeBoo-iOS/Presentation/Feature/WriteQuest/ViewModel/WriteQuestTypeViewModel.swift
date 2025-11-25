@@ -16,23 +16,28 @@ struct WriteQuestionTypeViewModel: ViewModelType {
     
     private let saveQuestTypeUseCase: SaveQuestTypeUseCase
     private let getQuestInfoUseCase: GetQuestInfoUseCase
+    private let editQuestTypeUseCase: EditQuestTypeUseCase
     
     private let questInfoResultSubject: PassthroughSubject<Result<QuestInfoEntity, ByeBooError>, Never> = .init()
     private let questInfoWhenEditModeSubject: PassthroughSubject<Result<QuestInfoEntity, ByeBooError>, Never> = .init()
     private let didSuccessPostSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
+    private let didSuccessEditSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     
     init(
         saveQuestTypeUseCase:  SaveQuestTypeUseCase,
-        getQuestInfoUseCase: GetQuestInfoUseCase
+        getQuestInfoUseCase: GetQuestInfoUseCase,
+        editQuestTypeUseCase: EditQuestTypeUseCase
         
     ){
         self.saveQuestTypeUseCase = saveQuestTypeUseCase
         self.getQuestInfoUseCase = getQuestInfoUseCase
+        self.editQuestTypeUseCase = editQuestTypeUseCase
         
         output = Output(
             questInfoResultPublisher: questInfoResultSubject.eraseToAnyPublisher(),
             didSuccessPostPublisher: didSuccessPostSubject.eraseToAnyPublisher(),
-            questInfoWhenEditModeResultPublisher: questInfoWhenEditModeSubject.eraseToAnyPublisher()
+            questInfoWhenEditModeResultPublisher: questInfoWhenEditModeSubject.eraseToAnyPublisher(),
+            didSuccessEditPublisher: didSuccessEditSubject.eraseToAnyPublisher()
         )
     }
 }
@@ -40,7 +45,7 @@ struct WriteQuestionTypeViewModel: ViewModelType {
 extension WriteQuestionTypeViewModel {
     enum Input {
         case viewDidLoad(quesetID: Int)
-        case presentCompleteView(questID: Int, answer: String, emotionState: String)
+        case presentCompleteView(questID: Int, answer: String, emotionState: String?, isEdit: Bool)
         case viewDidLoadWhenEditMode(questID: Int)
     }
     
@@ -48,6 +53,7 @@ extension WriteQuestionTypeViewModel {
         let questInfoResultPublisher: AnyPublisher<Result<QuestInfoEntity, ByeBooError>, Never>
         let didSuccessPostPublisher:  AnyPublisher<Result<Void, ByeBooError>, Never>
         let questInfoWhenEditModeResultPublisher: AnyPublisher<Result<QuestInfoEntity, ByeBooError>, Never>
+        let didSuccessEditPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
@@ -57,9 +63,15 @@ extension WriteQuestionTypeViewModel {
         case let .presentCompleteView(
             questID,
             answer,
-            emotionState
+            emotionState,
+            isEdit
         ):
-            postQuestType(questID: questID, answer: answer, emotionState: emotionState)
+            if isEdit {
+                editQuestType(questID: questID, answer: answer)
+            } else {
+                guard let emotionState = emotionState else { return }
+                postQuestType(questID: questID, answer: answer, emotionState: emotionState)
+            }
         }
     }
 }
@@ -89,6 +101,21 @@ extension WriteQuestionTypeViewModel {
                     return
                 }
                 didSuccessPostSubject.send(.failure(error as ByeBooError))
+                ByeBooLogger.error(error)
+            }
+        }
+    }
+    
+    private func editQuestType(questID: Int, answer: String) {
+        Task {
+            do {
+                try await editQuestTypeUseCase.execute(questID: questID, answer: answer)
+                didSuccessEditSubject.send(.success(()))
+            } catch {
+                guard let error = error as? ByeBooError else {
+                    return
+                }
+                didSuccessEditSubject.send(.failure(error as ByeBooError))
                 ByeBooLogger.error(error)
             }
         }

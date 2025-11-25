@@ -55,6 +55,7 @@ extension CompleteQuestionTypeQuestViewController: ToastPresentable, ToastErrorH
             .sink { [weak self] result in
                 switch result {
                 case .success(let entity):
+                    self?.questNumber = entity.questNumber
                     self?.rootView.bind(with: entity)
                 case .failure(let error):
                     self?.handleError(error)
