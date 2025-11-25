@@ -20,6 +20,8 @@ enum QuestAPI {
     case fetchCompletedJourney
     case postJourney(journey: JourneyType)
     case completedQuests(journey: JourneyType)
+    case editRecording(questID: Int, request: EditQuestRequestDTO)
+    case editActive(questID: Int, request: EditQuestActiveRequestDTO)
 }
 
 extension QuestAPI: EndPoint {
@@ -32,9 +34,9 @@ extension QuestAPI: EndPoint {
         switch self {
         case .checkQuest(let questID):
             return "/\(questID)"
-        case .recording(let questID, _):
+        case .recording(let questID, _), .editRecording(let questID, _):
             return "/\(questID)/recording"
-        case .active(let questID, _):
+        case .active(let questID, _), .editActive(let questID, _):
             return "/\(questID)/active"
         case .images:
             return "/images/signed-url"
@@ -57,13 +59,15 @@ extension QuestAPI: EndPoint {
             return .get
         case .recording, .active, .images, .postJourney:
             return .post
+        case .editRecording, .editActive:
+            return .patch
         }
     }
     
     var headers: HeaderType {
         switch self {
         case .checkQuest, .recording, .active, .tip, .images, .answer, .progressingQuests, .fetchCompletedJourney,
-                .postJourney, .completedQuests:
+                .postJourney, .completedQuests, .editRecording, .editActive:
             let keychainService = DefaultKeychainService()
             return .withAuth(acessToken: keychainService.load(key: .accessToken))
         }
@@ -73,7 +77,7 @@ extension QuestAPI: EndPoint {
         switch self {
         case .checkQuest, .tip, .answer, .progressingQuests, .fetchCompletedJourney, .postJourney, .completedQuests:
             return URLEncoding.default
-        case .recording, .active, .images:
+        case .recording, .active, .images, .editRecording, .editActive:
             return JSONEncoding.default
         }
     }
@@ -94,6 +98,10 @@ extension QuestAPI: EndPoint {
         case let .active(_, dto):
             return try? dto.toDictionary()
         case let .images(dto):
+            return try? dto.toDictionary()
+        case let .editRecording(_, dto):
+            return try? dto.toDictionary()
+        case let .editActive(_, dto):
             return try? dto.toDictionary()
         case .checkQuest, .tip, .answer, .progressingQuests, .fetchCompletedJourney, .postJourney, .completedQuests:
             return nil
