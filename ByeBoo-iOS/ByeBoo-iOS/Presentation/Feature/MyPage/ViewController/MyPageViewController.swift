@@ -102,6 +102,7 @@ extension MyPageViewController {
         bindUserResult()
         bindLogoutResult()
         bindWithdrawResult()
+        bindNotificationResult()
     }
     
     private func bindUserResult() {
@@ -148,6 +149,21 @@ extension MyPageViewController {
             }
             .store(in: &cancellables)
     }
+    
+    private func bindNotificationResult() {
+        viewModel.output.notificationResult
+            .sink { [weak self] result in
+                switch result {
+                case .success(let alarmEnabled):
+                    DispatchQueue.main.async {
+                        self?.rootView.noticeView.noticeSwitch.setOn(alarmEnabled, animated: false)
+                    }
+                case .failure(let error):
+                    ByeBooLogger.error(error)
+                }
+            }
+            .store(in: &cancellables)
+    }
 }
 
 extension MyPageViewController {
@@ -155,11 +171,13 @@ extension MyPageViewController {
     @objc
     private func checkNoticeAuthorization() {
         UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            guard let self else { return }
+            
             let status = settings.authorizationStatus
             let isOn = (status == .authorized || status == .provisional || status == .ephemeral)
             
             DispatchQueue.main.async {
-                self?.rootView.noticeView.noticeSwitch.setOn(isOn, animated: false)
+                self.rootView.noticeView.noticeSwitch.setOn(isOn, animated: false)
             }
         }
     }
@@ -202,6 +220,8 @@ extension MyPageViewController {
     
     @objc
     private func noticeSwitchValueChanged(_ sender: UISwitch) {
+        sender.setOn(!sender.isOn, animated: true)
+        
         UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
             guard let self else { return }
             
@@ -310,6 +330,7 @@ extension MyPageViewController {
         UNUserNotificationCenter.current().requestAuthorization(
             options: authOptions,
             completionHandler: { [weak self] _, _ in
+                UIApplication.shared.registerForRemoteNotifications()
                 self?.checkNoticeAuthorization()
             }
         )
@@ -351,11 +372,7 @@ extension MyPageViewController {
         UIAlertAction(
             title: "취소",
             style: .cancel
-        ) { [weak self] _ in
-            DispatchQueue.main.async {
-                self?.rootView.noticeView.noticeSwitch.setOn(!isOn, animated: true)
-            }
-        }
+        )
     }
     
     private func moveSetting() {

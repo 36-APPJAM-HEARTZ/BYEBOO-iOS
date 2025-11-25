@@ -147,7 +147,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: MyPageViewModel.self) { container in
             guard let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
                   let logoutUseCase = container.resolve(type: LogoutUseCase.self),
-                  let withdrawUseCase = container.resolve(type: WithdrawUseCase.self)
+                  let withdrawUseCase = container.resolve(type: WithdrawUseCase.self),
+                  let changeNotificationPermissionUseCase = container.resolve(type: ChangeNotificationPermissionUseCase.self)
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -156,7 +157,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             return MyPageViewModel(
                 getUserNameUseCase: getUserNameUseCase,
                 logoutUseCase: logoutUseCase,
-                withdrawUseCase: withdrawUseCase
+                withdrawUseCase: withdrawUseCase,
+                changeNotificationPermissionUseCase: changeNotificationPermissionUseCase
             )
         }
         
