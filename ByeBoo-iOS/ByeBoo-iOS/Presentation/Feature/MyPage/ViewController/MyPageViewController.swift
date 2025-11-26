@@ -173,9 +173,15 @@ extension MyPageViewController {
         UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
             guard let self else { return }
             
-            let status = settings.authorizationStatus
-            let isOn = (status == .authorized || status == .provisional || status == .ephemeral)
-            
+            let isOn: Bool
+            switch settings.authorizationStatus {
+            case .authorized, .provisional, .ephemeral:
+                isOn = true
+            case .notDetermined, .denied:
+                isOn = false
+            @unknown default:
+                isOn = false
+            }
             DispatchQueue.main.async {
                 self.rootView.noticeView.noticeSwitch.setOn(isOn, animated: false)
             }
