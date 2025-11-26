@@ -20,4 +20,5 @@ protocol UsersInterface {
     func startJourney() async throws
     func getIsRegistered() -> Bool
     func getLastJourneyType() -> JourneyType
+    func updateNotificationPermission() async throws -> Bool
 }

@@ -81,6 +81,16 @@ struct DefaultAuthRepository: AuthInterface {
         
         keychainService.delete(key: .authorization)
         keychainService.delete(key: .authorizationCode)
+        
+        if let token: String = userDefaultsService.load(key: .fcmToken) {
+            do {
+                try await network.request(
+                    NotificationAPI.saveToken(accessToken: result.accessToken, dto: .init(token: token))
+                )
+            } catch (let error) {
+                ByeBooLogger.error(error)
+            }
+        }
     }
     
     func autoLogin() async throws -> Bool {
@@ -102,11 +112,19 @@ struct DefaultAuthRepository: AuthInterface {
     }
     
     func logout() async throws -> Bool {
-        let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
+        let accessToken = keychainService.load(key: .accessToken)
+        let header: HeaderType = .withAuth(acessToken: accessToken)
         
         do {
             try await network.request(
                 AuthAPI.logout(header: header)
+            )
+            
+            guard let fcmToken: String = userDefaultsService.load(key: .fcmToken) else {
+                return false
+            }
+            try await network.request(
+                NotificationAPI.deleteToken(accessToken: accessToken, dto: .init(token: fcmToken))
             )
         }
         catch (let error) {

@@ -16,6 +16,7 @@ enum UsersAPI {
     case count
     case start
     case modifyName(requestDTO: UserNameRequestDTO)
+    case updateNotificationPermission
 }
 
 extension UsersAPI: EndPoint {
@@ -37,6 +38,8 @@ extension UsersAPI: EndPoint {
             return "/journey/start"
         case .modifyName:
             return "/name"
+        case .updateNotificationPermission:
+            return "/alarm"
         }
     }
     
@@ -44,14 +47,14 @@ extension UsersAPI: EndPoint {
         switch self {
         case .journey, .character, .count:
             return .get
-        case .sendUser, .start, .modifyName:
+        case .sendUser, .start, .modifyName, .updateNotificationPermission:
             return .patch
         }
     }
     
     var headers: HeaderType {
         switch self {
-        case .journey, .sendUser, .character, .count, .start, .modifyName:
+        case .journey, .sendUser, .character, .count, .start, .modifyName, .updateNotificationPermission:
             let keychainService = DefaultKeychainService()
             return .withAuth(acessToken: keychainService.load(key: .accessToken))
         }
@@ -61,7 +64,7 @@ extension UsersAPI: EndPoint {
         switch self {
         case .journey, .character, .count, .start:
             return URLEncoding.default
-        case .sendUser, .modifyName:
+        case .sendUser, .modifyName, .updateNotificationPermission:
             return JSONEncoding.default
         }
     }
@@ -72,7 +75,7 @@ extension UsersAPI: EndPoint {
     
     var bodyParameters: Parameters? {
         switch self {
-        case .journey, .character, .count, .start:
+        case .journey, .character, .count, .start, .updateNotificationPermission:
             return nil
         case .sendUser(let dto):
             return try? dto.toDictionary()

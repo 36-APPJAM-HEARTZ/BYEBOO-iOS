@@ -16,4 +16,5 @@ enum UserDefaultsKey: String, CaseIterable {
     case loginPlatform
     case journey
     case journeyStatus
+    case fcmToken
 }

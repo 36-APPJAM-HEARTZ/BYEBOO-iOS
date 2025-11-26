@@ -135,5 +135,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: GetLastJourneyUseCase.self) { _ in
             return DefaultGetLastJourneyUseCase(repository: userRepository)
         }
+        
+        DIContainer.shared.register(type: ChangeNotificationPermissionUseCase.self) { _ in
+            return DefaultChangeNotificationPermissionUseCase(repository: userRepository)
+        }
     }
 }

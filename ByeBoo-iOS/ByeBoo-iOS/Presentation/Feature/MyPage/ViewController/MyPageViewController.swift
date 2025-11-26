@@ -33,18 +33,28 @@ final class MyPageViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         viewModel.action(.viewWillAppear)
         rootView.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
+        checkNoticeAuthorization()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         bind()
         
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
             type: .title("내 정보")
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(checkNoticeAuthorization),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
         )
     }
     
@@ -60,6 +70,11 @@ final class MyPageViewController: BaseViewController {
                 $0.addTarget(self, action: #selector(featureButtonDidTap(_:)), for: .touchUpInside)
             }
         }
+        rootView.noticeView.noticeSwitch.addTarget(
+            self,
+            action: #selector(noticeSwitchValueChanged(_:)),
+            for: .valueChanged
+        )
     }
     
     private func setGesture() {
@@ -87,6 +102,7 @@ extension MyPageViewController {
         bindUserResult()
         bindLogoutResult()
         bindWithdrawResult()
+        bindNotificationResult()
     }
     
     private func bindUserResult() {
@@ -133,9 +149,44 @@ extension MyPageViewController {
             }
             .store(in: &cancellables)
     }
+    
+    private func bindNotificationResult() {
+        viewModel.output.notificationResult
+            .sink { [weak self] result in
+                switch result {
+                case .success(let alarmEnabled):
+                    DispatchQueue.main.async {
+                        self?.rootView.noticeView.noticeSwitch.setOn(alarmEnabled, animated: false)
+                    }
+                case .failure(let error):
+                    ByeBooLogger.error(error)
+                }
+            }
+            .store(in: &cancellables)
+    }
 }
 
 extension MyPageViewController {
+    
+    @objc
+    private func checkNoticeAuthorization() {
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            guard let self else { return }
+            
+            let isOn: Bool
+            switch settings.authorizationStatus {
+            case .authorized, .provisional, .ephemeral:
+                isOn = true
+            case .notDetermined, .denied:
+                isOn = false
+            @unknown default:
+                isOn = false
+            }
+            DispatchQueue.main.async {
+                self.rootView.noticeView.noticeSwitch.setOn(isOn, animated: false)
+            }
+        }
+    }
     
     @objc
     private func lookBackButtonDidTap() {
@@ -171,6 +222,34 @@ extension MyPageViewController {
             return
         }
         actionFeature(type: type)
+    }
+    
+    @objc
+    private func noticeSwitchValueChanged(_ sender: UISwitch) {
+        sender.setOn(!sender.isOn, animated: true)
+        
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            guard let self else { return }
+            
+            DispatchQueue.main.async {
+                switch settings.authorizationStatus {
+                case .notDetermined:
+                    self.requestNoticeAuthorization()
+                case .authorized, .provisional, .ephemeral:
+                    self.presentMoveSettingAlert(
+                        isOn: sender.isOn,
+                        status: .authorized
+                    )
+                case .denied:
+                    self.presentMoveSettingAlert(
+                        isOn: sender.isOn,
+                        status: .denied
+                    )
+                @unknown default:
+                    break
+                }
+            }
+        }
     }
     
     private func actionFeature(type: MyPageDetailFeatureType) {
@@ -250,5 +329,61 @@ extension MyPageViewController {
         
         sceneDelegate.window?.rootViewController = navigationController
         sceneDelegate.window?.makeKeyAndVisible()
+    }
+    
+    private func requestNoticeAuthorization() {
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: { [weak self] _, _ in
+                UIApplication.shared.registerForRemoteNotifications()
+                self?.checkNoticeAuthorization()
+            }
+        )
+    }
+    
+    private func presentMoveSettingAlert(
+        isOn: Bool,
+        status: NotificationPermissionStatus
+    ) {
+        let alertController = createAlertController(status: status)
+        alertController.addActions(
+            createSuccessAlertAction(),
+            createCancelAlertAction()
+        )
+        
+        DispatchQueue.main.async {
+            self.present(alertController, animated: true)
+        }
+    }
+    
+    private func createAlertController(status: NotificationPermissionStatus) -> UIAlertController {
+        UIAlertController(
+            title: status.title,
+            message: status.message,
+            preferredStyle: .alert
+        )
+    }
+    
+    private func createSuccessAlertAction() -> UIAlertAction {
+        UIAlertAction(
+           title: "설정으로 이동",
+           style: .default
+       ) { [weak self] _ in
+           self?.moveSetting()
+       }
+    }
+    
+    private func createCancelAlertAction() -> UIAlertAction {
+        UIAlertAction(
+            title: "취소",
+            style: .cancel
+        )
+    }
+    
+    private func moveSetting() {
+        if let url = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(url)
+        }
     }
 }

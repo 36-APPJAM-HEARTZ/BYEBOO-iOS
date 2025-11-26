@@ -22,15 +22,34 @@ struct DataDependencyAssembler: DependencyAssembler {
     
     func assemble() {        
         DIContainer.shared.register(type: UsersInterface.self) { _ in
-            return DefaultUsersRepository(network: networkService, userDefaultsService: userDefaultService)
+            return DefaultUsersRepository(
+                network: networkService,
+                userDefaultsService: userDefaultService
+            )
         }
         
         DIContainer.shared.register(type: QuestsInterface.self) { _ in
-            return DefaultQuestRepository(network: networkService, userDefaultsService: userDefaultService)
+            return DefaultQuestRepository(
+                network: networkService,
+                userDefaultsService: userDefaultService
+            )
         }
         
         DIContainer.shared.register(type: AuthInterface.self) { _ in
-            return DefaultAuthRepository(network: networkService, keychainService: keychainService, userDefaultsService: userDefaultService, tokenService: tokenService)
+            return DefaultAuthRepository(
+                network: networkService,
+                keychainService: keychainService,
+                userDefaultsService: userDefaultService,
+                tokenService: tokenService
+            )
+        }
+        
+        DIContainer.shared.register(type: DefaultNotificationRepository.self) { _ in
+            return DefaultNotificationRepository(
+                network: networkService,
+                userDefaultsService: userDefaultService,
+                keychainService: keychainService
+            )
         }
     }
 }

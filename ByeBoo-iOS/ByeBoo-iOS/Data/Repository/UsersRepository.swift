@@ -104,15 +104,24 @@ struct DefaultUsersRepository: UsersInterface {
         let journey: String? = userDefaultsService.load(key: .journey)
         return JourneyType.keyToEnum(journey ?? "") ?? .face
     }
+    
+    func updateNotificationPermission() async throws -> Bool {
+        let result = try await network.request(
+            UsersAPI.updateNotificationPermission,
+            decodingType: AlarmEnabledResponseDTO.self
+        )
+        return result.alarmEnabled
+    }
 }
 
-struct MockUserRepository: UsersInterface {
+final class MockUserRepository: UsersInterface {
     var questStatus: UserQuestStatusEntity = .init(
         todayComplete: true,
         currentStatus: .afterJourney,
         questCount: 0
     )
     var isHelperShown: Bool = true
+    var isAllowed = false
     
     init(
         questStatus: UserQuestStatusEntity? = nil,
@@ -177,6 +186,11 @@ struct MockUserRepository: UsersInterface {
     
     func getLastJourneyType() -> JourneyType {
         .process
+    }
+    
+    func updateNotificationPermission() -> Bool {
+        isAllowed.toggle()
+        return isAllowed
     }
 }
 
