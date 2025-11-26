@@ -12,8 +12,12 @@ final class HomeViewModel {
     
     private var cancellables = Set<AnyCancellable>()
     
+    var dialoguesResult: Result<DialogueEntity, ByeBooError> {
+        characterResultSubject.value
+    }
+    
     private(set) var output: Output
-    private var characterResultSubject = PassthroughSubject<Result<String, ByeBooError>, Never>()
+    private var characterResultSubject = CurrentValueSubject<Result<DialogueEntity, ByeBooError>, Never>(.failure(ByeBooError.noData))
     private var userResultSubject = CurrentValueSubject<String, Never>("하츠핑")
     private var isHelperShownResultSubject = CurrentValueSubject<Bool, Never>(true)
     private var homeStateResultSubject = PassthroughSubject<Result<UserQuestStatusEntity, ByeBooError>, Never>()
@@ -54,11 +58,11 @@ final class HomeViewModel {
 extension HomeViewModel: ViewModelType {
     enum Input {
         case viewWillAppear
-        case helperTapped
+        case helperDidTap
     }
     
     struct Output {
-        let characterResult: AnyPublisher<Result<String, ByeBooError>, Never>
+        let characterResult: AnyPublisher<Result<DialogueEntity, ByeBooError>, Never>
         let userResult: AnyPublisher<String, Never>
         let helperResult: AnyPublisher<Bool, Never>
         let homeStateResult: AnyPublisher<Result<UserQuestStatusEntity, ByeBooError>, Never>
@@ -74,7 +78,7 @@ extension HomeViewModel: ViewModelType {
             fetchJourney()
             
             getUserResult()
-        case .helperTapped:
+        case .helperDidTap:
             setHelperShown()
         }
     }
@@ -84,8 +88,8 @@ extension HomeViewModel {
     private func fetchDialogue() {
         Task {
             do {
-                let dialogue = try await fetchCharacterDialogueUseCase.execute()
-                characterResultSubject.send(.success(dialogue))
+                let dialogues = try await fetchCharacterDialogueUseCase.execute()
+                characterResultSubject.send(.success(dialogues))
             } catch {
                 characterResultSubject.send(
                     .failure(

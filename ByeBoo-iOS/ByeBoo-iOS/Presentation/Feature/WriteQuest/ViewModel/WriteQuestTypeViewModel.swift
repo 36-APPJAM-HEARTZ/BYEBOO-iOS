@@ -18,6 +18,7 @@ struct WriteQuestionTypeViewModel: ViewModelType {
     private let getQuestInfoUseCase: GetQuestInfoUseCase
     
     private let questInfoResultSubject: PassthroughSubject<Result<QuestInfoEntity, ByeBooError>, Never> = .init()
+    private let questInfoWhenEditModeSubject: PassthroughSubject<Result<QuestInfoEntity, ByeBooError>, Never> = .init()
     private let didSuccessPostSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     
     init(
@@ -30,7 +31,8 @@ struct WriteQuestionTypeViewModel: ViewModelType {
         
         output = Output(
             questInfoResultPublisher: questInfoResultSubject.eraseToAnyPublisher(),
-            didSuccessPostPublisher: didSuccessPostSubject.eraseToAnyPublisher()
+            didSuccessPostPublisher: didSuccessPostSubject.eraseToAnyPublisher(),
+            questInfoWhenEditModeResultPublisher: questInfoWhenEditModeSubject.eraseToAnyPublisher()
         )
     }
 }
@@ -39,16 +41,18 @@ extension WriteQuestionTypeViewModel {
     enum Input {
         case viewDidLoad(quesetID: Int)
         case presentCompleteView(questID: Int, answer: String, emotionState: String)
+        case viewDidLoadWhenEditMode(questID: Int)
     }
     
     struct Output {
         let questInfoResultPublisher: AnyPublisher<Result<QuestInfoEntity, ByeBooError>, Never>
         let didSuccessPostPublisher:  AnyPublisher<Result<Void, ByeBooError>, Never>
+        let questInfoWhenEditModeResultPublisher: AnyPublisher<Result<QuestInfoEntity, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
         switch trigger {
-        case .viewDidLoad(let questID):
+        case .viewDidLoad(let questID), .viewDidLoadWhenEditMode(let questID):
             getQuestInfo(questID: questID)
         case let .presentCompleteView(
             questID,

@@ -6,7 +6,7 @@
 //
 
 protocol FetchCharacterDialogueUseCase {
-    func execute() async throws -> String
+    func execute() async throws -> DialogueEntity
 }
 
 struct DefaultFetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase {
@@ -16,7 +16,7 @@ struct DefaultFetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase {
         self.repository = repository
     }
     
-    func execute() async throws -> String {
+    func execute() async throws -> DialogueEntity {
         return try await repository.fetchCharacterDialogue()
     }
 }

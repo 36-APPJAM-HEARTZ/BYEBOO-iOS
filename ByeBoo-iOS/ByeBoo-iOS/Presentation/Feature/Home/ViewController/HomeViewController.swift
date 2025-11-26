@@ -65,10 +65,15 @@ final class HomeViewController: BaseViewController {
     }
     
     private func setGesture() {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(headerDidTap))
-        tapGestureRecognizer.isEnabled = true
-        tapGestureRecognizer.cancelsTouchesInView = false
-        rootView.headerView.homeStateView.addGestureRecognizer(tapGestureRecognizer)
+        let headerTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(headerDidTap))
+        headerTapGestureRecognizer.isEnabled = true
+        headerTapGestureRecognizer.cancelsTouchesInView = false
+        rootView.headerView.homeStateView.addGestureRecognizer(headerTapGestureRecognizer)
+        
+        let boriTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(boriDidTap))
+        boriTapGestureRecognizer.isEnabled = true
+        boriTapGestureRecognizer.cancelsTouchesInView = false
+        rootView.homeBori.addGestureRecognizer(boriTapGestureRecognizer)
     }
 }
 
@@ -87,7 +92,7 @@ extension HomeViewController {
     
     @objc
     private func helperDidTap() {
-        viewModel.action(.helperTapped)
+        viewModel.action(.helperDidTap)
         rootView.helperDidTap()
         
         Mixpanel.mainInstance().track(event: HomeEvents.Name.tutorialIconClick)
@@ -97,6 +102,17 @@ extension HomeViewController {
         tutorialViewController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(tutorialViewController, animated: false)
     }
+    
+    @objc
+    private func boriDidTap() {
+        guard case .success(let dialogues) = viewModel.dialoguesResult else { return }
+
+        self.rootView.updateOnboardingText(dialogues.tapDialogue)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.rootView.updateOnboardingText(dialogues.dialogue)
+        }
+    }
 }
 
 extension HomeViewController: ToastPresentable, ToastErrorHandler {
@@ -105,8 +121,8 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 switch result {
-                case .success(let text):
-                    self?.rootView.updateOnboardingText(text)
+                case .success(let dialogues):
+                    self?.rootView.updateOnboardingText(dialogues.dialogue)
                 case .failure(let error):
                     self?.handleError(error)
                 }

@@ -108,6 +108,7 @@ extension WriteQuestionTypeQuestView {
         )
     }
 }
+
 extension WriteQuestionTypeQuestView: QuestCompleteProtocol {
     func changeStyle(count: Int) {
         if (count >= 10) &&
