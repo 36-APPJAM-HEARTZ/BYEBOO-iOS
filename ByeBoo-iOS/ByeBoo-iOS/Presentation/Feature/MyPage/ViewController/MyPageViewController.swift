@@ -349,7 +349,7 @@ extension MyPageViewController {
         let alertController = createAlertController(status: status)
         alertController.addActions(
             createSuccessAlertAction(),
-            createCancelAlertAction(isOn: isOn)
+            createCancelAlertAction()
         )
         
         DispatchQueue.main.async {
@@ -374,7 +374,7 @@ extension MyPageViewController {
        }
     }
     
-    private func createCancelAlertAction(isOn: Bool) -> UIAlertAction {
+    private func createCancelAlertAction() -> UIAlertAction {
         UIAlertAction(
             title: "취소",
             style: .cancel
