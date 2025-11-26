@@ -7,5 +7,5 @@
 
 protocol EditQuestProtocol {
     var questMode: QuestMode { get set }
-    func getExistingQuest(questID: Int, quest: String?, image: String?)
+    func getExistingQuest(questID: Int, quest: String?, image: String?, imageKey: String?)
 }

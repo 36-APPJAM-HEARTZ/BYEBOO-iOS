@@ -32,27 +32,31 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: WriteQuestionTypeViewModel.self) { container in
             guard let getQuestInfoUseCase = container.resolve(type: GetQuestInfoUseCase.self),
-                  let saveQuestTypeUseCase = container.resolve(type: SaveQuestTypeUseCase.self) else {
+                  let saveQuestTypeUseCase = container.resolve(type: SaveQuestTypeUseCase.self),
+                  let editQuestTypeUseCase = container.resolve(type: EditQuestTypeUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             return WriteQuestionTypeViewModel(
                 saveQuestTypeUseCase: saveQuestTypeUseCase,
-                getQuestInfoUseCase: getQuestInfoUseCase
+                getQuestInfoUseCase: getQuestInfoUseCase,
+                editQuestTypeUseCase: editQuestTypeUseCase
             )
         }
         
         DIContainer.shared.register(type: WriteActiveTypeViewModel.self) { container in
             guard let getQuestInfoUseCase = container.resolve(type: GetQuestInfoUseCase.self),
                   let saveActiveTypeUseCase = container.resolve(type: SaveQuestActiveUseCase.self),
-                  let saveQuestTypeUseCase = container.resolve(type: SaveQuestTypeUseCase.self) else {
+                  let saveQuestTypeUseCase = container.resolve(type: SaveQuestTypeUseCase.self),
+                  let editActiveQuestType = container.resolve(type: EditQuestActiveUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             return WriteActiveTypeViewModel(
                 saveQuestTypeUseCase: saveQuestTypeUseCase,
                 saveActiveTypeUseCase: saveActiveTypeUseCase,
-                getQuestInfoUseCase: getQuestInfoUseCase
+                getQuestInfoUseCase: getQuestInfoUseCase,
+                editActiveQuestUseCase: editActiveQuestType
             )
         }
         

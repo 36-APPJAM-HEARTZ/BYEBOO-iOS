@@ -15,6 +15,7 @@ struct QuestAnswerEntity {
     var answer: String
     var questEmotionState: String
     var imageUrl: String?
+    var imageKey: String?
     var emotionDescription: String
 }
 

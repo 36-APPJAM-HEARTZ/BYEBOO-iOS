@@ -8,7 +8,6 @@
 import Foundation
 
 struct DefaultQuestRepository: QuestsInterface {
-
     private let network: NetworkService
     private let userDefaultsService: UserDefaultService
     
@@ -54,7 +53,7 @@ struct DefaultQuestRepository: QuestsInterface {
     
     func postActiveQuest(questID: Int, answer: String, emotionState: String, image: Data, imageKey: String) async throws {
         let url = try await makeSignedURL(imageKey: imageKey)
-
+        
         try await putImage(signedURL: url, image: image)
         try await saveQuest(questID: questID, answer: answer, emotionState: emotionState, imageKey: imageKey)
     }
@@ -102,11 +101,28 @@ struct DefaultQuestRepository: QuestsInterface {
         return result.toEntity()
     }
     
+    func editQuestionQuest(questID: Int, answer: String) async throws {
+        let editQuestRequestDTO: EditQuestRequestDTO = .init(answer: answer)
+        
+        let _ = try await network.request(
+            QuestAPI.editRecording(questID: questID, request: editQuestRequestDTO)
+        )
+    }
+    
+    func editActiveQuest(questID: Int, answer: String, image: Data?, imageKey: String, isImageChanged: Bool) async throws {
+        if isImageChanged {
+            guard let image else { return }
+            let url = try await makeSignedURL(imageKey: imageKey)
+            try await putImage(signedURL: url, image: image)
+        }
+        try await editQuest(questID: questID, answer: answer, imageKey: imageKey)
+    }
+    
     // MARK: private function
     
     private func makeSignedURL(imageKey: String) async throws -> String {
         let signedURLRequestDTO = SignedURLRequestDTO(contentType: "image/jpeg", imageKey: imageKey)
-        
+        ByeBooLogger.debug(imageKey)
         let result = try await network.request(
             QuestAPI.images(request: signedURLRequestDTO),
             decodingType: SignedURLResponseDTO.self
@@ -135,6 +151,21 @@ struct DefaultQuestRepository: QuestsInterface {
             QuestAPI.active(questID: questID, request: saveQuestActiveDTO)
         )
     }
+    
+    private func editQuest(
+        questID: Int,
+        answer: String,
+        imageKey: String
+    ) async throws {
+        let editQuestActiveDTO = EditQuestActiveRequestDTO(
+            imageKey: imageKey,
+            answer: answer
+        )
+        
+        let _ = try await network.request(
+            QuestAPI.editActive(questID: questID, request: editQuestActiveDTO)
+        )
+    }
 }
 
 final class MockQuestsRepository: QuestsInterface {
@@ -142,6 +173,8 @@ final class MockQuestsRepository: QuestsInterface {
     private(set) var postActiveQuestCalled = false
     private(set) var postQuestionQuestCalled = false
     private(set) var postNewJourneyCalled = false
+    private(set) var editQuestionQuestCalled = false
+    private(set) var editActiveQuestCalled = false
     
     func fetchProgressingQuests() async throws -> ProgressingQuestsEntity {
         return .stub()
@@ -181,5 +214,13 @@ final class MockQuestsRepository: QuestsInterface {
     
     func fetchCompletedQuests(journey: JourneyType) async throws -> CompletedQuestsEntity {
         return .stub()
+    }
+    
+    func editQuestionQuest(questID: Int, answer: String) async throws {
+        self.editQuestionQuestCalled = true
+    }
+    
+    func editActiveQuest(questID: Int, answer: String, image: Data?, imageKey: String, isImageChanged: Bool) async throws {
+        self.editActiveQuestCalled = true
     }
 }

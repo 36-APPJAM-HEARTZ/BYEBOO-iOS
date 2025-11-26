@@ -108,6 +108,14 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultFetchNewJourneyUseCase(fetchNewJourneyRepository: questRepository)
         }
         
+        DIContainer.shared.register(type: EditQuestTypeUseCase.self) { _ in
+            return DefaultEditQuestTypeUseCase(repository: questRepository)
+        }
+        
+        DIContainer.shared.register(type: EditQuestActiveUseCase.self) { _ in
+            return DefaultEditQuestActiveUseCase(repository: questRepository)
+        }
+        
         DIContainer.shared.register(type: SocialLoginUseCase.self) { _ in
             return DefaultSocialLoginUseCase(repository: authRepository)
         }
