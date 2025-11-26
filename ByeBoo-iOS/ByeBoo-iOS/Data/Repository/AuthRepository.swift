@@ -85,7 +85,9 @@ struct DefaultAuthRepository: AuthInterface {
         if let token: String = userDefaultsService.load(key: .fcmToken) {
             Task {
                 do {
-                    try await network.request(NotificationAPI.saveToken(dto: .init(token: token)))
+                    try await network.request(
+                        NotificationAPI.saveToken(accessToken: result.accessToken, dto: .init(token: token))
+                    )
                 } catch (let error) {
                     ByeBooLogger.error(error)
                 }
@@ -112,7 +114,8 @@ struct DefaultAuthRepository: AuthInterface {
     }
     
     func logout() async throws -> Bool {
-        let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
+        let accessToken = keychainService.load(key: .accessToken)
+        let header: HeaderType = .withAuth(acessToken: accessToken)
         
         do {
             try await network.request(
@@ -123,7 +126,7 @@ struct DefaultAuthRepository: AuthInterface {
                 return false
             }
             try await network.request(
-                NotificationAPI.deleteToken(dto: .init(token: fcmToken))
+                NotificationAPI.deleteToken(accessToken: accessToken, dto: .init(token: fcmToken))
             )
         }
         catch (let error) {

@@ -9,13 +9,16 @@ struct DefaultNotificationRepository: NotificationInterface {
     
     private let network: NetworkService
     private let userDefaultsService: UserDefaultService
+    private let keychainService: KeychainService
     
     init(
         network: NetworkService,
-        userDefaultsService: UserDefaultService
+        userDefaultsService: UserDefaultService,
+        keychainService: KeychainService
     ) {
         self.network = network
         self.userDefaultsService = userDefaultsService
+        self.keychainService = keychainService
     }
     
     func loadToken() -> String? {
@@ -26,8 +29,11 @@ struct DefaultNotificationRepository: NotificationInterface {
     }
     
     func sendToken(token: String) async throws {
+        let accessToken = keychainService.load(key: .accessToken)
         let fcmTokenDTO = createDTO(token: token)
-        try await network.request(NotificationAPI.saveToken(dto: fcmTokenDTO))
+        try await network.request(
+            NotificationAPI.saveToken(accessToken: accessToken, dto: fcmTokenDTO)
+        )
         saveToken(token: token)
     }
     
@@ -36,14 +42,20 @@ struct DefaultNotificationRepository: NotificationInterface {
     }
     
     func updateToken(token: String) async throws {
+        let accessToken = keychainService.load(key: .accessToken)
         let fcmTokenDTO = createDTO(token: token)
-        try await network.request(NotificationAPI.updateToken(dto: fcmTokenDTO))
+        try await network.request(
+            NotificationAPI.updateToken(accessToken: accessToken, dto: fcmTokenDTO)
+        )
         let _ = userDefaultsService.save(token, key: .fcmToken)
     }
     
     func deleteToken(token: String) async throws {
         let fcmTokenDTO = createDTO(token: token)
-        try await network.request(NotificationAPI.deleteToken(dto: fcmTokenDTO))
+        let accessToken = keychainService.load(key: .accessToken)
+        try await network.request(
+            NotificationAPI.deleteToken(accessToken: accessToken, dto: fcmTokenDTO)
+        )
         let _ = userDefaultsService.delete(key: .fcmToken)
     }
     

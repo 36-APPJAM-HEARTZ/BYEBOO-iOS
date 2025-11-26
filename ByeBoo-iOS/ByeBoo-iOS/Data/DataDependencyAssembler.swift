@@ -47,7 +47,8 @@ struct DataDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: DefaultNotificationRepository.self) { _ in
             return DefaultNotificationRepository(
                 network: networkService,
-                userDefaultsService: userDefaultService
+                userDefaultsService: userDefaultService,
+                keychainService: keychainService
             )
         }
     }
