@@ -83,14 +83,12 @@ struct DefaultAuthRepository: AuthInterface {
         keychainService.delete(key: .authorizationCode)
         
         if let token: String = userDefaultsService.load(key: .fcmToken) {
-            Task {
-                do {
-                    try await network.request(
-                        NotificationAPI.saveToken(accessToken: result.accessToken, dto: .init(token: token))
-                    )
-                } catch (let error) {
-                    ByeBooLogger.error(error)
-                }
+            do {
+                try await network.request(
+                    NotificationAPI.saveToken(accessToken: result.accessToken, dto: .init(token: token))
+                )
+            } catch (let error) {
+                ByeBooLogger.error(error)
             }
         }
     }
