@@ -24,6 +24,7 @@ enum ByeBooError: Error, LocalizedError, Equatable {
     case kakaoOuathError
     case appleLoginError
     case endTimer
+    case configError
     
     var errorDescription: String? {
         switch self {
@@ -59,6 +60,8 @@ enum ByeBooError: Error, LocalizedError, Equatable {
             return "타이머 종료"
         case .unknownError:
             return nil
+        case .configError:
+            return "info에서 값을 찾을 수 없음"
         }
     }
 }
