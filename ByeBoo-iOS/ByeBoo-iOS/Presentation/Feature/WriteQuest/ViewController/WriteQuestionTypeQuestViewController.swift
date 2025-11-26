@@ -212,9 +212,10 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
             .sink { [weak self] result in
                 switch result {
                 case .success(()):
-                    let viewController = ViewControllerFactory.shared.makeCompleteQuestionTypeQuestViewController()
-                    viewController.configure(questID: self?.questID ?? 1, questNumber: self?.questNumber ?? 1)
-                    self?.navigationController?.pushViewController(viewController, animated: true)
+                    guard let self else { return }
+                    let viewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
+                    viewController.configure(questID: self.questID, questType: .question)
+                    self.navigationController?.pushViewController(viewController, animated: true)
                 case .failure(let error):
                     self?.handleError(error)
                 }
@@ -270,6 +271,7 @@ extension WriteQuestionTypeQuestViewController {
 
 extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
     func getExistingQuest(questID: Int, quest: String?, image: String?, imageKey: String?) {
+        self.questID = questID
         self.viewModel.action(.viewDidLoadWhenEditMode(questID: questID))
         guard let quest = quest else { return }
         self.answerText = quest

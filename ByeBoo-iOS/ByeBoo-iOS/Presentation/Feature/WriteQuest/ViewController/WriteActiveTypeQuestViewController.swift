@@ -367,6 +367,7 @@ extension WriteActiveTypeQuestViewController {
 
 extension WriteActiveTypeQuestViewController: EditQuestProtocol {
     func getExistingQuest(questID: Int, quest: String?, image: String?, imageKey: String?) {
+        self.questID = questID
         self.viewModel.action(.navigateFromArchiveViewController(questID: questID))
         guard let quest = quest, let image = image, let imageKey = imageKey else { return }
         self.originalImageKey = imageKey
