@@ -59,7 +59,6 @@ extension ArchiveQuestViewController: ToastPresentable, ToastErrorHandler {
             .sink { [weak self] result in
                 switch result {
                 case .success(let entity):
-                    self?.questID = entity.questNumber
                     ByeBooLogger.debug("퀘스트 아이디 \(self?.questID)")
                     self?.rootView.updateUI(entity)
                 case .failure(let error):
@@ -86,7 +85,18 @@ extension ArchiveQuestViewController: ToastPresentable, ToastErrorHandler {
 
 extension ArchiveQuestViewController: Dismissible {
     func close() {
-        self.navigationController?.popViewController(animated: false)
+        let viewController = BottomNavigationViewController()
+        viewController.selectedIndex = 1
+        
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+            
+            ViewControllerUtils.setRootViewController(
+                window: window,
+                viewController: viewController,
+                withAnimation: true
+            )
+        }
     }
 }
 
