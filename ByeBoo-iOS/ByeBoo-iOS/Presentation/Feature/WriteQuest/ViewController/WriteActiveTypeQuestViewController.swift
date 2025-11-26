@@ -229,11 +229,12 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
             .sink { [weak self] result in
                 switch result {
                 case .success(()):
-                    ByeBooLogger.debug("퀘스트 아이디 \(self?.questID)")
+                    guard let self else { return }
+                    ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
                     let viewController = ViewControllerFactory.shared.makeCompleteActiveTypeQuestViewController()
-                    viewController.configure(questID: self?.questID ?? 1, questNumber: self?.questNumber ?? 1)
-                    self?.bottomSheetViewController.dismiss(animated: true)
-                    self?.navigationController?.pushViewController(viewController, animated: true)
+                    viewController.configure(questID: self.questID, questNumber: self.questNumber)
+                    self.bottomSheetViewController.dismiss(animated: true)
+                    self.navigationController?.pushViewController(viewController, animated: true)
                 case .failure(let error):
                     self?.handleError(error)
                 }
@@ -263,10 +264,11 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
             .sink { [weak self] result in
                 switch result {
                 case .success(()):
-                    ByeBooLogger.debug("퀘스트 아이디 \(self?.questID)")
-                    let viewController = ViewControllerFactory.shared.makeCompleteActiveTypeQuestViewController()
-                    viewController.configure(questID: self?.questID ?? 1, questNumber: self?.questNumber ?? 1)
-                    self?.navigationController?.pushViewController(viewController, animated: true)
+                    guard let self else { return }
+                    ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
+                    let viewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
+                    viewController.configure(questID: self.questID, questType: .activation)
+                    self.navigationController?.pushViewController(viewController, animated: true)
                 case .failure(let error):
                     self?.handleError(error)
                 }
