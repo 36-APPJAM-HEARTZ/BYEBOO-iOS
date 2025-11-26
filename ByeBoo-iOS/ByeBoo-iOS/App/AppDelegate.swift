@@ -61,19 +61,13 @@ extension AppDelegate: MessagingDelegate {
         didReceiveRegistrationToken fcmToken: String?
     ) {
         guard let fcmToken,
-              let notificationRepository = DIContainer.shared.resolve(type: DefaultNotificationRepository.self),
-              let originalToken: String = notificationRepository.loadToken() else {
+              let notificationRepository = DIContainer.shared.resolve(type: DefaultNotificationRepository.self)
+        else {
             return
         }
         
-        if fcmToken != originalToken {
-            Task {
-                do {
-                    try await notificationRepository.updateToken(token: fcmToken)
-                } catch (let error) {
-                    ByeBooLogger.error(error)
-                }
-            }
+        Task {
+            try await notificationRepository.updateToken(token: fcmToken)
         }
     }
     

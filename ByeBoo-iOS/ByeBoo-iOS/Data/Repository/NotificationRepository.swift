@@ -42,6 +42,11 @@ struct DefaultNotificationRepository: NotificationInterface {
     }
     
     func updateToken(token: String) async throws {
+        guard let originalToken: String = userDefaultsService.load(key: .fcmToken),
+              originalToken != token else {
+            return
+        }
+        
         let accessToken = keychainService.load(key: .accessToken)
         let fcmTokenDTO = createDTO(token: token)
         try await network.request(
