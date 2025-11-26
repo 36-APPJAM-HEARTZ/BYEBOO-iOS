@@ -20,6 +20,4 @@ struct DefaultChangeNotificationPermissionUseCase: ChangeNotificationPermissionU
     func execute() async throws -> Bool {
         return try await repository.updateNotificationPermission()
     }
-    
-    
 }

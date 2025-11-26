@@ -188,7 +188,7 @@ final class MockUserRepository: UsersInterface {
         .process
     }
     
-    func updateNotificationPermission() async throws -> Bool {
+    func updateNotificationPermission() -> Bool {
         isAllowed.toggle()
         return isAllowed
     }
