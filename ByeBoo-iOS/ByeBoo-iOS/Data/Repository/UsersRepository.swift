@@ -47,13 +47,13 @@ struct DefaultUsersRepository: UsersInterface {
         return result.toEntity()
     }
     
-    func fetchCharacterDialogue() async throws -> String {
+    func fetchCharacterDialogue() async throws -> DialogueEntity {
         let result = try await network.request(
             UsersAPI.character,
             decodingType: DialogueResponseDTO.self
         )
         
-        return result.dialogue
+        return result.toEntity()
     }
     
     func fetchQuestStatus() async throws -> UserQuestStatusEntity {
@@ -166,8 +166,8 @@ final class MockUserRepository: UsersInterface {
         )
     }
     
-    func fetchCharacterDialogue() async throws -> String {
-        return "천천히, 하지만 분명하게. 오늘도 나아가 봐요."
+    func fetchCharacterDialogue() async throws -> DialogueEntity {
+        return .stub()
     }
     
     func fetchQuestStatus() async throws -> UserQuestStatusEntity {

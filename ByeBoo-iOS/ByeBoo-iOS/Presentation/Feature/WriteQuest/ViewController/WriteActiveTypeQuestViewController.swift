@@ -8,6 +8,7 @@
 import Combine
 import UIKit
 
+import Kingfisher
 import Mixpanel
 
 final class WriteActiveTypeQuestViewController: BaseViewController {
@@ -15,6 +16,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private let rootView = WriteActiveTypeQuestView()
     private let viewModel: WriteActiveTypeViewModel
     private var cancellables = Set<AnyCancellable>()
+    var questMode: QuestMode = .write
     
     private var questID: Int = 1
     private var questType: QuestType = .activation
@@ -66,7 +68,10 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         setGesture()
         bind()
         presentPhotoPicker()
-        viewModel.action(.viewDidLoad(quesetID: questID))
+        
+        if questMode == .write {
+            viewModel.action(.viewDidLoad(quesetID: questID))
+        }
         
         let property = QuestEvents.QuestWriteStartProperty(
             questStartAt: Date().toString(),
@@ -220,6 +225,24 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.output.questInfoWhenEditModeResultPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let quest):
+                    self?.rootView.updateQuestTitle(
+                        step: quest.step,
+                        stepNum: quest.stepNumber,
+                        questNumber: quest.questNumber,
+                        questStyle: quest.questStyle,
+                        question: quest.question
+                    )
+                case .failure(let error):
+                    self?.handleError(error)
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -295,5 +318,24 @@ extension WriteActiveTypeQuestViewController {
         self.questID = questID
         self.questNumber = questNumber
         self.questType = questType
+    }
+}
+
+extension WriteActiveTypeQuestViewController: EditQuestProtocol {
+    func getExistingQuest(questID: Int, quest: String?, image: String?) {
+        self.viewModel.action(.navigateFromArchiveViewController(questID: questID))
+        guard let quest = quest, let image = image else { return }
+        rootView.imageContainer.selectedImageView.kf.setImage(with: URL(string: image))
+        rootView.updateImageCountLabel(count: 1)
+        rootView.imageContainer.changeIconHidden()
+        
+        if quest.isEmpty {
+            rootView.questTextField.textView.text = "꼭 적지 않아도 괜찮지만, 글로 정리해 보면 스스로에게 한 걸음 더 가까워질 수 있어요."
+        }
+        else {
+            rootView.questTextField.textView.text = quest
+            rootView.questTextField.textCount.text = "(\(quest.count)/\(rootView.questTextField.limitCount))"
+            rootView.questTextField.isPlaceholderActive = false
+        }
     }
 }

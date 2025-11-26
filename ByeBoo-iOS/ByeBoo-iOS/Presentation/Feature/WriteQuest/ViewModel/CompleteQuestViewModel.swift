@@ -19,6 +19,8 @@ final class CompleteQuestViewModel: ViewModelType {
     private var resultSubject = PassthroughSubject<Result<QuestAnswerEntity, ByeBooError>, Never>()
     private var loadingSubject = PassthroughSubject<
         Bool, Never>()
+    private(set) var entity: QuestAnswerEntity?
+    private(set) var questID: Int = 1
     
     init(
         questAnswerCase: QuestAnswerUseCase
@@ -45,6 +47,7 @@ extension CompleteQuestViewModel {
     func action(_ trigger: Input) {
         switch trigger {
         case .questAnswerDidLoad(let questID):
+            self.questID = questID
             fetchQuestAnswer(questID: questID)
         }
     }
@@ -55,7 +58,8 @@ extension CompleteQuestViewModel {
         Task {
             do {
                 loadingSubject.send(true)
-                let entity = try await questAnswerUseCase.execute(questID: questID)
+                entity = try await questAnswerUseCase.execute(questID: questID)
+                guard let entity = self.entity else { return }
                 resultSubject.send(.success(entity))
                 loadingSubject.send(false)
             } catch {
