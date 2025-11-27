@@ -336,7 +336,9 @@ extension MyPageViewController {
         UNUserNotificationCenter.current().requestAuthorization(
             options: authOptions,
             completionHandler: { [weak self] _, _ in
-                UIApplication.shared.registerForRemoteNotifications()
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
                 self?.checkNoticeAuthorization()
             }
         )
