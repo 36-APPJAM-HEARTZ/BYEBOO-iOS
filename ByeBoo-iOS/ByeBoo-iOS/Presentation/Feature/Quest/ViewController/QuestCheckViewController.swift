@@ -104,7 +104,7 @@ extension QuestCheckViewController: ToastPresentable, ToastErrorHandler {
                 self?.updateQuestMainUI(name: name, journey: journey, quests: quests)
             case (.success(_), .success(_), .failure(_)):
                 self?.coordinator?.moveQuestStart()
-            case (.success(_), .failure(_), .failure(_)):
+            case (.success(_), .failure(.notFound), .failure(_)):
                 self?.coordinator?.moveFinishQuest()
             case (_, .failure(let error), _), (_, _, .failure(let error)):
                 self?.handleError(error)
