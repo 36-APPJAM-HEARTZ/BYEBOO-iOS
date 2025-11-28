@@ -59,8 +59,8 @@ final class HomeView: BaseView {
 }
 
 extension HomeView {
-    func updateOnboardingText(_ text: String) {
-        speechBoxView.updateText(text)
+    func updateOnboardingText(_ text: String, withAnimation: Bool = false) {
+        speechBoxView.updateText(text, withAnimation: withAnimation)
     }
     
     func updateProgressView(

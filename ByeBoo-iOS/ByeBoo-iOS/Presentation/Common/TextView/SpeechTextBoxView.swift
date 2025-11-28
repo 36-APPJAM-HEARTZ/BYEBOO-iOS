@@ -58,7 +58,13 @@ final class SpeechTextBoxView: BaseView {
 }
 
 extension SpeechTextBoxView {
-    func updateText(_ text: String) {
-        titleLabel.text = text
+    func updateText(_ text: String, withAnimation: Bool = false) {
+        if withAnimation {
+            UIView.transition(with: titleLabel, duration: 1, options: .transitionCrossDissolve) { [weak self] in
+                self?.titleLabel.text = text
+            }
+        } else {
+            titleLabel.text = text
+        }
     }
 }
