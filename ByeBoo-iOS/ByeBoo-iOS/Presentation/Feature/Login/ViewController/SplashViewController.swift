@@ -47,7 +47,7 @@ extension SplashViewController {
                 switch result {
                 case .success:
                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        let nextViewController = BottomNavigationViewController()
+                        let nextViewController = ByeBooTabBar()
                         
                         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                            let window = windowScene.windows.first(where: { $0.isKeyWindow }) {

@@ -85,7 +85,7 @@ extension ArchiveQuestViewController: ToastPresentable, ToastErrorHandler {
 
 extension ArchiveQuestViewController: Dismissible {
     func close() {
-        let viewController = BottomNavigationViewController()
+        let viewController = ByeBooTabBar()
         viewController.selectedIndex = 1
         
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
