@@ -268,7 +268,7 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                     ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
                     let viewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
                     viewController.configure(questID: self.questID, questType: .activation)
-                    self.navigationController?.pushViewController(viewController, animated: true)
+                    self.navigationController?.pushFromLeftToRight(viewController)
                 case .failure(let error):
                     self?.handleError(error)
                 }

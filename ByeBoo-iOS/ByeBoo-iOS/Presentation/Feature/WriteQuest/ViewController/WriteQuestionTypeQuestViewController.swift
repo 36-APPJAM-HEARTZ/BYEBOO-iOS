@@ -215,7 +215,7 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                     guard let self else { return }
                     let viewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
                     viewController.configure(questID: self.questID, questType: .question)
-                    self.navigationController?.pushViewController(viewController, animated: true)
+                    self.navigationController?.pushFromLeftToRight(viewController)
                 case .failure(let error):
                     self?.handleError(error)
                 }
