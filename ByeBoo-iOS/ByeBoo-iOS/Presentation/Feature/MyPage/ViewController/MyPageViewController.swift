@@ -15,6 +15,7 @@ final class MyPageViewController: BaseViewController {
     private let viewModel: MyPageViewModel
     private var cancellables = Set<AnyCancellable>()
     private var name: String?
+    private var beforeNotificationStatus = false
     
     private let rootView = MyPageView()
     
@@ -36,7 +37,7 @@ final class MyPageViewController: BaseViewController {
         
         viewModel.action(.viewWillAppear)
         rootView.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
-        checkNoticeAuthorization()
+        checkNoticeAuthorizationWhenFirst()
     }
     
     override func viewDidLoad() {
@@ -52,7 +53,7 @@ final class MyPageViewController: BaseViewController {
         
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(checkNoticeAuthorization),
+            selector: #selector(checkNoticeAuthorizationWhenBack),
             name: UIApplication.didBecomeActiveNotification,
             object: nil
         )
@@ -155,6 +156,7 @@ extension MyPageViewController {
             .sink { [weak self] result in
                 switch result {
                 case .success(let alarmEnabled):
+                    self?.beforeNotificationStatus = alarmEnabled
                     DispatchQueue.main.async {
                         self?.rootView.noticeView.noticeSwitch.setOn(alarmEnabled, animated: false)
                     }
@@ -169,7 +171,7 @@ extension MyPageViewController {
 extension MyPageViewController {
     
     @objc
-    private func checkNoticeAuthorization() {
+    private func checkNoticeAuthorizationWhenFirst() {
         UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
             guard let self else { return }
             
@@ -177,13 +179,36 @@ extension MyPageViewController {
             switch settings.authorizationStatus {
             case .authorized, .provisional, .ephemeral:
                 isOn = true
-            case .notDetermined, .denied:
-                isOn = false
-            @unknown default:
+            default:
                 isOn = false
             }
+            beforeNotificationStatus = isOn
             DispatchQueue.main.async {
                 self.rootView.noticeView.noticeSwitch.setOn(isOn, animated: false)
+            }
+        }
+    }
+    
+    @objc
+    private func checkNoticeAuthorizationWhenBack() {
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            guard let self else { return }
+            
+            switch settings.authorizationStatus {
+            case .authorized, .provisional, .ephemeral:
+                if !beforeNotificationStatus {
+                    self.viewModel.action(.notificationSwitchDidTap)
+                }
+                beforeNotificationStatus = true
+            default:
+                if beforeNotificationStatus {
+                    self.viewModel.action(.notificationSwitchDidTap)
+                } else {
+                    DispatchQueue.main.async {
+                        self.rootView.noticeView.noticeSwitch.setOn(false, animated: false)
+                    }
+                }
+                beforeNotificationStatus = false
             }
         }
     }
@@ -226,20 +251,15 @@ extension MyPageViewController {
     
     @objc
     private func noticeSwitchValueChanged(_ sender: UISwitch) {
-        sender.setOn(!sender.isOn, animated: true)
-        
         UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
             guard let self else { return }
-            
+                        
             DispatchQueue.main.async {
                 switch settings.authorizationStatus {
                 case .notDetermined:
                     self.requestNoticeAuthorization()
                 case .authorized, .provisional, .ephemeral:
-                    self.presentMoveSettingAlert(
-                        isOn: sender.isOn,
-                        status: .authorized
-                    )
+                    self.viewModel.action(.notificationSwitchDidTap)
                 case .denied:
                     self.presentMoveSettingAlert(
                         isOn: sender.isOn,
@@ -339,7 +359,7 @@ extension MyPageViewController {
                 DispatchQueue.main.async {
                     UIApplication.shared.registerForRemoteNotifications()
                 }
-                self?.checkNoticeAuthorization()
+                self?.checkNoticeAuthorizationWhenBack()
             }
         )
     }
@@ -348,6 +368,8 @@ extension MyPageViewController {
         isOn: Bool,
         status: NotificationPermissionStatus
     ) {
+        guard isOn else { return }
+        
         let alertController = createAlertController(status: status)
         alertController.addActions(
             createSuccessAlertAction(),
@@ -380,7 +402,11 @@ extension MyPageViewController {
         UIAlertAction(
             title: "취소",
             style: .cancel
-        )
+        ) { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.rootView.noticeView.noticeSwitch.setOn(false, animated: true)
+            }
+        }
     }
     
     private func moveSetting() {
