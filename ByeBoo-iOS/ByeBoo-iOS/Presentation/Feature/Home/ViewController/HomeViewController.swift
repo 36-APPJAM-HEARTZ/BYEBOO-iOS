@@ -107,10 +107,10 @@ extension HomeViewController {
     private func boriDidTap() {
         guard case .success(let dialogues) = viewModel.dialoguesResult else { return }
 
-        self.rootView.updateOnboardingText(dialogues.tapDialogue)
+        self.rootView.updateOnboardingText(dialogues.tapDialogue, withAnimation: true)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.rootView.updateOnboardingText(dialogues.dialogue)
+            self.rootView.updateOnboardingText(dialogues.dialogue, withAnimation: true)
         }
     }
 }
