@@ -268,7 +268,7 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                     ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
                     let viewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
                     viewController.configure(questID: self.questID, questType: .activation)
-                    self.navigationController?.pushViewController(viewController, animated: true)
+                    self.navigationController?.pushFromLeftToRight(viewController)
                 case .failure(let error):
                     self?.handleError(error)
                 }
@@ -368,11 +368,12 @@ extension WriteActiveTypeQuestViewController {
 }
 
 extension WriteActiveTypeQuestViewController: EditQuestProtocol {
-    func getExistingQuest(questID: Int, quest: String?, image: String?, imageKey: String?) {
+    func getExistingQuest(questID: Int, questAnswer: String?, image: String?, imageKey: String?) {
         self.questID = questID
         self.viewModel.action(.navigateFromArchiveViewController(questID: questID))
-        guard let quest = quest, let image = image, let imageKey = imageKey else { return }
+        guard let questAnswer = questAnswer, let image = image, let imageKey = imageKey else { return }
         self.originalImageKey = imageKey
+        self.answerText = questAnswer
         rootView.imageContainer.selectedImageView.kf.setImage(with: URL(string: image)) { result in
             switch result {
             case .success(let value):
@@ -384,15 +385,15 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
         
         rootView.updateImageCountLabel(count: 1)
         rootView.imageContainer.changeIconHidden()
+        rootView.confirmButton.updateType(.disabled)
         
-        if quest.isEmpty {
+        if questAnswer.isEmpty {
             rootView.questTextField.textView.text = "꼭 적지 않아도 괜찮지만, 글로 정리해 보면 스스로에게 한 걸음 더 가까워질 수 있어요."
         }
         else {
-            rootView.questTextField.textView.text = quest
-            rootView.questTextField.textCount.text = "(\(quest.count)/\(rootView.questTextField.limitCount))"
+            rootView.questTextField.textView.text = questAnswer
+            rootView.questTextField.textCount.text = "(\(questAnswer.count)/\(rootView.questTextField.limitCount))"
             rootView.questTextField.isPlaceholderActive = false
-            rootView.questTextField.textViewDidChange(rootView.questTextField.textView)
         }
     }
 }
@@ -401,7 +402,6 @@ extension WriteActiveTypeQuestViewController: QuestCompleteProtocol {
     func changeStyleWhenEditing(changedText: String) {
         if answerText != changedText {
             rootView.confirmButton.updateType(.enabled)
-            self.answerText = changedText
         } else {
             rootView.confirmButton.updateType(.disabled)
         }

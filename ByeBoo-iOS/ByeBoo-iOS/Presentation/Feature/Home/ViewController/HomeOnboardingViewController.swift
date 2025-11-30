@@ -54,7 +54,7 @@ extension HomeOnboardingViewController {
             let duration = Date().timeIntervalSince(start)
             
             if duration >= 0.3 {
-                let tabBarController = BottomNavigationViewController()
+                let tabBarController = ByeBooTabBar()
                 
                 if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                    let window = windowScene.windows.first(where: { $0.isKeyWindow }) {

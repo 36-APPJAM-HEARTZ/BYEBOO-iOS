@@ -64,7 +64,7 @@ extension LoginViewController {
                     ByeBooLogger.debug(isRegisterd)
                     let nextViewController: UIViewController
                     if isRegisterd {
-                        nextViewController = BottomNavigationViewController()
+                        nextViewController = ByeBooTabBar()
                     } else {
                         nextViewController = UINavigationController(rootViewController: ViewControllerFactory.shared.makeTermsViewController())
                     }

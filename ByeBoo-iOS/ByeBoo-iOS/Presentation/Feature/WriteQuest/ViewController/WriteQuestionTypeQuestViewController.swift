@@ -215,7 +215,7 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                     guard let self else { return }
                     let viewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
                     viewController.configure(questID: self.questID, questType: .question)
-                    self.navigationController?.pushViewController(viewController, animated: true)
+                    self.navigationController?.pushFromLeftToRight(viewController)
                 case .failure(let error):
                     self?.handleError(error)
                 }
@@ -270,18 +270,17 @@ extension WriteQuestionTypeQuestViewController {
 }
 
 extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
-    func getExistingQuest(questID: Int, quest: String?, image: String?, imageKey: String?) {
+    func getExistingQuest(questID: Int, questAnswer: String?, image: String?, imageKey: String?) {
         self.questID = questID
         self.viewModel.action(.viewDidLoadWhenEditMode(questID: questID))
-        guard let quest = quest else { return }
-        self.answerText = quest
-        rootView.questTextField.textView.text = quest
+        guard let questAnswer = questAnswer else { return }
+        self.answerText = questAnswer
+        rootView.questTextField.textView.text = questAnswer
         
-        let textCount = quest.count
+        let textCount = questAnswer.count
         rootView.questTextField.textCount.text = "(\(textCount)/\(rootView.questTextField.limitCount))"
         rootView.questTextField.isPlaceholderActive = false
-        rootView.changeStyle(count: Int(textCount))
-        rootView.questTextField.textViewDidChange(rootView.questTextField.textView)
+        rootView.confirmButton.updateType(.disabled)
     }
 }
 

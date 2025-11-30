@@ -85,7 +85,7 @@ extension ArchiveQuestViewController: ToastPresentable, ToastErrorHandler {
 
 extension ArchiveQuestViewController: Dismissible {
     func close() {
-        let viewController = BottomNavigationViewController()
+        let viewController = ByeBooTabBar()
         viewController.selectedIndex = 1
         
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
@@ -116,7 +116,7 @@ extension ArchiveQuestViewController {
         var viewController: ( BaseViewController & EditQuestProtocol )
         viewController = setNavigateViewController(type: rootView.type)
         viewController.questMode = .edit
-        viewController.getExistingQuest(questID: self.viewModel.questID ,quest: entity.answer, image: entity.imageUrl, imageKey: entity.imageKey)
+        viewController.getExistingQuest(questID: self.viewModel.questID ,questAnswer: entity.answer, image: entity.imageUrl, imageKey: entity.imageKey)
         viewController.tabBarController?.tabBar.isHidden = true
         self.navigationController?.pushViewController(viewController, animated: false)
     }

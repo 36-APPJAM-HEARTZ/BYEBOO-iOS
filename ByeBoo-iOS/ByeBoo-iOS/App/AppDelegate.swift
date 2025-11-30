@@ -104,7 +104,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         _ center: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse
     ) async {
-        let bottomNavigationViewController = BottomNavigationViewController()
+        let bottomNavigationViewController = ByeBooTabBar()
         bottomNavigationViewController.selectedIndex = 1
         
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
