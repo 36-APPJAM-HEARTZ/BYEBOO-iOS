@@ -36,8 +36,8 @@ final class MyPageViewController: BaseViewController {
         super.viewWillAppear(animated)
         
         viewModel.action(.viewWillAppear)
+        viewModel.action(.checkHasEnterMyPage)
         rootView.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
-        checkHasEnterMyPage()
     }
     
     override func viewDidLoad() {
@@ -104,6 +104,7 @@ extension MyPageViewController {
         bindLogoutResult()
         bindWithdrawResult()
         bindNotificationResult()
+        bindHasEnterMyPage()
     }
     
     private func bindUserResult() {
@@ -166,12 +167,8 @@ extension MyPageViewController {
             }
             .store(in: &cancellables)
     }
-}
-
-extension MyPageViewController {
     
-    private func checkHasEnterMyPage() {
-        viewModel.action(.checkHasEnterMyPage)
+    private func bindHasEnterMyPage() {
         viewModel.output.hasEnterMyPageResult
             .sink { [weak self] result in
                 switch result {
@@ -187,6 +184,9 @@ extension MyPageViewController {
             }
             .store(in: &cancellables)
     }
+}
+
+extension MyPageViewController {
     
     @objc
     private func checkNoticeAuthorizationWhenFirst() {
