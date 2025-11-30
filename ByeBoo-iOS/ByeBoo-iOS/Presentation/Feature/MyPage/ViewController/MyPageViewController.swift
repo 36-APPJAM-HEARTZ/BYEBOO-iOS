@@ -37,7 +37,7 @@ final class MyPageViewController: BaseViewController {
         
         viewModel.action(.viewWillAppear)
         rootView.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
-        checkNoticeAuthorizationWhenFirst()
+        checkHasEnterMyPage()
     }
     
     override func viewDidLoad() {
@@ -169,6 +169,24 @@ extension MyPageViewController {
 }
 
 extension MyPageViewController {
+    
+    private func checkHasEnterMyPage() {
+        viewModel.action(.checkHasEnterMyPage)
+        viewModel.output.hasEnterMyPageResult
+            .sink { [weak self] result in
+                switch result {
+                case .success(let hasEnter):
+                    if !hasEnter {
+                        self?.rootView.noticeView.noticeSwitch.setOn(false, animated: false)
+                        return
+                    }
+                    self?.checkNoticeAuthorizationWhenFirst()
+                case .failure:
+                    break
+                }
+            }
+            .store(in: &cancellables)
+    }
     
     @objc
     private func checkNoticeAuthorizationWhenFirst() {

@@ -15,30 +15,35 @@ final class MyPageViewModel: ViewModelType {
     private var logoutResultSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private var withdrawResultSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private var notificationResultSubject: PassthroughSubject<Result<Bool, ByeBooError>, Never> = .init()
+    private var hasEnterMyPageResultSubject: PassthroughSubject<Result<Bool, ByeBooError>, Never> = .init()
     
     private(set) var output: Output
 
     private let getUserNameUseCase: GetUserNameUseCase
     private let logoutUseCase: LogoutUseCase
     private let withdrawUseCase: WithdrawUseCase
+    private let checkHasEnterMyPageUseCase: CheckHasEnterMyPageUseCase
     private let changeNotificationPermissionUseCase: ChangeNotificationPermissionUseCase
     
     init(
         getUserNameUseCase: GetUserNameUseCase,
         logoutUseCase: LogoutUseCase,
         withdrawUseCase: WithdrawUseCase,
-        changeNotificationPermissionUseCase: ChangeNotificationPermissionUseCase
+        changeNotificationPermissionUseCase: ChangeNotificationPermissionUseCase,
+        checkHasEnterMyPageUseCase: CheckHasEnterMyPageUseCase
     ) {
         self.getUserNameUseCase = getUserNameUseCase
         self.logoutUseCase = logoutUseCase
         self.withdrawUseCase = withdrawUseCase
         self.changeNotificationPermissionUseCase = changeNotificationPermissionUseCase
+        self.checkHasEnterMyPageUseCase = checkHasEnterMyPageUseCase
         
         output = Output(
             userResult: userResultSubject.eraseToAnyPublisher(),
             logoutResult: logoutResultSubject.eraseToAnyPublisher(),
             withdrawResult: withdrawResultSubject.eraseToAnyPublisher(),
-            notificationResult: notificationResultSubject.eraseToAnyPublisher()
+            notificationResult: notificationResultSubject.eraseToAnyPublisher(),
+            hasEnterMyPageResult: hasEnterMyPageResultSubject.eraseToAnyPublisher()
         )
     }
     
@@ -52,6 +57,8 @@ final class MyPageViewModel: ViewModelType {
             withdraw()
         case .notificationSwitchDidTap:
             changeNotificationPermission()
+        case .checkHasEnterMyPage:
+            checkHasEnterMyPage()
         }
     }
 }
@@ -62,6 +69,7 @@ extension MyPageViewModel {
         case logoutActionButtonDidTap
         case withdrawActionButtonDidTap
         case notificationSwitchDidTap
+        case checkHasEnterMyPage
     }
     
     struct Output {
@@ -69,6 +77,7 @@ extension MyPageViewModel {
         let logoutResult: AnyPublisher<Result<Void, ByeBooError>, Never>
         let withdrawResult: AnyPublisher<Result<Void, ByeBooError>, Never>
         let notificationResult: AnyPublisher<Result<Bool, ByeBooError>, Never>
+        let hasEnterMyPageResult: AnyPublisher<Result<Bool, ByeBooError>, Never>
     }
 }
 
@@ -121,5 +130,10 @@ extension MyPageViewModel {
                 notificationResultSubject.send(.failure(error))
             }
         }
+    }
+    
+    private func checkHasEnterMyPage() {
+        let result = checkHasEnterMyPageUseCase.execute()
+        hasEnterMyPageResultSubject.send(.success(result))
     }
 }

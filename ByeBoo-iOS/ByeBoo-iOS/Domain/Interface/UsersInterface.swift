@@ -21,4 +21,5 @@ protocol UsersInterface {
     func getIsRegistered() -> Bool
     func getLastJourneyType() -> JourneyType
     func updateNotificationPermission() async throws -> Bool
+    func checkHasEnterMyPage() -> Bool
 }

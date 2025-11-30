@@ -147,5 +147,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: ChangeNotificationPermissionUseCase.self) { _ in
             return DefaultChangeNotificationPermissionUseCase(repository: userRepository)
         }
+        
+        DIContainer.shared.register(type: CheckHasEnterMyPageUseCase.self) { _ in
+            return DefaultCheckHasEnterMyPageUseCase(repository: userRepository)
+        }
     }
 }

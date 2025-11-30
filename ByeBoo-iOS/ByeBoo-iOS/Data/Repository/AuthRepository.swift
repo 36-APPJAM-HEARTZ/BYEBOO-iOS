@@ -136,7 +136,7 @@ struct DefaultAuthRepository: AuthInterface {
         }
         
         clearKeychain()
-        removeUserInfo(excludedKeys: [.isOnboardingCompleted, .isHelperShown])
+        removeUserInfo(excludedKeys: [.isOnboardingCompleted, .isHelperShown, .hasEnterMyPage])
         
         return true
     }
