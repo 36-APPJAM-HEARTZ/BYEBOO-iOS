@@ -30,6 +30,12 @@ struct DefaultNotificationRepository: NotificationInterface {
     
     func sendToken(token: String) async throws {
         let accessToken = keychainService.load(key: .accessToken)
+        
+        guard !accessToken.isEmpty else {
+            saveToken(token: token)
+            return
+        }
+        
         let fcmTokenDTO = createDTO(token: token)
         try await network.request(
             NotificationAPI.saveToken(accessToken: accessToken, dto: fcmTokenDTO)
@@ -37,21 +43,22 @@ struct DefaultNotificationRepository: NotificationInterface {
         saveToken(token: token)
     }
     
-    func saveToken(token: String) {
-        let _ = userDefaultsService.save(token, key: .fcmToken)
-    }
-    
     func updateToken(token: String) async throws {
-        guard let originalToken: String = userDefaultsService.load(key: .fcmToken),
-              originalToken != token else {
+        let accessToken = keychainService.load(key: .accessToken)
+        
+        guard !accessToken.isEmpty else {
+            saveToken(token: token)
             return
         }
         
-        let accessToken = keychainService.load(key: .accessToken)
         let fcmTokenDTO = createDTO(token: token)
         try await network.request(
             NotificationAPI.updateToken(accessToken: accessToken, dto: fcmTokenDTO)
         )
+        saveToken(token: token)
+    }
+    
+    func saveToken(token: String) {
         let _ = userDefaultsService.save(token, key: .fcmToken)
     }
     

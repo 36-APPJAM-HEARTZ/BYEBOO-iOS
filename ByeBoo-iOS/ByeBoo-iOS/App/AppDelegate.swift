@@ -47,21 +47,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate: MessagingDelegate {
     
-    func messaging(
-        _ messaging: Messaging,
-        didReceiveRegistrationToken fcmToken: String?
-    ) {
-        guard let fcmToken,
-              let notificationRepository = DIContainer.shared.resolve(type: DefaultNotificationRepository.self)
-        else {
-            return
-        }
-        
-        Task {
-            try await notificationRepository.updateToken(token: fcmToken)
-        }
-    }
-    
     func application(
         _ application: UIApplication,
         didFailToRegisterForRemoteNotificationsWithError error: Error
@@ -76,16 +61,26 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
-        let userDefaultsService = DefaultUserDefaultService()
+        guard let notificationRepository = DIContainer.shared.resolve(type: DefaultNotificationRepository.self) else {
+            return
+        }
         
         Messaging.messaging().apnsToken = deviceToken
-        
         Messaging.messaging().token { token, error in
             if let error {
                 ByeBooLogger.error(error)
+                return
             }
-            if let token {
-                let _ = userDefaultsService.save(token, key: .fcmToken)
+            guard let token else {
+                return
+            }
+            
+            Task {
+                do {
+                    try await notificationRepository.updateToken(token: token)
+                } catch (let error) {
+                    ByeBooLogger.error(error)
+                }
             }
         }
     }
