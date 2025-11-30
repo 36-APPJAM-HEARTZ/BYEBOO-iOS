@@ -132,8 +132,9 @@ final class QuestTipView: BaseView {
         backgroundColor = .grayscale900
         
         navigationView.snp.makeConstraints {
-            $0.top.leading.trailing.equalTo(safeAreaLayoutGuide)
-            $0.height.equalTo(80.adjustedH)
+            $0.top.equalToSuperview().inset(72.adjustedH)
+            $0.leading.trailing.equalTo(safeAreaLayoutGuide)
+            $0.height.equalTo(24.adjustedH)
         }
         
         titleLabel.snp.makeConstraints {
@@ -147,7 +148,7 @@ final class QuestTipView: BaseView {
         }
         
         stepStackView.snp.makeConstraints {
-            $0.top.equalTo(navigationView.snp.bottom)
+            $0.top.equalTo(navigationView.snp.bottom).offset(28.adjustedH)
             $0.centerX.equalToSuperview()
         }
         

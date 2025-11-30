@@ -8,6 +8,9 @@
 import AuthenticationServices
 import Foundation
 
+import Firebase
+import FirebaseMessaging
+
 struct DefaultAuthRepository: AuthInterface {
     private let network: NetworkService
     private let keychainService: KeychainService
@@ -82,14 +85,14 @@ struct DefaultAuthRepository: AuthInterface {
         keychainService.delete(key: .authorization)
         keychainService.delete(key: .authorizationCode)
         
-        if let token: String = userDefaultsService.load(key: .fcmToken) {
-            do {
-                try await network.request(
-                    NotificationAPI.saveToken(accessToken: result.accessToken, dto: .init(token: token))
-                )
-            } catch (let error) {
-                ByeBooLogger.error(error)
-            }
+        do {
+            let fcmToken = try await Messaging.messaging().token()
+            let fcmTokenDTO = FCMTokenDTO(token: fcmToken)
+            try await network.request(
+                NotificationAPI.saveToken(accessToken: result.accessToken, dto: fcmTokenDTO)
+            )
+        } catch (let error) {
+            ByeBooLogger.error(error)
         }
     }
     
@@ -133,7 +136,8 @@ struct DefaultAuthRepository: AuthInterface {
         }
         
         clearKeychain()
-        removeUserInfo(excludedKeys: [.isOnboardingCompleted, .isHelperShown])
+        removeUserInfo(excludedKeys: [.isOnboardingCompleted, .isHelperShown, .hasEnterMyPage])
+        
         return true
     }
     
