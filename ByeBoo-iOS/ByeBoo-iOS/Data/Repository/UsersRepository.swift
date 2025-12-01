@@ -116,6 +116,7 @@ struct DefaultUsersRepository: UsersInterface {
     
     func checkHasEnterMyPage() -> Bool {
         guard let hasEnterMyPage: Bool = userDefaultsService.load(key: .hasEnterMyPage) else {
+            let _ = userDefaultsService.save(true, key: .hasEnterMyPage)
             return false
         }
         if !hasEnterMyPage {
