@@ -18,4 +18,5 @@ enum UserDefaultsKey: String, CaseIterable {
     case journeyStatus
     case fcmToken
     case hasEnterMyPage
+    case alarmEnabled
 }

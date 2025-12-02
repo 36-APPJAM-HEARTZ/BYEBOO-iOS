@@ -105,6 +105,7 @@ extension MyPageViewController {
         bindWithdrawResult()
         bindNotificationResult()
         bindHasEnterMyPage()
+        bindAlarmEnabled()
     }
     
     private func bindUserResult() {
@@ -177,9 +178,22 @@ extension MyPageViewController {
                         self?.rootView.noticeView.noticeSwitch.setOn(false, animated: false)
                         return
                     }
-                    self?.checkNoticeAuthorizationWhenFirst()
-                case .failure:
-                    break
+                    self?.viewModel.action(.checkAlarmEnabled)
+                case .failure(let error) :
+                    ByeBooLogger.error(error)
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func bindAlarmEnabled() {
+        viewModel.output.alarmEnabledResult
+            .sink { [weak self] result in
+                switch result {
+                case .success(let alarmEnabled):
+                    self?.rootView.noticeView.noticeSwitch.setOn(alarmEnabled, animated: true)
+                case .failure(let error) :
+                    ByeBooLogger.error(error)
                 }
             }
             .store(in: &cancellables)
@@ -187,25 +201,6 @@ extension MyPageViewController {
 }
 
 extension MyPageViewController {
-    
-    @objc
-    private func checkNoticeAuthorizationWhenFirst() {
-        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
-            guard let self else { return }
-            
-            let isOn: Bool
-            switch settings.authorizationStatus {
-            case .authorized, .provisional, .ephemeral:
-                isOn = true
-            default:
-                isOn = false
-            }
-            beforeNotificationStatus = isOn
-            DispatchQueue.main.async {
-                self.rootView.noticeView.noticeSwitch.setOn(isOn, animated: false)
-            }
-        }
-    }
     
     @objc
     private func checkNoticeAuthorizationWhenBack() {

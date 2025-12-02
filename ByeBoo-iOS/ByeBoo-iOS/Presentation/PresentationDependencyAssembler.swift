@@ -153,7 +153,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                   let logoutUseCase = container.resolve(type: LogoutUseCase.self),
                   let withdrawUseCase = container.resolve(type: WithdrawUseCase.self),
                   let changeNotificationPermissionUseCase = container.resolve(type: ChangeNotificationPermissionUseCase.self),
-                  let checkHasEnterMyPageUseCase = container.resolve(type: CheckHasEnterMyPageUseCase.self)
+                  let checkHasEnterMyPageUseCase = container.resolve(type: CheckHasEnterMyPageUseCase.self),
+                  let checkAlarmEnabledUseCase = container.resolve(type: CheckAlarmEnabledUseCase.self)
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -164,7 +165,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 logoutUseCase: logoutUseCase,
                 withdrawUseCase: withdrawUseCase,
                 changeNotificationPermissionUseCase: changeNotificationPermissionUseCase,
-                checkHasEnterMyPageUseCase: checkHasEnterMyPageUseCase
+                checkHasEnterMyPageUseCase: checkHasEnterMyPageUseCase,
+                checkAlarmEnabledUseCase: checkAlarmEnabledUseCase
             )
         }
         

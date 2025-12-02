@@ -22,4 +22,5 @@ protocol UsersInterface {
     func getLastJourneyType() -> JourneyType
     func updateNotificationPermission() async throws -> Bool
     func checkHasEnterMyPage() -> Bool
+    var alarmEnabled: Bool { get }
 }
