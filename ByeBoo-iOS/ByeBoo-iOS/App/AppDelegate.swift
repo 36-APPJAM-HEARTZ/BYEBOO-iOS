@@ -75,24 +75,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 extension AppDelegate: MessagingDelegate {
     
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        guard let fcmToken else {
-            return
-        }
-        
-        guard let notificationRepository = DIContainer.shared.resolve(type: DefaultNotificationRepository.self) else {
-            return
-        }
-        
-        Task {
-            do {
-                try await notificationRepository.updateToken(token: fcmToken)
-            } catch (let error) {
-                ByeBooLogger.error(error)
-            }
-        }
-    }
-    
     func application(
         _ application: UIApplication,
         didFailToRegisterForRemoteNotificationsWithError error: Error
