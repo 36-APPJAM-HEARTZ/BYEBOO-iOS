@@ -6,11 +6,10 @@
 //
 
 protocol QuestCompleteProtocol: AnyObject {
-    func changeStyle(count: Int)
-    func changeStyleWhenEditing(changedText: String)
+    func changeCount(count: Int)
+    func updateButtonWhenWriting(text: String)
 }
 
 extension QuestCompleteProtocol {
-    func changeStyle(count: Int) { return }
-    func changeStyleWhenEditing(changedText: String) { return }
+    func changeCount(count: Int) { return }
 }

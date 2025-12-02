@@ -319,7 +319,7 @@ extension WriteActiveTypeQuestViewController: UIImagePickerControllerDelegate, U
             rootView.imageContainer.changeIconHidden()
             rootView.imgCount = 1
             rootView.updateImageCountLabel(count: rootView.imgCount)
-            rootView.changeStyle(count: rootView.imgCount)
+            changeCount(count: rootView.imgCount)
             self.image = image
             isImageChanged = questMode == .edit ? true : false
         }
@@ -399,8 +399,14 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
 }
 
 extension WriteActiveTypeQuestViewController: QuestCompleteProtocol {
-    func changeStyleWhenEditing(changedText: String) {
-        if answerText != changedText {
+    func changeCount(count: Int) {
+        if count == 1 {
+            rootView.confirmButton.updateType(.enabled)
+        }
+    }
+    
+    func updateButtonWhenWriting(text: String) {
+        if answerText != text {
             rootView.confirmButton.updateType(.enabled)
         } else {
             rootView.confirmButton.updateType(.disabled)
