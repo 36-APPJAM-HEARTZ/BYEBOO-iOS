@@ -285,11 +285,32 @@ extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
 }
 
 extension WriteQuestionTypeQuestViewController: QuestCompleteProtocol {
-    func changeStyleWhenEditing(changedText: String) {
-        if answerText != changedText {
-            rootView.confirmButton.updateType(.enabled)
+    func updateButtonWhenWriting(text: String) {
+        switch questMode {
+        case .write:
+            if isValidAnswerText(text: text){
+                rootView.confirmButton.updateType(.enabled)
+            } else {
+                rootView.confirmButton.updateType(.disabled)
+            }
+            
+        case .edit:
+            if answerText != text && isValidAnswerText(text: text) {
+                rootView.confirmButton.updateType(.enabled)
+            } else {
+                rootView.confirmButton.updateType(.disabled)
+            }
+        }
+    }
+}
+
+extension WriteQuestionTypeQuestViewController {
+    private func isValidAnswerText(text: String) -> Bool {
+        if (text.count >= 10) &&
+            (!rootView.questTextField.textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) {
+            return true
         } else {
-            rootView.confirmButton.updateType(.disabled)
+            return false
         }
     }
 }
