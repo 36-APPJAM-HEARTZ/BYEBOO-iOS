@@ -43,19 +43,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
-}
-
-extension AppDelegate: MessagingDelegate {
-    
-    func application(
-        _ application: UIApplication,
-        didFailToRegisterForRemoteNotificationsWithError error: Error
-    ) {
-        ByeBooLogger.error(error)
-    }
-}
-
-extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func application(
         _ application: UIApplication,
@@ -84,6 +71,37 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             }
         }
     }
+}
+
+extension AppDelegate: MessagingDelegate {
+    
+    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+        guard let fcmToken else {
+            return
+        }
+        
+        guard let notificationRepository = DIContainer.shared.resolve(type: DefaultNotificationRepository.self) else {
+            return
+        }
+        
+        Task {
+            do {
+                try await notificationRepository.updateToken(token: fcmToken)
+            } catch (let error) {
+                ByeBooLogger.error(error)
+            }
+        }
+    }
+    
+    func application(
+        _ application: UIApplication,
+        didFailToRegisterForRemoteNotificationsWithError error: Error
+    ) {
+        ByeBooLogger.error(error)
+    }
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
     
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
