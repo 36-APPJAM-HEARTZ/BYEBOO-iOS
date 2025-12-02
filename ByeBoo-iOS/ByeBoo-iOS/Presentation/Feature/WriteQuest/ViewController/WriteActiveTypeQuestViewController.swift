@@ -406,7 +406,7 @@ extension WriteActiveTypeQuestViewController: QuestCompleteProtocol {
     }
     
     func updateButtonWhenWriting(text: String) {
-        if answerText != text {
+        if rootView.imgCount == 1 && answerText != text {
             rootView.confirmButton.updateType(.enabled)
         } else {
             rootView.confirmButton.updateType(.disabled)
