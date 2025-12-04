@@ -21,6 +21,7 @@ final class HomeViewController: BaseViewController {
     private var state: HomeState = .beforeJourneyStart
     private var isFirstVisit: Bool = true
     private var journeyType: JourneyType = .face
+    private var isAnimating: Bool = false
     
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -105,12 +106,19 @@ extension HomeViewController {
     
     @objc
     private func boriDidTap() {
-        guard case .success(let dialogues) = viewModel.dialoguesResult else { return }
-
-        self.rootView.updateOnboardingText(dialogues.tapDialogue, withAnimation: true)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            self.rootView.updateOnboardingText(dialogues.dialogue, withAnimation: true)
+        guard !isAnimating,
+              case .success(let dialogues) = viewModel.dialoguesResult else { return }
+        
+        isAnimating = true
+        rootView.updateOnboardingText(dialogues.tapDialogue, withAnimation: true)
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) { [weak self] in
+            self?.rootView.updateOnboardingText(dialogues.dialogue, withAnimation: true)
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                self?.isAnimating = false
+            }
         }
     }
 }
