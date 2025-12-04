@@ -44,6 +44,8 @@ struct DefaultUsersRepository: UsersInterface {
         let _ = userDefaultsService.save(result.name, key: .userName)
         let _ = userDefaultsService.save(true, key: .isOnboardingCompleted)
         let _ = userDefaultsService.save(false, key: .hasEnterMyPage)
+        let _ = userDefaultsService.save(false, key: .alarmEnabled)
+        
         ByeBooLogger.debug("유저 정보 저장 완료")
         return result.toEntity()
     }
@@ -111,7 +113,10 @@ struct DefaultUsersRepository: UsersInterface {
             UsersAPI.updateNotificationPermission,
             decodingType: AlarmEnabledResponseDTO.self
         )
-        return result.alarmEnabled
+        let alarmEnabled = result.alarmEnabled
+        let _ = userDefaultsService.save(alarmEnabled, key: .alarmEnabled)
+        
+        return alarmEnabled
     }
     
     func checkHasEnterMyPage() -> Bool {
@@ -123,6 +128,15 @@ struct DefaultUsersRepository: UsersInterface {
             let _ = userDefaultsService.save(true, key: .hasEnterMyPage)
         }
         return hasEnterMyPage
+    }
+    
+    var alarmEnabled: Bool {
+        get {
+            guard let alarmEnabled: Bool = userDefaultsService.load(key: .alarmEnabled) else {
+                return false
+            }
+            return alarmEnabled
+        }
     }
 }
 
@@ -206,6 +220,10 @@ final class MockUserRepository: UsersInterface {
     }
     
     func checkHasEnterMyPage() -> Bool {
+        return true
+    }
+    
+    var alarmEnabled: Bool {
         return true
     }
 }

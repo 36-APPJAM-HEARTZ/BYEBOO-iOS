@@ -151,5 +151,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: CheckHasEnterMyPageUseCase.self) { _ in
             return DefaultCheckHasEnterMyPageUseCase(repository: userRepository)
         }
+        
+        DIContainer.shared.register(type: CheckAlarmEnabledUseCase.self) { _ in
+            return DefaultCheckAlarmEnabledUseCase(repository: userRepository)
+        }
     }
 }
