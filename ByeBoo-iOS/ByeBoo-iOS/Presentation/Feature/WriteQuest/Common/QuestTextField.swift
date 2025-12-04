@@ -104,7 +104,6 @@ extension QuestTextField: UITextViewDelegate {
         }
         count = textView.text.count
         textCount.text = "(\(count)/\(limitCount))"
-        delegate?.changeStyle(count: count)
-        delegate?.changeStyleWhenEditing(changedText: textView.text)
+        delegate?.updateButtonWhenWriting(text: textView.text)
     }
 }

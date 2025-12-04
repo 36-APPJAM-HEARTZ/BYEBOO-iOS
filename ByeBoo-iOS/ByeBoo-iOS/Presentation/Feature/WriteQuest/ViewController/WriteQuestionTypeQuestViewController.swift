@@ -221,6 +221,18 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.output.isValidTextPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case true:
+                    self?.rootView.confirmButton.updateType(.enabled)
+                case false:
+                    self?.rootView.confirmButton.updateType(.disabled)
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -285,11 +297,7 @@ extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
 }
 
 extension WriteQuestionTypeQuestViewController: QuestCompleteProtocol {
-    func changeStyleWhenEditing(changedText: String) {
-        if answerText != changedText {
-            rootView.confirmButton.updateType(.enabled)
-        } else {
-            rootView.confirmButton.updateType(.disabled)
-        }
+    func updateButtonWhenWriting(text: String) {
+        viewModel.action(.textFieldEditing(answerText: self.answerText, text: text))
     }
 }

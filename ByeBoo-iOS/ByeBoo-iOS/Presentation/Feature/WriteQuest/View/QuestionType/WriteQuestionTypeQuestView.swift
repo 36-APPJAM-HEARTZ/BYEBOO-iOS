@@ -35,7 +35,6 @@ final class WriteQuestionTypeQuestView: BaseView {
             errorIcon,
             descriptionLabel
         )
-        setDelegate()
     }
     
     override func setStyle() {
@@ -57,10 +56,6 @@ final class WriteQuestionTypeQuestView: BaseView {
             $0.textColor = .grayscale400
             $0.textAlignment = .center
         }
-    }
-    
-    private func setDelegate() {
-        questTextField.delegate = self
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -106,16 +101,5 @@ extension WriteQuestionTypeQuestView {
             questNum: questNumber,
             title: question
         )
-    }
-}
-
-extension WriteQuestionTypeQuestView: QuestCompleteProtocol {
-    func changeStyle(count: Int) {
-        if (count >= 10) &&
-            (!questTextField.textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty) {
-            confirmButton.updateType(.enabled)
-        } else {
-            confirmButton.updateType(.disabled)
-        }
     }
 }

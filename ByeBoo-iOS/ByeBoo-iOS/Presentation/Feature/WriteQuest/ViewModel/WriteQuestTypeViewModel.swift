@@ -17,27 +17,32 @@ struct WriteQuestionTypeViewModel: ViewModelType {
     private let saveQuestTypeUseCase: SaveQuestTypeUseCase
     private let getQuestInfoUseCase: GetQuestInfoUseCase
     private let editQuestTypeUseCase: EditQuestTypeUseCase
+    private let isValidQuestAnswerUseCase: IsValidQuestAnswerUseCase
     
     private let questInfoResultSubject: PassthroughSubject<Result<QuestInfoEntity, ByeBooError>, Never> = .init()
     private let questInfoWhenEditModeSubject: PassthroughSubject<Result<QuestInfoEntity, ByeBooError>, Never> = .init()
     private let didSuccessPostSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private let didSuccessEditSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
+    private let isValidTextSubject: PassthroughSubject<Bool, Never> = .init()
     
     init(
         saveQuestTypeUseCase:  SaveQuestTypeUseCase,
         getQuestInfoUseCase: GetQuestInfoUseCase,
-        editQuestTypeUseCase: EditQuestTypeUseCase
+        editQuestTypeUseCase: EditQuestTypeUseCase,
+        isValidQuestAnswerUseCase: IsValidQuestAnswerUseCase
         
     ){
         self.saveQuestTypeUseCase = saveQuestTypeUseCase
         self.getQuestInfoUseCase = getQuestInfoUseCase
         self.editQuestTypeUseCase = editQuestTypeUseCase
+        self.isValidQuestAnswerUseCase = isValidQuestAnswerUseCase
         
         output = Output(
             questInfoResultPublisher: questInfoResultSubject.eraseToAnyPublisher(),
             didSuccessPostPublisher: didSuccessPostSubject.eraseToAnyPublisher(),
             questInfoWhenEditModeResultPublisher: questInfoWhenEditModeSubject.eraseToAnyPublisher(),
-            didSuccessEditPublisher: didSuccessEditSubject.eraseToAnyPublisher()
+            didSuccessEditPublisher: didSuccessEditSubject.eraseToAnyPublisher(),
+            isValidTextPublisher: isValidTextSubject.eraseToAnyPublisher()
         )
     }
 }
@@ -47,6 +52,7 @@ extension WriteQuestionTypeViewModel {
         case viewDidLoad(quesetID: Int)
         case presentCompleteView(questID: Int, answer: String, emotionState: String?, isEdit: Bool)
         case viewDidLoadWhenEditMode(questID: Int)
+        case textFieldEditing(answerText: String, text: String)
     }
     
     struct Output {
@@ -54,6 +60,7 @@ extension WriteQuestionTypeViewModel {
         let didSuccessPostPublisher:  AnyPublisher<Result<Void, ByeBooError>, Never>
         let questInfoWhenEditModeResultPublisher: AnyPublisher<Result<QuestInfoEntity, ByeBooError>, Never>
         let didSuccessEditPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
+        let isValidTextPublisher: AnyPublisher<Bool, Never>
     }
     
     func action(_ trigger: Input) {
@@ -72,6 +79,8 @@ extension WriteQuestionTypeViewModel {
                 guard let emotionState = emotionState else { return }
                 postQuestType(questID: questID, answer: answer, emotionState: emotionState)
             }
+        case .textFieldEditing(let answerText, let text):
+            isValidText(previousText: answerText, changingText: text)
         }
     }
 }
@@ -119,5 +128,10 @@ extension WriteQuestionTypeViewModel {
                 ByeBooLogger.error(error)
             }
         }
+    }
+    
+    private func isValidText(previousText: String, changingText: String) {
+        let isValidText: Bool = isValidQuestAnswerUseCase.execute(previousText: previousText, changingText: changingText)
+        isValidTextSubject.send(isValidText)
     }
 }

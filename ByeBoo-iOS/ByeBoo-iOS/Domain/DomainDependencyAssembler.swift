@@ -152,6 +152,10 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultCheckHasEnterMyPageUseCase(repository: userRepository)
         }
         
+        DIContainer.shared.register(type: IsValidQuestAnswerUseCase.self) { _ in
+            return DefaultIsValidQuestAnswerUseCase()
+        }
+        
         DIContainer.shared.register(type: CheckAlarmEnabledUseCase.self) { _ in
             return DefaultCheckAlarmEnabledUseCase(repository: userRepository)
         }

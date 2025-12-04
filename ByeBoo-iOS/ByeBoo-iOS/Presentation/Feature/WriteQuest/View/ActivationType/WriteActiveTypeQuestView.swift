@@ -183,11 +183,3 @@ extension WriteActiveTypeQuestView {
         )
     }
 }
-
-extension WriteActiveTypeQuestView: QuestCompleteProtocol {
-    func changeStyle(count: Int) {
-        if count == 1 {
-            confirmButton.updateType(.enabled)
-        }
-    }
-}
