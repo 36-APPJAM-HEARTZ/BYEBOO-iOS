@@ -124,12 +124,13 @@ final class FinishJourneyView: BaseView {
             $0.centerX.equalToSuperview()
         }
         startButton.snp.makeConstraints {
-            $0.top.equalTo(characterLottie.snp.bottom).offset(30.adjustedH)
+            $0.top.equalTo(characterLottie.snp.bottom).offset(41.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
         lookBackButton.snp.makeConstraints {
             $0.top.equalTo(startButton.snp.bottom).offset(16.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.bottom.equalToSuperview().inset(36.adjustedH)
         }
     }
 }

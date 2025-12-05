@@ -132,7 +132,7 @@ final class QuestTipView: BaseView {
         backgroundColor = .grayscale900
         
         navigationView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(72.adjustedH)
+            $0.top.equalTo(safeAreaLayoutGuide.snp.top)
             $0.leading.trailing.equalTo(safeAreaLayoutGuide)
             $0.height.equalTo(24.adjustedH)
         }
