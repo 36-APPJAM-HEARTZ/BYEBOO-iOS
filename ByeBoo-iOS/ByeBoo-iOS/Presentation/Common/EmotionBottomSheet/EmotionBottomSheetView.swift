@@ -47,7 +47,7 @@ final class EmotionBottomSheetView: BaseView {
     }
     
     override func setStyle() {
-        backgroundColor = .grayscale90080
+        backgroundColor = .grayscale900
         
         titleLabel.do {
             $0.text = "퀘스트를 완료한 후,\n어떤 감정이 느껴지시나요?"
@@ -79,8 +79,6 @@ final class EmotionBottomSheetView: BaseView {
                 $0.spacing = 20.adjustedW
             }
         }
-        
-        setBlurEffect()
     }
     
     override func setLayout() {
