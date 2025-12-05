@@ -10,7 +10,7 @@ import UIKit
 
 enum ArchiveViewControllerEntryPoint {
     case mypage
-    case quesMain
+    case questMain
     case edit
 }
 
@@ -94,7 +94,7 @@ extension ArchiveQuestViewController: Dismissible {
     func close() {
         guard let entryViewController else { return }
         switch entryViewController {
-        case .mypage, .quesMain:
+        case .mypage, .questMain:
             self.navigationController?.popViewController(animated: true)
         case .edit:
             let viewController = ByeBooTabBar()
