@@ -195,7 +195,7 @@ extension QuestCheckViewController {
     
     private func scrollToBottom() {
         let collectionView = questsCheckView.questCollectionView
-        let extraOffset: CGFloat = 80
+        let extraOffset: CGFloat = 100.adjustedH
         let maxOffset = collectionView.contentSize.height - collectionView.bounds.height
         let targetOffset = max(maxOffset + extraOffset, 0)
         
