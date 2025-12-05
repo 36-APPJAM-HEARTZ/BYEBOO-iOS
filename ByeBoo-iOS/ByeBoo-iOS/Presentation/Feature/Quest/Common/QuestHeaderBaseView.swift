@@ -46,7 +46,7 @@ class QuestHeaderBaseView: BaseView {
     
     override func setLayout() {
         periodTag.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(72.adjustedH)
+            $0.top.equalTo(safeAreaLayoutGuide.snp.top)
             $0.leading.equalTo(safeAreaLayoutGuide.snp.leading).inset(24.adjustedW)
         }
         titleLabel.snp.makeConstraints {
