@@ -142,6 +142,7 @@ extension CompletedQuestsViewController: UICollectionViewDelegate {
         let quest = viewModel.getQuest(section: indexPath.section, item: indexPath.item)
         
         let archiveQuestController = ViewControllerFactory.shared.makeArchiveQuestViewController()
+        archiveQuestController.entryViewController = .mypage
         archiveQuestController.configure(questID: quest?.questId ?? 1, questType: quest?.questStyle ?? .activation)
         archiveQuestController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(archiveQuestController, animated: false)

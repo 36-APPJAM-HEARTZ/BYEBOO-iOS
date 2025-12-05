@@ -19,28 +19,33 @@ struct WriteActiveTypeViewModel: ViewModelType {
     private let saveActiveQuestUseCase: SaveQuestActiveUseCase
     private let getQuestInfoUseCase: GetQuestInfoUseCase
     private let editActiveQuestUseCase: EditQuestActiveUseCase
+    private let isValidQuestAnswerUseCase: IsValidQuestAnswerUseCase
     
     private let questInfoResultSubject: PassthroughSubject<Result<QuestInfoEntity, ByeBooError>, Never> = .init()
     private let questActiveResultSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private let didSuccessPostSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private let didSuccessEditSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
+    private let isValidTextSubject: PassthroughSubject<Bool, Never> = .init()
     
     init(
         saveQuestTypeUseCase:  SaveQuestTypeUseCase,
         saveActiveTypeUseCase: SaveQuestActiveUseCase,
         getQuestInfoUseCase: GetQuestInfoUseCase,
-        editActiveQuestUseCase: EditQuestActiveUseCase
+        editActiveQuestUseCase: EditQuestActiveUseCase,
+        isValidQuestAnswerUseCase: IsValidQuestAnswerUseCase
     ){
         self.saveQuestTypeUseCase = saveQuestTypeUseCase
         self.saveActiveQuestUseCase = saveActiveTypeUseCase
         self.getQuestInfoUseCase = getQuestInfoUseCase
         self.editActiveQuestUseCase = editActiveQuestUseCase
+        self.isValidQuestAnswerUseCase = isValidQuestAnswerUseCase
         
         output = Output(
             questInfoResultPublisher: questInfoResultSubject.eraseToAnyPublisher(),
             didSuccessPostPublisher: didSuccessPostSubject.eraseToAnyPublisher(),
             questInfoWhenEditModeResultPublisher: questInfoResultSubject.eraseToAnyPublisher(),
-            didSuccessEditPublisher: didSuccessEditSubject.eraseToAnyPublisher()
+            didSuccessEditPublisher: didSuccessEditSubject.eraseToAnyPublisher(),
+            isValidTextPublisher: isValidTextSubject.eraseToAnyPublisher()
         )
     }
     
@@ -70,6 +75,8 @@ struct WriteActiveTypeViewModel: ViewModelType {
                     imageKey: imageKey
                 )
             }
+        case .textFieldEditing(let answerText, let text, let imgCount):
+            isValidText(previousText: answerText, changingText: text, imgCount: imgCount)
         }
     }
 }
@@ -87,6 +94,7 @@ extension WriteActiveTypeViewModel {
             isImageChanged: Bool
         )
         case navigateFromArchiveViewController(questID: Int)
+        case textFieldEditing(answerText: String, text: String, imgCount: Int)
     }
     
     struct Output {
@@ -94,6 +102,7 @@ extension WriteActiveTypeViewModel {
         let didSuccessPostPublisher:  AnyPublisher<Result<Void, ByeBooError>, Never>
         let questInfoWhenEditModeResultPublisher: AnyPublisher<Result<QuestInfoEntity, ByeBooError>, Never>
         let didSuccessEditPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
+        let isValidTextPublisher: AnyPublisher<Bool, Never>
     }
 }
 
@@ -169,6 +178,15 @@ extension WriteActiveTypeViewModel {
             }
             
         }
+    }
+    
+    private func isValidText(previousText: String, changingText: String, imgCount: Int) {
+        let isValidText: Bool = isValidQuestAnswerUseCase.executeWhenActiceType(
+            previousText: previousText,
+            changingText: changingText,
+            imgCount: imgCount
+        )
+        isValidTextSubject.send(isValidText)
     }
 }
 

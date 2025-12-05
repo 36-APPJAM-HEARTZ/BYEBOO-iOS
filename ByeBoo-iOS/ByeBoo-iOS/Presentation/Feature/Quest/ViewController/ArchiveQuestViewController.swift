@@ -8,6 +8,12 @@
 import Combine
 import UIKit
 
+enum ArchiveViewControllerEntryPoint {
+    case mypage
+    case questMain
+    case edit
+}
+
 final class ArchiveQuestViewController: BaseViewController {
         
     private var rootView = ArchiveQuestView(type: .activation)
@@ -16,6 +22,7 @@ final class ArchiveQuestViewController: BaseViewController {
     
     private var questID: Int = 1
     private var questType: QuestType = .activation
+    var entryViewController: ArchiveViewControllerEntryPoint?
     
     init(viewModel: CompleteQuestViewModel
     ) {
@@ -85,17 +92,23 @@ extension ArchiveQuestViewController: ToastPresentable, ToastErrorHandler {
 
 extension ArchiveQuestViewController: Dismissible {
     func close() {
-        let viewController = ByeBooTabBar()
-        viewController.selectedIndex = 1
-        
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+        guard let entryViewController else { return }
+        switch entryViewController {
+        case .mypage, .questMain:
+            self.navigationController?.popViewController(animated: true)
+        case .edit:
+            let viewController = ByeBooTabBar()
+            viewController.selectedIndex = 1
             
-            ViewControllerUtils.setRootViewController(
-                window: window,
-                viewController: viewController,
-                withAnimation: true
-            )
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+                
+                ViewControllerUtils.setRootViewController(
+                    window: window,
+                    viewController: viewController,
+                    withAnimation: true
+                )
+            }
         }
     }
 }

@@ -8,23 +8,29 @@
 import Foundation
 
 protocol IsValidQuestAnswerUseCase {
-    func execute(previousText: String, changingText: String) -> Bool
+    func executeWhenQuestionType(previousText: String, changingText: String) -> Bool
+    func executeWhenActiceType(previousText: String, changingText: String, imgCount: Int) -> Bool
 }
 
 struct DefaultIsValidQuestAnswerUseCase: IsValidQuestAnswerUseCase {
-    func execute(previousText: String, changingText: String) -> Bool {
-        if previousText.isEmpty {
-            if isValidAnswerText(text: changingText) {
-                return true
-            } else {
-                return false
-            }
+    func executeWhenQuestionType(previousText: String, changingText: String) -> Bool {
+        switch previousText.isEmpty {
+        case true:
+            let isValidAnswer: Bool = isValidAnswerText(text: changingText)
+            return isValidAnswer
+        case false:
+            let isValidAnswer: Bool = previousText != changingText && isValidAnswerText(text: changingText)
+            return isValidAnswer
+        }
+    }
+    
+    func executeWhenActiceType(previousText: String, changingText: String, imgCount: Int) -> Bool {
+        if !previousText.isEmpty {
+            let isValidAnswer: Bool = previousText != changingText && imgCount == 1
+            return isValidAnswer
         } else {
-            if previousText != changingText && isValidAnswerText(text: changingText) {
-                return true
-            } else {
-                return false
-            }
+            if imgCount == 1 { return true }
+            return false
         }
     }
     

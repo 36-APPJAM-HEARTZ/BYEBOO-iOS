@@ -267,10 +267,23 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                     guard let self else { return }
                     ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
                     let viewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
+                    viewController.entryViewController = .edit
                     viewController.configure(questID: self.questID, questType: .activation)
                     self.navigationController?.pushFromLeftToRight(viewController)
                 case .failure(let error):
                     self?.handleError(error)
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.isValidTextPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case true:
+                    self?.rootView.confirmButton.updateType(.enabled)
+                case false:
+                    self?.rootView.confirmButton.updateType(.disabled)
                 }
             }
             .store(in: &cancellables)
@@ -383,6 +396,7 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
             }
         }
         
+        rootView.imgCount = 1
         rootView.updateImageCountLabel(count: 1)
         rootView.imageContainer.changeIconHidden()
         rootView.confirmButton.updateType(.disabled)
@@ -402,14 +416,12 @@ extension WriteActiveTypeQuestViewController: QuestCompleteProtocol {
     func changeCount(count: Int) {
         if count == 1 {
             rootView.confirmButton.updateType(.enabled)
+        } else {
+            rootView.confirmButton.updateType(.disabled)
         }
     }
     
     func updateButtonWhenWriting(text: String) {
-        if rootView.imgCount == 1 && answerText != text {
-            rootView.confirmButton.updateType(.enabled)
-        } else {
-            rootView.confirmButton.updateType(.disabled)
-        }
+        viewModel.action(.textFieldEditing(answerText: self.answerText, text: text, imgCount: rootView.imgCount))
     }
 }

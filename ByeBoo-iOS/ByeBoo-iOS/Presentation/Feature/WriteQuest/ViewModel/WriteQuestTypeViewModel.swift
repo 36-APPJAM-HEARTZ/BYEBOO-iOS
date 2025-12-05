@@ -131,7 +131,7 @@ extension WriteQuestionTypeViewModel {
     }
     
     private func isValidText(previousText: String, changingText: String) {
-        let isValidText: Bool = isValidQuestAnswerUseCase.execute(previousText: previousText, changingText: changingText)
+        let isValidText: Bool = isValidQuestAnswerUseCase.executeWhenQuestionType(previousText: previousText, changingText: changingText)
         isValidTextSubject.send(isValidText)
     }
 }
