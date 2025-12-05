@@ -267,6 +267,7 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                     guard let self else { return }
                     ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
                     let viewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
+                    viewController.entryViewController = .edit
                     viewController.configure(questID: self.questID, questType: .activation)
                     self.navigationController?.pushFromLeftToRight(viewController)
                 case .failure(let error):
@@ -395,6 +396,7 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
             }
         }
         
+        rootView.imgCount = 1
         rootView.updateImageCountLabel(count: 1)
         rootView.imageContainer.changeIconHidden()
         rootView.confirmButton.updateType(.disabled)
