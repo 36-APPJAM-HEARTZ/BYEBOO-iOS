@@ -9,6 +9,7 @@ import Foundation
 
 protocol IsValidQuestAnswerUseCase {
     func executeWhenQuestionType(previousText: String, changingText: String) -> Bool
+    func executeWhenActiceType(previousText: String, changingText: String, imgCount: Int) -> Bool
 }
 
 struct DefaultIsValidQuestAnswerUseCase: IsValidQuestAnswerUseCase {
@@ -23,9 +24,11 @@ struct DefaultIsValidQuestAnswerUseCase: IsValidQuestAnswerUseCase {
         }
     }
     
-                return false
-            }
-        }
+    func executeWhenActiceType(previousText: String, changingText: String, imgCount: Int) -> Bool {
+        if !previousText.isEmpty {
+            let isValidAnswer: Bool = previousText != changingText && imgCount == 1
+            return isValidAnswer
+        } else { return true }
     }
     
     private func isValidAnswerText(text: String) -> Bool {

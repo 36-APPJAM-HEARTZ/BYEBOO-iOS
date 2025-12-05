@@ -274,6 +274,18 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.output.isValidTextPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case true:
+                    self?.rootView.confirmButton.updateType(.enabled)
+                case false:
+                    self?.rootView.confirmButton.updateType(.disabled)
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -402,14 +414,12 @@ extension WriteActiveTypeQuestViewController: QuestCompleteProtocol {
     func changeCount(count: Int) {
         if count == 1 {
             rootView.confirmButton.updateType(.enabled)
+        } else {
+            rootView.confirmButton.updateType(.disabled)
         }
     }
     
     func updateButtonWhenWriting(text: String) {
-        if rootView.imgCount == 1 && answerText != text {
-            rootView.confirmButton.updateType(.enabled)
-        } else {
-            rootView.confirmButton.updateType(.disabled)
-        }
+        viewModel.action(.textFieldEditing(answerText: self.answerText, text: text, imgCount: rootView.imgCount))
     }
 }
