@@ -28,7 +28,10 @@ struct DefaultIsValidQuestAnswerUseCase: IsValidQuestAnswerUseCase {
         if !previousText.isEmpty {
             let isValidAnswer: Bool = previousText != changingText && imgCount == 1
             return isValidAnswer
-        } else { return true }
+        } else {
+            if imgCount == 1 { return true }
+            return false
+        }
     }
     
     private func isValidAnswerText(text: String) -> Bool {
