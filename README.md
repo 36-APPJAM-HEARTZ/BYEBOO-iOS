@@ -167,7 +167,7 @@ add: #2 이미지 에셋 추가
 
 | 카카오 로그인 | 애플 로그인 | 
 | ---------| ------------------- |
-| <img src = "https://github.com/user-attachments/assets/3a7ffca2-7a26-4026-8019-6c4e76f6220a" />  | <img src = "https://github.com/user-attachments/assets/da8b8673-f0f3-4bfc-bfd9-1d41acbb2d7d" /> |
+| <img src = "https://github.com/user-attachments/assets/1d436e77-d26f-43e2-a1a0-b5af19e75faf"/>  | <img src = "https://github.com/user-attachments/assets/da8b8673-f0f3-4bfc-bfd9-1d41acbb2d7d" /> |
  
 
 | 정보 입력 및 사용자 맞춤 여정 결과 확인 | 
