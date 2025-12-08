@@ -181,7 +181,7 @@ add: #2 이미지 에셋 추가
 
 | 질문형 퀘스트 작성 -> 작성 완료 확인 | 행동형 퀘스트 작성 -> 작성 완료 확인 | 
 | ----------------------------| -----------------------------|
-| <img src = "https://github.com/user-attachments/assets/0bd15b01-44b0-4f37-9e27-eee1c9373a7" /> | <img src ="https://github.com/user-attachments/assets/2a93cd9b-b7bb-4322-9bb3-2977b2debba8"/> |
+| <img src = "https://github.com/user-attachments/assets/790f639e-cf78-42cb-9d1b-1e67c7ccc40c"/> | <img src ="https://github.com/user-attachments/assets/2a93cd9b-b7bb-4322-9bb3-2977b2debba8"/> |
 
 
 | 질문형 퀘스트 수정 | 행동형 퀘스트 수정 |
