@@ -15,10 +15,10 @@ final class MyPageViewController: BaseViewController {
     private let viewModel: MyPageViewModel
     private var cancellables = Set<AnyCancellable>()
     private var name: String?
-    private var beforeNotificationStatus = false
-    private var didOpenSetting = false
     
     private let rootView = MyPageView()
+    private lazy var beforeNotificationStatus = rootView.noticeView.noticeSwitch.isOn
+    private var didOpenSetting = false
     
     init(viewModel: MyPageViewModel) {
         self.viewModel = viewModel
