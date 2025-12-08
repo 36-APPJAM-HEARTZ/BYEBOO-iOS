@@ -16,6 +16,7 @@ final class MyPageViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     private var name: String?
     private var beforeNotificationStatus = false
+    private var didOpenSetting = false
     
     private let rootView = MyPageView()
     
@@ -204,25 +205,29 @@ extension MyPageViewController {
     
     @objc
     private func checkNoticeAuthorizationWhenBack() {
+        guard didOpenSetting else { return }
+        
         UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
             guard let self else { return }
             
+            let isAuthorized: Bool
             switch settings.authorizationStatus {
             case .authorized, .provisional, .ephemeral:
-                if !beforeNotificationStatus {
-                    self.viewModel.action(.notificationSwitchDidTap)
-                }
-                beforeNotificationStatus = true
+                isAuthorized = true
             default:
-                if beforeNotificationStatus {
-                    self.viewModel.action(.notificationSwitchDidTap)
-                } else {
-                    DispatchQueue.main.async {
-                        self.rootView.noticeView.noticeSwitch.setOn(false, animated: false)
-                    }
-                }
-                beforeNotificationStatus = false
+                isAuthorized = false
             }
+            
+            if beforeNotificationStatus != isAuthorized {
+                viewModel.action(.notificationSwitchDidTap)
+            } else if !isAuthorized {
+                DispatchQueue.main.async {
+                    self.rootView.noticeView.noticeSwitch.setOn(false, animated: false)
+                }
+            }
+            
+            beforeNotificationStatus = isAuthorized
+            didOpenSetting = false
         }
     }
     
@@ -425,6 +430,7 @@ extension MyPageViewController {
     private func moveSetting() {
         if let url = URL(string: UIApplication.openSettingsURLString) {
             UIApplication.shared.open(url)
+            didOpenSetting = true
         }
     }
 }
