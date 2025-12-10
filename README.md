@@ -184,6 +184,10 @@ add: #2 이미지 에셋 추가
 | <img src = "https://github.com/user-attachments/assets/790f639e-cf78-42cb-9d1b-1e67c7ccc40c"/> | <img src ="https://github.com/user-attachments/assets/2a93cd9b-b7bb-4322-9bb3-2977b2debba8"/> |
 
 
+| 퀘스트 알림 | 알림 터치 시 앱으로 이동 | 
+| ----------------------------| -----------------------------|
+| <img src = "https://github.com/user-attachments/assets/be3caedb-9f12-4c05-b069-3c22ea2c4b76" /> | <img src = "https://github.com/user-attachments/assets/1507e397-e2e3-41dd-8108-01a1192f64f5" /> |
+
 | 질문형 퀘스트 수정 | 행동형 퀘스트 수정 |
 | -------------| -------------|
 |<img src = "https://github.com/user-attachments/assets/b2c7e6e4-74a8-4e3d-87e3-e6ec25f4ce51" /> | <img src= "https://github.com/user-attachments/assets/f6854d3a-3419-4f6d-9e4c-4aa3dedfe8d8"/> |
