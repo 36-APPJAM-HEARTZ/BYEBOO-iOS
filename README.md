@@ -1,7 +1,8 @@
 <img width="1200" src="https://github.com/user-attachments/assets/20e8a39a-78a1-4c88-bec4-3c84b7d257a5" />
 
 # <img src="https://github.com/user-attachments/assets/4571f8fd-8b93-44ce-b1d6-48fac7655bad" height="40"/> ByeBoo
-> 이별 후의 감정을 정리하고 극복하도록 돕는 감정 케어 서비스
+> 이별 후의 감정을 정리하고 극복하도록 돕는 감정 케어 서비스   
+🔮 [App Store](https://apps.apple.com/kr/app/bye-boo-%EB%B0%94%EC%9D%B4%EB%B6%80-%EC%9D%B4%EB%B3%84-%EA%B7%B9%EB%B3%B5-%EC%9D%BC%EA%B8%B0%EC%9E%A5/id6748205348)
 <br/>
 
 ##  <img width="40" src="https://github.com/user-attachments/assets/404fe305-6805-4971-8599-440227ab5716" /> 서비스 소개
@@ -9,7 +10,7 @@
 > `ByeBoo`는 이별의 감정을 맞춤형 퀘스트를 통해 정리하고, 감정 회복의 여정을 함께하는 감정 케어 앱입니다.
 사용자는 자기 성찰형/행동 실천형 퀘스트를 선택하여 보리와 함께 감정을 직면하고 일상을 회복해나갑니다.
 
-### ➊ 스플래시&온보딩
+### ➊ 스플래시 & 온보딩
 가입 직후 온보딩 과정을 통해 서비스의 세계관에 대해 안내 받습니다. 메인 캐릭터인 ‘보리’의 스토리를 들으며 서비스에 대한 이해도를 높일 수 있습니다.
 
 ### ➋ 정보 입력
@@ -33,6 +34,12 @@
  > 몸을 움직이며 감정을 정리하는 실천 중심의 퀘스트입니다.   
  >간단한 행동을 통해 머릿속을 환기시키고, 무기력에서 벗어나 스스로 일상의 루틴을 되찾을 수 있도록 유도합니다.
 
+### ➎ 오프보딩 & 마이페이지
+
+30개의 퀘스트를 모두 완료하고, 1개의 이별 극복 여정이 끝나면 보리의 축하 인사를 받습니다.    
+이후 추가적인 이별 극복 여정이 필요하면 ‘새로운 이별 극복 여정 시작하기’를 통해 추가 여정을 선택하고, 새롭게 시작할 수 있습니다.   
+남긴 기록들을 돌아보고 싶을 경우, ‘완료한 여정 돌아보기’를 통해 이번 여정에서 작성한 내용들을 다시 볼 수 있습니다.
+
 <br/>
 <br/>
 
@@ -41,7 +48,7 @@
 | ![최주리](https://github.com/user-attachments/assets/a1889d8b-f465-4c5a-b661-5ff8a004b3a6) | ![허승준](https://github.com/user-attachments/assets/1377d3a0-1eab-47cb-8a3b-1bcf4aea4e00) | ![이나연](https://github.com/user-attachments/assets/288b7b27-233e-40eb-bccd-0341e81f94bc) |
 |:---:|:---:|:---:|
 | [**최주리 (Lead)**](https://github.com/juri123123) | [**허승준**](https://github.com/dev-domo) | [**이나연**](https://github.com/y-eonee) |
-| `온보딩`, `홈` | `정보입력`, `퀘스트 조회` | `퀘스트 작성` |
+| `온보딩`, `홈` | `정보입력`, `퀘스트 조회`, `알림` | `퀘스트 작성`, `퀘스트 수정` |
 
 <br/>
 <br/>
@@ -78,6 +85,7 @@ SwiftUI는 예측하지 못한 동작으로 인해 기대와는 다른 UI가 제
 | Combine | 데이터 바인딩을 편리하게 하기 위함 |
 | Kingfisher | 이미지 처리 및 캐싱을 편리하게 하기 위함 |
 | Lottie | 애니메이션 구현을 위함 |
+| Firebase | FCM 토큰을 이용한 알람 구현을 위함 |
 
 <br/>
 <br/>
@@ -156,21 +164,31 @@ add: #2 이미지 에셋 추가
 
 
 ##  <img width="50" src="https://github.com/user-attachments/assets/1c7377d3-09d5-44be-aa3b-92c40c3ceaeb" /> 시연 영상 
-| 온보딩  | 정보 입력 | 사용자 맞춤 여정 결과 확인 |
-| -------| ---------| ------------------- |
-| <img src = "https://github.com/user-attachments/assets/3cb6b646-620e-4e21-801a-ad2bdf575150" /> | <img src ="https://github.com/user-attachments/assets/7281e42e-3e80-471d-bb3b-9f37f49d5248" />  | <img src = "https://github.com/user-attachments/assets/df10384d-8e8a-4fdb-b812-8242c4a93cdf" /> | 
 
-|퀘스트 조회 | 퀘스트 작성 -> 퀘스트 팁 조회 | 행동형 퀘스트 작성 -> 작성 완료 확인 |
+| 카카오 로그인 | 애플 로그인 | 
+| ---------| ------------------- |
+| <img src = "https://github.com/user-attachments/assets/1d436e77-d26f-43e2-a1a0-b5af19e75faf"/>  | <img src = "https://github.com/user-attachments/assets/da8b8673-f0f3-4bfc-bfd9-1d41acbb2d7d" /> |
+ 
+
+| 정보 입력 및 사용자 맞춤 여정 결과 확인 | 
+| --------------------------- |
+| <img src = "https://github.com/user-attachments/assets/ece961f2-7df3-4362-8c89-825769c3f44a" /> | 
+
+| 퀘스트 조회 | 퀘스트 작성 -> 퀘스트 팁 조회 | 퀘스트 시작 모달 -> 퀘스트 팁 조회 |
 | --------| --------| ---------------|
-| <img src ="https://github.com/user-attachments/assets/bb13254b-1623-40fd-8323-b8150fbc39e1" />  | <img src = "https://github.com/user-attachments/assets/7aa3bfbb-d3a7-4239-abe1-5657779f61a0" /> | ![바이부 시연영상](https://github.com/user-attachments/assets/03ab9547-fb7f-4bdc-873d-9108e6a58096)
-|
+| <img src = "https://github.com/user-attachments/assets/e17ee421-f1d5-483b-b3bf-f2e8a0041379"/>  | <img src = "https://github.com/user-attachments/assets/323ef7ae-9cb4-4b3b-94b5-0d8a0578b317"/> | <img src = "https://github.com/user-attachments/assets/cc45c416-16dc-4a3e-8089-0ebf833d2bbe" /> |
 
-| 퀘스트 시작 모달 -> 퀘스트 팁 조회 | 질문형 퀘스트 작성 -> 작성 완료 확인 |
-| ----------------------------| -----------------------------| 
-| <img src ="https://github.com/user-attachments/assets/ff53ab6a-9448-4845-8af8-2a30b50bdc4d"/> | <img src ="https://github.com/user-attachments/assets/ecceddd4-2e7c-482f-8123-97738750a9ef" /> |
 
-| 퀘스트 조회 -> 완료한 행동형 퀘스트 확인 | 퀘스트 조회 -> 완료한 질문형 퀘스트 확인 |
-| ----------------------------| -----------------------------| 
-|<img src ="https://github.com/user-attachments/assets/d36d11f2-35ad-4057-8b18-2a61946a5dff" width = "250" /> | <img src="https://github.com/user-attachments/assets/bf79eba1-97cd-4183-9848-17fe377a07f6" width ="250"/> |
+| 질문형 퀘스트 작성 -> 작성 완료 확인 | 행동형 퀘스트 작성 -> 작성 완료 확인 | 
+| ----------------------------| -----------------------------|
+| <img src = "https://github.com/user-attachments/assets/790f639e-cf78-42cb-9d1b-1e67c7ccc40c"/> | <img src ="https://github.com/user-attachments/assets/2a93cd9b-b7bb-4322-9bb3-2977b2debba8"/> |
 
+
+| 퀘스트 알림 | 알림 터치 시 앱으로 이동 | 
+| ----------------------------| -----------------------------|
+| <img src = "https://github.com/user-attachments/assets/be3caedb-9f12-4c05-b069-3c22ea2c4b76" /> | <img src = "https://github.com/user-attachments/assets/1507e397-e2e3-41dd-8108-01a1192f64f5" /> |
+
+| 질문형 퀘스트 수정 | 행동형 퀘스트 수정 |
+| -------------| -------------|
+|<img src = "https://github.com/user-attachments/assets/b2c7e6e4-74a8-4e3d-87e3-e6ec25f4ce51" /> | <img src= "https://github.com/user-attachments/assets/f6854d3a-3419-4f6d-9e4c-4aa3dedfe8d8"/> |
 
