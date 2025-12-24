@@ -63,7 +63,6 @@ extension LoginViewController {
                 switch result {
                 case .success(let isRegisterd):
                     ByeBooLogger.debug(isRegisterd)
-                    ByeBooLogger.debug("한번만 호출되나")
                     let nextViewController: UIViewController
                     if isRegisterd {
                         nextViewController = ByeBooTabBar()
