@@ -57,11 +57,13 @@ extension LoginViewController{
 extension LoginViewController {
     private func bind() {
         viewModel.output.isRegisteredPublisher
+            .throttle(for: .seconds(1.0), scheduler: DispatchQueue.main, latest: false)
             .receive(on: DispatchQueue.main)
             .sink { result in
                 switch result {
                 case .success(let isRegisterd):
                     ByeBooLogger.debug(isRegisterd)
+                    ByeBooLogger.debug("한번만 호출되나")
                     let nextViewController: UIViewController
                     if isRegisterd {
                         nextViewController = ByeBooTabBar()
