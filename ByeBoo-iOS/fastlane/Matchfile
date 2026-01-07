@@ -1,0 +1,6 @@
+git_url(ENV['PRIVATE_REPOSITORY'])
+
+storage_mode("git")
+
+# 로그 확인용
+verbose(true)
