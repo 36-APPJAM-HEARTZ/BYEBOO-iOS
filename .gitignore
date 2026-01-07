@@ -130,10 +130,31 @@ iOSInjectionProject/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
-/GoogleService-Info.plist
+**/GoogleService-Info.plist
 
 ### Env
 *.xcconfig
 .env
+
+### fastlane
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots
+**/fastlane/test_output
+**/fastlane/FastlaneRunner
+
+Gemfile.lock
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots/**/*.png
+**/fastlane/screenshots/
+**/fastlane/BuildOutputs
+**/fastlane/metadata
+**/fastlane/Deliverfile
+**/fastlane/.env.default
+**Gemfile.lock
+
+### UserInterfaceState
+**/UserInterfaceState.xcuserstate
 
 # End of https://www.toptal.com/developers/gitignore/api/macos,swift,xcode
