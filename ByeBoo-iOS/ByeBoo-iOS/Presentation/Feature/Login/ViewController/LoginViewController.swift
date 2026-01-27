@@ -57,6 +57,7 @@ extension LoginViewController{
 extension LoginViewController {
     private func bind() {
         viewModel.output.isRegisteredPublisher
+            .throttle(for: .seconds(1.0), scheduler: DispatchQueue.main, latest: false)
             .receive(on: DispatchQueue.main)
             .sink { result in
                 switch result {
