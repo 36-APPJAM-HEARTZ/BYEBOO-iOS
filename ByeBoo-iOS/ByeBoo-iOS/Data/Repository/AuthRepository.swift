@@ -98,7 +98,7 @@ struct DefaultAuthRepository: AuthInterface {
     
     func autoLogin() async throws -> Bool {
         let isOnboardingCompleted: Bool = userDefaultsService.load(key: .isOnboardingCompleted) ?? false
-        ByeBooLogger.debug(isOnboardingCompleted)
+        ByeBooLogger.debug("온보딩 여부 \(isOnboardingCompleted)")
         
         if !keychainService.load(key: .accessToken).isEmpty
             && !keychainService.load(key: .refreshToken).isEmpty
@@ -214,7 +214,7 @@ final class MockAuthRepository: AuthInterface {
     func appleLogin(platform: LoginPlatform) async throws {
         appleLoginCalled = true
         
-        var (identityToken, authorizationCode) = try await network.appleRequest()
+        let (identityToken, authorizationCode) = try await network.appleRequest()
         let _ = userDefaultsService.save("APPLE", key: .loginPlatform)
         keychainService.save(key: .authorization, token: identityToken)
         keychainService.save(key: .authorizationCode, token: authorizationCode)
