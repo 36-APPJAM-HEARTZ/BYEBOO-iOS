@@ -56,7 +56,7 @@ actor DefaultTokenService: TokenService {
             .validate()
             .responseDecodable(of: BaseResponse<TokenReissueResponseDTO>.self) { [weak self] response in
                 guard let self else { return }
-                ByeBooLogger.debug("!!Reissue \(response)")
+                ByeBooLogger.debug("💡Reissue \(response)")
                 
                 switch response.result {
                 case .success(let data):
@@ -96,7 +96,6 @@ actor DefaultTokenService: TokenService {
     }
     
     private func clearKeychain() {
-        ByeBooLogger.debug("clearKeychain() called (TokenService)\n\(Thread.callStackSymbols.joined(separator: "\n"))")
         for key in KeyType.allCases {
             let token = keychainService.load(key: key)
             if !token.isEmpty {
