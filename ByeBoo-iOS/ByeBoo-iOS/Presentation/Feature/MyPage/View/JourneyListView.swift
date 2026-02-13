@@ -77,9 +77,9 @@ final class JourneyListView: BaseView {
         }
         
         emptyLabel?.applyByeBooFont (
-            style: .body3R16,
+            style: .body6R14,
             text: "아직 완료된 여정이 없어요!",
-            color: .grayscale300
+            color: .grayscale400
         )
         
         prepareTitleLabel.applyByeBooFont (
@@ -114,7 +114,7 @@ final class JourneyListView: BaseView {
             prepareView.addSubview(prepareTitleLabel)
             
             prepareView.snp.makeConstraints {
-                $0.height.equalTo(62.adjustedH)
+                $0.height.equalTo(65.adjustedH)
             }
             prepareTitleLabel.snp.makeConstraints {
                 $0.center.equalToSuperview()
@@ -128,13 +128,13 @@ final class JourneyListView: BaseView {
     
     override func setLayout() {
         stackView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(16.adjustedH)
+            $0.top.equalToSuperview()
             $0.leading.equalToSuperview().inset(24.adjustedW)
         }
         
         if let emptyLabel {
             emptyLabel.snp.makeConstraints {
-                $0.top.equalTo(stackView.snp.bottom).offset(201.adjustedH)
+                $0.top.equalTo(stackView.snp.bottom).offset(176.5.adjustedH)
                 $0.centerX.equalToSuperview()
             }
         }

@@ -61,19 +61,19 @@ final class NewJourneySelectView: BaseView {
         let safeArea = safeAreaLayoutGuide
         
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(safeArea).offset(3.5.adjustedH)
+            $0.top.equalTo(safeArea).offset(10.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedW)
         }
         descriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(8.adjustedH)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(12.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedH)
         }
         divider1.snp.makeConstraints {
-            $0.top.equalTo(descriptionLabel.snp.bottom).offset(11.5.adjustedH)
+            $0.top.equalTo(descriptionLabel.snp.bottom).offset(10.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
         unCompleteListView.snp.makeConstraints {
-            $0.top.equalTo(divider1.snp.bottom).offset(8.adjustedH)
+            $0.top.equalTo(divider1.snp.bottom).offset(20.adjustedH)
             $0.horizontalEdges.equalToSuperview()
         }
     }
