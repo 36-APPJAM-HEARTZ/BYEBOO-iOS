@@ -52,6 +52,15 @@ enum EmotionChipState {
             return 0.5
         }
     }
+    
+    var font: FontManager {
+        switch self {
+        case .selected:
+            return FontManager.body4Sb14
+        case .defaultState, .unselected:
+            return FontManager.body5M14
+        }
+    }
 }
 
 final class ByeBooEmotionChip: BaseView {
@@ -89,7 +98,7 @@ final class ByeBooEmotionChip: BaseView {
         }
         
         emotionTag.applyByeBooFont(
-            style: .body4Sb14,
+            style: chipState.font,
             color: chipState.textColor,
             textAlignment: .center
         )
@@ -126,11 +135,20 @@ extension ByeBooEmotionChip {
     func updateEmotion(_ emotionType: ByeBooEmotion) {
         self.emotionType = emotionType
         self.emotionImage.image = emotionType.emotionImage.image
-        self.emotionTag.text = emotionType.emotionText
+        emotionTag.applyByeBooFont(
+            style: chipState.font,
+            text: emotionType.emotionText,
+            color: chipState.textColor,
+            textAlignment: .center
+        )
     }
     
     func updateChipUI() {
-        self.emotionTag.textColor = chipState.textColor
+        emotionTag.applyByeBooFont(
+            style: chipState.font,
+            color: chipState.textColor,
+            textAlignment: .center
+        )
         self.backgroundColor = chipState.backgroundColor
         self.layer.borderColor = chipState.borderColor.cgColor
         self.layer.opacity = chipState.backgroundOpacity
