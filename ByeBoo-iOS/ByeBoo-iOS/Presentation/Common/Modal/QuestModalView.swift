@@ -18,7 +18,7 @@ final class QuestModalView: BaseView, ModalProtocol {
     private let imageView = UIImageView()
     private let questLabel = UILabel()
     private let titleLabel = UILabel()
-    let tipButton = UIButton()
+    let tipButton = ByeBooTipTag()
     
     private var questNumber: Int
     private var quest: String
@@ -53,25 +53,15 @@ final class QuestModalView: BaseView, ModalProtocol {
             textAlignment: .center
         )
         
-        
-        titleLabel.applyByeBooFont(
-            style: .sub3M18,
-            text: quest,
-            color: .grayscale50,
-            textAlignment: .center,
-            numberOfLines: 0
-        )
-        titleLabel.lineBreakMode = .byWordWrapping
-        
-        tipButton.applyByeBooFont(
-            style: .body6R14,
-            text: "작성 TIP",
-            color: .grayscale300
-        )
-        tipButton.do {
-            $0.backgroundColor = .clear
-            $0.layer.cornerRadius = 12.adjustedW
-            $0.setUnderLine()
+        titleLabel.do {
+            $0.applyByeBooFont(
+                style: .sub3M18,
+                text: quest,
+                color: .grayscale50,
+                textAlignment: .center,
+                numberOfLines: 0
+            )
+            $0.lineBreakMode = .byWordWrapping
         }
     }
     
@@ -94,27 +84,24 @@ final class QuestModalView: BaseView, ModalProtocol {
         }
         
         questLabel.snp.makeConstraints {
-            $0.top.equalTo(imageView.snp.bottom).offset(17.5.adjustedH)
+            $0.top.equalTo(imageView.snp.bottom).offset(12.adjustedH)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(200.adjustedW)
-            $0.height.equalTo(21.adjustedH)
+            $0.horizontalEdges.equalToSuperview().inset(32.adjustedW)
         }
         
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(questLabel.snp.bottom).offset(8.adjustedH)
             $0.centerX.equalToSuperview()
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.horizontalEdges.equalToSuperview().inset(32.adjustedW)
         }
         
         tipButton.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(16.adjustedH)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(12.adjustedH)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(200.adjustedW)
-            $0.height.equalTo(18.adjustedH)
         }
         
         actionButton.snp.makeConstraints {
-            $0.top.equalTo(tipButton.snp.bottom).offset(17.5.adjustedH)
+            $0.top.equalTo(tipButton.snp.bottom).offset(24.adjustedH)
             $0.centerX.equalToSuperview()
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.height.equalTo(53.adjustedH)

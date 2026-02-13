@@ -19,7 +19,7 @@ final class WriteQuestTitleView: BaseView {
     private let questNumLabel =  UILabel()
     
     private let titleLabel = UILabel()
-    let tipTag = ByeBooFilledTag(tagType: .word3Purple, text: "작성 TIP")
+    let tipTag = ByeBooTipTag()
     
         
     init(stepNum: String, stepTitle: String, questNum: Int, title: String) {
