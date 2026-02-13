@@ -54,13 +54,13 @@ public enum FontManager {
         case .body2M16:
             return FontProperty(font: .medium, size: 16, lineHeight: 130, kern: -1)
         case .body3R16:
-            return FontProperty(font: .regular, size: 16, lineHeight: 130, kern: -1)
+            return FontProperty(font: .regular, size: 16, lineHeight: 150, kern: -1)
         case .body4Sb14:
-            return FontProperty(font: .semibold, size: 14, lineHeight: 130, kern: -1)
+            return FontProperty(font: .semibold, size: 14, lineHeight: 150, kern: -1)
         case .body5M14:
             return FontProperty(font: .medium, size: 14, lineHeight: 130, kern: -1)
         case .body6R14:
-            return FontProperty(font: .regular, size: 14, lineHeight: 130, kern: -1)
+            return FontProperty(font: .regular, size: 14, lineHeight: 150, kern: -1)
             
         case .cap1M12:
             return FontProperty(font: .medium, size: 12, lineHeight: 130, kern: -1)
@@ -77,5 +77,10 @@ public extension FontManager {
             return UIFont()
         }
         return font
+    }
+    
+    var lineHeight: CGFloat? {
+        guard let lineHeightPercent = fontProperty.lineHeight else { return nil }
+        return fontProperty.size * (lineHeightPercent / 100.0)
     }
 }
