@@ -16,20 +16,23 @@ final class NicknameStateView: BaseView {
     
     override func setStyle() {
         nicknameStateView.backgroundColor = .clear
-        stateLabel.do {
-            $0.text = NicknameState.normal.rawValue
-            $0.textColor = .grayscale400
-            $0.font = FontManager.cap2R12.font
-        }
+        
+        stateLabel.applyByeBooFont(
+            style: FontManager.cap2R12,
+            text: NicknameState.normal.rawValue,
+            color: .grayscale400
+        )
+        
         errorIconImageView.do {
             $0.image = .error
         }
-        letterCountLabel.do {
-            $0.text = "0/5"
-            $0.textColor = .grayscale400
-            $0.textAlignment = .right
-            $0.font = FontManager.cap2R12.font
-        }
+        
+        letterCountLabel.applyByeBooFont(
+            style: FontManager.cap2R12,
+            text: "0/5",
+            color: .grayscale400,
+            textAlignment: .right
+        )
     }
     
     override func setUI() {

@@ -88,11 +88,11 @@ final class ByeBooEmotionChip: BaseView {
             $0.isUserInteractionEnabled = true
         }
         
-        emotionTag.do {
-            $0.textAlignment = .center
-            $0.textColor = chipState.textColor
-            $0.font = FontManager.body4Sb14.font
-        }
+        emotionTag.applyByeBooFont(
+            style: FontManager.body4Sb14,
+            color: chipState.textColor,
+            textAlignment: .center
+        )
     }
     
     override func setLayout() {

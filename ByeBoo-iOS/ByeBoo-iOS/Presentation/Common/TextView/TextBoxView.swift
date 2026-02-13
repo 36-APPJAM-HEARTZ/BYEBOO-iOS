@@ -37,14 +37,14 @@ final class TextBoxView: BaseView {
     
     override func setStyle() {
         layer.cornerRadius = 12
-        backgroundColor = .white10
+        backgroundColor = .white5
         
-        titleLabel.do {
-            $0.numberOfLines = 0
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .grayscale300
-            $0.lineBreakMode = .byCharWrapping
-        }
+        titleLabel.applyByeBooFont(
+            style: FontManager.body6R14,
+            color: .grayscale300,
+            numberOfLines: 0
+        )
+        titleLabel.lineBreakMode = .byCharWrapping
     }
     
     override func setUI() {

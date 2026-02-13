@@ -34,19 +34,22 @@ final class EmotionCardView: BaseView {
     
     override func setStyle() {
         backgroundView.do {
-            $0.backgroundColor = .white10
+            $0.backgroundColor = .white5
             $0.layer.cornerRadius = 12
             setBlurEffect(alpha: 0.5)
         }
+        
         cardImageView.do {
             $0.contentMode = .scaleAspectFit
             $0.backgroundColor = .clear
         }
-        stateLabel.do {
-            $0.textColor = .grayscale300
-            $0.textAlignment = .center
-            $0.font = FontManager.body6R14.font
-        }
+        
+        stateLabel.applyByeBooFont (
+            style: FontManager.body6R14,
+            color: .grayscale300,
+            textAlignment: .center
+        )
+        
         setBlurEffect()
     }
     

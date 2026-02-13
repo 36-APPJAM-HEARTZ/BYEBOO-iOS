@@ -35,7 +35,7 @@ final class QuestModalView: BaseView, ModalProtocol {
     
     override func setStyle() {
         self.do {
-            $0.backgroundColor = .grayscale90080
+            $0.backgroundColor = .grayscale900
             $0.layer.cornerRadius = 12.adjustedW
         }
         
@@ -46,32 +46,33 @@ final class QuestModalView: BaseView, ModalProtocol {
             $0.layer.cornerRadius = 12.adjustedW
         }
         
-        questLabel.do {
-            $0.text = "\(questNumber)번째 퀘스트"
-            $0.textColor = .grayscale400
-            $0.textAlignment = .center
-            $0.font = FontManager.body3R16.font
-        }
+        questLabel.applyByeBooFont(
+            style: FontManager.body3R16,
+            text: "\(questNumber)번째 퀘스트",
+            color: .grayscale400,
+            textAlignment: .center
+        )
         
-        titleLabel.do {
-            $0.text = quest
-            $0.textColor = .grayscale50
-            $0.textAlignment = .center
-            $0.numberOfLines = 0
-            $0.lineBreakMode = .byWordWrapping
-            $0.font = FontManager.sub3M18.font
-        }
         
+        titleLabel.applyByeBooFont(
+            style: FontManager.sub3M18,
+            text: quest,
+            color: .grayscale50,
+            textAlignment: .center,
+            numberOfLines: 0
+        )
+        titleLabel.lineBreakMode = .byWordWrapping
+        
+        tipButton.applyByeBooFont(
+            style: FontManager.body6R14,
+            text: "작성 TIP",
+            color: .grayscale300
+        )
         tipButton.do {
-            $0.setTitle("작성 TIP", for: .normal)
-            $0.titleLabel?.font = FontManager.body6R14.font
             $0.backgroundColor = .clear
-            $0.setTitleColor(.grayscale300, for: .normal)
             $0.layer.cornerRadius = 12.adjustedW
             $0.setUnderLine()
         }
-        
-        setBlurEffect()
     }
     
     override func setUI() {

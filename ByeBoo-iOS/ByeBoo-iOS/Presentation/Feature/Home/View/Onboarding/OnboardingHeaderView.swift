@@ -21,22 +21,26 @@ final class OnboardingHeaderView: BaseView {
     }
     
     override func setStyle() {
-        stepLabel.do {
-            $0.text = "\(step.rawValue)/3"
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .primary300
-        }
+        stepLabel.applyByeBooFont(
+            style: FontManager.body6R14,
+            text: "\(step.rawValue)/3",
+            color: .primary300
+        )
+        
         skipStackView.do {
             $0.axis = .horizontal
             $0.spacing = 4
             $0.alignment = .center
             $0.isHidden = step.rawValue == 3 ? true : false
         }
+        
         skipLabel.do {
-            $0.text = "SKIP"
+            $0.applyByeBooFont(
+                style: FontManager.body6R14,
+                text: "SKIP",
+                color: .primary300
+            )
             $0.underLine(text: $0.text ?? "")
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .primary300
         }
         
         arrowImageView.do {

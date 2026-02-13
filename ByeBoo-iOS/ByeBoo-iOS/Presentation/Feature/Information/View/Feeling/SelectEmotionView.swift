@@ -29,19 +29,19 @@ final class SelectEmotionView: BaseView {
     override func setStyle() {
         titleView.backgroundColor = .clear
         
-        titleLabel.do {
-            $0.text = "감정 상태를 알려주세요"
-            $0.textColor = .grayscale50
-            $0.textAlignment = .left
-            $0.font = FontManager.head1M24.font
-        }
+        titleLabel.applyByeBooFont (
+            style: FontManager.head1M24,
+            text:"감정 상태를 알려주세요",
+            color: .grayscale50,
+            textAlignment: .left
+        )
         
-        subTitleLabel.do {
-            $0.text = "이별 후, 어떤 감정으로 하루를 보내고 계신가요?"
-            $0.textColor = .grayscale400
-            $0.textAlignment = .left
-            $0.font = FontManager.body6R14.font
-        }
+        subTitleLabel.applyByeBooFont (
+            style: FontManager.body6R14,
+            text: "이별 후, 어떤 감정으로 하루를 보내고 계신가요?",
+            color: .grayscale400,
+            textAlignment: .left
+        )
         
         emotionCardsView.backgroundColor = .clear
     }

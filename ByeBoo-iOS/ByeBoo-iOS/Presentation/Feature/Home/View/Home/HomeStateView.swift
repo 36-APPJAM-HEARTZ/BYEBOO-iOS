@@ -25,21 +25,23 @@ final class HomeStateView: BaseView {
     }
 
     override func setStyle() {
-        backgroundColor = .white10
+        backgroundColor = .white5
         layer.cornerRadius = 12
         layer.borderWidth = 1
         layer.borderColor = state.borderColor.cgColor
         
-        titleLabel.do {
-            $0.text = state.title
-            $0.font = FontManager.sub2Sb18.font
-            $0.textColor = .grayscale50
-        }
-        descriptionLabel.do {
-            $0.text = state.description
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .grayscale300
-        }
+        titleLabel.applyByeBooFont(
+            style: FontManager.sub2Sb18,
+            text: state.title,
+            color: .grayscale50
+        )
+        
+        descriptionLabel.applyByeBooFont(
+            style: FontManager.body6R14,
+            text: state.description,
+            color: .grayscale300
+        )
+        
         arrowImageView.do {
             $0.image = .right.withRenderingMode(.alwaysTemplate)
             $0.tintColor = .grayscale50

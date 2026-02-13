@@ -26,11 +26,11 @@ final class OnboardingTextView: BaseView {
         backgroundColor = .primary50
         layer.cornerRadius = 12
         
-        titleLabel.do {
-            $0.text = text
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .primary400
-        }
+        titleLabel.applyByeBooFont(
+            style: FontManager.body6R14,
+            text: self.text,
+            color: .primary400
+        )
     }
     
     override func setUI() {

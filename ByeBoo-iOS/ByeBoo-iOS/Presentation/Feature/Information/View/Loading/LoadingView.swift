@@ -33,22 +33,27 @@ final class LoadingView: BaseView {
             $0.axis = .vertical
             $0.spacing = 35
         }
+        
         loadingView.do {
             $0.play()
             $0.loopMode = .loop
             $0.contentMode = .scaleAspectFill
             $0.transform = CGAffineTransform(scaleX: 2.3.adjustedW, y: 2.3.adjustedH)
         }
+        
         titleLabel.do {
-            $0.font = FontManager.body3R16.font
+            $0.applyByeBooFont(
+                style: FontManager.body3R16,
+                color: .grayscale50,
+                textAlignment: .center,
+                numberOfLines: 2
+            )
             $0.attributedText = "\(nickname)님에게 꼭 맞는\n이별 극복 여정을 찾는 중 ..."
                 .makeTitle(
                     rangedText: nickname,
                     font: FontManager.body1Sb16.font,
                     baseFont: FontManager.body3R16.font
                 )
-            $0.numberOfLines = 2
-            $0.textAlignment = .center
         }
     }
     

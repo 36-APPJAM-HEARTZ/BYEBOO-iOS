@@ -41,48 +41,58 @@ final class OnboardingContentView: BaseView {
         firstTopImageView.do {
             $0.image = .first
         }
-        firstTopDescriptionLabel.do {
-            $0.text = "저는 당신이 털어놓은 감정을 담는 보따리,\n보리라고 해요."
-            $0.textAlignment = .center
-            $0.numberOfLines = 0
-            $0.font = FontManager.body3R16.font
-            $0.textColor = .grayscale900
-        }
+        
+        firstTopDescriptionLabel.applyByeBooFont (
+            style: FontManager.body3R16,
+            text: "저는 당신이 털어놓은 감정을 담는 보따리,\n보리라고 해요.",
+            color: .grayscale900,
+            textAlignment: .center,
+            numberOfLines: 0
+        )
+        
         firstBottomImageView.do {
             $0.image = .second
         }
-        firstBottomDescriptionLable.do {
-            $0.text = "이별 후 걸림돌 같은 감정들을 털어놔 주시면\n제 안에서 감정돌이 되어 쌓여요."
-            $0.textAlignment = .center
-            $0.numberOfLines = 0
-            $0.font = FontManager.body3R16.font
-            $0.textColor = .grayscale900
-        }
+        
+        firstBottomDescriptionLable.applyByeBooFont (
+            style: FontManager.body3R16,
+            text: "이별 후 걸림돌 같은 감정들을 털어놔 주시면\n제 안에서 감정돌이 되어 쌓여요.",
+            color: .grayscale900,
+            textAlignment: .center,
+            numberOfLines: 0
+        )
+            
         secondTopImageView.do {
             $0.image = .third
         }
-        secondTopDescriptionLabel.do {
-            $0.text = "당신이 준비가 되었을 때\n감정돌들을 하나씩 꺼내 바닥에 놓아드려요."
-            $0.textAlignment = .center
-            $0.numberOfLines = 0
-            $0.font = FontManager.body3R16.font
-            $0.textColor = .grayscale900
-        }
+        
+        secondTopDescriptionLabel.applyByeBooFont (
+            style: FontManager.body3R16,
+            text: "당신이 준비가 되었을 때\n감정돌들을 하나씩 꺼내 바닥에 놓아드려요.",
+            color: .grayscale900,
+            textAlignment: .center,
+            numberOfLines: 0
+        )
+            
         secondBottomImageView.do {
             $0.image = .fourth
         }
-        secondBottomDescriptionLabel.do {
-            $0.text = "제가 모아둔 감정돌을 디딤돌 삼아\n한 걸음 한 걸음 미래로 나아가주세요."
-            $0.textAlignment = .center
-            $0.numberOfLines = 0
-            $0.font = FontManager.body3R16.font
-            $0.textColor = .grayscale900
-        }
+        
+        secondBottomDescriptionLabel.applyByeBooFont (
+            style: FontManager.body3R16,
+            text: "제가 모아둔 감정돌을 디딤돌 삼아\n한 걸음 한 걸음 미래로 나아가주세요.",
+            color: .grayscale900,
+            textAlignment: .center,
+            numberOfLines: 0
+        )
+        
         thirdImageView.do {
             $0.image = .fifth
         }
-        thirdDescriptionLabel.do {
-            $0.text = """
+        
+        thirdDescriptionLabel.applyByeBooFont (
+            style: FontManager.body3R16,
+            text: """
                 자, 이제 시간이 됐어요.
 
                 당신에게 꼭 맞는 이별 극복 여정에 따라
@@ -90,12 +100,11 @@ final class OnboardingContentView: BaseView {
                 감정을 정리하고, 극복해 보아요.
 
                 저 보리가 항상 함께할게요.
-                """
-            $0.textAlignment = .center
-            $0.numberOfLines = 0
-            $0.font = FontManager.body3R16.font
-            $0.textColor = .grayscale900
-        }
+                """,
+            color: .grayscale900,
+            textAlignment: .center,
+            numberOfLines: 0
+        )
     }
     
     override func setUI() {

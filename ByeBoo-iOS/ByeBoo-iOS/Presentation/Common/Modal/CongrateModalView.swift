@@ -21,34 +21,35 @@ final class CongrateModalView: BaseView, ModalProtocol {
     private let secondDescriptionLabel = UILabel()
     
     override func setStyle() {
-        backgroundColor = .grayscale90080
+        backgroundColor = .grayscale900
         layer.cornerRadius = 12
+                
+        descriptionLabel.applyByeBooFont(
+            style: FontManager.body3R16,
+            text: "축하드려요!",
+            color: .grayscale400,
+            textAlignment: .center
+        )
         
-        descriptionLabel.do {
-            $0.text = "축하드려요!"
-            $0.textAlignment = .center
-            $0.textColor = .grayscale400
-            $0.font = FontManager.body3R16.font
-        }
-        titleLabel.do {
-            $0.text = "감정 직면 여정을\n모두 마무리 했어요"
-            $0.numberOfLines = 2
-            $0.textAlignment = .center
-            $0.textColor = .grayscale50
-            $0.font = FontManager.sub2Sb18.font
-        }
+        titleLabel.applyByeBooFont(
+            style: FontManager.sub2Sb18,
+            text: "감정 직면 여정을\n모두 마무리 했어요",
+            color: .grayscale50,
+            textAlignment: .center,
+            numberOfLines: 2
+        )
+        
         imageView.do {
             $0.image = .clover
         }
-        secondDescriptionLabel.do {
-            $0.text = "보리가 하츠핑님께\n하고싶은 말이 있다고 해요."
-            $0.numberOfLines = 2
-            $0.textAlignment = .center
-            $0.textColor = .grayscale400
-            $0.font = FontManager.body3R16.font
-        }
         
-        setBlurEffect()
+        secondDescriptionLabel.applyByeBooFont(
+            style: FontManager.body3R16,
+            text: "보리가 하츠핑님께\n하고싶은 말이 있다고 해요.",
+            color: .grayscale400,
+            textAlignment: .center,
+            numberOfLines: 2
+        )
     }
     
     override func setUI() {
