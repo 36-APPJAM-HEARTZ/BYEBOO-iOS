@@ -51,7 +51,7 @@ final class OneLineTextBoxView: BaseView {
         }
         
         titleLabel.applyByeBooFont(
-            style: FontManager.body3R16,
+            style: .body3R16,
             color: isHighlighted ? .grayscale50 : .grayscale300,
             numberOfLines: 1
         )

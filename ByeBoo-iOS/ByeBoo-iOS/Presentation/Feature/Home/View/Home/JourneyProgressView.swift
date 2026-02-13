@@ -22,7 +22,7 @@ final class JourneyProgressView: BaseView {
         layer.cornerRadius = 12
         
         titleLabel.applyByeBooFont(
-            style: FontManager.sub2Sb18,
+            style: .sub2Sb18,
             text: "\(name)님의 \(journeyTitle) 여정",
             color: .grayscale50
         )
@@ -41,7 +41,7 @@ final class JourneyProgressView: BaseView {
             $0.layer.cornerRadius = 12
         }
         
-        progressLabel.applyByeBooFont(style: FontManager.cap2R12, color: .grayscale400)
+        progressLabel.applyByeBooFont(style: .cap2R12, color: .grayscale400)
     }
     
     override func setUI() {

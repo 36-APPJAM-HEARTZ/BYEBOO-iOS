@@ -30,14 +30,14 @@ final class SelectEmotionView: BaseView {
         titleView.backgroundColor = .clear
         
         titleLabel.applyByeBooFont (
-            style: FontManager.head1M24,
+            style: .head1M24,
             text:"감정 상태를 알려주세요",
             color: .grayscale50,
             textAlignment: .left
         )
         
         subTitleLabel.applyByeBooFont (
-            style: FontManager.body6R14,
+            style: .body6R14,
             text: "이별 후, 어떤 감정으로 하루를 보내고 계신가요?",
             color: .grayscale400,
             textAlignment: .left

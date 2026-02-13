@@ -23,7 +23,7 @@ final class CongratSquare: BaseView {
     override func setStyle() {
         self.do {
             $0.layer.cornerRadius = 12
-            $0.backgroundColor = .white10
+            $0.backgroundColor = .white5
         }
         
         titleLabel.do {
@@ -31,9 +31,12 @@ final class CongratSquare: BaseView {
                 rangedText: "QUEST",
                 originalTitleColor: .primary100
             )
-            $0.font = FontManager.head1M24.font
-            $0.numberOfLines = 2
-            $0.textAlignment = .center
+            $0.applyByeBooFont(
+                style: .head1M24,
+                color: .primary100,
+                textAlignment: .center,
+                numberOfLines: 2
+            )
         }
         
         imageLottie.do {
@@ -42,13 +45,13 @@ final class CongratSquare: BaseView {
             $0.contentMode = .scaleAspectFill
         }
         
-        descriptionLabel.do {
-            $0.font = FontManager.body3R16.font
-            $0.text = "기특해요!\n점점 극복해 나가고 있어요 :)"
-            $0.textColor = .grayscale300
-            $0.numberOfLines = 2
-            $0.textAlignment = .center
-        }
+        descriptionLabel.applyByeBooFont (
+            style: .body3R16,
+            text: "기특해요!\n점점 극복해 나가고 있어요 :)",
+            color: .grayscale300,
+            textAlignment: .center,
+            numberOfLines: 2
+        )
     }
     
     override func setLayout() {

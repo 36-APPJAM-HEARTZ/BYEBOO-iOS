@@ -35,14 +35,14 @@ final class QuitModalView: BaseView, ModalProtocol {
     
     override func setStyle() {
         titleLabel.applyByeBooFont(
-            style: FontManager.sub3M18,
+            style: .sub3M18,
             text: "작성을 중단하시겠어요?",
             color: .grayscale50,
             textAlignment: .center
         )
         
         secondDescriptionLabel.applyByeBooFont(
-            style: FontManager.body3R16,
+            style: .body3R16,
             text: "작성하시던 내용은 저장되지 않아요.",
             color: .grayscale400,
             textAlignment: .center

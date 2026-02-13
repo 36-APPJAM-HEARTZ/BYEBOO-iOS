@@ -32,7 +32,7 @@ final class ToastMessageView: BaseView {
             $0.layer.shadowOffset = CGSize(width: 0, height: 4)
         }
         
-        textLabel.applyByeBooFont(style: FontManager.body6R14, color: .grayscale50)
+        textLabel.applyByeBooFont(style: .body6R14, color: .grayscale50)
     }
     
     override func setUI() {

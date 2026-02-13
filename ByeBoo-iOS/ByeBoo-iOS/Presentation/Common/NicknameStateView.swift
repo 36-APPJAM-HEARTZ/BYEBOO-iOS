@@ -18,7 +18,7 @@ final class NicknameStateView: BaseView {
         nicknameStateView.backgroundColor = .clear
         
         stateLabel.applyByeBooFont(
-            style: FontManager.cap2R12,
+            style: .cap2R12,
             text: NicknameState.normal.rawValue,
             color: .grayscale400
         )
@@ -28,7 +28,7 @@ final class NicknameStateView: BaseView {
         }
         
         letterCountLabel.applyByeBooFont(
-            style: FontManager.cap2R12,
+            style: .cap2R12,
             text: "0/5",
             color: .grayscale400,
             textAlignment: .right

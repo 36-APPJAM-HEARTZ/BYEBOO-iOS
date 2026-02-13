@@ -31,7 +31,7 @@ final class CardJourneyView: BaseView {
         }
         
         tipDescriptionLabel.applyByeBooFont(
-            style: FontManager.body3R16,
+            style: .body3R16,
             text: "카드를 뒤집어서 내용을 확인해 주세요!",
             color: .white50
         )
@@ -47,7 +47,7 @@ final class CardJourneyView: BaseView {
         
         descriptionLabel.do {
             $0.applyByeBooFont(
-                style: FontManager.body6R14,
+                style: .body6R14,
                 color: .secondary50,
                 textAlignment: .center,
                 numberOfLines: 0
@@ -57,7 +57,7 @@ final class CardJourneyView: BaseView {
         
         confirmLabel.do {
             $0.applyByeBooFont(
-                style: FontManager.body4Sb14,
+                style: .body4Sb14,
                 text: "확인했어요",
                 color: .secondary300,
                 textAlignment: .center

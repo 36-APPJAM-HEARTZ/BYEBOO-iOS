@@ -31,13 +31,13 @@ final class HomeStateView: BaseView {
         layer.borderColor = state.borderColor.cgColor
         
         titleLabel.applyByeBooFont(
-            style: FontManager.sub2Sb18,
+            style: .sub2Sb18,
             text: state.title,
             color: .grayscale50
         )
         
         descriptionLabel.applyByeBooFont(
-            style: FontManager.body6R14,
+            style: .body6R14,
             text: state.description,
             color: .grayscale300
         )
@@ -77,11 +77,23 @@ extension HomeStateView {
     func updateState(_ state: HomeState, _ journeyTitle: String? = nil) {
         layer.borderColor = state.borderColor.cgColor
         if let titleText = journeyTitle {
-            titleLabel.text = titleText + " " + state.title
+            titleLabel.applyByeBooFont(
+                style: .sub2Sb18,
+                text:  titleText + " " + state.title,
+                color: .grayscale50
+            )
         } else {
-            titleLabel.text = state.title
+            titleLabel.applyByeBooFont(
+                style: .sub2Sb18,
+                text:  state.title,
+                color: .grayscale50
+            )
         }
         
-        descriptionLabel.text = state.description
+        descriptionLabel.applyByeBooFont(
+            style: .body6R14,
+            text: state.description,
+            color: .grayscale300
+        )
     }
 }

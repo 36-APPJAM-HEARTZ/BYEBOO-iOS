@@ -27,7 +27,7 @@ final class HomeOnboardingView: BaseView {
         }
         descriptionLabel.do {
             $0.applyByeBooFont(
-                style: FontManager.body3R16,
+                style: .body3R16,
                 text: "보리를 꾹 눌러주세요!",
                 color: .white50,
                 textAlignment: .center

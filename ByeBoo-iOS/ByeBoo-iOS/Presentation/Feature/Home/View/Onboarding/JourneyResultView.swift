@@ -23,10 +23,10 @@ final class JourneyResultView: BaseView {
         backgroundView.do {
             $0.backgroundColor = .black50
         }
-        titleLabel.applyByeBooFont(style: FontManager.body1Sb16, color: .white)
+        titleLabel.applyByeBooFont(style: .body1Sb16, color: .white)
         
         descriptionLabel.applyByeBooFont(
-            style: FontManager.body6R14,
+            style: .body6R14,
             color: .secondary100,
             textAlignment: .center,
             numberOfLines: 0
@@ -34,7 +34,7 @@ final class JourneyResultView: BaseView {
         
         confirmLabel.do {
             $0.applyByeBooFont(
-                style: FontManager.body4Sb14,
+                style: .body4Sb14,
                 text: "확인했어요",
                 color: .secondary300,
                 textAlignment: .center

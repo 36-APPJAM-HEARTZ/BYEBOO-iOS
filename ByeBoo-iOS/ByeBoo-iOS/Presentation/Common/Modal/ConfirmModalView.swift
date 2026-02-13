@@ -62,13 +62,13 @@ final class ConfirmModalView: BaseView, ModalProtocol {
         }
         
         titleLabel.applyByeBooFont(
-            style: FontManager.sub3M18,
+            style: .sub3M18,
             color: .grayscale50,
             textAlignment: .center
         )
         
         descriptionLabel.applyByeBooFont(
-            style: FontManager.body3R16,
+            style: .body3R16,
             color: .grayscale400,
             textAlignment: .center
         )

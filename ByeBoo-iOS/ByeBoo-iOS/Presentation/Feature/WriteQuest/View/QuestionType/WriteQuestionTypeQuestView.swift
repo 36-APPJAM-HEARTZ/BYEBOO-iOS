@@ -50,12 +50,12 @@ final class WriteQuestionTypeQuestView: BaseView {
             $0.contentMode = .scaleAspectFit
         }
         
-        descriptionLabel.do {
-            $0.text = "10글자 이상 작성해 주세요."
-            $0.font = FontManager.cap2R12.font
-            $0.textColor = .grayscale400
-            $0.textAlignment = .center
-        }
+        descriptionLabel.applyByeBooFont(
+            style: .cap2R12,
+            text: "10글자 이상 작성해 주세요.",
+            color: .grayscale400,
+            textAlignment: .center
+        )
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

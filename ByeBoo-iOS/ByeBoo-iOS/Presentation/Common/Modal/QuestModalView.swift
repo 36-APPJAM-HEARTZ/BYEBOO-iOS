@@ -47,7 +47,7 @@ final class QuestModalView: BaseView, ModalProtocol {
         }
         
         questLabel.applyByeBooFont(
-            style: FontManager.body3R16,
+            style: .body3R16,
             text: "\(questNumber)번째 퀘스트",
             color: .grayscale400,
             textAlignment: .center
@@ -55,7 +55,7 @@ final class QuestModalView: BaseView, ModalProtocol {
         
         
         titleLabel.applyByeBooFont(
-            style: FontManager.sub3M18,
+            style: .sub3M18,
             text: quest,
             color: .grayscale50,
             textAlignment: .center,
@@ -64,7 +64,7 @@ final class QuestModalView: BaseView, ModalProtocol {
         titleLabel.lineBreakMode = .byWordWrapping
         
         tipButton.applyByeBooFont(
-            style: FontManager.body6R14,
+            style: .body6R14,
             text: "작성 TIP",
             color: .grayscale300
         )

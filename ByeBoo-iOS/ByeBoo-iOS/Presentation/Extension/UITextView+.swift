@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 extension UITextView {
-    func applyTextStyle(
+    func applyByeBooFont(
         style: FontManager,
         text: String? = nil,
         color: UIColor
@@ -33,7 +33,7 @@ extension UITextView {
             .font: style.font,
             .paragraphStyle: paragraphStyle,
             .baselineOffset: (lineHeight - style.font.lineHeight) / 2,
-            .kern: style.fontProperty.kern
+            .kern: style.kern
         ]
         
         if let textColor = textColor {

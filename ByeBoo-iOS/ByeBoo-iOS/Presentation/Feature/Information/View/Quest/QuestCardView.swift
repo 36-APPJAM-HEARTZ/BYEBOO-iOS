@@ -36,24 +36,27 @@ final class QuestCardView: BaseView {
     
     override func setStyle() {
         backgroundView.do {
-            $0.backgroundColor = .white10
+            $0.backgroundColor = .white5
             $0.layer.cornerRadius = 12
             setBlurEffect(alpha: 0.5)
         }
+        
         cardImageView.do {
             $0.backgroundColor = .clear
         }
-        titleLabel.do {
-            $0.textColor = .grayscale300
-            $0.textAlignment = .center
-            $0.font = FontManager.sub3M18.font
-        }
-        subTitleLabel.do {
-            $0.textColor = .grayscale300
-            $0.textAlignment = .center
-            $0.font = FontManager.body6R14.font
-            $0.numberOfLines = 3
-        }
+        
+        titleLabel.applyByeBooFont (
+            style: .sub3M18,
+            color: .grayscale300,
+            textAlignment: .center
+        )
+        
+        subTitleLabel.applyByeBooFont (
+            style: .body6R14,
+            color: .grayscale300,
+            textAlignment: .center,
+            numberOfLines: 0
+        )
     }
     
     override func setUI() {
@@ -93,30 +96,18 @@ final class QuestCardView: BaseView {
         onSelected?()
         
         if isSelected {
-            titleLabel.do {
-                $0.textColor = .primary200
-                $0.font = FontManager.sub2Sb18.font
-            }
-            subTitleLabel.do {
-                $0.textColor = .primary200
-                $0.font = FontManager.body5M14.font
-            }
+            titleLabel.applyByeBooFont(style: .sub2Sb18, color: .primary200)
+            subTitleLabel.applyByeBooFont(style: .body5M14, color: .primary200)
             backgroundView.do {
                 $0.backgroundColor = .primary30020
                 $0.layer.borderWidth = 2
                 $0.layer.borderColor = UIColor.primary300.cgColor
             }
         } else {
-            titleLabel.do {
-                $0.textColor = .grayscale300
-                $0.font = FontManager.sub3M18.font
-            }
-            subTitleLabel.do {
-                $0.textColor = .grayscale300
-                $0.font = FontManager.body6R14.font
-            }
+            titleLabel.applyByeBooFont(style: .sub3M18, color: .grayscale300)
+            subTitleLabel.applyByeBooFont(style: .body6R14, color: .grayscale300)
             backgroundView.do {
-                $0.backgroundColor = .white10
+                $0.backgroundColor = .white5
                 $0.layer.borderWidth = 0
             }
         }

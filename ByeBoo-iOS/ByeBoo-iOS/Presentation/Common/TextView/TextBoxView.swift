@@ -40,7 +40,7 @@ final class TextBoxView: BaseView {
         backgroundColor = .white5
         
         titleLabel.applyByeBooFont(
-            style: FontManager.body6R14,
+            style: .body6R14,
             color: .grayscale300,
             numberOfLines: 0
         )
@@ -74,11 +74,21 @@ final class TextBoxView: BaseView {
 
 extension TextBoxView {
     func updateText(_ text: String) {
-        titleLabel.text = text
+        titleLabel.applyByeBooFont(
+            style: .body6R14,
+            text: text,
+            color: .grayscale300,
+            numberOfLines: 0
+        )
     }
     
     func updateEmotionText(_ emotionState: String, text: String){
-        self.titleLabel.text = text
+        titleLabel.applyByeBooFont(
+            style: .body6R14,
+            text: text,
+            color: .grayscale300,
+            numberOfLines: 0
+        )
         self.emotionChip?.updateEmotion(ByeBooEmotion.toEmotion(text: emotionState))
     }
 }

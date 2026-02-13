@@ -45,7 +45,7 @@ final class EmotionCardView: BaseView {
         }
         
         stateLabel.applyByeBooFont (
-            style: FontManager.body6R14,
+            style: .body6R14,
             color: .grayscale300,
             textAlignment: .center
         )
@@ -90,7 +90,7 @@ final class EmotionCardView: BaseView {
         } else {
             stateLabel.textColor = .grayscale300
             backgroundView.do {
-                $0.backgroundColor = .white10
+                $0.backgroundColor = .white5
                 $0.layer.borderWidth = 0
             }
         }

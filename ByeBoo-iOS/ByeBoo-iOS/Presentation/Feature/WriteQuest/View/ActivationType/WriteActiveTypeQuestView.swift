@@ -70,17 +70,17 @@ final class WriteActiveTypeQuestView: BaseView {
             $0.isUserInteractionEnabled = true
         }
         
-        imgTitleLabel.do {
-            $0.text = "사진 첨부"
-            $0.font = FontManager.body2M16.font
-            $0.textColor = .grayscale50
-        }
+        imgTitleLabel.applyByeBooFont(
+            style: .body2M16,
+            text: "사진 첨부",
+            color: .grayscale50
+        )
         
-        imgCountLabel.do {
-            $0.text = "(\(imgCount)/1)"
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .grayscale400
-        }
+        imgCountLabel.applyByeBooFont(
+            style: .body6R14,
+            text: "(\(imgCount)/1)",
+            color: .grayscale400
+        )
         
         textStackView.do {
             $0.axis = .horizontal
@@ -88,11 +88,11 @@ final class WriteActiveTypeQuestView: BaseView {
             $0.alignment = .center
         }
         
-        thinkTitleLabel.do {
-            $0.text = "생각 적기"
-            $0.font = FontManager.body2M16.font
-            $0.textColor = .grayscale50
-        }
+        thinkTitleLabel.applyByeBooFont(
+            style: .body2M16,
+            text: "생각 적기",
+            color: .grayscale50
+        ) 
     }
     
     override func setLayout() {

@@ -43,7 +43,7 @@ final class OnboardingContentView: BaseView {
         }
         
         firstTopDescriptionLabel.applyByeBooFont (
-            style: FontManager.body3R16,
+            style: .body3R16,
             text: "저는 당신이 털어놓은 감정을 담는 보따리,\n보리라고 해요.",
             color: .grayscale900,
             textAlignment: .center,
@@ -55,7 +55,7 @@ final class OnboardingContentView: BaseView {
         }
         
         firstBottomDescriptionLable.applyByeBooFont (
-            style: FontManager.body3R16,
+            style: .body3R16,
             text: "이별 후 걸림돌 같은 감정들을 털어놔 주시면\n제 안에서 감정돌이 되어 쌓여요.",
             color: .grayscale900,
             textAlignment: .center,
@@ -67,7 +67,7 @@ final class OnboardingContentView: BaseView {
         }
         
         secondTopDescriptionLabel.applyByeBooFont (
-            style: FontManager.body3R16,
+            style: .body3R16,
             text: "당신이 준비가 되었을 때\n감정돌들을 하나씩 꺼내 바닥에 놓아드려요.",
             color: .grayscale900,
             textAlignment: .center,
@@ -79,7 +79,7 @@ final class OnboardingContentView: BaseView {
         }
         
         secondBottomDescriptionLabel.applyByeBooFont (
-            style: FontManager.body3R16,
+            style: .body3R16,
             text: "제가 모아둔 감정돌을 디딤돌 삼아\n한 걸음 한 걸음 미래로 나아가주세요.",
             color: .grayscale900,
             textAlignment: .center,
@@ -91,7 +91,7 @@ final class OnboardingContentView: BaseView {
         }
         
         thirdDescriptionLabel.applyByeBooFont (
-            style: FontManager.body3R16,
+            style: .body3R16,
             text: """
                 자, 이제 시간이 됐어요.
 

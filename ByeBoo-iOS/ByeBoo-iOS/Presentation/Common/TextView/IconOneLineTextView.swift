@@ -53,7 +53,7 @@ final class IconOneLineTextView: BaseView {
             $0.contentMode = .scaleAspectFit
         }
         
-        textLabel.applyByeBooFont(style: FontManager.body2M16, color: .grayscale200)
+        textLabel.applyByeBooFont(style: .body2M16, color: .grayscale200)
     }
     
     override func setLayout() {

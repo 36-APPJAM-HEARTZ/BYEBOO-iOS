@@ -66,29 +66,27 @@ final class JourneyListView: BaseView {
             $0.axis = .horizontal
             $0.spacing = 8
         }
-        titleLabel.do {
-            $0.font = FontManager.cap1M12.font
-            $0.textColor = .grayscale300
-        }
-        countLabel.do {
-            $0.font = FontManager.body2M16.font
-            $0.textColor = .grayscale500
-        }
+        
+        titleLabel.applyByeBooFont(style: .cap1M12, color: .grayscale300)
+        countLabel.applyByeBooFont(style: .body2M16, color: .grayscale500)
+        
         journeyListView?.do {
             $0.spacing = 16.adjustedH
             $0.axis = .vertical
             $0.isUserInteractionEnabled = true
         }
-        emptyLabel?.do {
-            $0.text = "아직 완료된 여정이 없어요!"
-            $0.font = FontManager.body3R16.font
-            $0.textColor = .grayscale300
-        }
-        prepareTitleLabel.do {
-            $0.text = "준비 중"
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .grayscale600
-        }
+        
+        emptyLabel?.applyByeBooFont (
+            style: .body3R16,
+            text: "아직 완료된 여정이 없어요!",
+            color: .grayscale300
+        )
+        
+        prepareTitleLabel.applyByeBooFont (
+            style: .body6R14,
+            text: "준비 중",
+            color: .grayscale600
+        )
     }
     
     override func setUI() {

@@ -14,7 +14,7 @@ enum QuestState {
     var backgroundColor: UIColor {
         switch self {
         case .completed, .upComing, .locked:
-            return .white10
+            return .white5
         case .ongoing:
             return .primary30020
         }
@@ -29,7 +29,7 @@ enum QuestState {
         case .upComing:
             return .secondary300
         case .locked:
-            return .white10
+            return .white5
         }
     }
     
@@ -67,7 +67,7 @@ enum QuestState {
     var tintColor: UIColor {
         switch self {
         case .upComing, .locked:
-            return .white10
+            return .white5
         case .completed, .ongoing:
             return .clear
         }

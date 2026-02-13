@@ -36,23 +36,25 @@ final class QuestTextField: BaseView {
     
     override func setStyle() {
         self.do {
-            $0.backgroundColor = .white10
+            $0.backgroundColor = .white5
             $0.layer.cornerRadius = 12
         }
         
         textView.do {
+            $0.applyByeBooFont(
+                style: .body3R16,
+                text: placeholder,
+                color: .grayscale300
+            )
             $0.backgroundColor = .clear
-            $0.textColor = .grayscale300
-            $0.text = placeholder
-            $0.font = FontManager.body3R16.font
             $0.tintColor = .white
         }
         
-        textCount.do {
-            $0.text = "(\(count)/\(limitCount))"
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .grayscale300
-        }
+        textCount.applyByeBooFont (
+            style: .body6R14,
+            text: "(\(count)/\(limitCount))",
+            color: .grayscale300
+        )
     }
     
     override func setLayout() {

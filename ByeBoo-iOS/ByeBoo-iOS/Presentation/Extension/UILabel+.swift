@@ -42,17 +42,15 @@ extension UILabel {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.minimumLineHeight = lineHeight
         paragraphStyle.maximumLineHeight = lineHeight
+        paragraphStyle.alignment = self.textAlignment
         
-        var attributes: [NSAttributedString.Key: Any] = [
+        let attributes: [NSAttributedString.Key: Any] = [
             .font: style.font,
             .paragraphStyle: paragraphStyle,
             .baselineOffset: (lineHeight - style.font.lineHeight) / 2,
-            .foregroundColor: textColor as Any
+            .foregroundColor: textColor as Any,
+            .kern: style.kern
         ]
-        
-        if style.fontProperty.kern != 0 {
-            attributes[.kern] = style.fontProperty.kern
-        }
         
         attributedText = NSAttributedString(string: targetText, attributes: attributes)
     }

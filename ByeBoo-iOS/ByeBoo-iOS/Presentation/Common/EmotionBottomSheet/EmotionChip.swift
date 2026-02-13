@@ -20,7 +20,7 @@ enum EmotionChipState {
         case .selected:
             return .primary30020
         case .unselected, .defaultState:
-            return .white10
+            return .white5
         }
     }
     
@@ -89,7 +89,7 @@ final class ByeBooEmotionChip: BaseView {
         }
         
         emotionTag.applyByeBooFont(
-            style: FontManager.body4Sb14,
+            style: .body4Sb14,
             color: chipState.textColor,
             textAlignment: .center
         )

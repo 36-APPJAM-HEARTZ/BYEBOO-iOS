@@ -27,7 +27,7 @@ final class OnboardingTextView: BaseView {
         layer.cornerRadius = 12
         
         titleLabel.applyByeBooFont(
-            style: FontManager.body6R14,
+            style: .body6R14,
             text: self.text,
             color: .primary400
         )

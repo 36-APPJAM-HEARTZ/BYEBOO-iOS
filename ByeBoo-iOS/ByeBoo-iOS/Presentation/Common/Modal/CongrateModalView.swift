@@ -25,14 +25,14 @@ final class CongrateModalView: BaseView, ModalProtocol {
         layer.cornerRadius = 12
                 
         descriptionLabel.applyByeBooFont(
-            style: FontManager.body3R16,
+            style: .body3R16,
             text: "축하드려요!",
             color: .grayscale400,
             textAlignment: .center
         )
         
         titleLabel.applyByeBooFont(
-            style: FontManager.sub2Sb18,
+            style: .sub2Sb18,
             text: "감정 직면 여정을\n모두 마무리 했어요",
             color: .grayscale50,
             textAlignment: .center,
@@ -44,7 +44,7 @@ final class CongrateModalView: BaseView, ModalProtocol {
         }
         
         secondDescriptionLabel.applyByeBooFont(
-            style: FontManager.body3R16,
+            style: .body3R16,
             text: "보리가 하츠핑님께\n하고싶은 말이 있다고 해요.",
             color: .grayscale400,
             textAlignment: .center,

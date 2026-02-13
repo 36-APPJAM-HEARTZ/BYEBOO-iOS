@@ -28,11 +28,11 @@ final class LookBackJourneyView: BaseView {
     
     override func setStyle() {
         backgroundColor = .grayscale900
-        titleLabel.do {
-            $0.text = "내가 완료한 여정이에요"
-            $0.font = FontManager.head1M24.font
-            $0.textColor = .grayscale50
-        }
+        titleLabel.applyByeBooFont (
+            style: .head1M24,
+            text: "내가 완료한 여정이에요",
+            color: .grayscale50
+        )
     }
     
     override func setUI() {

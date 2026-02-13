@@ -22,18 +22,18 @@ class QuestHeaderBaseView: BaseView {
     override func setStyle() {
         backgroundColor = .grayscale900
         
-        titleLabel.do {
-            $0.font = FontManager.head1M24.font
-            $0.numberOfLines = 0
-            $0.textAlignment = .left
-            $0.textColor = .grayscale50
-        }
-        subTitleLabel.do {
-            $0.text = subtitleText
-            $0.textColor = .grayscale400
-            $0.textAlignment = .left
-            $0.font = FontManager.body6R14.font
-        }
+        titleLabel.applyByeBooFont (
+            style: .head1M24,
+            color: .grayscale50,
+            textAlignment: .left,
+            numberOfLines: 0
+        )
+        subTitleLabel.applyByeBooFont (
+            style: .body6R14,
+            text: subtitleText,
+            color: .grayscale400,
+            textAlignment: .left
+        )
     }
     
     override func setUI() {

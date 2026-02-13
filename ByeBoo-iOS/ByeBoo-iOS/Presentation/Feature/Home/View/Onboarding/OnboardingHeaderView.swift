@@ -22,7 +22,7 @@ final class OnboardingHeaderView: BaseView {
     
     override func setStyle() {
         stepLabel.applyByeBooFont(
-            style: FontManager.body6R14,
+            style: .body6R14,
             text: "\(step.rawValue)/3",
             color: .primary300
         )
@@ -36,7 +36,7 @@ final class OnboardingHeaderView: BaseView {
         
         skipLabel.do {
             $0.applyByeBooFont(
-                style: FontManager.body6R14,
+                style: .body6R14,
                 text: "SKIP",
                 color: .primary300
             )

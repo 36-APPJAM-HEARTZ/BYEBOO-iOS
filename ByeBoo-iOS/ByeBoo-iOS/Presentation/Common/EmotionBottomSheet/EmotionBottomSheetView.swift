@@ -50,7 +50,7 @@ final class EmotionBottomSheetView: BaseView {
         backgroundColor = .grayscale900
         
         titleLabel.applyByeBooFont(
-            style: FontManager.head1M24,
+            style: .head1M24,
             text: "퀘스트를 완료한 후,\n어떤 감정이 느껴지시나요?",
             color: .grayscale50,
             textAlignment: .center,
@@ -68,7 +68,7 @@ final class EmotionBottomSheetView: BaseView {
         }
         
         warningLabel.applyByeBooFont(
-            style: FontManager.cap2R12,
+            style: .cap2R12,
             text: "퀘스트 완료 후에는 감정을 수정할 수 없어요",
             color: .grayscale400
         )

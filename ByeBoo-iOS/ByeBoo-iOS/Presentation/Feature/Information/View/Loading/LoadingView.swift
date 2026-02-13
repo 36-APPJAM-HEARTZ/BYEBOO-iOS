@@ -43,7 +43,7 @@ final class LoadingView: BaseView {
         
         titleLabel.do {
             $0.applyByeBooFont(
-                style: FontManager.body3R16,
+                style: .body3R16,
                 color: .grayscale50,
                 textAlignment: .center,
                 numberOfLines: 2

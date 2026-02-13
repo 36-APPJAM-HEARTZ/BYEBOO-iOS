@@ -33,14 +33,14 @@ final class QuestStateCell: UICollectionViewCell {
     private func setStyle() {
         questBackgroundView.layer.cornerRadius = 12
         frontView.backgroundColor = .clear
-        questNumberLabel.font = FontManager.cap1M12.font
+        questNumberLabel.applyByeBooFont(style: .cap1M12, color: .white50)
         imageContentView.backgroundColor = .clear
         imageView.backgroundColor = .clear
-        timerLabel.do {
-            $0.textColor = .secondary300
-            $0.font = FontManager.cap1M12.font
-            $0.textAlignment = .center
-        }
+        timerLabel.applyByeBooFont (
+            style: .cap1M12,
+            color: .secondary300,
+            textAlignment: .center
+        )
     }
     
     private func setUI() {

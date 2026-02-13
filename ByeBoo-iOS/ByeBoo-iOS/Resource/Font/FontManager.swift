@@ -83,4 +83,8 @@ public extension FontManager {
         guard let lineHeightPercent = fontProperty.lineHeight else { return nil }
         return fontProperty.size * (lineHeightPercent / 100.0)
     }
+    
+    var kern: CGFloat {
+        return fontProperty.size * (fontProperty.kern / 100.0)
+    }
 }
