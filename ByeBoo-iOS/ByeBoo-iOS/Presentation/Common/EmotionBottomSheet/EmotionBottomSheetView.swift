@@ -19,7 +19,7 @@ final class EmotionBottomSheetView: BaseView {
     private let emotionChipFirstStackView = UIStackView()
     private let emotionChipSecondStackView = UIStackView()
     
-    let confirmButton = ByeBooButton(titleText: "완료", type: .disabled)
+    let confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
     var emotionChips: [ByeBooEmotionChip] = []
     
     override func setUI() {

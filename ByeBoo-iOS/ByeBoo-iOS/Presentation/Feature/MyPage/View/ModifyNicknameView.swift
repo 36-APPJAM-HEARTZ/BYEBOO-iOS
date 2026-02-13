@@ -12,7 +12,7 @@ final class ModifyNicknameView: BaseView {
     private let nicknameLabel = UILabel()
     private(set) var nicknameTextField = ByeBooNicknameTextField(.onBeginEditing)
     private(set) var nicknameStateView = NicknameStateView()
-    private(set) var confirmButton = ByeBooButton(titleText: "완료", type: .disabled)
+    private(set) var confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
     
     init() {
         super.init(frame: .zero)
