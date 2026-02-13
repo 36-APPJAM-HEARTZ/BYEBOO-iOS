@@ -16,4 +16,44 @@ extension UILabel {
         ], range: NSString(string: text).range(of: text))
         self.attributedText = attributedString
     }
+    
+    func applyByeBooFont(
+        style: FontManager,
+        text: String? = nil,
+        color: UIColor,
+        textAlignment: NSTextAlignment? = nil,
+        numberOfLines: Int? = nil
+    ) {
+        if let text { self.text = text }
+        self.textColor = color
+        if let textAlignment { self.textAlignment = textAlignment }
+        if let numberOfLines { self.numberOfLines = numberOfLines }
+        
+        font = style.font
+        let targetText = text ?? self.text
+        
+        guard let targetText else { return }
+        
+        guard let lineHeight = style.lineHeight else {
+            self.text = targetText
+            return
+        }
+        
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.minimumLineHeight = lineHeight
+        paragraphStyle.maximumLineHeight = lineHeight
+        
+        var attributes: [NSAttributedString.Key: Any] = [
+            .font: style.font,
+            .paragraphStyle: paragraphStyle,
+            .baselineOffset: (lineHeight - style.font.lineHeight) / 2,
+            .foregroundColor: textColor as Any
+        ]
+        
+        if style.fontProperty.kern != 0 {
+            attributes[.kern] = style.fontProperty.kern
+        }
+        
+        attributedText = NSAttributedString(string: targetText, attributes: attributes)
+    }
 }
