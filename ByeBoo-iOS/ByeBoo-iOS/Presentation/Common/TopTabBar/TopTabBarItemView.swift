@@ -37,7 +37,7 @@ final class TopTabBarItemView: BaseView {
             $0.textAlignment = .center
         }
         underlineLabel.do {
-            $0.backgroundColor = .grayscale300
+            $0.layer.borderColor = UIColor.grayscale300.cgColor
             $0.layer.borderWidth = 1
         }
     }
@@ -55,21 +55,38 @@ final class TopTabBarItemView: BaseView {
     
     override func setLayout() {
         journeyStackView.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.centerX.equalToSuperview()
             $0.width.equalTo(108.adjustedW)
             $0.height.equalTo(24.adjustedH)
         }
         journeyImageView.snp.makeConstraints {
             $0.size.equalTo(24.adjustedW)
+            $0.verticalEdges.equalToSuperview()
+            $0.leading.equalToSuperview().inset(9.5.adjustedW)
         }
         journeyNameLabel.snp.makeConstraints {
+            $0.leading.equalTo(journeyImageView.snp.trailing).offset(2.adjustedW)
             $0.centerY.equalToSuperview()
-            $0.width.equalTo(59.adjustedW)
-            $0.height.equalTo(21.adjustedH)
+            $0.trailing.equalToSuperview().inset(11.5.adjustedW)
         }
         underlineLabel.snp.makeConstraints {
             $0.top.equalTo(journeyStackView.snp.bottom).offset(4.adjustedH)
-            $0.width.equalTo(108.adjustedW)
+            $0.horizontalEdges.equalToSuperview()
             $0.height.equalTo(1.adjustedH)
+            $0.bottom.equalToSuperview()
         }
+    }
+}
+
+extension TopTabBarItemView {
+    
+    func updateBarItem(for tag: Int) {
+        let condition = (self.tag == tag)
+        
+        journeyImageView.layer.opacity = condition ? 1 : 0.44
+        journeyNameLabel.textColor = condition ?  .grayscale100 : .grayscale600
+        underlineLabel.layer.borderColor = condition ? UIColor.grayscale300.cgColor : UIColor.clear.cgColor
+        underlineLabel.layer.borderWidth = condition ? 1 : 0
     }
 }
