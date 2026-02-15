@@ -7,14 +7,14 @@
 
 import UIKit
 
-public struct FontProperty {
+struct FontProperty {
     let font: UIFont.FontType
     let size: CGFloat
-    let lineHeight: CGFloat?
+    let lineHeight: CGFloat
     let kern: CGFloat
 }
 
-public enum FontManager {
+enum FontManager {
     case head1M24
     case head2M22
     
@@ -71,7 +71,7 @@ public enum FontManager {
     }
 }
 
-public extension FontManager {
+extension FontManager {
     var font: UIFont {
         guard let font = UIFont(name: fontProperty.font.name, size: fontProperty.size) else {
             return UIFont()
@@ -79,9 +79,8 @@ public extension FontManager {
         return font
     }
     
-    var lineHeight: CGFloat? {
-        guard let lineHeightPercent = fontProperty.lineHeight else { return nil }
-        return fontProperty.size * (lineHeightPercent / 100.0)
+    var lineHeight: CGFloat {
+        return fontProperty.size * (fontProperty.lineHeight / 100.0)
     }
     
     var kern: CGFloat {

@@ -34,20 +34,15 @@ extension UILabel {
         
         guard let targetText else { return }
         
-        guard let lineHeight = style.lineHeight else {
-            self.text = targetText
-            return
-        }
-        
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.minimumLineHeight = lineHeight
-        paragraphStyle.maximumLineHeight = lineHeight
+        paragraphStyle.minimumLineHeight = style.lineHeight
+        paragraphStyle.maximumLineHeight = style.lineHeight
         paragraphStyle.alignment = self.textAlignment
         
         let attributes: [NSAttributedString.Key: Any] = [
             .font: style.font,
             .paragraphStyle: paragraphStyle,
-            .baselineOffset: (lineHeight - style.font.lineHeight) / 2,
+            .baselineOffset: (style.lineHeight - style.font.lineHeight) / 2,
             .foregroundColor: textColor as Any,
             .kern: style.kern
         ]

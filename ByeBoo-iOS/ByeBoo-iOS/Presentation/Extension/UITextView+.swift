@@ -18,21 +18,16 @@ extension UITextView {
         let targetText = text ?? self.text
         self.textColor = color
         
-        guard let lineHeight = style.lineHeight else {
-            self.text = targetText
-            return
-        }
-        
         guard let targetText else { return }
         
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.minimumLineHeight = lineHeight
-        paragraphStyle.maximumLineHeight = lineHeight
+        paragraphStyle.minimumLineHeight = style.lineHeight
+        paragraphStyle.maximumLineHeight = style.lineHeight
         
         var attributes: [NSAttributedString.Key: Any] = [
             .font: style.font,
             .paragraphStyle: paragraphStyle,
-            .baselineOffset: (lineHeight - style.font.lineHeight) / 2,
+            .baselineOffset: (style.lineHeight - style.font.lineHeight) / 2,
             .kern: style.kern
         ]
         
