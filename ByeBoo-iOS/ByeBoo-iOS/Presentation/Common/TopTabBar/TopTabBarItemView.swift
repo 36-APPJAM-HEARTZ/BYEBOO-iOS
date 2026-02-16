@@ -9,14 +9,14 @@ import UIKit
 
 final class TopTabBarItemView: BaseView {
     
-    private let journeyStackView = UIStackView()
-    private let journeyImageView = UIImageView()
-    private let journeyNameLabel = UILabel()
+    private let tabStackView = UIStackView()
+    private let tabImageView = UIImageView()
+    private let tabNameLabel = UILabel()
     private let underlineLabel = UILabel()
     
     init(item: any TabItem) {
-        journeyImageView.image = item.image
-        journeyNameLabel.text = item.title
+        tabImageView.image = item.image
+        tabNameLabel.text = item.title
         
         super.init(frame: .zero)
     }
@@ -26,12 +26,12 @@ final class TopTabBarItemView: BaseView {
     }
     
     override func setStyle() {
-        journeyStackView.do {
+        tabStackView.do {
             $0.axis = .horizontal
             $0.spacing = 2
             $0.alignment = .center
         }
-        journeyNameLabel.do {
+        tabNameLabel.do {
             $0.textColor = .grayscale100
             $0.font = FontManager.body2M16.font
             $0.textAlignment = .center
@@ -44,34 +44,34 @@ final class TopTabBarItemView: BaseView {
     
     override func setUI() {
         addSubviews(
-            journeyStackView,
+            tabStackView,
             underlineLabel
         )
-        journeyStackView.addArrangedSubviews(
-            journeyImageView,
-            journeyNameLabel
+        tabStackView.addArrangedSubviews(
+            tabImageView,
+            tabNameLabel
         )
     }
     
     override func setLayout() {
-        journeyStackView.snp.makeConstraints {
+        tabStackView.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.centerX.equalToSuperview()
             $0.width.equalTo(108.adjustedW)
             $0.height.equalTo(24.adjustedH)
         }
-        journeyImageView.snp.makeConstraints {
+        tabImageView.snp.makeConstraints {
             $0.size.equalTo(24.adjustedW)
             $0.verticalEdges.equalToSuperview()
             $0.leading.equalToSuperview().inset(9.5.adjustedW)
         }
-        journeyNameLabel.snp.makeConstraints {
-            $0.leading.equalTo(journeyImageView.snp.trailing).offset(2.adjustedW)
+        tabNameLabel.snp.makeConstraints {
+            $0.leading.equalTo(tabImageView.snp.trailing).offset(2.adjustedW)
             $0.centerY.equalToSuperview()
             $0.trailing.equalToSuperview().inset(11.5.adjustedW)
         }
         underlineLabel.snp.makeConstraints {
-            $0.top.equalTo(journeyStackView.snp.bottom).offset(4.adjustedH)
+            $0.top.equalTo(tabStackView.snp.bottom).offset(4.adjustedH)
             $0.horizontalEdges.equalToSuperview()
             $0.height.equalTo(1.adjustedH)
             $0.bottom.equalToSuperview()
@@ -84,8 +84,8 @@ extension TopTabBarItemView {
     func updateBarItem(for tag: Int) {
         let condition = (self.tag == tag)
         
-        journeyImageView.layer.opacity = condition ? 1 : 0.44
-        journeyNameLabel.textColor = condition ?  .grayscale100 : .grayscale600
+        tabImageView.layer.opacity = condition ? 1 : 0.44
+        tabNameLabel.textColor = condition ?  .grayscale100 : .grayscale600
         underlineLabel.layer.borderColor = condition ? UIColor.grayscale300.cgColor : UIColor.clear.cgColor
         underlineLabel.layer.borderWidth = condition ? 1 : 0
     }
