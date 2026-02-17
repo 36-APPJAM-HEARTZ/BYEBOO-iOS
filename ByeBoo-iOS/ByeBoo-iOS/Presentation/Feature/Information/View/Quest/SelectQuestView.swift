@@ -29,19 +29,19 @@ final class SelectQuestView: BaseView {
     override func setStyle() {
         titleView.backgroundColor = .clear
         
-        titleLabel.do {
-            $0.text = "퀘스트 방식을 골라주세요"
-            $0.textColor = .grayscale50
-            $0.textAlignment = .left
-            $0.font = FontManager.head1M24.font
-        }
+        titleLabel.applyByeBooFont (
+            style: .head1M24,
+            text: "퀘스트 방식을 골라주세요",
+            color: .grayscale50,
+            textAlignment: .left
+        )
         
-        subTitleLabel.do {
-            $0.text = "나에게 맞는 방식으로 퀘스트를 받아볼 수 있어요."
-            $0.textColor = .grayscale400
-            $0.textAlignment = .left
-            $0.font = FontManager.body6R14.font
-        }
+        subTitleLabel.applyByeBooFont (
+            style: .body6R14,
+            text: "나에게 맞는 방식으로 퀘스트를 받아볼 수 있어요.",
+            color: .grayscale400,
+            textAlignment: .left
+        )
         
         questCardsView.backgroundColor = .clear
     }

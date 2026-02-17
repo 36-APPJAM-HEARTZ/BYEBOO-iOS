@@ -37,14 +37,14 @@ final class TextBoxView: BaseView {
     
     override func setStyle() {
         layer.cornerRadius = 12
-        backgroundColor = .white10
+        backgroundColor = .white5
         
-        titleLabel.do {
-            $0.numberOfLines = 0
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .grayscale300
-            $0.lineBreakMode = .byCharWrapping
-        }
+        titleLabel.applyByeBooFont(
+            style: .body6R14,
+            color: .grayscale300,
+            numberOfLines: 0
+        )
+        titleLabel.lineBreakMode = .byCharWrapping
     }
     
     override func setUI() {
@@ -74,11 +74,21 @@ final class TextBoxView: BaseView {
 
 extension TextBoxView {
     func updateText(_ text: String) {
-        titleLabel.text = text
+        titleLabel.applyByeBooFont(
+            style: .body6R14,
+            text: text,
+            color: .grayscale300,
+            numberOfLines: 0
+        )
     }
     
     func updateEmotionText(_ emotionState: String, text: String){
-        self.titleLabel.text = text
+        titleLabel.applyByeBooFont(
+            style: .body6R14,
+            text: text,
+            color: .grayscale300,
+            numberOfLines: 0
+        )
         self.emotionChip?.updateEmotion(ByeBooEmotion.toEmotion(text: emotionState))
     }
 }

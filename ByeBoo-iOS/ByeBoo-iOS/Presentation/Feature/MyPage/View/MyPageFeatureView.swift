@@ -26,15 +26,17 @@ final class MyPageFeatureView: BaseView {
     }
     
     override func setStyle() {
-        titleLabel.do {
-            $0.font = FontManager.body1Sb16.font
-            $0.textColor = .grayscale400
-            $0.textAlignment = .left
-        }
+        titleLabel.applyByeBooFont (
+            style: .body1Sb16,
+            color: .grayscale400,
+            textAlignment: .left
+        )
+        
         featureStackView.do {
             $0.axis = .vertical
             $0.spacing = 14
         }
+        
         noticeSwitch.do {
             $0.onTintColor = .primary300
             $0.tintColor = .grayscale600
@@ -80,9 +82,11 @@ final class MyPageFeatureView: BaseView {
     private func createFeatureButton(feature: String) -> UIButton {
         let featureButton = UIButton()
         featureButton.do {
-            $0.setTitle(feature, for: .normal)
-            $0.titleLabel?.font = FontManager.body3R16.font
-            $0.setTitleColor(.grayscale50, for: .normal)
+            $0.applyByeBooFont(
+                style: .body3R16,
+                text: feature,
+                color: .grayscale50
+            )
             $0.backgroundColor = .clear
         }
         

@@ -18,30 +18,30 @@ final class JourneyProgressView: BaseView {
     private var journeyTitle: String = ""
     
     override func setStyle() {
-        backgroundColor = .white10
+        backgroundColor = .white5
         layer.cornerRadius = 12
         
-        titleLabel.do {
-            $0.text = "\(name)님의 \(journeyTitle) 여정"
-            $0.font = FontManager.sub2Sb18.font
-            $0.textColor = .grayscale50
-        }
+        titleLabel.applyByeBooFont(
+            style: .sub2Sb18,
+            text: "\(name)님의 \(journeyTitle) 여정",
+            color: .grayscale50
+        )
+        
         progressStackView.do {
             $0.axis = .horizontal
             $0.spacing = 8
             $0.alignment = .center
             
         }
+        
         progressView.do {
             $0.progress = 0
             $0.progressTintColor = .primary300
             $0.trackTintColor = .primary30020
             $0.layer.cornerRadius = 12
         }
-        progressLabel.do {
-            $0.font = FontManager.cap2R12.font
-            $0.textColor = .grayscale400
-        }
+        
+        progressLabel.applyByeBooFont(style: .cap2R12, color: .grayscale400)
     }
     
     override func setUI() {

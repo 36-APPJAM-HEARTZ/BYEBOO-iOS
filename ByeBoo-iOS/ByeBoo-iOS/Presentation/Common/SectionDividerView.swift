@@ -13,7 +13,7 @@ final class SectionDividerView: BaseView {
     
     override func setStyle() {
         dividerView.do {
-            $0.backgroundColor = .white10
+            $0.backgroundColor = .white5
         }
     }
     

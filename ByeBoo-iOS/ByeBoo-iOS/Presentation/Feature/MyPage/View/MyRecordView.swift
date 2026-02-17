@@ -18,11 +18,11 @@ final class MyRecordView: BaseView {
             $0.image = .write
         }
         
-        titleLabel.do {
-            $0.text = "나의 기록"
-            $0.font = FontManager.body1Sb16.font
-            $0.textColor = .grayscale300
-        }
+        titleLabel.applyByeBooFont (
+            style: .body1Sb16,
+            text: "나의 기록",
+            color: .grayscale300
+        )
     }
     
     override func setUI() {

@@ -31,16 +31,18 @@ final class NewJourneySelectView: BaseView {
     override func setStyle() {
         backgroundColor = .grayscale900
         
-        titleLabel.do {
-            $0.text = "어떤 여정을 시작해 볼까요?"
-            $0.font = FontManager.head1M24.font
-            $0.textColor = .grayscale50
-        }
-        descriptionLabel.do {
-            $0.text = "각 여정 당 30개의 퀘스트를 제공해 드려요"
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .grayscale400
-        }
+        titleLabel.applyByeBooFont (
+            style: .head1M24,
+            text: "어떤 여정을 시작해 볼까요?",
+            color: .grayscale50
+        )
+        
+        descriptionLabel.applyByeBooFont (
+            style: .body6R14,
+            text: "각 여정 당 30개의 퀘스트를 제공해 드려요",
+            color: .grayscale400
+        )
+            
         unCompleteListView.do {
             $0.isUserInteractionEnabled = true
         }
@@ -59,19 +61,19 @@ final class NewJourneySelectView: BaseView {
         let safeArea = safeAreaLayoutGuide
         
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(safeArea).offset(3.5.adjustedH)
+            $0.top.equalTo(safeArea).offset(10.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedW)
         }
         descriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(8.adjustedH)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(12.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedH)
         }
         divider1.snp.makeConstraints {
-            $0.top.equalTo(descriptionLabel.snp.bottom).offset(11.5.adjustedH)
+            $0.top.equalTo(descriptionLabel.snp.bottom).offset(10.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
         unCompleteListView.snp.makeConstraints {
-            $0.top.equalTo(divider1.snp.bottom).offset(8.adjustedH)
+            $0.top.equalTo(divider1.snp.bottom).offset(20.adjustedH)
             $0.horizontalEdges.equalToSuperview()
         }
     }

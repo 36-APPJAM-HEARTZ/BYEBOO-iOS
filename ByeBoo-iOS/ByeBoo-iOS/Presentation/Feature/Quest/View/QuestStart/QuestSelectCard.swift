@@ -27,17 +27,18 @@ final class QuestSelectCard: BaseView {
     }
     
     override func setStyle() {
-        backgroundColor = .white10
+        backgroundColor = .white5
         layer.cornerRadius = 12
         layer.borderWidth = 1
         layer.borderColor = UIColor(.grayscale700).cgColor
         
-        titleLabel.do {
-            $0.text = type.title
-            $0.numberOfLines = 2
-            $0.font = FontManager.head1M24.font
-            $0.textColor = .grayscale50
-        }
+        titleLabel.applyByeBooFont (
+            style: .head1M24,
+            text: type.title,
+            color: .grayscale50,
+            numberOfLines: 2
+        )
+        
         characterImageView.do {
             $0.image = type.character
             $0.contentMode = .scaleAspectFit

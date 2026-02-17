@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "sadness_badge.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -44,7 +44,7 @@ final class ImagePickerContainer: BaseView {
         }
         
         addImageButton.do {
-            $0.backgroundColor = .white10
+            $0.backgroundColor = .white5
         }
         
         plusIcon.do {

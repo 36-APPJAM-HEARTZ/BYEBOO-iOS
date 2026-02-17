@@ -23,22 +23,23 @@ final class JourneyResultView: BaseView {
         backgroundView.do {
             $0.backgroundColor = .black50
         }
-        titleLabel.do {
-            $0.font = FontManager.body1Sb16.font
-            $0.textColor = .white
-        }
-        descriptionLabel.do {
-            $0.numberOfLines = 0
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .secondary100
-            $0.textAlignment = .center
-        }
+        titleLabel.applyByeBooFont(style: .body1Sb16, color: .white)
+        
+        descriptionLabel.applyByeBooFont(
+            style: .body6R14,
+            color: .secondary100,
+            textAlignment: .center,
+            numberOfLines: 0
+        )
+        
         confirmLabel.do {
-            $0.text = "확인했어요"
+            $0.applyByeBooFont(
+                style: .body4Sb14,
+                text: "확인했어요",
+                color: .secondary300,
+                textAlignment: .center
+            )
             $0.underLine(text: $0.text ?? "")
-            $0.font = FontManager.body4Sb14.font
-            $0.textColor = .secondary300
-            $0.textAlignment = .center
         }
     }
     

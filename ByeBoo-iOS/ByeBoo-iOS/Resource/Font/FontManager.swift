@@ -7,14 +7,14 @@
 
 import UIKit
 
-public struct FontProperty {
+struct FontProperty {
     let font: UIFont.FontType
     let size: CGFloat
-    let lineHeight: CGFloat?
+    let lineHeight: CGFloat
     let kern: CGFloat
 }
 
-public enum FontManager {
+enum FontManager {
     case head1M24
     case head2M22
     
@@ -54,13 +54,13 @@ public enum FontManager {
         case .body2M16:
             return FontProperty(font: .medium, size: 16, lineHeight: 130, kern: -1)
         case .body3R16:
-            return FontProperty(font: .regular, size: 16, lineHeight: 130, kern: -1)
+            return FontProperty(font: .regular, size: 16, lineHeight: 150, kern: -1)
         case .body4Sb14:
-            return FontProperty(font: .semibold, size: 14, lineHeight: 130, kern: -1)
+            return FontProperty(font: .semibold, size: 14, lineHeight: 150, kern: -1)
         case .body5M14:
             return FontProperty(font: .medium, size: 14, lineHeight: 130, kern: -1)
         case .body6R14:
-            return FontProperty(font: .regular, size: 14, lineHeight: 130, kern: -1)
+            return FontProperty(font: .regular, size: 14, lineHeight: 150, kern: -1)
             
         case .cap1M12:
             return FontProperty(font: .medium, size: 12, lineHeight: 130, kern: -1)
@@ -71,11 +71,19 @@ public enum FontManager {
     }
 }
 
-public extension FontManager {
+extension FontManager {
     var font: UIFont {
         guard let font = UIFont(name: fontProperty.font.name, size: fontProperty.size) else {
             return UIFont()
         }
         return font
+    }
+    
+    var lineHeight: CGFloat {
+        return fontProperty.size * (fontProperty.lineHeight / 100.0)
+    }
+    
+    var kern: CGFloat {
+        return fontProperty.size * (fontProperty.kern / 100.0)
     }
 }

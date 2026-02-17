@@ -15,12 +15,12 @@ final class QuestCardsView: BaseView {
     private(set) var questCards = [
         QuestCardView(
             title: "질문에 답하기",
-            subTitle: "질문을 통해\n상황과 감정을\n정리해요",
+            subTitle: "질문을 통해 상황과 감정을 정리해요",
             image: .book
         ),
         QuestCardView(
             title: "활동 인증하기",
-            subTitle: "작은 미션을 통해\n몸과 마음을\n가볍게 해요",
+            subTitle: "작은 미션을 통해 몸과 마음을 가볍게 해요",
             image: .shoe
         )
     ]

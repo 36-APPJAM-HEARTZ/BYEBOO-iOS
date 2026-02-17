@@ -19,7 +19,7 @@ final class WriteQuestTitleView: BaseView {
     private let questNumLabel =  UILabel()
     
     private let titleLabel = UILabel()
-    let tipTag = ByeBooFilledTag(tagType: .word3Purple, text: "작성 TIP")
+    let tipTag = ByeBooTipTag()
     
         
     init(stepNum: String, stepTitle: String, questNum: Int, title: String) {
@@ -45,21 +45,16 @@ final class WriteQuestTitleView: BaseView {
             $0.spacing = 8.adjustedW
         }
                 
-        stepTitle.do {
-            $0.font = FontManager.body2M16.font
-            $0.textColor = .grayscale500
-        }
-        
-        questNumLabel.do {
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .grayscale500
-        }
+        stepTitle.applyByeBooFont(style: .body2M16, color: .grayscale500)
+        questNumLabel.applyByeBooFont(style: .body6R14, color: .grayscale500)
         
         titleLabel.do {
-            $0.font = FontManager.head1M24.font
-            $0.textColor = .white
-            $0.numberOfLines = 0
-            $0.textAlignment = .center
+            $0.applyByeBooFont(
+                style: .head1M24,
+                color: .white,
+                textAlignment: .center,
+                numberOfLines: 0
+            )
             $0.lineBreakMode = .byWordWrapping
         }
         

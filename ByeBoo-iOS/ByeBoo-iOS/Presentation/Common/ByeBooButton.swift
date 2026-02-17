@@ -25,7 +25,7 @@ enum ByeBooButtonType {
         case .enabled:
                 .primary300
         case .disabled:
-                .white10
+                .white5
         case .disabled2:
                 .black50
         }

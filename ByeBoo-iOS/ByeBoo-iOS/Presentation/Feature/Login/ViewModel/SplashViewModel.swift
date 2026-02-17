@@ -64,6 +64,7 @@ extension SplashViewModel {
                 guard let error = error as? ByeBooError else {
                     return
                 }
+                autoLoginSubject.send(.failure((.noData)))
                 ByeBooLogger.debug(ByeBooError.networkConnect)
                 ByeBooLogger.error(error as ByeBooError)
             }

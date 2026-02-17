@@ -39,18 +39,21 @@ final class InputNicknameView: BaseView {
     
     override func setStyle() {
         titleView.backgroundColor = .clear
-        titleLabel.do {
-            $0.text = "닉네임을 입력해주세요"
-            $0.textColor = .grayscale50
-            $0.textAlignment = .left
-            $0.font = FontManager.head1M24.font
-        }
-        subTitleLabel.do {
-            $0.text = "어떤 이름으로 불러드릴까요?"
-            $0.textColor = .grayscale400
-            $0.textAlignment = .left
-            $0.font = FontManager.body6R14.font
-        }
+        
+        titleLabel.applyByeBooFont(
+            style: .head1M24,
+            text: "닉네임을 입력해주세요",
+            color: .grayscale50,
+            textAlignment: .left
+        )
+        
+        subTitleLabel.applyByeBooFont (
+            style: .body6R14,
+            text: "어떤 이름으로 불러드릴까요?",
+            color: .grayscale400,
+            textAlignment: .left
+        )
+        
         nicknameFieldView.backgroundColor = .clear
     }
     
