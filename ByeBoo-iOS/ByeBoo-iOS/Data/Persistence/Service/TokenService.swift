@@ -68,13 +68,13 @@ actor DefaultTokenService: TokenService {
                     }
                     
                     Task {
-                        await self.debugTokenReissueSuccess(data)
+                        await self.tokenReissueSuccess(data)
                         continuation.resume(returning: ())
                     }
                     
                 case .failure(let error):
                     Task {
-                        await self.debugTokenReissueFailure()
+                        await self.tokenReissueFail()
                         continuation.resume(throwing: error)
                     }
                 }
@@ -82,16 +82,16 @@ actor DefaultTokenService: TokenService {
         }
     }
     
-    private func debugTokenReissueSuccess(_ data: TokenReissueResponseDTO) {
+    private func tokenReissueSuccess(_ data: TokenReissueResponseDTO) {
         ByeBooLogger.debug("토큰 재발급 완료")
         self.keychainService.save(key: .accessToken, token: data.accessToken)
         self.keychainService.save(key: .refreshToken, token: data.refreshToken)
     }
     
-    private func debugTokenReissueFailure() {
+    private func tokenReissueFail() {
         ByeBooLogger.debug("토큰 재발급 실패, 키체인 삭제 후 로그인으로 이동")
         clearKeychain()
-        DispatchQueue.main.async {
+        Task { @MainActor in
             NotificationCenter.default.post(name: .navigateLoginViewController, object: nil)
         }
     }
