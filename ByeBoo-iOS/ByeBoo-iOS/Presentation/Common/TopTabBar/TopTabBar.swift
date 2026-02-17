@@ -41,7 +41,7 @@ final class TopTabBar: UIStackView {
     private func setAction() {
         itemViews.enumerated().forEach { index, itemView in
             let tapGesture = UITapGestureRecognizer(
-                target: self, action: #selector(barTapped(_:))
+                target: self, action: #selector(barDidTap(_:))
             )
             itemView.addGestureRecognizer(tapGesture)
             itemView.tag = index
@@ -56,7 +56,7 @@ final class TopTabBar: UIStackView {
 extension TopTabBar {
     
     @objc
-    private func barTapped(_ sender: UITapGestureRecognizer) {
+    private func barDidTap(_ sender: UITapGestureRecognizer) {
         guard let tag = sender.view?.tag else {
             return
         }
