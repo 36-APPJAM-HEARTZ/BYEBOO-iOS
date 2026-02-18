@@ -189,6 +189,14 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
         }
         return CompletedQuestsViewController(viewModel: viewModel)
     }
+    
+    func makeParentQuestViewController() -> ParentQuestViewController<QuestTabItem> {
+        return ParentQuestViewController(items: QuestTabItem.allCases)
+    }
+    
+    func makeCommonQuestViewController() -> CommonQuestViewController {
+        return .init()
+    }
 }
 
 extension ViewControllerFactory {
