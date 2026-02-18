@@ -45,7 +45,10 @@ actor DefaultTokenService: TokenService {
         ByeBooLogger.debug("토큰 재발급 시작")
         
         return try await withCheckedThrowingContinuation { [weak self] continuation in
-            guard let self else { return }
+            guard let self else {
+                continuation.resume(throwing: ByeBooError.unknownError)
+                return          
+            }
             
             AF.request(
                 endPoint.requestURL,
@@ -55,8 +58,14 @@ actor DefaultTokenService: TokenService {
                 headers: endPoint.headers.value
             )
             .validate()
-            .responseDecodable(of: BaseResponse<TokenReissueResponseDTO>.self) { [weak self] response in
-                guard let self else { return }
+            .responseDecodable(
+                of: BaseResponse<TokenReissueResponseDTO>.self,
+                queue: DispatchQueue.global()
+            ) { [weak self] response in
+                guard let self else {
+                    continuation.resume(throwing: ByeBooError.unknownError)
+                    return
+                }
                 ByeBooLogger.debug("💡Reissue \(response)")
                 
                 switch response.result {
