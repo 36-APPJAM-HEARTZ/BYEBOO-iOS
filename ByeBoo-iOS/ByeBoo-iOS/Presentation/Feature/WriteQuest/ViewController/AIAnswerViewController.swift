@@ -10,7 +10,7 @@ import UIKit
 
 final class AIAnswerViewController: BaseViewController {
     
-    private let rootView = AIAnswerView(answerState: .fail)
+    private let rootView = AIAnswerView(answerState: .success)
     
     override func loadView() {
         view = rootView

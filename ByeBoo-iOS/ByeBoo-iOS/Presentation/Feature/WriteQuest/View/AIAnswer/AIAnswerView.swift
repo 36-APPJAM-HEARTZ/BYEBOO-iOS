@@ -20,6 +20,7 @@ final class AIAnswerView: BaseView {
         self.answerState = answerState
         
         super.init(frame: .zero)
+        updateState(state: answerState)
     }
     
     required init?(coder: NSCoder) {
@@ -34,7 +35,6 @@ final class AIAnswerView: BaseView {
             $0.spacing = 8.adjustedH
             $0.alignment = .center
         }
-        
         textLabel.do {
             $0.applyByeBooFont(
                 style: .body3R16,
@@ -44,11 +44,9 @@ final class AIAnswerView: BaseView {
             )
             $0.numberOfLines = 0
         }
-        
         imageView.do {
             $0.image = .boriWriting
         }
-
         cardView.do {
             $0.isHidden = true
         }
@@ -72,9 +70,23 @@ final class AIAnswerView: BaseView {
             $0.centerY.equalToSuperview()
         }
     }
-    
+}
+
+extension AIAnswerView {
     func updateState(state: AIAnswerState) {
         textLabel.text = state.text
         imageView.image = state.image
+        
+        switch state {
+        case .loading:
+            stackView.isHidden = false
+            cardView.isHidden = true
+        case .fail:
+            stackView.isHidden = false
+            cardView.isHidden = true
+        case .success:
+            stackView.isHidden = true
+            cardView.isHidden = false
+        }
     }
 }
