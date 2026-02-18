@@ -27,6 +27,11 @@ platform :ios do
 	scheme: "ByeBoo-iOS",
 	export_method: "app-store"
 	)
+
+    upload_symbols_to_crashlytics(
+	gsp_path: "ByeBoo-iOS/GoogleService-Info.plist"
+	)
+
     upload_to_testflight
   end
 end
