@@ -60,7 +60,7 @@ enum FontManager {
         case .body4Sb14:
             return FontProperty(font: .semibold, size: 14, lineHeight: 150, kern: -1)
         case .body5M14:
-            return FontProperty(font: .medium, size: 14, lineHeight: 130, kern: -1)
+            return FontProperty(font: .medium, size: 14, lineHeight: 150, kern: -1)
         case .body6R14:
             return FontProperty(font: .regular, size: 14, lineHeight: 150, kern: -1)
             
