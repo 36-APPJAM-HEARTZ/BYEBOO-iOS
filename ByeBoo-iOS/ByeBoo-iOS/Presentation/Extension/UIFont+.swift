@@ -17,6 +17,7 @@ extension UIFont {
         case regular = "Pretendard-Regular"
         case semibold = "Pretendard-Semibold"
         case thin = "Pretendard-Thin"
+        case omyu = "omyu pretty"
         
         var name: String {
             return self.rawValue
