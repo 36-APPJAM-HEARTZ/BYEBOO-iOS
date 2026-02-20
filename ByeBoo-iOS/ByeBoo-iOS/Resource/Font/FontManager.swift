@@ -33,6 +33,8 @@ enum FontManager {
     case cap1M12
     case cap2R12
     
+    case boriVoiceR18
+    
     public var fontProperty: FontProperty {
         switch self {
         case .head1M24:
@@ -58,7 +60,7 @@ enum FontManager {
         case .body4Sb14:
             return FontProperty(font: .semibold, size: 14, lineHeight: 150, kern: -1)
         case .body5M14:
-            return FontProperty(font: .medium, size: 14, lineHeight: 130, kern: -1)
+            return FontProperty(font: .medium, size: 14, lineHeight: 150, kern: -1)
         case .body6R14:
             return FontProperty(font: .regular, size: 14, lineHeight: 150, kern: -1)
             
@@ -66,7 +68,9 @@ enum FontManager {
             return FontProperty(font: .medium, size: 12, lineHeight: 130, kern: -1)
         case .cap2R12:
             return FontProperty(font: .regular, size: 12, lineHeight: 130, kern: -1)
-            
+        
+        case .boriVoiceR18:
+            return FontProperty(font: .omyu, size: 18, lineHeight: 150, kern: 0)
         }
     }
 }
