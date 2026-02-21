@@ -15,8 +15,6 @@ final class FeelView: BaseView {
     private let emotionType: String
     private let descriptionText: String
     
-    private let titleTextView = IconOneLineTextView(iconType: .change, text: "퀘스트 완료 후, 이런 감정을 느꼈어요")
-    
     init(emotionType: String, descriptionText: String) {
         self.emotionType = emotionType
         self.descriptionText = descriptionText
@@ -35,19 +33,13 @@ final class FeelView: BaseView {
     
     override func setUI() {
         addSubviews(
-            titleTextView,
             descriptionView
         )
     }
     
     override func setLayout() {
-        titleTextView.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
-        }
-       
         descriptionView.snp.makeConstraints {
-            $0.top.equalTo(titleTextView.snp.bottom).offset(12.adjustedH)
+            $0.top.equalToSuperview()
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(24.5.adjustedH)
         }
