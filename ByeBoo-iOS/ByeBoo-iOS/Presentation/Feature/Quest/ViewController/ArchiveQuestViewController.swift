@@ -48,13 +48,24 @@ final class ArchiveQuestViewController: BaseViewController {
         super.viewDidLoad()
         self.navigationItem.hidesBackButton = true
         
-        ByeBooNavigationBar.makeNavigationBar(
-            navigationItem: self.navigationItem,
-            navigationController: self.navigationController,
-            type: .editAndClose(header: .black),
-            action: #selector(close),
-            secondAction: #selector(editButtonDidTap)
-        )
+        guard let entryViewController else { return }
+        switch entryViewController {
+        case .writeQuest:
+            ByeBooNavigationBar.makeNavigationBar(
+                navigationItem: self.navigationItem,
+                navigationController: self.navigationController,
+                type: .close(header: .black),
+                action: #selector(close)
+            )
+        case .mypage, .questMain, .edit:
+            ByeBooNavigationBar.makeNavigationBar(
+                navigationItem: self.navigationItem,
+                navigationController: self.navigationController,
+                type: .editAndClose(header: .black),
+                action: #selector(close),
+                secondAction: #selector(editButtonDidTap)
+            )
+        }
         viewModel.action(.questAnswerDidLoad(questID: questID))
         bind()
     }
