@@ -11,6 +11,7 @@ import UIKit
 enum ArchiveViewControllerEntryPoint {
     case mypage
     case questMain
+    case writeQuest
     case edit
 }
 
@@ -96,7 +97,7 @@ extension ArchiveQuestViewController: Dismissible {
         switch entryViewController {
         case .mypage, .questMain:
             self.navigationController?.popViewController(animated: true)
-        case .edit:
+        case .writeQuest, .edit:
             let viewController = ByeBooTabBar()
             viewController.selectedIndex = 1
             
