@@ -32,4 +32,8 @@ struct ModalBuilder {
         modalViewController.modalPresentationStyle = .overFullScreen
         rootViewController.present(modalViewController, animated: false)
     }
+    
+    func dismiss() {
+        modalViewController.dismiss(animated: false)
+    }
 }
