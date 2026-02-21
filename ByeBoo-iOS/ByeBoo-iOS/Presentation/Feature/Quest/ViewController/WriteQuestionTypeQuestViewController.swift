@@ -197,10 +197,24 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
             .sink { [weak self] result in
                 switch result {
                 case .success(()):
-                    let viewController = ViewControllerFactory.shared.makeCompleteQuestionTypeQuestViewController()
-                    viewController.configure(questID: self?.questID ?? 1, questNumber: self?.questNumber ?? 1)
-                    self?.bottomSheetViewController.dismiss(animated: true)
-                    self?.navigationController?.pushViewController(viewController, animated: true)
+                    guard let self else { return }
+                    self.bottomSheetViewController.dismiss(animated: true) {
+                        let modal = ModalBuilder(
+                            modalView: QuestCompleteModal(),
+                            action: nil,
+                            rootViewController: self
+                        )
+                        modal.present()
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            modal.dismiss()
+                            
+                            ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
+                            let viewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
+                            viewController.configure(questID: self.questID, questType: .question)
+                            self.navigationController?.pushViewController(viewController, animated: true)
+                        }
+                    }
                 case .failure(let error):
                     self?.handleError(error)
                 }

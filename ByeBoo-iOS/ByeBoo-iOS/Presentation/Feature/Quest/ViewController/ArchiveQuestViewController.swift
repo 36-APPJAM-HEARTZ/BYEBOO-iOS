@@ -17,14 +17,14 @@ enum ArchiveViewControllerEntryPoint {
 final class ArchiveQuestViewController: BaseViewController {
         
     private var rootView = ArchiveQuestView(type: .activation)
-    private let viewModel: CompleteQuestViewModel
+    private let viewModel: ArchiveQuestViewModel
     private var cancellables = Set<AnyCancellable>()
     
     private var questID: Int = 1
     private var questType: QuestType = .activation
     var entryViewController: ArchiveViewControllerEntryPoint?
     
-    init(viewModel: CompleteQuestViewModel
+    init(viewModel: ArchiveQuestViewModel
     ) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)

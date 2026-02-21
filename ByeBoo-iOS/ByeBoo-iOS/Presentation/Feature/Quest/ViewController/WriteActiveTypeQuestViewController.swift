@@ -230,11 +230,23 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                 switch result {
                 case .success(()):
                     guard let self else { return }
-                    ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
-                    let viewController = ViewControllerFactory.shared.makeCompleteActiveTypeQuestViewController()
-                    viewController.configure(questID: self.questID, questNumber: self.questNumber)
-                    self.bottomSheetViewController.dismiss(animated: true)
-                    self.navigationController?.pushViewController(viewController, animated: true)
+                    self.bottomSheetViewController.dismiss(animated: true) {
+                        let modal = ModalBuilder(
+                            modalView: QuestCompleteModal(),
+                            action: nil,
+                            rootViewController: self
+                        )
+                        modal.present()
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            modal.dismiss()
+                            
+                            ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
+                            let viewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
+                            viewController.configure(questID: self.questID, questType: .activation)
+                            self.navigationController?.pushViewController(viewController, animated: true)
+                        }
+                    }
                 case .failure(let error):
                     self?.handleError(error)
                 }

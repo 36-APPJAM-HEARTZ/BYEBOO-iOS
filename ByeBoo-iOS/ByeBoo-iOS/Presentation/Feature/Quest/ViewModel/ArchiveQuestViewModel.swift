@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-final class CompleteQuestViewModel: ViewModelType {
+final class ArchiveQuestViewModel: ViewModelType {
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -34,7 +34,7 @@ final class CompleteQuestViewModel: ViewModelType {
     }
 }
 
-extension CompleteQuestViewModel {
+extension ArchiveQuestViewModel {
     enum Input {
         case questAnswerDidLoad(questID: Int)
     }
@@ -53,7 +53,7 @@ extension CompleteQuestViewModel {
     }
 }
 
-extension CompleteQuestViewModel {
+extension ArchiveQuestViewModel {
     private func fetchQuestAnswer(questID: Int) {
         Task {
             do {
