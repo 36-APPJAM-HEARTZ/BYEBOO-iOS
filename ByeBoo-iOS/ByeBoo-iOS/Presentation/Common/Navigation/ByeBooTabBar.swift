@@ -22,7 +22,7 @@ final class ByeBooTabBar: UITabBarController {
     private func setViewController() {
         
         let homeViewController = ViewControllerFactory.shared.makeHomeViewController()
-        let questViewController = ViewControllerFactory.shared.makeQuestViewController()
+        let questViewController = ViewControllerFactory.shared.makeParentQuestViewController()
         let myPageViewController = ViewControllerFactory.shared.makeMyPageViewController()
         
         self.viewControllers = [

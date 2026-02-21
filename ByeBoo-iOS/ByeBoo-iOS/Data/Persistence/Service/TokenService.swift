@@ -41,21 +41,31 @@ actor DefaultTokenService: TokenService {
     
     private func fetchAuthReissue() async throws {
         let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .refreshToken))
+        let endPoint: EndPoint = AuthAPI.reissue(header: header)
         ByeBooLogger.debug("토큰 재발급 시작")
         
         return try await withCheckedThrowingContinuation { [weak self] continuation in
-            guard let self else { return }
+            guard let self else {
+                continuation.resume(throwing: ByeBooError.unknownError)
+                return          
+            }
             
             AF.request(
-                AuthAPI.reissue(header: header).requestURL,
-                method: AuthAPI.reissue(header: header).method,
-                parameters: AuthAPI.reissue(header: header).bodyParameters,
-                encoding: AuthAPI.reissue(header: header).parameterEncoding,
-                headers: AuthAPI.reissue(header: header).headers.value
+                endPoint.requestURL,
+                method: endPoint.method,
+                parameters: endPoint.bodyParameters,
+                encoding: endPoint.parameterEncoding,
+                headers: endPoint.headers.value
             )
             .validate()
-            .responseDecodable(of: BaseResponse<TokenReissueResponseDTO>.self) { [weak self] response in
-                guard let self else { return }
+            .responseDecodable(
+                of: BaseResponse<TokenReissueResponseDTO>.self,
+                queue: DispatchQueue.global()
+            ) { [weak self] response in
+                guard let self else {
+                    continuation.resume(throwing: ByeBooError.unknownError)
+                    return
+                }
                 ByeBooLogger.debug("💡Reissue \(response)")
                 
                 switch response.result {
@@ -67,13 +77,13 @@ actor DefaultTokenService: TokenService {
                     }
                     
                     Task {
-                        await self.debugTokenReissueSuccess(data)
+                        await self.tokenReissueSuccess(data)
                         continuation.resume(returning: ())
                     }
                     
                 case .failure(let error):
                     Task {
-                        await self.debugTokenReissueFailure()
+                        await self.tokenReissueFail()
                         continuation.resume(throwing: error)
                     }
                 }
@@ -81,16 +91,16 @@ actor DefaultTokenService: TokenService {
         }
     }
     
-    private func debugTokenReissueSuccess(_ data: TokenReissueResponseDTO) {
+    private func tokenReissueSuccess(_ data: TokenReissueResponseDTO) {
         ByeBooLogger.debug("토큰 재발급 완료")
         self.keychainService.save(key: .accessToken, token: data.accessToken)
         self.keychainService.save(key: .refreshToken, token: data.refreshToken)
     }
     
-    private func debugTokenReissueFailure() {
+    private func tokenReissueFail() {
         ByeBooLogger.debug("토큰 재발급 실패, 키체인 삭제 후 로그인으로 이동")
         clearKeychain()
-        DispatchQueue.main.async {
+        Task { @MainActor in
             NotificationCenter.default.post(name: .navigateLoginViewController, object: nil)
         }
     }
