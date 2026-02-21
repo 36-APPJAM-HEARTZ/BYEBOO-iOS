@@ -1,8 +1,8 @@
 //
-//  CongratSqusre.swift
+//  QuestCompleteModal.swift
 //  ByeBoo-iOS
 //
-//  Created by 이나연 on 7/10/25.
+//  Created by 이나연 on 2/22/26.
 //
 
 import UIKit
@@ -11,7 +11,7 @@ import Lottie
 import SnapKit
 import Then
 
-final class CongratSquare: BaseView {
+final class QuestCompleteModal: BaseView {
     private let titleLabel = UILabel()
     private let imageLottie = LottieAnimationView(name: "bori_congrate")
     private let descriptionLabel = UILabel()
@@ -23,7 +23,7 @@ final class CongratSquare: BaseView {
     override func setStyle() {
         self.do {
             $0.layer.cornerRadius = 12
-            $0.backgroundColor = .white5
+            $0.backgroundColor = .grayscale900
         }
         
         titleLabel.do {
@@ -57,13 +57,12 @@ final class CongratSquare: BaseView {
     override func setLayout() {
         self.snp.makeConstraints {
             $0.width.equalTo(325.adjustedW)
-            $0.height.equalTo(365.adjustedH)
+            $0.height.equalTo(371.adjustedH)
         }
         
         titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(24.adjustedH)
-            $0.leading.trailing.equalToSuperview().inset(61.adjustedH)
-            $0.width.equalTo(203.adjustedW)
+            $0.centerX.equalToSuperview()
         }
         
         imageLottie.snp.makeConstraints {
@@ -75,7 +74,7 @@ final class CongratSquare: BaseView {
         
         descriptionLabel.snp.makeConstraints {
             $0.top.equalTo(imageLottie.snp.bottom).offset(16.adjustedH)
-            $0.leading.trailing.equalToSuperview().inset(61.adjustedH)
+            $0.centerX.equalToSuperview()
         }
     }
 }
