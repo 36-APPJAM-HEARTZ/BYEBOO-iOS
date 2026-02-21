@@ -8,6 +8,7 @@
 import UIKit
 
 import Then
+import Kingfisher
 import SnapKit
 
 final class ArchiveQuestView: BaseView {
@@ -15,20 +16,21 @@ final class ArchiveQuestView: BaseView {
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let headerView = ArchiveQuestHeaderView(
-        type: .archive,
         stepNumber: 0,
         questNumber: 0,
         date: "",
         questTitle:""
     )
-    private let thinkView: ThinkView?
-    private let actionView: ActionView?
-    private let feelView = FeelView(emotionType: "", descriptionText: "")
     private let AIAnswerButton = ByeBooButton(
         titleText: "보리의 답장 보러가기",
         type: .enabled
     )
     
+    private let textBoxView = TextBoxView(title: "")
+    private let photoBoxView: UIImageView?
+    private let feelView =  FeelView(emotionType: "", descriptionText: "")
+    private var descriptionText: String = ""
+    private var photoURL: String = ""
     
     private(set) var type: QuestType
     
@@ -37,11 +39,9 @@ final class ArchiveQuestView: BaseView {
         
         switch type {
         case .question:
-            thinkView = ThinkView(descriptionText: "")
-            actionView = nil
+            photoBoxView = nil
         case .activation:
-            thinkView = nil
-            actionView = ActionView(descriptionText: "", photoURL: "")
+            photoBoxView = UIImageView()
         }
         
         super.init(frame: .zero)
@@ -54,30 +54,38 @@ final class ArchiveQuestView: BaseView {
     override func setStyle() {
         backgroundColor = .grayscale900
         
-        actionView?.do {
-            $0.isUserInteractionEnabled = false
-        }
-        thinkView?.do {
-            $0.isUserInteractionEnabled = false
+        photoBoxView?.do {
+            $0.layer.cornerRadius = 12
+            $0.clipsToBounds = true
+            $0.backgroundColor = .gray
+            $0.contentMode = .scaleAspectFill
+            guard let url = URL(string: photoURL) else {
+                ByeBooLogger.error(ByeBooError.URLError)
+                return
+            }
+            $0.kf.setImage(with: url)
         }
     }
     
     override func setUI() {
-        addSubview(scrollView)
+        addSubviews(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubviews(
             headerView,
+            textBoxView,
             feelView,
             AIAnswerButton
         )
         
+        if let photoBoxView {
+            contentView.addSubview(photoBoxView)
+        }
+        
         switch type {
         case .question:
-            guard let thinkView else { return }
-            contentView.addSubview(thinkView)
+            addSubviews(answerButton)
         case .activation:
-            guard let actionView else { return }
-            contentView.addSubview(actionView)
+            contentView.addSubview(answerButton)
         }
     }
     
@@ -97,32 +105,33 @@ final class ArchiveQuestView: BaseView {
             $0.horizontalEdges.equalToSuperview()
         }
         
-        if let thinkView {
-            thinkView.snp.makeConstraints {
-                $0.top.equalTo(headerView.snp.bottom)
-                $0.horizontalEdges.equalToSuperview()
-            }
-            feelView.snp.makeConstraints {
-                $0.top.equalTo(thinkView.snp.bottom)
-                $0.horizontalEdges.equalToSuperview()
+        if let photoBoxView {
+            photoBoxView.snp.makeConstraints {
+                $0.top.equalTo(headerView.snp.bottom).offset(20.adjustedH)
+                $0.size.equalTo(327.adjustedW)
+                $0.centerX.equalToSuperview()
             }
         }
         
-        if let actionView {
-            actionView.snp.makeConstraints {
-                $0.top.equalTo(headerView.snp.bottom)
-                $0.horizontalEdges.equalToSuperview()
+        textBoxView.snp.makeConstraints {
+            if let photoBoxView {
+                if !descriptionText.isEmpty {
+                    $0.top.equalTo(photoBoxView.snp.bottom).offset(20.adjustedH)
+                }
+            } else {
+                $0.top.equalTo(headerView.snp.bottom).offset(20.adjustedH)
             }
-            feelView.snp.makeConstraints {
-                $0.top.equalTo(actionView.snp.bottom)
-                $0.horizontalEdges.equalToSuperview()
-            }
+            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
     
         AIAnswerButton.snp.makeConstraints {
             $0.top.greaterThanOrEqualTo(feelView.snp.bottom).offset(44.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalTo(contentView.snp.bottom).inset(36.adjustedH)
+        }
+        feelView.snp.makeConstraints {
+            $0.top.equalTo(textBoxView.snp.bottom).offset(20.adjustedH)
+            $0.horizontalEdges.equalToSuperview()
         }
     }
 }
@@ -136,17 +145,36 @@ extension ArchiveQuestView {
             title: entity.question
         )
         
-        self.feelView.updateUI(
+        feelView.updateUI(
             emotionType: entity.questEmotionState,
             descriptionText: entity.emotionDescription
         )
         
-        switch self.type {
+        switch type {
         case .question:
-            self.thinkView?.updateUI(description: entity.answer)
+            textBoxView.updateText(entity.answer)
         case .activation:
-            self.actionView?.updateUI(description: entity.answer, photoURL: entity.imageUrl ?? "")
+            guard let photoBoxView else { return }
             
+            if let url = URL(string: entity.imageUrl!) {
+                photoBoxView.kf.setImage(with: url)
+            }
+            
+            if entity.answer.isEmpty {
+                textBoxView.removeFromSuperview()
+                
+                feelView.snp.remakeConstraints {
+                    $0.top.equalTo(photoBoxView.snp.bottom).offset(20.adjustedH)
+                    $0.horizontalEdges.equalToSuperview()
+                }
+            } else {
+                textBoxView.updateText(entity.answer)
+                textBoxView.snp.remakeConstraints {
+                    $0.top.equalTo(photoBoxView.snp.bottom).offset(20.adjustedH)
+                    $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+                    $0.centerX.equalToSuperview()
+                }
+            }
         }
     }
 }
