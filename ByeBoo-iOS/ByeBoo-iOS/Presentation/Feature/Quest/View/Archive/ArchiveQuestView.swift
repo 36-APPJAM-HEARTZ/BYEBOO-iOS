@@ -80,13 +80,6 @@ final class ArchiveQuestView: BaseView {
         if let photoBoxView {
             contentView.addSubview(photoBoxView)
         }
-        
-        switch type {
-        case .question:
-            addSubviews(answerButton)
-        case .activation:
-            contentView.addSubview(answerButton)
-        }
     }
     
     override func setLayout() {
