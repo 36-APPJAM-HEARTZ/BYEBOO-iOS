@@ -27,7 +27,6 @@ extension UITextView {
         var attributes: [NSAttributedString.Key: Any] = [
             .font: style.font,
             .paragraphStyle: paragraphStyle,
-            .baselineOffset: (style.lineHeight - style.font.lineHeight) / 2,
             .kern: style.kern
         ]
         
