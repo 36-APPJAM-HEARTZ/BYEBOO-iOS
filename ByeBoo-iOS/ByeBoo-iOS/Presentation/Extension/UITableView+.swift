@@ -14,7 +14,7 @@ extension UITableView {
             withIdentifier: T.identifier,
             for: indexPath
         ) as? T else {
-            fatalError("identifier에 알맞은 셀을 찾을 수 없음: \(T.identifier)")
+            return T()
         }
         
         return cell
