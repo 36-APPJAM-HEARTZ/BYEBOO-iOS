@@ -10,6 +10,8 @@ import UIKit
 final class AIAnswerCardView: BaseView {
     
     private let cardImageView = UIImageView()
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
     private let contentLabel = UILabel()
     private let boriLabel = UILabel()
     
@@ -18,9 +20,12 @@ final class AIAnswerCardView: BaseView {
         
         cardImageView.do {
             $0.image = .boriLetter
+            $0.isUserInteractionEnabled = true
+        }
+        scrollView.do {
+            $0.showsVerticalScrollIndicator = false
         }
         contentLabel.do {
-            // font 어떻게 되는거지?
             $0.applyByeBooFont(
                 style: .body3R16,
                 text: "",
@@ -30,7 +35,7 @@ final class AIAnswerCardView: BaseView {
         }
         boriLabel.do {
             $0.applyByeBooFont(
-                style: .body3R16,
+                style: .boriVoiceR18,
                 text: "보리의 답장",
                 color: .primary50
             )
@@ -39,19 +44,31 @@ final class AIAnswerCardView: BaseView {
     
     override func setUI() {
         addSubviews(cardImageView)
-        cardImageView.addSubviews(contentLabel, boriLabel)
+        cardImageView.addSubviews(scrollView, boriLabel)
+        scrollView.addSubview(contentView)
+        contentView.addSubview(contentLabel)
     }
     
     override func setLayout() {
         cardImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        contentLabel.snp.makeConstraints {
+        scrollView.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(217.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-            $0.top.equalToSuperview().offset(217.adjustedH)
+            $0.bottom.equalToSuperview().inset(98.adjustedH)
+        }
+        contentView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+            $0.width.equalToSuperview()
+            $0.height.greaterThanOrEqualTo(scrollView.frameLayoutGuide)
+        }
+        contentLabel.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview()
+            $0.verticalEdges.equalToSuperview()
         }
         boriLabel.snp.makeConstraints {
-            $0.top.equalTo(contentLabel.snp.bottom).offset(44.adjustedH)
+            $0.top.equalTo(scrollView.snp.bottom).offset(44.adjustedH)
             $0.trailing.equalToSuperview().inset(24.adjustedW)
         }
     }
