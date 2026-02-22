@@ -150,7 +150,7 @@ final class WriteActiveTypeQuestView: BaseView {
         questTextField.snp.makeConstraints {
             $0.top.equalTo(textStackView.snp.bottom).offset(8.adjustedH)
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
-            $0.height.equalTo(290.adjustedH)
+            $0.height.greaterThanOrEqualTo(290.adjustedH)
         }
         
         confirmButton.snp.makeConstraints {

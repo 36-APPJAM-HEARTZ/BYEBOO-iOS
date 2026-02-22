@@ -11,15 +11,24 @@ import SnapKit
 import Then
 
 final class QuestTextField: BaseView {
-    let textView = UITextView()
-    var textCount = UILabel()
-    let placeholder: String
+    private(set) var textView = UITextView()
+    private let descriptionStackView = UIStackView()
+    private let errorIcon = UIImageView()
+    private let descriptionLabel = UILabel()
+    private(set) var textCountLabel = UILabel()
+    
+    private var questType: QuestType
     var isPlaceholderActive: Bool = true
-    let limitCount: Int
     var count: Int = 0
+    private(set) var  placeholder: String
+    private(set) var  limitCount: Int
+    private var containerHeightConsraint: Constraint?
+    private var textViewHeightConstraint: Constraint?
+    
     weak var delegate: QuestCompleteProtocol?
     
     init(type: QuestType) {
+        self.questType = type
         placeholder = type.plaeholder
         limitCount = type.textLimit
         super.init(frame: .zero)
@@ -31,47 +40,70 @@ final class QuestTextField: BaseView {
     }
     
     override func setUI() {
-        addSubviews(textView, textCount)
+        addSubviews(textView, textCountLabel)
+        
+        if questType == .question {
+            addSubviews(descriptionStackView)
+            descriptionStackView.addArrangedSubviews(errorIcon, descriptionLabel)
+        }
     }
     
     override func setStyle() {
         self.do {
-            $0.backgroundColor = .white5
-            $0.layer.cornerRadius = 12
+            $0.backgroundColor = .clear
         }
         
         textView.do {
-            $0.applyByeBooFont(
-                style: .body3R16,
-                text: placeholder,
-                color: .grayscale300
-            )
+            applyTextViewStyle(text: placeholder, color: .grayscale300)
             $0.backgroundColor = .clear
-            $0.tintColor = .white
+            $0.tintColor = .grayscale100
+            $0.isScrollEnabled = false
         }
         
-        textCount.applyByeBooFont (
+        textCountLabel.applyByeBooFont (
             style: .body6R14,
             text: "(\(count)/\(limitCount))",
-            color: .grayscale300
+            color: .grayscale400
+        )
+        
+        descriptionStackView.do {
+            $0.axis = .horizontal
+            $0.spacing = 3.adjustedW
+        }
+        
+        errorIcon.do {
+            $0.image = .error
+            $0.contentMode = .scaleAspectFit
+        }
+        
+        descriptionLabel.applyByeBooFont(
+            style: .cap2R12,
+            text: "10글자 이상 작성해 주세요.",
+            color: .grayscale400,
+            textAlignment: .center
         )
     }
     
     override func setLayout() {
         self.snp.makeConstraints {
             $0.width.equalTo(327.adjustedW)
-            $0.height.equalTo(290.adjustedH)
+            containerHeightConsraint = $0.height.equalTo(268.adjustedH).constraint
         }
         
         textView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16.adjustedH)
-            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
-            $0.bottom.equalToSuperview().inset(34.adjustedH)
+            $0.leading.trailing.equalToSuperview()
+            textViewHeightConstraint = $0.height.equalTo(196.adjustedH).constraint
         }
         
-        textCount.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(24)
-            $0.bottom.equalToSuperview().inset(16.adjustedW)
+        descriptionStackView.snp.makeConstraints {
+            $0.leading.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(24.adjustedW)
+        }
+        
+        textCountLabel.snp.makeConstraints {
+            $0.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(24.adjustedW)
         }
     }
 }
@@ -80,24 +112,20 @@ extension QuestTextField: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if isPlaceholderActive == true {
             isPlaceholderActive = false
-            textView.textColor = .white
-            textView.text = nil
+            applyTextViewStyle(text: "", color: .grayscale100)
         }
-        self.layer.borderColor = UIColor.primary300.cgColor
-        self.layer.borderWidth = 1
-        textCount.textColor = .primary300
-        textView.textColor = .white
+        textView.textColor = .grayscale100
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
-            textView.text = placeholder
-            textView.textColor = .grayscale300
+            applyTextViewStyle(text: placeholder, color: .grayscale300)
             isPlaceholderActive = true
+        } else {
+            applyTextViewStyle(text: textView.text, color: .grayscale100)
         }
-        textView.textColor = .grayscale300
-        self.layer.borderWidth = 0
-        textCount.textColor = .grayscale300
+        textCountLabel.textColor = .grayscale300
+        updateTextViewHeight()
     }
     
     func textViewDidChange(_ textView: UITextView) {
@@ -105,7 +133,31 @@ extension QuestTextField: UITextViewDelegate {
             textView.deleteBackward()
         }
         count = textView.text.count
-        textCount.text = "(\(count)/\(limitCount))"
+        textCountLabel.text = "(\(count)/\(limitCount))"
         delegate?.updateButtonWhenWriting(text: textView.text)
+        updateTextViewHeight()
+    }
+}
+
+private extension QuestTextField {
+    func applyTextViewStyle(text: String, color: UIColor) {
+        textView.applyByeBooFont(
+            style: .body3R16,
+            text: text,
+            color: color
+        )
+    }
+    
+    func updateTextViewHeight() {
+        let width = self.frame.width
+        let fittingSize = CGSize(width: width, height: .greatestFiniteMagnitude)
+        let estimatedHeight = ceil(textView.sizeThatFits(fittingSize).height)
+        let containerMinHeight = 268.adjustedH
+        let textViewMinHeight = 196.adjustedH
+        
+        containerHeightConsraint?.update(offset: max(containerMinHeight, estimatedHeight + 72.adjustedH))
+        textViewHeightConstraint?.update(offset: max(textViewMinHeight, estimatedHeight))
+        superview?.layoutIfNeeded()
+        layoutIfNeeded()
     }
 }
