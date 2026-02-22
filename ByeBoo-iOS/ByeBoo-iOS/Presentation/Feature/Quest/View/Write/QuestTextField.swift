@@ -62,10 +62,14 @@ final class QuestTextField: BaseView {
         }
         
         textView.do {
-            applyTextViewStyle(text: placeholder, color: .grayscale300)
             $0.backgroundColor = .clear
             $0.tintColor = .grayscale100
             $0.isScrollEnabled = false
+            $0.applyByeBooFont(
+                style: .body3R16,
+                text: placeholder,
+                color: .grayscale300
+            )
         }
         
         textCountLabel.applyByeBooFont (
@@ -101,7 +105,7 @@ final class QuestTextField: BaseView {
         }
         
         textView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(16.adjustedH)
+            $0.top.equalToSuperview()
             $0.leading.trailing.equalToSuperview()
             textViewHeightConstraint = $0.height.equalTo(196.adjustedH).constraint
         }
@@ -146,8 +150,8 @@ extension QuestTextField: UITextViewDelegate {
         }
         count = textView.text.count
         textCountLabel.text = "(\(count)/\(limitCount))"
-        delegate?.updateButtonWhenWriting(text: textView.text)
         updateTextViewHeight()
+        delegate?.updateButtonWhenWriting(text: textView.text)
     }
 }
 
