@@ -78,8 +78,9 @@ extension ArchiveQuestViewController: ToastPresentable, ToastErrorHandler {
             .sink { [weak self] result in
                 switch result {
                 case .success(let entity):
-                    ByeBooLogger.debug("퀘스트 아이디 \(self?.questID)")
-                    self?.rootView.updateUI(entity)
+                    guard let self else { return }
+                    ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
+                    self.rootView.updateUI(entity)
                 case .failure(let error):
                     self?.handleError(error)
                 }
