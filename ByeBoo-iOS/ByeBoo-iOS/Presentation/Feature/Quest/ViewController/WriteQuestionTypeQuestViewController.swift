@@ -338,10 +338,10 @@ extension WriteQuestionTypeQuestViewController {
             return
         }
         
-        let delta = currentHeight - previousTextViewHeight
+        let diff = currentHeight - previousTextViewHeight
         previousTextViewHeight = currentHeight
         
-        guard abs(delta) > 0.5 else { return }
+        guard abs(diff) > 0.5 else { return }
 
         let textView = rootView.questTextField.textView
         let textViewFrameInWindow = textView.convert(textView.bounds, to: nil)
@@ -354,14 +354,8 @@ extension WriteQuestionTypeQuestViewController {
         guard abs(targetOffset - currentKeyboardOffset) > 0.5 else { return }
         currentKeyboardOffset = targetOffset
         
-        let animations = {
+        UIView.animate(withDuration: 0.2) {
             self.rootView.transform = CGAffineTransform(translationX: 0, y: -self.currentKeyboardOffset)
-        }
-        
-        if animated {
-            UIView.animate(withDuration: 0.2, animations: animations)
-        } else {
-            animations()
         }
     }
     
@@ -384,14 +378,8 @@ extension WriteQuestionTypeQuestViewController {
         guard abs(targetOffset - currentKeyboardOffset) > 0.5 else { return }
         currentKeyboardOffset = targetOffset
         
-        let animations = {
+        UIView.animate(withDuration: 0.2) {
             self.rootView.transform = CGAffineTransform(translationX: 0, y: -self.currentKeyboardOffset)
-        }
-        
-        if animated {
-            UIView.animate(withDuration: 0.2, animations: animations)
-        } else {
-            animations()
         }
     }
 }
