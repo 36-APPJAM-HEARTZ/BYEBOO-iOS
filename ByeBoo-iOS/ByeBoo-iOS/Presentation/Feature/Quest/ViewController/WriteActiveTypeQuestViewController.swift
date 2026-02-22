@@ -26,6 +26,9 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private var emotionState: String = ""
     private var image: UIImage = UIImage()
     private var isKeyboardUsed: Bool = false
+    private var keyboardFrameInWindow: CGRect = .zero
+    private var currentKeyboardOffset: CGFloat = 0
+    private var previousTextViewHeight: CGFloat = 0
     private var isImageChanged: Bool = false
     private var originalImageKey: String = ""
     
@@ -126,24 +129,24 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
 extension WriteActiveTypeQuestViewController {
     @objc
     private func textViewMoveUp(_ notification: NSNotification) {
-        if self.view.window?.frame.origin.y == 0 && !isKeyboardUsed{
-            if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-                let keyboardHeight = keyboardFrame.cgRectValue.height
-                let safeAreaBottom = view.safeAreaInsets.bottom
-                let offsetY = keyboardHeight - safeAreaBottom
-                
-                UIView.animate(withDuration: 0.3) {
-                    self.rootView.transform = CGAffineTransform(translationX: 0, y: -offsetY)
-                }
-                
-                isKeyboardUsed = true
-            }
+        guard let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {
+            return
         }
+        keyboardFrameInWindow = keyboardFrame.cgRectValue
+        currentKeyboardOffset = 0
+        previousTextViewHeight = rootView.questTextField.textView.bounds.height
+        isKeyboardUsed = true
         
+        DispatchQueue.main.async { [weak self] in
+            self?.adjustViewForCurrentCaret(animated: true)
+        }
     }
     
     @objc
     private func textViewMoveDown(_ notification: NSNotification) {
+        keyboardFrameInWindow = .zero
+        currentKeyboardOffset = 0
+        previousTextViewHeight = 0
         UIView.animate(withDuration: 0.3) {
             self.rootView.transform = .identity
         }
@@ -436,5 +439,79 @@ extension WriteActiveTypeQuestViewController: QuestCompleteProtocol {
     
     func updateButtonWhenWriting(text: String) {
         viewModel.action(.textFieldEditing(answerText: self.answerText, text: text, imgCount: rootView.imgCount))
+        if isKeyboardUsed {
+            adjustViewForTextGrowth(animated: false)
+        }
+    }
+}
+
+extension WriteActiveTypeQuestViewController {
+    private func adjustViewForTextGrowth(animated: Bool) {
+        guard isKeyboardUsed else { return }
+        guard !keyboardFrameInWindow.isEmpty else { return }
+        
+        let currentHeight = rootView.questTextField.textView.bounds.height
+        guard currentHeight > 0 else { return }
+        
+        if previousTextViewHeight == 0 {
+            previousTextViewHeight = currentHeight
+            return
+        }
+        
+        let delta = currentHeight - previousTextViewHeight
+        previousTextViewHeight = currentHeight
+        
+        guard abs(delta) > 0.5 else { return }
+
+        let textView = rootView.questTextField.textView
+        let textViewFrameInWindow = textView.convert(textView.bounds, to: nil)
+        let keyboardTop = keyboardFrameInWindow.minY
+        let padding = 12.adjustedH
+
+        let overlap = textViewFrameInWindow.maxY + padding - keyboardTop
+        let targetOffset = max(0, currentKeyboardOffset + overlap)
+
+        guard abs(targetOffset - currentKeyboardOffset) > 0.5 else { return }
+        currentKeyboardOffset = targetOffset
+        
+        let animations = {
+            self.rootView.transform = CGAffineTransform(translationX: 0, y: -self.currentKeyboardOffset)
+        }
+        
+        if animated {
+            UIView.animate(withDuration: 0.15, animations: animations)
+        } else {
+            animations()
+        }
+    }
+    
+    private func adjustViewForCurrentCaret(animated: Bool) {
+        guard isKeyboardUsed else { return }
+        guard !keyboardFrameInWindow.isEmpty else { return }
+        
+        let textView = rootView.questTextField.textView
+        guard textView.isFirstResponder else { return }
+        guard let selectedRange = textView.selectedTextRange else { return }
+        
+        let caretRect = textView.caretRect(for: selectedRange.end)
+        let caretInWindow = textView.convert(caretRect, to: nil)
+        let keyboardTop = keyboardFrameInWindow.minY
+        let padding = 12.adjustedH
+        
+        let overlap = caretInWindow.maxY + padding - keyboardTop
+        let targetOffset = max(0, overlap)
+        
+        guard abs(targetOffset - currentKeyboardOffset) > 0.5 else { return }
+        currentKeyboardOffset = targetOffset
+        
+        let animations = {
+            self.rootView.transform = CGAffineTransform(translationX: 0, y: -self.currentKeyboardOffset)
+        }
+        
+        if animated {
+            UIView.animate(withDuration: 0.2, animations: animations)
+        } else {
+            animations()
+        }
     }
 }
