@@ -303,10 +303,10 @@ extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
         self.viewModel.action(.viewDidLoadWhenEditMode(questID: questID))
         guard let questAnswer = questAnswer else { return }
         self.answerText = questAnswer
-        rootView.questTextField.textView.text = questAnswer
+        rootView.questTextField.applyTextViewStyle(text: answerText, color: .grayscale100)
         
         let textCount = questAnswer.count
-        rootView.questTextField.textCount.text = "(\(textCount)/\(rootView.questTextField.limitCount))"
+        rootView.questTextField.textCountLabel.text = "(\(textCount)/\(rootView.questTextField.limitCount))"
         rootView.questTextField.isPlaceholderActive = false
         rootView.confirmButton.updateType(.disabled)
     }

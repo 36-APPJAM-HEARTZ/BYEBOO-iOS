@@ -139,7 +139,7 @@ extension QuestTextField: UITextViewDelegate {
     }
 }
 
-private extension QuestTextField {
+extension QuestTextField {
     func applyTextViewStyle(text: String, color: UIColor) {
         textView.applyByeBooFont(
             style: .body3R16,

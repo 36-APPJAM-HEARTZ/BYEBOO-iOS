@@ -419,7 +419,7 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
         }
         else {
             rootView.questTextField.textView.text = questAnswer
-            rootView.questTextField.textCount.text = "(\(questAnswer.count)/\(rootView.questTextField.limitCount))"
+            rootView.questTextField.textCountLabel.text = "(\(questAnswer.count)/\(rootView.questTextField.limitCount))"
             rootView.questTextField.isPlaceholderActive = false
         }
     }
