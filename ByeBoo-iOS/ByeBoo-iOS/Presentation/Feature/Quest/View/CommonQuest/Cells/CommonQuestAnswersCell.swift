@@ -9,12 +9,6 @@ import UIKit
 
 final class CommonQuestAnswersCell: UITableViewCell {
     
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy.MM.dd."
-        return formatter
-    }()
-    
     private let containerView = UIView()
     private let userIconView = UIImageView()
     private let userNicknameLabel = UILabel()
@@ -56,7 +50,7 @@ final class CommonQuestAnswersCell: UITableViewCell {
         }
         writtenDateLabel.do {
             $0.textColor = .grayscale400
-            $0.font = FontManager.body6R14.font  // TO-DO : 폰트 NotoSans로 수정하기
+            $0.font = FontManager.body6R14.font
         }
     }
     
@@ -103,7 +97,8 @@ extension CommonQuestAnswersCell {
     
     func bind(
         profileIcon: UIImage?,
-        answer: CommonQuestAnswerEntity
+        answer: CommonQuestAnswerEntity,
+        writtenAt: String
     ) {
         if let profileIcon {
             userIconView.image = profileIcon
@@ -115,6 +110,6 @@ extension CommonQuestAnswersCell {
         }
         userNicknameLabel.text = answer.writer
         answerContentLabel.text = answer.content
-        writtenDateLabel.text = dateFormatter.string(from: answer.writtenAt)
+        writtenDateLabel.text = writtenAt
     }
 }

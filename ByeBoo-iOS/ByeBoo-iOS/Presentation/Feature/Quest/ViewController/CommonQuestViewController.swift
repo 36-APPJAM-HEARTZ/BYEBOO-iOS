@@ -9,6 +9,11 @@ import UIKit
 
 final class CommonQuestViewController: BaseViewController {
     
+    private let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy.MM.dd."
+        return formatter
+    }()
     private let rootView = CommonQuestView()
     private let viewModel: CommonQuestViewModel
     
@@ -171,7 +176,8 @@ extension CommonQuestViewController: UITableViewDataSource {
         
         let answer = viewModel.getAnswer(at: indexPath.row - 1)
         let profileIcon = viewModel.getProfileIcon(at: indexPath.row - 1)
-        cell.bind(profileIcon: profileIcon, answer: answer)
+        let writtenAt = dateFormatter.string(from: viewModel.getWrittenAt(at: indexPath.row - 1))
+        cell.bind(profileIcon: profileIcon, answer: answer, writtenAt: writtenAt)
         
         return cell
     }

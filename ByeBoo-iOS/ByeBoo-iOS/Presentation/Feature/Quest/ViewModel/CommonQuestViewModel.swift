@@ -77,4 +77,8 @@ extension CommonQuestViewModel {
             .image
         return profileIcon
     }
+    
+    func getWrittenAt(at index: Int) -> Date {
+        commonQuest?.answers[index].writtenAt ?? .now
+    }
 }
