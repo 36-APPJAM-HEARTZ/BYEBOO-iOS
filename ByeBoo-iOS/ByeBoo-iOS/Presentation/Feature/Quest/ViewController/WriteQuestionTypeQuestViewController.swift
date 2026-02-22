@@ -59,9 +59,12 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .back(header: .black),
-            action: #selector(back)
+            type: .confirmAndBack("완료", header: .clear),
+            action: #selector(back),
+            secondAction: #selector(confirmButtonDidTap)
         )
+        
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
         
         bind()
         setDelegate()
@@ -88,11 +91,9 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     }
     
     override func setAddTarget() {
-        rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
-        
         let tipTagGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tipTagDidTap))
-        self.rootView.title.tipTag.addGestureRecognizer(tipTagGestureRecognizer)
-        self.rootView.title.tipTag.isUserInteractionEnabled = true
+        self.rootView.headerView.tipTag.addGestureRecognizer(tipTagGestureRecognizer)
+        self.rootView.headerView.tipTag.isUserInteractionEnabled = true
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -241,11 +242,12 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
         viewModel.output.isValidTextPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
+                guard let self else { return }
                 switch result {
                 case true:
-                    self?.rootView.confirmButton.updateType(.enabled)
+                    self.navigationItem.rightBarButtonItem?.isEnabled = true
                 case false:
-                    self?.rootView.confirmButton.updateType(.disabled)
+                    self.navigationItem.rightBarButtonItem?.isEnabled = false
                 }
             }
             .store(in: &cancellables)
@@ -308,7 +310,7 @@ extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
         let textCount = questAnswer.count
         rootView.questTextField.textCountLabel.text = "(\(textCount)/\(rootView.questTextField.limitCount))"
         rootView.questTextField.isPlaceholderActive = false
-        rootView.confirmButton.updateType(.disabled)
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
     }
 }
 

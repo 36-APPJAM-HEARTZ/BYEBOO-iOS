@@ -63,9 +63,12 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .back(header: .black),
-            action: #selector(back)
+            type: .confirmAndBack("완료", header: .clear),
+            action: #selector(back),
+            secondAction: #selector(confirmButtonDidTap)
         )
+        
+        self.navigationItem.rightBarButtonItem?.isEnabled = true
         
         setGesture()
         setDelegate()
@@ -93,10 +96,6 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    override func setAddTarget() {
-        rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
-    }
-    
     override func setDelegate() {
         rootView.questTextField.delegate = self
     }
@@ -112,7 +111,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         
         tipTagGestureRecognizer.isEnabled = true
         
-        self.rootView.title.tipTag.addGestureRecognizer(tipTagGestureRecognizer)
+        self.rootView.headerView.tipTag.addGestureRecognizer(tipTagGestureRecognizer)
         self.rootView.scrollView.addGestureRecognizer(tapGestureRecognizer)
     }
     
@@ -292,11 +291,12 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
         viewModel.output.isValidTextPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
+                guard let self else { return }
                 switch result {
                 case true:
-                    self?.rootView.confirmButton.updateType(.enabled)
+                    self.navigationItem.rightBarButtonItem?.isEnabled = true
                 case false:
-                    self?.rootView.confirmButton.updateType(.disabled)
+                    self.navigationItem.rightBarButtonItem?.isEnabled = false
                 }
             }
             .store(in: &cancellables)
@@ -412,7 +412,7 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
         rootView.imgCount = 1
         rootView.updateImageCountLabel(count: 1)
         rootView.imageContainer.changeIconHidden()
-        rootView.confirmButton.updateType(.disabled)
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
         
         if questAnswer.isEmpty {
             rootView.questTextField.textView.text = "꼭 적지 않아도 괜찮지만, 글로 정리해 보면 스스로에게 한 걸음 더 가까워질 수 있어요."
@@ -428,9 +428,9 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
 extension WriteActiveTypeQuestViewController: QuestCompleteProtocol {
     func changeCount(count: Int) {
         if count == 1 {
-            rootView.confirmButton.updateType(.enabled)
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
         } else {
-            rootView.confirmButton.updateType(.disabled)
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
         }
     }
     
