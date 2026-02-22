@@ -61,7 +61,7 @@ final class QuestTextField: BaseView {
         }
         
         textCountLabel.applyByeBooFont (
-            style: .body6R14,
+            style: .cap2R12,
             text: "(\(count)/\(limitCount))",
             color: .grayscale400
         )
