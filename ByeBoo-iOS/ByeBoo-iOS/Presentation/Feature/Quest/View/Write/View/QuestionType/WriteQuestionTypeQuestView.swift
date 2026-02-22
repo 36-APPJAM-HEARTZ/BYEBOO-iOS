@@ -11,25 +11,24 @@ import SnapKit
 import Then
 
 final class WriteQuestionTypeQuestView: BaseView {
-    private(set) var title = WriteQuestTitleView(
-        stepNum: "",
-        stepTitle: "",
-        questNum: 0,
-        title: ""
-    )
+    private(set) var headerView = WriteQuestTitleView(questNum: 0, title: "")
+    private let divider = UIView()
     private(set) var questTextField = QuestTextField(type: .question)
-    private(set) var confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
     
     override func setUI() {
         addSubviews(
-            title,
-            questTextField,
-            confirmButton
+            headerView,
+            divider,
+            questTextField
         )
     }
     
     override func setStyle() {
         backgroundColor = .grayscale900
+        
+        divider.do {
+            $0.backgroundColor = .grayscale800
+        }
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -37,21 +36,21 @@ final class WriteQuestionTypeQuestView: BaseView {
     }
     
     override func setLayout() {
-        title.snp.makeConstraints {
+        headerView.snp.makeConstraints {
             $0.top.equalTo(self.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview()
         }
         
-        questTextField.snp.makeConstraints {
-            $0.top.equalTo(title.snp.bottom).offset(8.adjustedH)
+        divider.snp.makeConstraints {
+            $0.top.equalTo(headerView.snp.bottom)
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
-            $0.height.greaterThanOrEqualTo(268.adjustedH)
+            $0.height.equalTo(1.adjustedH)
         }
         
-        confirmButton.snp.makeConstraints {
-            $0.width.equalTo(311.adjustedW)
-            $0.bottom.equalTo(self.safeAreaLayoutGuide)
-            $0.centerX.equalToSuperview()
+        questTextField.snp.makeConstraints {
+            $0.top.equalTo(divider.snp.bottom).offset(20.adjustedH)
+            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
+            $0.height.greaterThanOrEqualTo(268.adjustedH)
         }
     }
 }
@@ -64,7 +63,7 @@ extension WriteQuestionTypeQuestView {
         questStyle: String,
         question: String
     ) {
-        title.bind(
+        headerView.bind(
             stepNum: String(stepNum),
             stepTitle: step,
             questNum: questNumber,

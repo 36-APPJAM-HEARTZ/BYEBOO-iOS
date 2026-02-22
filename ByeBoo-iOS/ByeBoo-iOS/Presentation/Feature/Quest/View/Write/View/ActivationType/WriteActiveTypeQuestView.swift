@@ -13,12 +13,12 @@ import Then
 final class WriteActiveTypeQuestView: BaseView {
     private(set) var scrollView = UIScrollView()
     private let contentView = UIView()
-    private(set) var title = WriteQuestTitleView(
-        stepNum: "",
-        stepTitle: "",
+    
+    private(set) var headerView = WriteQuestTitleView(
         questNum: 0,
         title: ""
     )
+    private let divider = UIView()
     
     private let imgTitleContainerView = UIView()
     private let yellowTag = ByeBooFilledTag(tagType: .yelloFilled, text: "필수")
@@ -31,19 +31,18 @@ final class WriteActiveTypeQuestView: BaseView {
     private let grayTag = ByeBooFilledTag(tagType: .smallGray, text: "선택")
     private let thinkTitleLabel = UILabel()
     private(set) var questTextField = QuestTextField(type: .activation)
-    private(set) var confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
     
     override func setUI() {
         addSubviews(scrollView)
         scrollView.addSubviews(contentView)
         
         contentView.addSubviews(
-            title,
+            headerView,
+            divider,
             imgTitleContainerView,
             textStackView,
             imageContainer,
-            questTextField,
-            confirmButton
+            questTextField
         )
         
         imgTitleContainerView.addSubviews(
@@ -68,6 +67,10 @@ final class WriteActiveTypeQuestView: BaseView {
         contentView.do {
             $0.backgroundColor = .grayscale900
             $0.isUserInteractionEnabled = true
+        }
+        
+        divider.do {
+            $0.backgroundColor = .grayscale800
         }
         
         imgTitleLabel.applyByeBooFont(
@@ -105,13 +108,19 @@ final class WriteActiveTypeQuestView: BaseView {
             $0.width.equalTo(scrollView.frameLayoutGuide)
         }
         
-        title.snp.makeConstraints {
-            $0.top.equalTo(0)
+        headerView.snp.makeConstraints {
+            $0.top.equalTo(self.safeAreaLayoutGuide)
             $0.leading.trailing.equalToSuperview()
         }
         
+        divider.snp.makeConstraints {
+            $0.top.equalTo(headerView.snp.bottom)
+            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
+            $0.height.equalTo(1.adjustedH)
+        }
+        
         imgTitleContainerView.snp.makeConstraints {
-            $0.top.equalTo(title.snp.bottom).offset(8.adjustedH)
+            $0.top.equalTo(divider.snp.bottom).offset(20.adjustedH)
             $0.height.equalTo(24.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedW)
         }
@@ -152,14 +161,6 @@ final class WriteActiveTypeQuestView: BaseView {
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
             $0.height.greaterThanOrEqualTo(290.adjustedH)
         }
-        
-        confirmButton.snp.makeConstraints {
-            $0.top.equalTo(questTextField.snp.bottom).offset(28.adjustedH)
-            $0.height.equalTo(53.adjustedH)
-            $0.width.equalTo(311.adjustedW)
-            $0.bottom.equalToSuperview().inset(24.adjustedH)
-            $0.centerX.equalToSuperview()
-        }
     }
     
     func updateImageCountLabel(count: Int) {
@@ -175,7 +176,7 @@ extension WriteActiveTypeQuestView {
         questStyle: String,
         question: String
     ) {
-        title.bind(
+        headerView.bind(
             stepNum: String(stepNum),
             stepTitle: step,
             questNum: questNumber,
