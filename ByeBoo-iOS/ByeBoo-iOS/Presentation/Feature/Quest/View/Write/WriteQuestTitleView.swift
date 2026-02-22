@@ -74,7 +74,7 @@ final class WriteQuestTitleView: BaseView {
 }
 
 extension WriteQuestTitleView {
-    func bind(stepNum: String, stepTitle: String, questNum: Int, title: String) {
+    func bind(questNum: Int, title: String) {
         self.questNum = questNum
         self.titleLabel.text = title
         questNumLabel.text = "\(questNum)번째 퀘스트"

@@ -185,8 +185,6 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                 case .success(let quest):
                     self?.questNumber = quest.questNumber
                     self?.rootView.updateQuestTitle(
-                        step: quest.step,
-                        stepNum: quest.stepNumber,
                         questNumber: quest.questNumber,
                         questStyle: quest.questStyle,
                         question: quest.question
@@ -367,7 +365,7 @@ extension WriteQuestionTypeQuestViewController {
         }
     }
     
-    func adjustViewForCurrentCaret(animated: Bool) {
+    private func adjustViewForCurrentCaret(animated: Bool) {
         guard isKeyboardUsed else { return }
         guard !keyboardFrameInWindow.isEmpty else { return }
         

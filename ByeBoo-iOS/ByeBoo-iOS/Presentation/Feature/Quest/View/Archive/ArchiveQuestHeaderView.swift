@@ -90,10 +90,6 @@ final class ArchiveQuestHeaderView: BaseView {
     }
     
     override func setLayout() {
-        self.snp.makeConstraints {
-            $0.height.equalTo(138.adjustedH)
-        }
-        
         stepStackView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(10.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedW)

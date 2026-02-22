@@ -57,15 +57,11 @@ final class WriteQuestionTypeQuestView: BaseView {
 
 extension WriteQuestionTypeQuestView {
     func updateQuestTitle(
-        step: String,
-        stepNum: Int,
         questNumber: Int,
         questStyle: String,
         question: String
     ) {
         headerView.bind(
-            stepNum: String(stepNum),
-            stepTitle: step,
             questNum: questNumber,
             title: question
         )

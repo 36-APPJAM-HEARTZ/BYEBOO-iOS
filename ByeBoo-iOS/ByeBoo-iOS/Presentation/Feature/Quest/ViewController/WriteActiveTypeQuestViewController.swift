@@ -71,7 +71,7 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
             secondAction: #selector(confirmButtonDidTap)
         )
         
-        self.navigationItem.rightBarButtonItem?.isEnabled = true
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
         
         setGesture()
         setDelegate()
@@ -214,8 +214,6 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                 case .success(let quest):
                     self?.questNumber = quest.questNumber
                     self?.rootView.updateQuestTitle(
-                        step: quest.step,
-                        stepNum: quest.stepNumber,
                         questNumber: quest.questNumber,
                         questStyle: quest.questStyle,
                         question: quest.question
@@ -262,8 +260,6 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                 switch result {
                 case .success(let quest):
                     self?.rootView.updateQuestTitle(
-                        step: quest.step,
-                        stepNum: quest.stepNumber,
                         questNumber: quest.questNumber,
                         questStyle: quest.questStyle,
                         question: quest.question

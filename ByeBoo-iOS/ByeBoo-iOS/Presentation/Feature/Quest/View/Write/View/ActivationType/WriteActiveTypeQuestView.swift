@@ -106,6 +106,7 @@ final class WriteActiveTypeQuestView: BaseView {
         contentView.snp.makeConstraints {
             $0.edges.equalTo(scrollView.contentLayoutGuide)
             $0.width.equalTo(scrollView.frameLayoutGuide)
+            $0.bottom.equalTo(questTextField)
         }
         
         headerView.snp.makeConstraints {
@@ -170,15 +171,11 @@ final class WriteActiveTypeQuestView: BaseView {
 
 extension WriteActiveTypeQuestView {
     func updateQuestTitle(
-        step: String,
-        stepNum: Int,
         questNumber: Int,
         questStyle: String,
         question: String
     ) {
         headerView.bind(
-            stepNum: String(stepNum),
-            stepTitle: step,
             questNum: questNumber,
             title: question
         )
