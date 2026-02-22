@@ -258,5 +258,14 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 getLastJourneyUseCase: getLastJourneyUseCase
             )
         }
+        
+        DIContainer.shared.register(type: CommonQuestViewModel.self) { container in
+            guard let fetchCommonQuestByDateUseCase = container.resolve(type: FetchCommonQuestByDateUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return CommonQuestViewModel(fetchCommonQuestByDateUseCase: fetchCommonQuestByDateUseCase)
+        }
     }
 }
