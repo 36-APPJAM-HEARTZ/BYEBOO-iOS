@@ -27,15 +27,16 @@ final class QuestCompleteModal: BaseView {
         }
         
         titleLabel.do {
-            $0.attributedText = "QUEST\nCOMPLETE!".makeTitle(
-                rangedText: "QUEST",
-                originalTitleColor: .primary100
-            )
             $0.applyByeBooFont(
                 style: .head1M24,
                 color: .primary100,
                 textAlignment: .center,
                 numberOfLines: 2
+            )
+            
+            $0.attributedText = "QUEST\nCOMPLETE!".makeTitle(
+                rangedText: "QUEST",
+                originalTitleColor: .primary100
             )
         }
         

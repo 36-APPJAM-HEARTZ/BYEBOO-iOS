@@ -28,15 +28,15 @@ final class QuestStartView: BaseView {
             $0.isUserInteractionEnabled = true
         }
         titleLabel.do {
-            $0.attributedText = "QUEST JOURNEY\nSTART!".makeTitle(
-                rangedText: "QUEST JOURNEY",
-                originalTitleColor: .primary100
-            )
             $0.applyByeBooFont(
                 style: .head1M24,
                 color: .primary100,
                 textAlignment: .center,
                 numberOfLines: 2
+            )
+            $0.attributedText = "QUEST JOURNEY\nSTART!".makeTitle(
+                rangedText: "QUEST JOURNEY",
+                originalTitleColor: .primary100
             )
         }
         cloverImageView.do {
