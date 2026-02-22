@@ -12,7 +12,7 @@ import Then
 
 final class QuestTextField: BaseView {
     private(set) var textView = UITextView()
-    private let descriptionStackView = UIStackView()
+    private var descriptionStackView: UIStackView?
     private let errorIcon = UIImageView()
     private let descriptionLabel = UILabel()
     private(set) var textCountLabel = UILabel()
@@ -31,6 +31,14 @@ final class QuestTextField: BaseView {
         self.questType = type
         placeholder = type.plaeholder
         limitCount = type.textLimit
+        
+        switch type {
+        case .question:
+            descriptionStackView = UIStackView()
+        case .activation:
+            descriptionStackView = nil
+        }
+        
         super.init(frame: .zero)
         textView.delegate = self
     }
@@ -42,7 +50,7 @@ final class QuestTextField: BaseView {
     override func setUI() {
         addSubviews(textView, textCountLabel)
         
-        if questType == .question {
+        if let descriptionStackView {
             addSubviews(descriptionStackView)
             descriptionStackView.addArrangedSubviews(errorIcon, descriptionLabel)
         }
@@ -66,9 +74,11 @@ final class QuestTextField: BaseView {
             color: .grayscale400
         )
         
-        descriptionStackView.do {
-            $0.axis = .horizontal
-            $0.spacing = 3.adjustedW
+        if let descriptionStackView {
+            descriptionStackView.do {
+                $0.axis = .horizontal
+                $0.spacing = 3.adjustedW
+            }
         }
         
         errorIcon.do {
@@ -96,9 +106,11 @@ final class QuestTextField: BaseView {
             textViewHeightConstraint = $0.height.equalTo(196.adjustedH).constraint
         }
         
-        descriptionStackView.snp.makeConstraints {
-            $0.leading.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(24.adjustedW)
+        if let descriptionStackView {
+            descriptionStackView.snp.makeConstraints {
+                $0.leading.equalToSuperview()
+                $0.bottom.equalToSuperview().inset(24.adjustedW)
+            }
         }
         
         textCountLabel.snp.makeConstraints {
