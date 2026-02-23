@@ -10,22 +10,25 @@ import UIKit
 enum ConfirmModalType {
     case logout
     case withdraw
+    case block
     
     var title: String {
         switch self {
         case .logout:
-            return "로그아웃하시겠어요?"
+            "로그아웃하시겠어요?"
         case .withdraw:
-            return "정말 탈퇴하시겠어요?"
+            "정말 탈퇴하시겠어요?"
+        case .block:
+            "차단을 해제하시겠어요?"
         }
     }
     
     var description: String? {
         switch self {
-        case .logout:
-            return nil
+        case .logout, .block:
+            nil
         case .withdraw:
-            return "탈퇴 시 모든 데이터가 삭제됩니다."
+            "탈퇴 시 모든 데이터가 삭제됩니다."
         }
     }
 }
