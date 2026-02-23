@@ -39,7 +39,7 @@ final class ByeBooTipTag: UIButton {
     
     private func setLayout() {
         self.snp.makeConstraints {
-            $0.width.equalTo(76.adjustedW)
+            $0.width.greaterThanOrEqualTo(76.adjustedW)
             $0.height.equalTo(24.adjustedH)
         }
     }
