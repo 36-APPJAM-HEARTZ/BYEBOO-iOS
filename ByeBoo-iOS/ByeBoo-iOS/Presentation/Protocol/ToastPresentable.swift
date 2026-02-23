@@ -14,11 +14,7 @@ protocol ToastPresentable: AnyObject {
 extension ToastPresentable where Self: BaseViewController {
     
     func presentToastMessage(type: ToastMessageType) {
-        let toastMessageView = ToastMessageView(
-            image: type.image,
-            text: type.text
-        )
-        
+        let toastMessageView = ToastMessageView(type: type)
         setUI(toastMessageView)
         setLayout(toastMessageView)
         
