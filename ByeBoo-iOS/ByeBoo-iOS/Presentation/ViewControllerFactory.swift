@@ -197,6 +197,10 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
     func makeCommonQuestViewController() -> CommonQuestViewController {
         return .init()
     }
+    
+    func makeBlockedUserListViewController() -> BlockedkUserListViewController {
+        .init(viewModel: BlockedUserListViewModel())
+    }
 }
 
 extension ViewControllerFactory {
