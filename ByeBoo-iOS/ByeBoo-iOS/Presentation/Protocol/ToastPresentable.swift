@@ -29,7 +29,7 @@ extension ToastPresentable where Self: BaseViewController {
     
     private func setLayout(_ view: ToastMessageView) {
         view.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(104.adjustedH)
         }
     }

@@ -34,7 +34,11 @@ final class ToastMessageView: BaseView {
             $0.layer.shadowOffset = CGSize(width: 0, height: 4)
         }
         
-        textLabel.applyByeBooFont(style: .body6R14, color: .grayscale50)
+        textLabel.applyByeBooFont(
+            style: .body6R14,
+            color: .grayscale50,
+            numberOfLines: 0
+        )
     }
     
     override func setUI() {
@@ -46,16 +50,17 @@ final class ToastMessageView: BaseView {
     
     override func setLayout() {
         self.snp.makeConstraints {
-            $0.height.equalTo(42.adjustedH)
+            $0.height.greaterThanOrEqualTo(46.adjustedH)
         }
+        
         toastImageView.snp.makeConstraints {
             $0.leading.equalToSuperview().inset(16.adjustedW)
             $0.centerY.equalToSuperview()
         }
         textLabel.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview().inset(13.adjustedH)
             $0.leading.equalTo(toastImageView.snp.trailing).offset(8.adjustedW)
             $0.trailing.equalToSuperview().inset(16.adjustedW)
-            $0.centerY.equalToSuperview()
         }
     }
 }
