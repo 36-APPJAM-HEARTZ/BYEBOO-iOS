@@ -135,6 +135,10 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: FetchCompletedQuestsUseCase.self) { _ in
             return DefaultFetchCompletedQuestsUseCase(repository: questRepository)
         }
+        
+        DIContainer.shared.register(type: FetchCommonQuestByDateUseCase.self) { _ in
+            return DefaultFetchCommonQuestByDateUseCase(repository: questRepository)
+        }
               
         DIContainer.shared.register(type: AutoLoginUseCase.self) { _ in
             return DefaultAutoLoginUseCase(repository: authRepository)
