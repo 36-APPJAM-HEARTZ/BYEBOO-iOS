@@ -59,11 +59,11 @@ final class DateNavigator: UITableViewHeaderFooterView {
             $0.backgroundColor = UIColor.white.withAlphaComponent(0.05)
             $0.layer.cornerRadius = 16
         }
-        dateLabel.do {
-            $0.text = dateFormatter.string(from: currentDate)
-            $0.textColor = .grayscale50
-            $0.font = FontManager.body2M16.font
-        }
+        dateLabel.applyByeBooFont(
+            style: .body2M16,
+            text: dateFormatter.string(from: currentDate),
+            color: .grayscale50
+        )
         nextButton.do {
             $0.setImage(.nextOff, for: .normal)
             $0.backgroundColor = UIColor.white.withAlphaComponent(0.05)

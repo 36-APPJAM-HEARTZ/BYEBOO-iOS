@@ -31,12 +31,12 @@ final class NoAnswerCell: UITableViewCell {
             $0.backgroundColor = .grayscale900
             $0.selectionStyle = .none
         }
-        noAnswerLabel.do {
-            $0.text = "아직 작성된 답변이 없어요!"
-            $0.textColor = .grayscale400
-            $0.textAlignment = .center
-            $0.font = FontManager.body6R14.font
-        }
+        noAnswerLabel.applyByeBooFont(
+            style: .body6R14,
+            text: "아직 작성된 답변이 없어요!",
+            color: .grayscale400,
+            textAlignment: .center
+        )
     }
     
     private func setUI() {

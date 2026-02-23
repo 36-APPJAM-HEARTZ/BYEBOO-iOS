@@ -39,19 +39,19 @@ final class CommonQuestAnswersCell: UITableViewCell {
             $0.layer.cornerRadius = 12
             $0.backgroundColor = UIColor.white.withAlphaComponent(0.05)
         }
-        userNicknameLabel.do {
-            $0.textColor = .grayscale200
-            $0.font = FontManager.body6R14.font
-        }
-        answerContentLabel.do {
-            $0.textColor = .grayscale100
-            $0.font = FontManager.body3R16.font
-            $0.numberOfLines = 0
-        }
-        writtenDateLabel.do {
-            $0.textColor = .grayscale400
-            $0.font = FontManager.body6R14.font
-        }
+        userNicknameLabel.applyByeBooFont(
+            style: .body6R14,
+            color: .grayscale200
+        )
+        answerContentLabel.applyByeBooFont(
+            style: .body3R16,
+            color: .grayscale100,
+            numberOfLines: 0
+        )
+        writtenDateLabel.applyByeBooFont(
+            style: .body6R14,
+            color: .grayscale400
+        )
     }
     
     private func setUI() {

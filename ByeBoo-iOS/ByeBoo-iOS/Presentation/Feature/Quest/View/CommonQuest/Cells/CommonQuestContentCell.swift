@@ -36,34 +36,39 @@ final class CommonQuestContentCell: UITableViewCell {
             $0.backgroundColor = .grayscale900
             $0.selectionStyle = .none
         }
-        questionMarkLabel.do {
-            $0.text = "Q."
-            $0.textColor = .primary200
-            $0.font = FontManager.body1Sb16.font
-        }
+        questionMarkLabel.applyByeBooFont(
+            style: .body1Sb16,
+            text: "Q.",
+            color: .primary200
+        )
         questionContentLabel.do {
-            $0.textColor = .grayscale50
-            $0.font = FontManager.sub3M18.font
-            $0.numberOfLines = 0
+            $0.applyByeBooFont(
+                style: .sub3M18,
+                color: .grayscale50,
+                numberOfLines: 0
+            )
             $0.lineBreakStrategy = []
         }
-        guideTimeLabel.do {
-            $0.text = "23:59까지 답변 가능해요"
-            $0.textColor = .grayscale400
-            $0.textAlignment = .left
-            $0.font = FontManager.cap2R12.font
-        }
+        guideTimeLabel.applyByeBooFont(
+            style: .cap2R12,
+            text: "23:59까지 답변 가능해요",
+            color: .grayscale400,
+            textAlignment: .left
+        )
         moveWriteAnswerButton.do {
-            $0.setTitle("답변 작성하기", for: .normal)
-            $0.setTitleColor(.primary500, for: .normal)
+            $0.applyByeBooFont(
+                style: .body2M16,
+                text: "답변 작성하기",
+                color: .primary500
+            )
             $0.layer.cornerRadius = 12
             $0.backgroundColor = .primary100
         }
-        answersCountLabel.do {
-            $0.textColor = .grayscale400
-            $0.textAlignment = .left
-            $0.font = FontManager.cap2R12.font
-        }
+        answersCountLabel.applyByeBooFont(
+            style: .cap2R12,
+            color: .grayscale400,
+            textAlignment: .left
+        )
     }
     
     private func setUI() {
