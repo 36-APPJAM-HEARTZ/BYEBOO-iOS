@@ -37,7 +37,7 @@ final class CommonQuestAnswersCell: UITableViewCell {
         }
         containerView.do {
             $0.layer.cornerRadius = 12
-            $0.backgroundColor = UIColor.white.withAlphaComponent(0.05)
+            $0.backgroundColor = .white5
         }
         userNicknameLabel.applyByeBooFont(
             style: .body6R14,

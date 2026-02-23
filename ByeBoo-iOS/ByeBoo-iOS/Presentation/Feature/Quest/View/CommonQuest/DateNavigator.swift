@@ -56,7 +56,7 @@ final class DateNavigator: UITableViewHeaderFooterView {
         }
         previousButton.do {
             $0.setImage(.previousOn, for: .normal)
-            $0.backgroundColor = UIColor.white.withAlphaComponent(0.05)
+            $0.backgroundColor = .white5
             $0.layer.cornerRadius = 16
         }
         dateLabel.applyByeBooFont(
@@ -66,7 +66,7 @@ final class DateNavigator: UITableViewHeaderFooterView {
         )
         nextButton.do {
             $0.setImage(.nextOff, for: .normal)
-            $0.backgroundColor = UIColor.white.withAlphaComponent(0.05)
+            $0.backgroundColor = .white5
             $0.layer.cornerRadius = 16
             $0.isEnabled = true
         }

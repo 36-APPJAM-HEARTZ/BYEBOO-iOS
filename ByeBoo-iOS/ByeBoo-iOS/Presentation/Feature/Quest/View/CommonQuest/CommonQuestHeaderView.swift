@@ -37,7 +37,7 @@ final class CommonQuestHeaderView: BaseView {
             )
             $0.layer.cornerRadius = 12
             $0.layer.borderColor = UIColor.grayscale800.cgColor
-            $0.backgroundColor = UIColor.white.withAlphaComponent(0.05)
+            $0.backgroundColor = .white5
         }
         underline.do {
             $0.backgroundColor = .grayscale800
