@@ -11,18 +11,16 @@ import SnapKit
 import Then
 
 enum ProgressBarType: Int {
-    case first, second, third
+    case first, second
 }
 
 final class ProgressBarView: BaseView {
     
     private let progressGroupView = UIView()
-    
     private let firstProgressView = UIProgressView()
     private let secondProgressView = UIProgressView()
-    private let thirdProgressView = UIProgressView()
     private let progressStackView = UIStackView()
-    private lazy var progressViews = [firstProgressView, secondProgressView, thirdProgressView]
+    private lazy var progressViews = [firstProgressView, secondProgressView]
     
     init(type: ProgressBarType) {
         super.init(frame: .zero)
@@ -39,7 +37,7 @@ final class ProgressBarView: BaseView {
         }
         progressStackView.do {
             $0.axis = .horizontal
-            $0.spacing = 10
+            $0.spacing = 7
         }
         progressViews.forEach { setProgressView($0) }
     }
@@ -47,8 +45,7 @@ final class ProgressBarView: BaseView {
     override func setUI() {
         progressStackView.addArrangedSubviews(
             firstProgressView,
-            secondProgressView,
-            thirdProgressView
+            secondProgressView
         )
         progressGroupView.addSubview(progressStackView)
         addSubview(progressGroupView)
@@ -60,20 +57,16 @@ final class ProgressBarView: BaseView {
         }
         progressStackView.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.width.equalTo(325.adjustedW)
+            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.top.equalToSuperview().inset(13.adjustedH)
             $0.bottom.equalToSuperview().inset(13.adjustedH)
         }
         firstProgressView.snp.makeConstraints {
-            $0.width.equalTo(105.adjustedW)
+            $0.width.equalTo(160.adjustedW)
             $0.height.equalTo(6.adjustedH)
         }
         secondProgressView.snp.makeConstraints {
-            $0.width.equalTo(105.adjustedW)
-            $0.height.equalTo(6.adjustedH)
-        }
-        thirdProgressView.snp.makeConstraints {
-            $0.width.equalTo(105.adjustedW)
+            $0.width.equalTo(160.adjustedW)
             $0.height.equalTo(6.adjustedH)
         }
     }
@@ -83,16 +76,9 @@ final class ProgressBarView: BaseView {
         case .first:
             firstProgressView.progress = 1
             secondProgressView.progress = 0
-            thirdProgressView.progress = 0
         case .second:
             firstProgressView.progress = 0
             secondProgressView.progress = 1
-            thirdProgressView.progress = 0
-        case .third:
-            firstProgressView.progress = 0
-            secondProgressView.progress = 0
-            thirdProgressView.progress = 1
-            
         }
     }
     
