@@ -62,7 +62,7 @@ extension BlockedkUserListViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForHeaderInSection section: Int
     ) -> CGFloat {
-        section == 0 ? 0 : 5.adjustedH
+        0
     }
     
     func tableView(
