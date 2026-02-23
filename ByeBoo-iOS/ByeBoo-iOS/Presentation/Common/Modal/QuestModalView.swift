@@ -18,7 +18,7 @@ final class QuestModalView: BaseView, ModalProtocol {
     private let imageView = UIImageView()
     private let questLabel = UILabel()
     private let titleLabel = UILabel()
-    let tipButton = ByeBooTipTag()
+    let tipButton = ByeBooTipTag(text: "작성 TIP")
     
     private var questNumber: Int
     private var quest: String
