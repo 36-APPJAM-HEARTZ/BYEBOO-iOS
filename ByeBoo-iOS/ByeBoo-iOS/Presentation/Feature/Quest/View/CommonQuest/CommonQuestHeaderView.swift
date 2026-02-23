@@ -11,7 +11,7 @@ final class CommonQuestHeaderView: BaseView {
     
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
-    private(set) var historyButton = UIButton()
+    private(set) var historyButton = ByeBooTipTag(text: "나의 답변 모아보기")
     private let underline = UILabel()
     
     override func setStyle() {
@@ -29,16 +29,6 @@ final class CommonQuestHeaderView: BaseView {
             textAlignment: .left,
             numberOfLines: 2
         )
-        historyButton.do {
-            $0.applyByeBooFont(
-                style: .cap1M12,
-                text: "나의 답변 모아보기",
-                color: .primary200
-            )
-            $0.layer.cornerRadius = 12
-            $0.layer.borderColor = UIColor.grayscale800.cgColor
-            $0.backgroundColor = .white5
-        }
         underline.do {
             $0.backgroundColor = .grayscale800
             $0.layer.borderColor = UIColor.grayscale800.cgColor
