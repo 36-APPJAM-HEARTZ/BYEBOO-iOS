@@ -71,6 +71,7 @@ final class MyPageViewController: BaseViewController {
             rootView.inquireView,
             rootView.termAndPolicyView,
             rootView.accountView,
+            rootView.participantView,
             rootView.manageView
         ].forEach {
             $0.featureButtons.forEach {
@@ -304,9 +305,9 @@ extension MyPageViewController {
         case .questOpenNotice:
             break
         case .chattingRoom:
-            break
+            ExternalLink.openChattingRoom.openURL(for: self)
         case .instagram:
-            break
+            ExternalLink.instagram.openURL(for: self)
         case .blockUserList:
             let viewController = ViewControllerFactory.shared.makeBlockedUserListViewController()
             viewController.navigationItem.hidesBackButton = true
