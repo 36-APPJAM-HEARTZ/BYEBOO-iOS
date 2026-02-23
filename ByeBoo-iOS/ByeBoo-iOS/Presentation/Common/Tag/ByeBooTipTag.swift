@@ -11,8 +11,11 @@ import SnapKit
 import Then
 
 final class ByeBooTipTag: UIButton {
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    
+    init(text: String) {
+        super.init(frame: .zero)
+        
+        setTitle(text, for: .normal)
         setStyle()
         setLayout()
     }
@@ -25,7 +28,6 @@ final class ByeBooTipTag: UIButton {
         self.do {
             $0.applyByeBooFont(
                 style: .cap1M12,
-                text: "작성 TIP",
                 color: .primary200
             )
             $0.backgroundColor = .white5
