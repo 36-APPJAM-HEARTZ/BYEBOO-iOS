@@ -74,7 +74,12 @@ final class AIAnswerView: BaseView {
 
 extension AIAnswerView {
     func updateState(state: AIAnswerState) {
-        textLabel.text = state.text
+        textLabel.applyByeBooFont(
+            style: .body3R16,
+            text: state.text,
+            color: .grayscale100,
+            textAlignment: .center
+        )
         imageView.image = state.image
         
         switch state {

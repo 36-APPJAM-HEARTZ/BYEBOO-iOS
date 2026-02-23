@@ -76,6 +76,10 @@ final class AIAnswerCardView: BaseView {
 
 extension AIAnswerCardView {
     func updateText(answer: String) {
-        contentLabel.text = answer
+        contentLabel.applyByeBooFont(
+            style: .boriVoiceR18,
+            text: answer,
+            color: .primary50
+        )
     }
 }
