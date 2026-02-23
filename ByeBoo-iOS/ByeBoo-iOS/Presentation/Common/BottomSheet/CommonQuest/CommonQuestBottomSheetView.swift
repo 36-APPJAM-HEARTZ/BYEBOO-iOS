@@ -81,10 +81,6 @@ private extension CommonQuestBottomSheetView {
             $0.spacing = 12.adjustedW
         }
         stackView.addArrangedSubviews(icon, label)
-//        stackView.snp.makeConstraints {
-//            $0.height.equalTo(<#T##other: any ConstraintRelatableTarget##any ConstraintRelatableTarget#>)
-//        }
-        
         return stackView
     }
 }
