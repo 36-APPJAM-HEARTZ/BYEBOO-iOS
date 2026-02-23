@@ -67,7 +67,12 @@ final class MyPageViewController: BaseViewController {
             action: #selector(moveButtonDidTap),
             for: .touchUpInside
         )
-        [rootView.inquireView, rootView.termAndPolicyView, rootView.accountView].forEach {
+        [
+            rootView.inquireView,
+            rootView.termAndPolicyView,
+            rootView.accountView,
+            rootView.manageView
+        ].forEach {
             $0.featureButtons.forEach {
                 $0.addTarget(self, action: #selector(featureButtonDidTap(_:)), for: .touchUpInside)
             }
@@ -298,6 +303,15 @@ extension MyPageViewController {
             ExternalLink.makeService.openURL(for: self)
         case .questOpenNotice:
             break
+        case .chattingRoom:
+            break
+        case .instagram:
+            break
+        case .blockUserList:
+            let viewController = ViewControllerFactory.shared.makeBlockedUserListViewController()
+            viewController.navigationItem.hidesBackButton = true
+            viewController.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(viewController, animated: false)
         case .privacyPolicy:
             ExternalLink.privacyPolicy.openURL(for: self)
         case .serviceTerm:
@@ -346,6 +360,8 @@ extension MyPageViewController {
                 self.viewModel.action(.withdrawActionButtonDidTap)
                 
                 Mixpanel.mainInstance().track(event: MyPageEvents.Name.withdrawConfirmClick)
+            case .block:
+                break
             }
         }
         

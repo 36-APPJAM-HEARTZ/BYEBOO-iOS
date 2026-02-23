@@ -28,6 +28,14 @@ final class MyPageView: BaseView {
         title: MyPageFeatureType.notice.rawValue,
         features: MyPageFeatureType.notice.features
     )
+    private(set) var participantView = MyPageFeatureView(
+        title: MyPageFeatureType.participant.rawValue,
+        features: MyPageFeatureType.participant.features
+    )
+    private(set) var manageView = MyPageFeatureView(
+        title: MyPageFeatureType.manage.rawValue,
+        features: MyPageFeatureType.manage.features
+    )
     private(set) var termAndPolicyView = MyPageFeatureView(
         title: MyPageFeatureType.termAndPolicy.rawValue,
         features: MyPageFeatureType.termAndPolicy.features
@@ -55,6 +63,8 @@ final class MyPageView: BaseView {
             divider2,
             inquireView,
             noticeView,
+            participantView,
+            manageView,
             termAndPolicyView,
             accountView
         )
@@ -103,8 +113,16 @@ final class MyPageView: BaseView {
             $0.top.equalTo(inquireView.snp.bottom)
             $0.horizontalEdges.equalToSuperview()
         }
-        termAndPolicyView.snp.makeConstraints {
+        participantView.snp.makeConstraints {
             $0.top.equalTo(noticeView.snp.bottom)
+            $0.horizontalEdges.equalToSuperview()
+        }
+        manageView.snp.makeConstraints {
+            $0.top.equalTo(participantView.snp.bottom)
+            $0.horizontalEdges.equalToSuperview()
+        }
+        termAndPolicyView.snp.makeConstraints {
+            $0.top.equalTo(manageView.snp.bottom)
             $0.horizontalEdges.equalToSuperview()
         }
         accountView.snp.makeConstraints {
