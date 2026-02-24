@@ -9,11 +9,6 @@ import UIKit
 
 final class CommonQuestViewController: BaseViewController {
     
-    private let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy.MM.dd."
-        return formatter
-    }()
     private let rootView = CommonQuestView()
     private let viewModel: CommonQuestViewModel
     
@@ -59,8 +54,8 @@ final class CommonQuestViewController: BaseViewController {
             $0.delegate = self
             $0.dataSource = self
             $0.register(
-                CommonQuestAnswersCell.self,
-                forCellReuseIdentifier: CommonQuestAnswersCell.identifier
+                CommonQuestAnswerCell.self,
+                forCellReuseIdentifier: CommonQuestAnswerCell.identifier
             )
             $0.register(
                 CommonQuestContentCell.self,
@@ -81,10 +76,20 @@ final class CommonQuestViewController: BaseViewController {
 extension CommonQuestViewController: DateNavigatorDelegate {
     
     @objc
-    private func myAnswerHistoryButtonDidTap() {}
+    private func myAnswerHistoryButtonDidTap() {
+        let myAnswersViewController = ViewControllerFactory.shared.makeCommonQuestMyAnswersViewController()
+        myAnswersViewController.navigationItem.hidesBackButton = true
+        
+        self.navigationController?.pushViewController(
+            myAnswersViewController,
+            animated: false
+        )
+    }
     
     @objc
-    private func moveWriteAnswerButtonDidTap() {}
+    private func moveWriteAnswerButtonDidTap() {
+        
+    }
     
     func dateDidChanged(to date: String) {
         let _ = viewModel.action(
@@ -95,6 +100,36 @@ extension CommonQuestViewController: DateNavigatorDelegate {
 }
 
 extension CommonQuestViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row == 0 || !viewModel.isExistAnswer {
+            return
+        }
+        
+        let answerIndex = indexPath.row - 1
+        let answer = viewModel.getAnswer(at: answerIndex)
+        
+        let question = viewModel.question
+        let writtenAt = answer.writtenAt
+        let profileIcon = viewModel.getProfileIcon(at: answerIndex)
+        let nickname = answer.writer
+        let content = answer.content
+        
+        let historyViewController = ViewControllerFactory.shared.makeCommonQuestHistoryViewController()
+        historyViewController.configure(
+            question: question,
+            writtenAt: writtenAt,
+            profileIcon: profileIcon,
+            nickname: nickname,
+            content: content
+        )
+        historyViewController.navigationItem.hidesBackButton = true
+        
+        self.navigationController?.pushViewController(
+            historyViewController,
+            animated: false
+        )
+    }
     
     func tableView(
         _ tableView: UITableView,
@@ -144,7 +179,7 @@ extension CommonQuestViewController: UITableViewDataSource {
             return dequeueQuestContentCell(from: tableView, indexPath: indexPath)
         }
         if viewModel.isExistAnswer {
-            return dequeueQuestAnswersCell(from: tableView, indexPath: indexPath)
+            return dequeueQuestAnswerCell(from: tableView, indexPath: indexPath)
         }
         return dequeueNoAnswerCell(from: tableView, indexPath: indexPath)
     }
@@ -168,16 +203,21 @@ extension CommonQuestViewController: UITableViewDataSource {
         return cell
     }
     
-    private func dequeueQuestAnswersCell(
+    private func dequeueQuestAnswerCell(
         from tableView: UITableView,
         indexPath: IndexPath
     ) -> UITableViewCell {
-        let cell: CommonQuestAnswersCell = tableView.dequeueReusableCell(for: indexPath)
+        let cell: CommonQuestAnswerCell = tableView.dequeueReusableCell(for: indexPath)
         
         let answer = viewModel.getAnswer(at: indexPath.row - 1)
         let profileIcon = viewModel.getProfileIcon(at: indexPath.row - 1)
-        let writtenAt = dateFormatter.string(from: viewModel.getWrittenAt(at: indexPath.row - 1))
-        cell.bind(profileIcon: profileIcon, answer: answer, writtenAt: writtenAt)
+        let writtenAt = DateFormatter.standard.string(from: viewModel.getWrittenAt(at: indexPath.row - 1))
+        
+        cell.bind(
+            profileIcon: profileIcon,
+            answer: answer,
+            writtenAt: writtenAt
+        )
         
         return cell
     }
