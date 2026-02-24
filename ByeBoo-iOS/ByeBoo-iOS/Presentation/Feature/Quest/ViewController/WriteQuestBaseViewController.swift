@@ -47,7 +47,7 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .confirmAndBack("완료", header: .clear),
+            type: .confirmAndBack("완료", header: .black),
             action: #selector(back),
             secondAction: #selector(confirmButtonDidTap)
         )
