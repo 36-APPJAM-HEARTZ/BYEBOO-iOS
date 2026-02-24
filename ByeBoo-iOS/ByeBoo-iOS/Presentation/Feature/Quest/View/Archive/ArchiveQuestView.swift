@@ -21,14 +21,14 @@ final class ArchiveQuestView: BaseView {
         date: "",
         questTitle:""
     )
+    private let textBoxView = TextBoxView(title: "")
+    private let photoBoxView: UIImageView?
+    private let feelView =  FeelView(emotionType: "", descriptionText: "")
     private let AIAnswerButton = ByeBooButton(
         titleText: "보리의 답장 보러가기",
         type: .enabled
     )
     
-    private let textBoxView = TextBoxView(title: "")
-    private let photoBoxView: UIImageView?
-    private let feelView =  FeelView(emotionType: "", descriptionText: "")
     private var descriptionText: String = ""
     private var photoURL: String = ""
     
@@ -117,14 +117,15 @@ final class ArchiveQuestView: BaseView {
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
     
+        feelView.snp.makeConstraints {
+            $0.top.equalTo(textBoxView.snp.bottom).offset(20.adjustedH)
+            $0.horizontalEdges.equalToSuperview()
+        }
+        
         AIAnswerButton.snp.makeConstraints {
             $0.top.greaterThanOrEqualTo(feelView.snp.bottom).offset(44.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalTo(contentView.snp.bottom).inset(36.adjustedH)
-        }
-        feelView.snp.makeConstraints {
-            $0.top.equalTo(textBoxView.snp.bottom).offset(20.adjustedH)
-            $0.horizontalEdges.equalToSuperview()
         }
     }
 }
