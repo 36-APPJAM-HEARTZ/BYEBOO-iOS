@@ -77,7 +77,6 @@ final class WriteQuestionTypeQuestView: BaseView {
             $0.top.equalTo(divider.snp.bottom).offset(20.adjustedH)
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
             $0.height.greaterThanOrEqualTo(268.adjustedH)
-//            $0.bottom.equalToSuperview().inset(17.adjustedH)
         }
     }
 }
