@@ -1,5 +1,5 @@
 //
-//  CommonQuestAnswersCell.swift
+//  CommonQuestAnswerCell.swift
 //  ByeBoo-iOS
 //
 //  Created by APPLE on 2/17/26.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-final class CommonQuestAnswersCell: UITableViewCell {
-    
+final class CommonQuestAnswerCell: UITableViewCell {
+        
     private let containerView = UIView()
     private let userIconView = UIImageView()
     private let userNicknameLabel = UILabel()
@@ -93,7 +93,7 @@ final class CommonQuestAnswersCell: UITableViewCell {
     }
 }
 
-extension CommonQuestAnswersCell {
+extension CommonQuestAnswerCell {
     
     func bind(
         profileIcon: UIImage?,
