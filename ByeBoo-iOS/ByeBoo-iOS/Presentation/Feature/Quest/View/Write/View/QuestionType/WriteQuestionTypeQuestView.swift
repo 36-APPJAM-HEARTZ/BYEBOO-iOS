@@ -11,8 +11,8 @@ import SnapKit
 import Then
 
 final class WriteQuestionTypeQuestView: BaseView {
-    private let scrollView = UIScrollView()
-    private let contentView = UIView() 
+    private(set) var scrollView = UIScrollView()
+    private let contentView = UIView()
     private(set) var headerView = WriteQuestTitleView(questNum: 0, title: "")
     private let divider = UIView()
     private(set) var questTextField = QuestTextField(type: .question)
@@ -78,6 +78,16 @@ final class WriteQuestionTypeQuestView: BaseView {
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
             $0.height.greaterThanOrEqualTo(268.adjustedH)
         }
+    }
+}
+
+extension WriteQuestionTypeQuestView: WriteQuestBaseProtocol {
+    var questTextView: UITextView {
+        questTextField.textView
+    }
+    
+    var tipTagView: UIView {
+        headerView.tipTag
     }
 }
 

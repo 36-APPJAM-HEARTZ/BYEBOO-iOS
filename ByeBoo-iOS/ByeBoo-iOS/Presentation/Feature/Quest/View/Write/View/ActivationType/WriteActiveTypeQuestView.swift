@@ -169,6 +169,16 @@ final class WriteActiveTypeQuestView: BaseView {
     }
 }
 
+extension WriteActiveTypeQuestView: WriteQuestBaseProtocol {
+    var questTextView: UITextView {
+        questTextField.textView
+    }
+    
+    var tipTagView: UIView {
+        headerView.tipTag
+    }
+}
+
 extension WriteActiveTypeQuestView {
     func updateQuestTitle(
         questNumber: Int,

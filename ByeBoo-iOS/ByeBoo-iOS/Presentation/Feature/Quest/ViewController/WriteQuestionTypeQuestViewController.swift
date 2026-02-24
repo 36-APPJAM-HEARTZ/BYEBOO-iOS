@@ -10,9 +10,8 @@ import UIKit
 
 import Mixpanel
 
-final class WriteQuestionTypeQuestViewController: BaseViewController {
+final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<WriteQuestionTypeQuestView> {
     
-    private let rootView = WriteQuestionTypeQuestView()
     private let viewModel: WriteQuestionTypeViewModel
     private var cancellables = Set<AnyCancellable>()
     var questMode: QuestMode = .write
@@ -23,51 +22,20 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     
     private var answerText: String = ""
     private var emotionState: String = ""
-    private var isKeyboardUsed: Bool = false
-    private var keyboardFrameInWindow: CGRect = .zero
-    private var currentKeyboardOffset: CGFloat = 0
-    private var previousTextViewHeight: CGFloat = 0
     
     private let bottomSheetViewController = EmotionBottomSheetViewController()
     
     init(viewModel: WriteQuestionTypeViewModel){
         self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
+        super.init(rootView: WriteQuestionTypeQuestView())
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func loadView() {
-        view = rootView
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(textViewMoveUp),
-            name: UIResponder.keyboardWillShowNotification, object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(textViewMoveDown),
-            name: UIResponder.keyboardWillHideNotification, object: nil
-        )
-        isKeyboardUsed = false
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        ByeBooNavigationBar.makeNavigationBar(
-            navigationItem: self.navigationItem,
-            navigationController: self.navigationController,
-            type: .confirmAndBack("완료", header: .clear),
-            action: #selector(back),
-            secondAction: #selector(confirmButtonDidTap)
-        )
-        
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
         
         bind()
         setDelegate()
@@ -87,63 +55,21 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
         )
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    override func setAddTarget() {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(endEditingOnTap))
-        let tipTagGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tipTagDidTap))
-        
-        tapGestureRecognizer.isEnabled = true
-        tapGestureRecognizer.delegate = self
-        tapGestureRecognizer.cancelsTouchesInView = false
-        
-        self.rootView.headerView.tipTag.addGestureRecognizer(tipTagGestureRecognizer)
-        self.rootView.headerView.tipTag.isUserInteractionEnabled = true
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
     override func setDelegate() {
         rootView.questTextField.delegate = self
     }
-}
-
-extension WriteQuestionTypeQuestViewController {
+    
     @objc
-    private func textViewMoveUp(_ notification: NSNotification) {
-        guard let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {
-            return
-        }
-        keyboardFrameInWindow = keyboardFrame.cgRectValue
-        currentKeyboardOffset = 0
-        previousTextViewHeight = rootView.questTextField.textView.bounds.height
-        isKeyboardUsed = true
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.adjustViewForCurrentCaret(animated: true)
-        }
+    override func tipTagDidTap() {
+        let viewController = ViewControllerFactory.shared.makeQuestTipViewController()
+        viewController.bind(questID: questID, questType: questType, questNumber: questNumber)
+        viewController.navigationItem.hidesBackButton = true
+        viewController.modalPresentationStyle = .fullScreen
+        self.present(viewController, animated: false)
     }
     
     @objc
-    private func textViewMoveDown(_ notification: NSNotification) {
-        keyboardFrameInWindow = .zero
-        currentKeyboardOffset = 0
-        previousTextViewHeight = 0
-        UIView.animate(withDuration: 0.3) {
-            self.rootView.transform = .identity
-        }
-        isKeyboardUsed = false
-    }
-    
-    @objc
-    private func confirmButtonDidTap() {
+    override func confirmButtonDidTap() {
         answerText = rootView.questTextField.textView.text
         
         if questMode == .edit {
@@ -170,21 +96,8 @@ extension WriteQuestionTypeQuestViewController {
             properties: property.dictionary
         )
     }
-    
-    @objc
-    private func endEditingOnTap(sender: UITapGestureRecognizer){
-        self.view.endEditing(true)
-    }
-    
-    @objc
-    private func tipTagDidTap() {
-        let viewController = ViewControllerFactory.shared.makeQuestTipViewController()
-        viewController.bind(questID: questID, questType: questType, questNumber: questNumber)
-        viewController.navigationItem.hidesBackButton = true
-        viewController.modalPresentationStyle = .fullScreen
-        self.present(viewController, animated: false)
-    }
 }
+
 
 extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHandler {
     
@@ -267,23 +180,6 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
     }
 }
 
-extension WriteQuestionTypeQuestViewController: BackNavigable {
-    func back() {
-        tabBarController?.tabBar.isHidden = true
-        
-        let action: (() -> Void) = {
-            self.navigationController?.popViewController(animated: true)
-            self.tabBarController?.tabBar.isHidden = false
-        }
-        
-        ModalBuilder(
-            modalView: QuitModalView(),
-            action: action,
-            rootViewController: self
-        ).present()
-    }
-}
-
 extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
     func saveEmotionState(emotionState: ByeBooEmotion) {
         self.emotionState = emotionState.key
@@ -312,15 +208,6 @@ extension WriteQuestionTypeQuestViewController {
     }
 }
 
-extension WriteQuestionTypeQuestViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizer(
-        _ agestureRecognizer: UIGestureRecognizer,
-        shouldReceive touch: UITouch)
-    -> Bool {
-        return true
-    }
-}
-
 extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
     func getExistingQuest(questID: Int, questAnswer: String?, image: String?, imageKey: String?) {
         self.questID = questID
@@ -341,65 +228,6 @@ extension WriteQuestionTypeQuestViewController: QuestCompleteProtocol {
         viewModel.action(.textFieldEditing(answerText: self.answerText, text: text))
         if isKeyboardUsed {
             adjustViewForTextGrowth(animated: false)
-        }
-    }
-}
-
-extension WriteQuestionTypeQuestViewController {
-    private func adjustViewForTextGrowth(animated: Bool) {
-        guard isKeyboardUsed else { return }
-        guard !keyboardFrameInWindow.isEmpty else { return }
-        
-        let currentHeight = rootView.questTextField.textView.bounds.height
-        guard currentHeight > 0 else { return }
-        
-        if previousTextViewHeight == 0 {
-            previousTextViewHeight = currentHeight
-            return
-        }
-        
-        let diff = currentHeight - previousTextViewHeight
-        previousTextViewHeight = currentHeight
-        
-        guard abs(diff) > 0.5 else { return }
-
-        let textView = rootView.questTextField.textView
-        let textViewFrameInWindow = textView.convert(textView.bounds, to: nil)
-        let keyboardTop = keyboardFrameInWindow.minY
-        let padding = 12.adjustedH
-
-        let overlap = textViewFrameInWindow.maxY + padding - keyboardTop
-        let targetOffset = max(0, currentKeyboardOffset + overlap)
-
-        guard abs(targetOffset - currentKeyboardOffset) > 0.5 else { return }
-        currentKeyboardOffset = targetOffset
-        
-        UIView.animate(withDuration: 0.2) {
-            self.rootView.transform = CGAffineTransform(translationX: 0, y: -self.currentKeyboardOffset)
-        }
-    }
-    
-    private func adjustViewForCurrentCaret(animated: Bool) {
-        guard isKeyboardUsed else { return }
-        guard !keyboardFrameInWindow.isEmpty else { return }
-        
-        let textView = rootView.questTextField.textView
-        guard textView.isFirstResponder else { return }
-        guard let selectedRange = textView.selectedTextRange else { return }
-        
-        let caretRect = textView.caretRect(for: selectedRange.end)
-        let caretInWindow = textView.convert(caretRect, to: nil)
-        let keyboardTop = keyboardFrameInWindow.minY
-        let padding = 12.adjustedH
-        
-        let overlap = caretInWindow.maxY + padding - keyboardTop
-        let targetOffset = max(0, overlap)
-        
-        guard abs(targetOffset - currentKeyboardOffset) > 0.5 else { return }
-        currentKeyboardOffset = targetOffset
-        
-        UIView.animate(withDuration: 0.2) {
-            self.rootView.transform = CGAffineTransform(translationX: 0, y: -self.currentKeyboardOffset)
         }
     }
 }
