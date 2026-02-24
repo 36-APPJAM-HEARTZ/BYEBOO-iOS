@@ -14,10 +14,7 @@ final class WriteActiveTypeQuestView: BaseView {
     private(set) var scrollView = UIScrollView()
     private let contentView = UIView()
     
-    private(set) var headerView = WriteQuestTitleView(
-        questNum: 0,
-        title: ""
-    )
+    private(set) var headerView = WriteQuestTitleView(questNum: 0, title: "")
     private let divider = UIView()
     
     private let imgTitleContainerView = UIView()
@@ -31,6 +28,7 @@ final class WriteActiveTypeQuestView: BaseView {
     private let grayTag = ByeBooFilledTag(tagType: .smallGray, text: "선택")
     private let thinkTitleLabel = UILabel()
     private(set) var questTextField = QuestTextField(type: .activation)
+
     
     override func setUI() {
         addSubviews(scrollView)
@@ -181,11 +179,13 @@ extension WriteActiveTypeQuestView: WriteQuestBaseProtocol {
 
 extension WriteActiveTypeQuestView {
     func updateQuestTitle(
+        questScope: QuestScope? = nil,
         questNumber: Int,
         questStyle: String,
         question: String
     ) {
         headerView.bind(
+            questScope: questScope,
             questNum: questNumber,
             title: question
         )

@@ -11,17 +11,32 @@ import SnapKit
 import Then
 
 final class WriteQuestTitleView: BaseView {
+    private let questScope: QuestScope?
     private var questNum: Int
     private let questNumLabel =  UILabel()
-    
     private let titleLabel = UILabel()
     let tipTag = ByeBooTipTag(text: "작성 TIP")
     
-        
-    init(questNum: Int, title: String) {
+    init(
+        questScope: QuestScope? = nil,
+        questNum: Int,
+        title: String
+    ) {
+        self.questScope = questScope
         self.questNum = questNum
         self.titleLabel.text = title
-        self.questNumLabel.text = "\(questNum)번째 퀘스트"
+        
+        if let questScope {
+            self.questNumLabel.text = {
+                switch questScope {
+                case .common:
+                    "공통 퀘스트"
+                case .personal:
+                    "\(questNum)번째 퀘스트"
+                }
+            }()
+        }
+        
         super.init(frame: .zero)
     }
     
@@ -74,9 +89,19 @@ final class WriteQuestTitleView: BaseView {
 }
 
 extension WriteQuestTitleView {
-    func bind(questNum: Int, title: String) {
+    func bind(questScope: QuestScope?, questNum: Int, title: String) {
         self.questNum = questNum
         self.titleLabel.text = title
-        questNumLabel.text = "\(questNum)번째 퀘스트"
+        
+        if let questScope {
+            self.questNumLabel.text = {
+                switch questScope {
+                case .common:
+                    "공통 퀘스트"
+                case .personal:
+                    "\(questNum)번째 퀘스트"
+                }
+            }()
+        }
    }
 }

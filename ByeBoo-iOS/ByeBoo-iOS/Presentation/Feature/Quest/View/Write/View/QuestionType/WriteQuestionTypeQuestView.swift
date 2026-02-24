@@ -11,11 +11,21 @@ import SnapKit
 import Then
 
 final class WriteQuestionTypeQuestView: BaseView {
+    private let questScope: QuestScope
     private(set) var scrollView = UIScrollView()
     private let contentView = UIView()
-    private(set) var headerView = WriteQuestTitleView(questNum: 0, title: "")
+    private(set) var headerView = WriteQuestTitleView(questScope: .personal, questNum: 0, title: "")
     private let divider = UIView()
     private(set) var questTextField = QuestTextField(type: .question)
+    
+    init(questScope: QuestScope) {
+        self.questScope = questScope
+        super.init(frame: .zero)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func setUI() {
         addSubview(scrollView)
@@ -93,11 +103,13 @@ extension WriteQuestionTypeQuestView: WriteQuestBaseProtocol {
 
 extension WriteQuestionTypeQuestView {
     func updateQuestTitle(
+        questScope: QuestScope,
         questNumber: Int,
         questStyle: String,
         question: String
     ) {
         headerView.bind(
+            questScope: questScope,
             questNum: questNumber,
             title: question
         )
