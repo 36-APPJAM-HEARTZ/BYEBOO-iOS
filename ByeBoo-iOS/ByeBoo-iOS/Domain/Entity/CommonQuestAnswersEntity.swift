@@ -26,9 +26,9 @@ extension CommonQuestAnswersEntity {
     static func stub() -> Self {
         .init(
             question: "연애에서 반복된 문제 패턴 3가지를 생각해보아요",
-            answerCount: 0,
+            answerCount: 5,
             isAnswered: false,
-            answers: []
+            answers: [.stub(), .stub(), .stub(), .stub(), .stub()]
         )
     }
 }
