@@ -11,9 +11,9 @@ extension JourneyType {
     var title: String {
         switch self {
         case .face:
-            "감정 직면"
+            "재회 준비"
         case .process:
-            "감정 정리"
+            "이별 극복"
         }
     }
     
@@ -33,18 +33,18 @@ extension JourneyType {
     var frontImage: UIImage {
         switch self {
         case .face:
-                .faceFrontCard
+                .reunionFront
         case .process:
-                .processFrontCard
+                .overcomingFront
         }
     }
     
     var backImage: UIImage {
         switch self {
         case .face:
-                .faceBackCard
+                .reunionBack
         case .process:
-                .processBackCard
+                .overcomingBack
         }
     }
     
