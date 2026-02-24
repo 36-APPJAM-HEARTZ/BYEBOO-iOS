@@ -10,6 +10,7 @@ import UIKit
 protocol WriteQuestBaseProtocol where Self: UIView {
     var scrollView: UIScrollView { get }
     var questTextView: UITextView { get }
+    var questCountLabelView: UIView { get }
     var tipTagView: UIView { get }
 }
 
@@ -159,9 +160,9 @@ extension WriteQuestBaseViewController {
         
         guard abs(diff) > 0.5 else { return }
         
-        let textView = rootView.questTextView
-        let textViewFrameInWindow = textView.convert(textView.bounds, to: nil)
-        let overlap = keyboardOverlap(for: textViewFrameInWindow)
+        let targetView = rootView.questCountLabelView
+        let targetViewFrameInWindow = targetView.convert(targetView.bounds, to: nil)
+        let overlap = keyboardOverlap(for: targetViewFrameInWindow)
         let targetOffset = max(0, currentKeyboardOffset + overlap)
         
         applyKeyboardOffset(targetOffset)
@@ -182,7 +183,7 @@ extension WriteQuestBaseViewController {
     
     private func keyboardOverlap(for rectInWindow: CGRect) -> CGFloat {
         let keyboardTop = keyboardFrameInWindow.minY
-        let padding = 12.adjustedH
+        let padding = 24.adjustedH
         return rectInWindow.maxY + padding - keyboardTop
     }
     

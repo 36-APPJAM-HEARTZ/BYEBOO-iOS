@@ -107,6 +107,7 @@ final class QuestTextField: BaseView {
         textView.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(72.adjustedH)
             textViewHeightConstraint = $0.height.equalTo(196.adjustedH).constraint
         }
         
