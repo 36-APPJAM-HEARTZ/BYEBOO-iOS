@@ -15,6 +15,7 @@ final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<W
     private let viewModel: WriteQuestionTypeViewModel
     private var cancellables = Set<AnyCancellable>()
     var questMode: QuestMode = .write
+    var questScope: QuestScope = .personal
     
     private var questID: Int = 1
     private var questNumber: Int = 1
@@ -27,7 +28,7 @@ final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<W
     
     init(viewModel: WriteQuestionTypeViewModel){
         self.viewModel = viewModel
-        super.init(rootView: WriteQuestionTypeQuestView())
+        super.init(rootView: WriteQuestionTypeQuestView(questScope: questScope))
     }
     
     required init?(coder: NSCoder) {
@@ -105,16 +106,18 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
         viewModel.output.questInfoResultPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
+                guard let self else { return }
                 switch result {
                 case .success(let quest):
-                    self?.questNumber = quest.questNumber
-                    self?.rootView.updateQuestTitle(
+                    self.questNumber = quest.questNumber
+                    self.rootView.updateQuestTitle(
+                        questScope: self.questScope,
                         questNumber: quest.questNumber,
                         questStyle: quest.questStyle,
                         question: quest.question
                     )
                 case .failure(let error):
-                    self?.handleError(error)
+                    self.handleError(error)
                 }
             }
             .store(in: &cancellables)
@@ -201,9 +204,16 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
 }
 
 extension WriteQuestionTypeQuestViewController {
-    func configure(_ questID: Int, _ questNumber: Int, _ questType: QuestType) {
+    func configure(_ questID: Int, _ questNumber: Int?, _ questType: QuestType) {
         self.questID = questID
-        self.questNumber = questNumber
+        
+        if let questNumber {
+            questScope = .personal
+            self.questNumber = questNumber
+        } else {
+            questScope = .common
+        }
+        
         self.questType = questType
     }
 }
