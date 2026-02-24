@@ -21,8 +21,9 @@ final class CommonQuestHistoryViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .back(header: .black),
-            action: #selector(back)
+            type: .backAndMenu(header: .black),
+            action: #selector(back),
+            secondAction: #selector(bottomUp)
         )
     }
 }
@@ -31,6 +32,14 @@ extension CommonQuestHistoryViewController: BackNavigable {
     
     func back() {
         self.navigationController?.popViewController(animated: false)
+    }
+}
+
+extension CommonQuestHistoryViewController {
+    
+    @objc
+    private func bottomUp() {
+        
     }
 }
 
