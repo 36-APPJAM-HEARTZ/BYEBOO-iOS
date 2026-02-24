@@ -325,7 +325,7 @@ extension WriteActiveTypeQuestViewController: QuestCompleteProtocol {
     func updateButtonWhenWriting(text: String) {
         viewModel.action(.textFieldEditing(answerText: self.answerText, text: text, imgCount: rootView.imgCount))
         if isKeyboardUsed {
-            adjustViewForTextGrowth(animated: false)
+            adjustViewForKeyboard(mode: .textGrowth)
         }
     }
 }

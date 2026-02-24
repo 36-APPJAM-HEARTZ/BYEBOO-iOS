@@ -227,7 +227,7 @@ extension WriteQuestionTypeQuestViewController: QuestCompleteProtocol {
     func updateButtonWhenWriting(text: String) {
         viewModel.action(.textFieldEditing(answerText: self.answerText, text: text))
         if isKeyboardUsed {
-            adjustViewForTextGrowth(animated: false)
+            adjustViewForKeyboard(mode: .textGrowth)
         }
     }
 }

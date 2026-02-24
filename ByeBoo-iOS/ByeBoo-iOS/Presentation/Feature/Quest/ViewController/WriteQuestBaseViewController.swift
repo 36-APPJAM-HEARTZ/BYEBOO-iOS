@@ -72,10 +72,11 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
         tapGestureRecognizer.delegate = self
         tapGestureRecognizer.cancelsTouchesInView = false
         
+        rootView.scrollView.addGestureRecognizer(tapGestureRecognizer)
         rootView.tipTagView.addGestureRecognizer(tipTagGestureRecognizer)
         rootView.tipTagView.isUserInteractionEnabled = true
     }
-        
+    
     func back() {
         tabBarController?.tabBar.isHidden = true
         
@@ -105,7 +106,7 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
         isKeyboardUsed = true
         
         DispatchQueue.main.async { [weak self] in
-            self?.adjustViewForCurrentCaret(animated: true)
+            self?.adjustViewForKeyboard(mode: .caretTracking)
         }
     }
     
@@ -126,6 +127,74 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
     }
 }
 
+extension WriteQuestBaseViewController {
+    enum KeyboardAdjustMode {
+        case textGrowth
+        case caretTracking
+    }
+    
+    func adjustViewForKeyboard(mode: KeyboardAdjustMode) {
+        guard isKeyboardUsed else { return }
+        guard !keyboardFrameInWindow.isEmpty else { return }
+        
+        switch mode {
+        case .textGrowth:
+            adjustViewForTextGrowth()
+        case .caretTracking:
+            adjustViewForCurrentCaret()
+        }
+    }
+    
+    private func adjustViewForTextGrowth() {
+        let currentHeight = rootView.questTextView.bounds.height
+        guard currentHeight > 0 else { return }
+        
+        if previousTextViewHeight == 0 {
+            previousTextViewHeight = currentHeight
+            return
+        }
+        
+        let diff = currentHeight - previousTextViewHeight
+        previousTextViewHeight = currentHeight
+        
+        guard abs(diff) > 0.5 else { return }
+        
+        let textView = rootView.questTextView
+        let textViewFrameInWindow = textView.convert(textView.bounds, to: nil)
+        let overlap = keyboardOverlap(for: textViewFrameInWindow)
+        let targetOffset = max(0, currentKeyboardOffset + overlap)
+        
+        applyKeyboardOffset(targetOffset)
+    }
+    
+    private func adjustViewForCurrentCaret() {
+        let textView = rootView.questTextView
+        guard textView.isFirstResponder,
+              let selectedRange = textView.selectedTextRange else { return }
+        
+        let caretRect = textView.caretRect(for: selectedRange.end)
+        let caretInWindow = textView.convert(caretRect, to: nil)
+        let overlap = keyboardOverlap(for: caretInWindow)
+        let targetOffset = max(0, overlap)
+        
+        applyKeyboardOffset(targetOffset)
+    }
+    
+    private func keyboardOverlap(for rectInWindow: CGRect) -> CGFloat {
+        let keyboardTop = keyboardFrameInWindow.minY
+        let padding = 12.adjustedH
+        return rectInWindow.maxY + padding - keyboardTop
+    }
+    
+    private func applyKeyboardOffset(_ targetOffset: CGFloat) {
+        guard abs(targetOffset - currentKeyboardOffset) > 0.5 else { return }
+        currentKeyboardOffset = targetOffset
+        
+        UIView.animate(withDuration: 0.2) {
+            self.rootView.transform = CGAffineTransform(translationX: 0, y: -self.currentKeyboardOffset)
+        }
+    }
+}
 
 extension WriteQuestBaseViewController {
     private func registerKeyboardNotificationCenter() {
@@ -144,62 +213,5 @@ extension WriteQuestBaseViewController {
     private func removeKeyboardNotifiationCneter() {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    func adjustViewForTextGrowth(animated: Bool) {
-        guard isKeyboardUsed else { return }
-        guard !keyboardFrameInWindow.isEmpty else { return }
-        
-        let currentHeight = rootView.questTextView.bounds.height
-        guard currentHeight > 0 else { return }
-        
-        if previousTextViewHeight == 0 {
-            previousTextViewHeight = currentHeight
-            return
-        }
-        
-        let diff = currentHeight - previousTextViewHeight
-        previousTextViewHeight = currentHeight
-        
-        guard abs(diff) > 0.5 else { return }
-
-        let textView = rootView.questTextView
-        let textViewFrameInWindow = textView.convert(textView.bounds, to: nil)
-        let keyboardTop = keyboardFrameInWindow.minY
-        let padding = 12.adjustedH
-
-        let overlap = textViewFrameInWindow.maxY + padding - keyboardTop
-        let targetOffset = max(0, currentKeyboardOffset + overlap)
-
-        guard abs(targetOffset - currentKeyboardOffset) > 0.5 else { return }
-        currentKeyboardOffset = targetOffset
-        
-        UIView.animate(withDuration: 0.2) {
-            self.rootView.transform = CGAffineTransform(translationX: 0, y: -self.currentKeyboardOffset)
-        }
-    }
-    
-    func adjustViewForCurrentCaret(animated: Bool) {
-        guard isKeyboardUsed else { return }
-        guard !keyboardFrameInWindow.isEmpty else { return }
-        
-        let textView = rootView.questTextView
-        guard textView.isFirstResponder else { return }
-        guard let selectedRange = textView.selectedTextRange else { return }
-        
-        let caretRect = textView.caretRect(for: selectedRange.end)
-        let caretInWindow = textView.convert(caretRect, to: nil)
-        let keyboardTop = keyboardFrameInWindow.minY
-        let padding = 12.adjustedH
-        
-        let overlap = caretInWindow.maxY + padding - keyboardTop
-        let targetOffset = max(0, overlap)
-        
-        guard abs(targetOffset - currentKeyboardOffset) > 0.5 else { return }
-        currentKeyboardOffset = targetOffset
-        
-        UIView.animate(withDuration: 0.2) {
-            self.rootView.transform = CGAffineTransform(translationX: 0, y: -self.currentKeyboardOffset)
-        }
     }
 }
