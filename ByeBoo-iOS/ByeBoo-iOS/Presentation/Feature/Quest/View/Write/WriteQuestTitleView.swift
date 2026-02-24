@@ -30,7 +30,7 @@ final class WriteQuestTitleView: BaseView {
             self.questNumLabel.text = {
                 switch questScope {
                 case .common:
-                    "공통 퀘스트"
+                    "공통퀘스트"
                 case .personal:
                     "\(questNum)번째 퀘스트"
                 }
@@ -97,7 +97,7 @@ extension WriteQuestTitleView {
             self.questNumLabel.text = {
                 switch questScope {
                 case .common:
-                    "공통 퀘스트"
+                    "공통퀘스트"
                 case .personal:
                     "\(questNum)번째 퀘스트"
                 }
