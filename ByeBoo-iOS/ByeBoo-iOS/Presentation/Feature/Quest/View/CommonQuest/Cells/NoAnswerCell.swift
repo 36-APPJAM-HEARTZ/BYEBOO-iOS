@@ -7,8 +7,11 @@
 
 import UIKit
 
+import SnapKit
+
 final class NoAnswerCell: UITableViewCell {
     
+    var topConstraint: Constraint?
     private let noAnswerLabel = UILabel()
     
     override init(
@@ -45,7 +48,7 @@ final class NoAnswerCell: UITableViewCell {
     
     private func setLayout() {
         noAnswerLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(70.adjustedH)
+            topConstraint = $0.top.equalToSuperview().inset(70.adjustedH).constraint
             $0.horizontalEdges.equalToSuperview().inset(80.adjustedW)
             $0.bottom.equalToSuperview().inset(51.adjustedH)
         }
