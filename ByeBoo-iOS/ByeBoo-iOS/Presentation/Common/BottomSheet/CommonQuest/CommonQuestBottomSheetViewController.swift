@@ -46,12 +46,16 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
         switch action {
         case .edit:
             // TODO: 수정하기
+            ByeBooLogger.debug("edit")
         case .delete:
             // TODO: 삭제하기
+            ByeBooLogger.debug("delete")
         case .block:
             // TODO: 차단하기
+            ByeBooLogger.debug("block")
         case .report:
             // TODO: 신고하기
+            ByeBooLogger.debug("report")
         }
     }
     
