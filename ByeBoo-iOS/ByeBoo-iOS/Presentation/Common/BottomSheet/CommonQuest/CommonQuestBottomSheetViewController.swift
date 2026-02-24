@@ -35,25 +35,24 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     
     @objc
     private func sheetItemDidTap(_ tapRecognizer: UITapGestureRecognizer) {
-        guard let tappedView = tapRecognizer.view else { return }
+        guard let tappedView = tapRecognizer.view,
+        let sheetType = sheetType else { return }
         
-        switch tappedView.tag {
-        case 0:
-            if sheetType == .mine {
-                // TODO: 수정하기
-            } else {
-                // TODO: 차단하기
-            }
-        case 1:
-            if sheetType == .mine {
-                // TODO: 삭제하기
-            } else {
-                // TODO: 신고하기
-            }
-        default:
-            break
+        let index = tappedView.tag
+        guard sheetType.items.indices.contains(index) else { return }
+        
+        let action = sheetType.items[index].action
+        
+        switch action {
+        case .edit:
+            // TODO: 수정하기
+        case .delete:
+            // TODO: 삭제하기
+        case .block:
+            // TODO: 차단하기
+        case .report:
+            // TODO: 신고하기
         }
-        
     }
     
     @objc

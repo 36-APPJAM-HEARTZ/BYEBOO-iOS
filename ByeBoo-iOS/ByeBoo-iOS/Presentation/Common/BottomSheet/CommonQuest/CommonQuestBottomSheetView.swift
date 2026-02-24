@@ -30,11 +30,11 @@ final class CommonQuestBottomSheetView: BaseView {
         sheetType.items.enumerated().forEach { index, item in
             let rowView = makeItemRow(item: item)
             itemList.append(rowView)
-            contentStackView.addArrangedSubviews(rowView)
+            contentStackView.addArrangedSubview(rowView)
 
             if index != sheetType.items.count - 1 {
                 let divider = SectionDividerView()
-                contentStackView.addArrangedSubviews(divider)
+                contentStackView.addArrangedSubview(divider)
             }
         }
     }
