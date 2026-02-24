@@ -111,7 +111,6 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         tapGestureRecognizer.delegate = self
         tapGestureRecognizer.cancelsTouchesInView = false
         
-        
         tipTagGestureRecognizer.isEnabled = true
         
         self.rootView.headerView.tipTag.addGestureRecognizer(tipTagGestureRecognizer)

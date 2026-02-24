@@ -11,12 +11,16 @@ import SnapKit
 import Then
 
 final class WriteQuestionTypeQuestView: BaseView {
+    private let scrollView = UIScrollView()
+    private let contentView = UIView() 
     private(set) var headerView = WriteQuestTitleView(questNum: 0, title: "")
     private let divider = UIView()
     private(set) var questTextField = QuestTextField(type: .question)
     
     override func setUI() {
-        addSubviews(
+        addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubviews(
             headerView,
             divider,
             questTextField
@@ -25,6 +29,18 @@ final class WriteQuestionTypeQuestView: BaseView {
     
     override func setStyle() {
         backgroundColor = .grayscale900
+        
+        scrollView.do {
+            $0.isScrollEnabled = true
+            $0.keyboardDismissMode = .onDrag
+            $0.backgroundColor = .clear
+            $0.isUserInteractionEnabled = true
+        }
+        
+        contentView.do {
+            $0.backgroundColor = .grayscale900
+            $0.isUserInteractionEnabled = true
+        }
         
         divider.do {
             $0.backgroundColor = .grayscale800
@@ -36,8 +52,18 @@ final class WriteQuestionTypeQuestView: BaseView {
     }
     
     override func setLayout() {
+        scrollView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        contentView.snp.makeConstraints {
+            $0.edges.equalTo(scrollView.contentLayoutGuide)
+            $0.width.equalTo(scrollView.frameLayoutGuide)
+            $0.height.greaterThanOrEqualTo(scrollView.frameLayoutGuide)
+        }
+        
         headerView.snp.makeConstraints {
-            $0.top.equalTo(self.safeAreaLayoutGuide)
+            $0.top.equalToSuperview()
             $0.leading.trailing.equalToSuperview()
         }
         
@@ -51,6 +77,7 @@ final class WriteQuestionTypeQuestView: BaseView {
             $0.top.equalTo(divider.snp.bottom).offset(20.adjustedH)
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
             $0.height.greaterThanOrEqualTo(268.adjustedH)
+//            $0.bottom.equalToSuperview().inset(17.adjustedH)
         }
     }
 }

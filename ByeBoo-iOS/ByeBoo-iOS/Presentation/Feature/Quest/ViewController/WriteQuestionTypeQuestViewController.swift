@@ -94,7 +94,13 @@ final class WriteQuestionTypeQuestViewController: BaseViewController {
     }
     
     override func setAddTarget() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(endEditingOnTap))
         let tipTagGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tipTagDidTap))
+        
+        tapGestureRecognizer.isEnabled = true
+        tapGestureRecognizer.delegate = self
+        tapGestureRecognizer.cancelsTouchesInView = false
+        
         self.rootView.headerView.tipTag.addGestureRecognizer(tipTagGestureRecognizer)
         self.rootView.headerView.tipTag.isUserInteractionEnabled = true
     }
@@ -163,6 +169,11 @@ extension WriteQuestionTypeQuestViewController {
             event: QuestEvents.Name.questWriteSuccess,
             properties: property.dictionary
         )
+    }
+    
+    @objc
+    private func endEditingOnTap(sender: UITapGestureRecognizer){
+        self.view.endEditing(true)
     }
     
     @objc
@@ -298,6 +309,15 @@ extension WriteQuestionTypeQuestViewController {
         self.questID = questID
         self.questNumber = questNumber
         self.questType = questType
+    }
+}
+
+extension WriteQuestionTypeQuestViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(
+        _ agestureRecognizer: UIGestureRecognizer,
+        shouldReceive touch: UITouch)
+    -> Bool {
+        return true
     }
 }
 
