@@ -76,15 +76,21 @@ final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<W
         if questMode == .edit {
             saveQuest()
         } else {
-            bottomSheetViewController.bind(questNumber: questNumber, questType: questType)
-            bottomSheetViewController.delegate = self
-            if let sheet = bottomSheetViewController.sheetPresentationController{
-                sheet.detents = [.custom { _ in 471.adjustedH }]
-                sheet.prefersGrabberVisible = true
-                sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-                sheet.preferredCornerRadius = 8
+            switch questScope {
+            case .common:
+                //TODO: 공통인 경우 뷰 연결
+                ByeBooLogger.debug("common 완료")
+            case .personal:
+                bottomSheetViewController.bind(questNumber: questNumber, questType: questType)
+                bottomSheetViewController.delegate = self
+                if let sheet = bottomSheetViewController.sheetPresentationController{
+                    sheet.detents = [.custom { _ in 471.adjustedH }]
+                    sheet.prefersGrabberVisible = true
+                    sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+                    sheet.preferredCornerRadius = 8
+                }
+                self.present(bottomSheetViewController, animated: true)
             }
-            self.present(bottomSheetViewController, animated: true)
         }
         
         let property = QuestEvents.QuestWriteFinishProperty(
