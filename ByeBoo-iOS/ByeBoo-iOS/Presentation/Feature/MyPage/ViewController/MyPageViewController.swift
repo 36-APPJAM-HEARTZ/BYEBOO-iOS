@@ -38,7 +38,6 @@ final class MyPageViewController: BaseViewController {
         
         viewModel.action(.viewWillAppear)
         viewModel.action(.checkHasEnterMyPage)
-        rootView.scrollView.setContentOffset(CGPoint(x: 0, y: 0), animated: false)
     }
     
     override func viewDidLoad() {
