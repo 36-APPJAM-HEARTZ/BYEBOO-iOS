@@ -104,11 +104,11 @@ final class WriteActiveTypeQuestView: BaseView {
         contentView.snp.makeConstraints {
             $0.edges.equalTo(scrollView.contentLayoutGuide)
             $0.width.equalTo(scrollView.frameLayoutGuide)
-            $0.bottom.equalTo(questTextField)
+            $0.height.greaterThanOrEqualTo(scrollView.frameLayoutGuide)
         }
         
         headerView.snp.makeConstraints {
-            $0.top.equalTo(self.safeAreaLayoutGuide)
+            $0.top.equalToSuperview()
             $0.leading.trailing.equalToSuperview()
         }
         
@@ -143,9 +143,9 @@ final class WriteActiveTypeQuestView: BaseView {
         }
         
         imageContainer.snp.makeConstraints {
-            $0.top.equalTo(imgTitleContainerView.snp.bottom).offset(8.adjustedH)
-            $0.leading.equalToSuperview().inset(24.adjustedW)
-            $0.width.height.equalTo(96.adjustedW)
+            $0.top.equalTo(imgTitleContainerView.snp.bottom).offset(12.adjustedH)
+            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
+            $0.width.height.equalTo(327.adjustedW)
         }
         
         textStackView.snp.makeConstraints {
@@ -158,8 +158,12 @@ final class WriteActiveTypeQuestView: BaseView {
         questTextField.snp.makeConstraints {
             $0.top.equalTo(textStackView.snp.bottom).offset(8.adjustedH)
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
-            $0.height.greaterThanOrEqualTo(290.adjustedH)
+            $0.height.greaterThanOrEqualTo(280.adjustedH)
         }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.endEditing(true)
     }
     
     func updateImageCountLabel(count: Int) {

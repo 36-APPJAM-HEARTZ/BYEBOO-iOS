@@ -102,6 +102,8 @@ extension WriteQuestTitleView {
                     "\(questNum)번째 퀘스트"
                 }
             }()
+        } else {
+            self.questNumLabel.text = "\(questNum)번째 퀘스트"
         }
    }
 }
