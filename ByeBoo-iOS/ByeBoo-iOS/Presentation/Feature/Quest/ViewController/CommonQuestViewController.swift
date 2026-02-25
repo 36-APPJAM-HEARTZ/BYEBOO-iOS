@@ -100,19 +100,13 @@ extension CommonQuestViewController: UITableViewDelegate {
         let answerIndex = indexPath.row - 1
         let answer = viewModel.getAnswer(at: answerIndex)
         
-        let question = viewModel.question
-        let writtenAt = answer.writtenAt
-        let profileIcon = viewModel.getProfileIcon(at: answerIndex)
-        let nickname = answer.writer
-        let content = answer.content
-        
         let historyViewController = ViewControllerFactory.shared.makeCommonQuestHistoryViewController()
         historyViewController.configure(
-            question: question,
-            writtenAt: writtenAt,
-            profileIcon: profileIcon,
-            nickname: nickname,
-            content: content
+            question: viewModel.question,
+            writtenAt: answer.writtenAt,
+            profileIcon: viewModel.getProfileIcon(at: answerIndex),
+            nickname: answer.writer,
+            content: answer.content
         )
         historyViewController.navigationItem.hidesBackButton = true
         
