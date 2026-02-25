@@ -40,14 +40,8 @@ final class CommonQuestMyAnswersViewController: BaseViewController {
         rootView.answersTableView.do {
             $0.delegate = self
             $0.dataSource = self
-            $0.register(
-                CommonQuestMyAnswerCell.self,
-                forCellReuseIdentifier: CommonQuestMyAnswerCell.identifier
-            )
-            $0.register(
-                NoAnswerCell.self,
-                forCellReuseIdentifier: NoAnswerCell.identifier
-            )
+            $0.register(CommonQuestMyAnswerCell.self)
+            $0.register(NoAnswerCell.self)
         }
     }
 }
@@ -129,11 +123,11 @@ extension CommonQuestMyAnswersViewController: UITableViewDataSource {
             return cell
         }
         
-        let cell: CommonQuestMyAnswerCell = tableView.dequeueReusableCell(for: indexPath)
-        
         guard let record = viewModel.getRecord(at: indexPath.section) else {
             return UITableViewCell()
         }
+        
+        let cell: CommonQuestMyAnswerCell = tableView.dequeueReusableCell(for: indexPath)
         
         cell.bind(
             question: record.question,

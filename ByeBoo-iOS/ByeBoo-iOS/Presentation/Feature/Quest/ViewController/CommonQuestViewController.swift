@@ -53,18 +53,9 @@ final class CommonQuestViewController: BaseViewController {
         rootView.commonQuestTableView.do {
             $0.delegate = self
             $0.dataSource = self
-            $0.register(
-                CommonQuestAnswerCell.self,
-                forCellReuseIdentifier: CommonQuestAnswerCell.identifier
-            )
-            $0.register(
-                CommonQuestContentCell.self,
-                forCellReuseIdentifier: CommonQuestContentCell.identifier
-            )
-            $0.register(
-                NoAnswerCell.self,
-                forCellReuseIdentifier: NoAnswerCell.identifier
-            )
+            $0.register(CommonQuestAnswerCell.self)
+            $0.register(CommonQuestContentCell.self)
+            $0.register(NoAnswerCell.self)
             $0.register(
                 DateNavigator.self,
                 forHeaderFooterViewReuseIdentifier: DateNavigator.identifier
