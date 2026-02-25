@@ -15,7 +15,6 @@ final class CommonQuestMyAnswersView: BaseView {
     override func setStyle() {
         myAnswerGuideLabel.applyByeBooFont(
             style: .head2M22,
-            text: "하츠핑하츠님의\n공통 퀘스트 답변이에요",
             color: .grayscale50,
             numberOfLines: 2
         )
@@ -41,5 +40,12 @@ final class CommonQuestMyAnswersView: BaseView {
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
+    }
+}
+
+extension CommonQuestMyAnswersView {
+    
+    func configure(userName: String) {
+        myAnswerGuideLabel.text = "\(userName)님의\n공통 퀘스트 답변이에요"
     }
 }

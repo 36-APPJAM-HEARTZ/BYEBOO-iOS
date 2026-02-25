@@ -10,6 +10,7 @@ import Foundation
 final class CommonQuestMyAnswerViewModel {
     
     private var answerRecords: [AnswerRecord] = []
+    private let getUserNameUseCase: GetUserNameUseCase
     
     struct AnswerRecord {
         let question: String
@@ -21,8 +22,13 @@ final class CommonQuestMyAnswerViewModel {
         answerRecords.count
     }
     
-    init() {
+    init(getUserNameUseCase: GetUserNameUseCase) {
+        self.getUserNameUseCase = getUserNameUseCase
         answerRecords = Self.stub()
+    }
+    
+    func getUserName() -> String {
+        getUserNameUseCase.execute()
     }
     
     func getRecord(at index: Int) -> AnswerRecord? {

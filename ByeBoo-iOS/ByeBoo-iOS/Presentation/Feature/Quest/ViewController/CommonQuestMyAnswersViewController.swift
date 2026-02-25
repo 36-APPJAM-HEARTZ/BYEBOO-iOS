@@ -28,6 +28,8 @@ final class CommonQuestMyAnswersViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        rootView.configure(userName: viewModel.getUserName())
+        
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
