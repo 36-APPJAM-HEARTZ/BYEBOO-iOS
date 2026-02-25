@@ -9,6 +9,9 @@ import UIKit
 
 final class CommonQuestHistoryView: BaseView {
     
+    private var profileIcon: UIImage?
+    private var nickname: String?
+    
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let commonQuestLabel = UILabel()
@@ -74,6 +77,14 @@ final class CommonQuestHistoryView: BaseView {
             questionMarkLabel,
             questionContentLabel
         )
+        
+        guard let profileIcon,
+              let nickname
+        else {
+            answerView.addSubview(answerContentLabel)
+            return
+        }
+        
         answerView.addSubviews(
             profileIconImageView,
             userNicknameLabel,
@@ -120,6 +131,18 @@ final class CommonQuestHistoryView: BaseView {
             $0.horizontalEdges.equalToSuperview()
             $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
+        
+        guard let profileIcon,
+              let nickname
+        else {
+            answerContentLabel.snp.makeConstraints {
+                $0.top.equalToSuperview().inset(16.adjustedH)
+                $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+                $0.bottom.equalToSuperview().inset(16.adjustedH)
+            }
+            return
+        }
+        
         profileIconImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedW)
@@ -144,13 +167,21 @@ extension CommonQuestHistoryView {
         question: String,
         writtenAt: Date,
         profileIcon: UIImage?,
-        nickname: String,
+        nickname: String?,
         content: String
     ) {
         questionContentLabel.text = question
         dateLabel.text = DateFormatter.standard.string(from: writtenAt)
-        profileIconImageView.image = profileIcon
-        userNicknameLabel.text = nickname
         answerContentLabel.text = content
+        
+        if let profileIcon {
+            self.profileIcon = profileIcon
+            profileIconImageView.image = profileIcon
+        }
+        
+        if let nickname {
+            self.nickname = nickname
+            userNicknameLabel.text = nickname
+        }
     }
 }

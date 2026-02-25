@@ -74,8 +74,6 @@ extension CommonQuestMyAnswersViewController: UITableViewDelegate {
         historyViewController.configure(
             question: record.question,
             writtenAt: record.writtenAt,
-            profileIcon: .sosoBadge,
-            nickname: viewModel.getUserName(),
             content: record.answer
         )
         

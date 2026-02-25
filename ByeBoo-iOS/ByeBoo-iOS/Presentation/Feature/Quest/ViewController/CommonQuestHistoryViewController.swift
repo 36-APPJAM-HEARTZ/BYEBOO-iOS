@@ -48,8 +48,8 @@ extension CommonQuestHistoryViewController {
     func configure(
         question: String,
         writtenAt: Date,
-        profileIcon: UIImage?,
-        nickname: String,
+        profileIcon: UIImage? = nil,
+        nickname: String? = nil,
         content: String
     ) {
         rootView.configure(
