@@ -27,20 +27,18 @@ extension UIButton {
         text: String? = nil,
         color: UIColor,
         for state: UIControl.State = .normal) {
-            titleLabel?.font = style.font
-            titleLabel?.textColor = color
             let targetText = text ?? title(for: state)
-            guard let targetText else { return }
+            guard let targetText = targetText else { return }
             
-            var attributes: [NSAttributedString.Key: Any] = [
+            let attributes: [NSAttributedString.Key: Any] = [
                 .font: style.font,
-                .kern: style.kern
+                .kern: style.kern,
+                .foregroundColor: color
             ]
             
-            if let titleColor = titleColor(for: state) {
-                attributes[.foregroundColor] = titleColor
-            }
-            
-            setAttributedTitle(NSAttributedString(string: targetText, attributes: attributes), for: state)
+            setAttributedTitle(
+                NSAttributedString(string: targetText, attributes: attributes),
+                for: state
+            )
         }
 }

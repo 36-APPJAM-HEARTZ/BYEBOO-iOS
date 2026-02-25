@@ -24,6 +24,11 @@ final class ArchiveQuestView: BaseView {
     private let thinkView: ThinkView?
     private let actionView: ActionView?
     private let feelView = FeelView(emotionType: "", descriptionText: "")
+    private let AIAnswerButton = ByeBooButton(
+        titleText: "보리의 답장 보러가기",
+        type: .enabled
+    )
+    
     
     private(set) var type: QuestType
     
@@ -62,7 +67,8 @@ final class ArchiveQuestView: BaseView {
         scrollView.addSubview(contentView)
         contentView.addSubviews(
             headerView,
-            feelView
+            feelView,
+            AIAnswerButton
         )
         
         switch type {
@@ -77,17 +83,17 @@ final class ArchiveQuestView: BaseView {
     
     override func setLayout() {
         scrollView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.edges.equalTo(safeAreaLayoutGuide)
         }
         
         contentView.snp.makeConstraints {
             $0.edges.equalToSuperview()
             $0.width.equalToSuperview()
-            $0.bottom.equalTo(feelView.snp.bottom).offset(24.adjustedH)
+            $0.height.greaterThanOrEqualTo(scrollView.frameLayoutGuide)
         }
         
         headerView.snp.makeConstraints {
-            $0.top.equalTo(16.adjustedH)
+            $0.top.equalToSuperview().offset(16.adjustedH)
             $0.horizontalEdges.equalToSuperview()
         }
         
@@ -111,6 +117,12 @@ final class ArchiveQuestView: BaseView {
                 $0.top.equalTo(actionView.snp.bottom)
                 $0.horizontalEdges.equalToSuperview()
             }
+        }
+    
+        AIAnswerButton.snp.makeConstraints {
+            $0.top.greaterThanOrEqualTo(feelView.snp.bottom).offset(44.adjustedH)
+            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.bottom.equalTo(contentView.snp.bottom).inset(36.adjustedH)
         }
     }
 }

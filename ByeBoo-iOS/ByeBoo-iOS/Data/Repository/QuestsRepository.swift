@@ -8,6 +8,7 @@
 import Foundation
 
 struct DefaultQuestRepository: QuestsInterface {
+    
     private let network: NetworkService
     private let userDefaultsService: UserDefaultService
     
@@ -118,6 +119,10 @@ struct DefaultQuestRepository: QuestsInterface {
         try await editQuest(questID: questID, answer: answer, imageKey: imageKey)
     }
     
+    func fetchCommoncQuest(date: String) async throws -> CommonQuestAnswersEntity {
+        .stub()
+    }
+    
     // MARK: private function
     
     private func makeSignedURL(imageKey: String) async throws -> String {
@@ -222,5 +227,9 @@ final class MockQuestsRepository: QuestsInterface {
     
     func editActiveQuest(questID: Int, answer: String, image: Data?, imageKey: String, isImageChanged: Bool) async throws {
         self.editActiveQuestCalled = true
+    }
+    
+    func fetchCommoncQuest(date: String) async throws -> CommonQuestAnswersEntity {
+        .stub()
     }
 }

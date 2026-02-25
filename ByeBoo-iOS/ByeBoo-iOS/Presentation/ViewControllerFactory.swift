@@ -195,7 +195,12 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
     }
     
     func makeCommonQuestViewController() -> CommonQuestViewController {
-        return .init()
+        guard let viewModel = DIContainer.shared.resolve(type: CommonQuestViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        
+        return .init(viewModel: viewModel)
     }
     
     func makeBlockedUserListViewController() -> BlockedkUserListViewController {
