@@ -31,10 +31,7 @@ final class SpeechTextBoxView: BaseView {
             $0.clipsToBounds = false
         }
         
-        titleLabel.do {
-            $0.font = FontManager.body2M16.font
-            $0.textColor = .primary50
-        }
+        titleLabel.applyByeBooFont(style: .body2M16, color: .primary50)
     }
     
     override func setUI() {

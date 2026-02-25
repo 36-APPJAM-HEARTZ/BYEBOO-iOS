@@ -28,14 +28,8 @@ final class QuestStepHeaderView: UICollectionReusableView {
     }
     
     private func setStyle() {
-        stepLabel.do {
-            $0.textColor = .secondary300
-            $0.font = FontManager.cap1M12.font
-        }
-        titleLabel.do {
-            $0.textColor = .grayscale50
-            $0.font = FontManager.body2M16.font
-        }
+        stepLabel.applyByeBooFont(style: .cap1M12, color: .secondary300)
+        titleLabel.applyByeBooFont(style: .body2M16, color: .grayscale50) 
     }
     
     private func setUI() {

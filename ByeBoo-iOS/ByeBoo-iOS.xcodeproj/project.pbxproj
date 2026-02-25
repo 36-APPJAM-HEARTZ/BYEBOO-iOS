@@ -16,6 +16,7 @@
 		51691DED2E5CB059008CCEC6 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 51691DEC2E5CB059008CCEC6 /* KakaoSDKAuth */; };
 		51691DEF2E5CB059008CCEC6 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 51691DEE2E5CB059008CCEC6 /* KakaoSDKUser */; };
 		CB5A49882E1EAAD400851C87 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = CB5A49872E1EAAD400851C87 /* Kingfisher */; };
+		CB71A8A32F3B6F9400176B64 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = CB71A8A22F3B6F9400176B64 /* FirebaseCrashlytics */; };
 		CBB032A72E7925FC00C0855E /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = CBB032A62E7925FC00C0855E /* Mixpanel */; };
 		CBF009C82E1D889D003F9DFE /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = CBF009C72E1D889D003F9DFE /* Lottie */; };
 /* End PBXBuildFile section */
@@ -75,6 +76,7 @@
 				CB5A49882E1EAAD400851C87 /* Kingfisher in Frameworks */,
 				CBB032A72E7925FC00C0855E /* Mixpanel in Frameworks */,
 				51691DED2E5CB059008CCEC6 /* KakaoSDKAuth in Frameworks */,
+				CB71A8A32F3B6F9400176B64 /* FirebaseCrashlytics in Frameworks */,
 				183EE0E12ED1D10600154F40 /* FirebaseMessaging in Frameworks */,
 				183EE0DB2ED1CB0E00154F40 /* FirebaseAnalytics in Frameworks */,
 			);
@@ -126,6 +128,7 @@
 				CB4180872E0925D2001E7BCB /* Sources */,
 				CB4180882E0925D2001E7BCB /* Frameworks */,
 				CB4180892E0925D2001E7BCB /* Resources */,
+				CB71A8A42F3B6FFD00176B64 /* Google Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -147,6 +150,7 @@
 				183EE0DA2ED1CB0E00154F40 /* FirebaseAnalytics */,
 				183EE0E02ED1D10600154F40 /* FirebaseMessaging */,
 				186847EF2ED5567D002827DA /* FirebaseCore */,
+				CB71A8A22F3B6F9400176B64 /* FirebaseCrashlytics */,
 			);
 			productName = "ByeBoo-iOS";
 			productReference = CB41808B2E0925D2001E7BCB /* ByeBoo-iOS.app */;
@@ -241,6 +245,32 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		CB71A8A42F3B6FFD00176B64 /* Google Crashlytics */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+			);
+			name = "Google Crashlytics";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif [ \"$CI\" != \"true\" ]; then\n  \"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		CB4180872E0925D2001E7BCB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -278,6 +308,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 6;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z6682N5G5D;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -664,6 +695,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CB5A49862E1EAAD400851C87 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		CB71A8A22F3B6F9400176B64 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FirebaseCrashlytics;
 		};
 		CBB032A62E7925FC00C0855E /* Mixpanel */ = {
 			isa = XCSwiftPackageProductDependency;

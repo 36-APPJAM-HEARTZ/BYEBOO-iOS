@@ -60,20 +60,24 @@ final class ConfirmModalView: BaseView, ModalProtocol {
             $0.backgroundColor = .grayscale90080
             $0.layer.cornerRadius = 12
         }
-        titleLabel.do {
-            $0.font = FontManager.sub3M18.font
-            $0.textColor = .grayscale50
-            $0.textAlignment = .center
-        }
-        descriptionLabel.do {
-            $0.font = FontManager.body3R16.font
-            $0.textColor = .grayscale400
-            $0.textAlignment = .center
-        }
+        
+        titleLabel.applyByeBooFont(
+            style: .sub3M18,
+            color: .grayscale50,
+            textAlignment: .center
+        )
+        
+        descriptionLabel.applyByeBooFont(
+            style: .body3R16,
+            color: .grayscale400,
+            textAlignment: .center
+        )
+        
         buttonStackView.do {
             $0.axis = .horizontal
             $0.spacing = 16
         }
+        
         setBlurEffect()
     }
     

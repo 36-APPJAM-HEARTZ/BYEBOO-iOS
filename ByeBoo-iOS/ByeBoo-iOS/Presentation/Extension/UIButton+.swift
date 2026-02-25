@@ -21,4 +21,24 @@ extension UIButton {
         
         setAttributedTitle(attributedString, for: .normal)
     }
+    
+    func applyByeBooFont(
+        style: FontManager,
+        text: String? = nil,
+        color: UIColor,
+        for state: UIControl.State = .normal) {
+            let targetText = text ?? title(for: state)
+            guard let targetText = targetText else { return }
+            
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: style.font,
+                .kern: style.kern,
+                .foregroundColor: color
+            ]
+            
+            setAttributedTitle(
+                NSAttributedString(string: targetText, attributes: attributes),
+                for: state
+            )
+        }
 }

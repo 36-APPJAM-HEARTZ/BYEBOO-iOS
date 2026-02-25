@@ -24,7 +24,7 @@ enum ByeBooFilledTagType {
         case .largePurple, .word3Purple, .smallPurple:
             return .primary300
         case .largeGray, .word3Gray, .smallGray :
-            return .white10
+            return .white5
         case .yelloFilled:
             return .secondary30010
         }

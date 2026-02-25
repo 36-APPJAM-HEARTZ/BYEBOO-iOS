@@ -12,7 +12,7 @@ final class ModifyNicknameView: BaseView {
     private let nicknameLabel = UILabel()
     private(set) var nicknameTextField = ByeBooNicknameTextField(.onBeginEditing)
     private(set) var nicknameStateView = NicknameStateView()
-    private(set) var confirmButton = ByeBooButton(titleText: "완료", type: .disabled)
+    private(set) var confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
     
     init() {
         super.init(frame: .zero)
@@ -28,18 +28,21 @@ final class ModifyNicknameView: BaseView {
     }
     
     override func setStyle() {
-        nicknameLabel.do {
-            $0.text = "닉네임"
-            $0.textColor = .grayscale300
-            $0.font = FontManager.body1Sb16.font
-        }
+        nicknameLabel.applyByeBooFont (
+            style: .body1Sb16,
+            text: "닉네임",
+            color: .grayscale300
+        )
+        
         nicknameTextField.do {
             $0.nicknameField.placeholder = ""
-            $0.nicknameField.backgroundColor = .white10
+            $0.nicknameField.backgroundColor = .white5
         }
+        
         nicknameStateView.do {
             $0.isHidden = true
         }
+        
         confirmButton.do {
             $0.isHidden = true
         }

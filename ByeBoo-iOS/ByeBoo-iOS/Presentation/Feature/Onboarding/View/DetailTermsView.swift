@@ -34,14 +34,13 @@ final class DetailTermsView: BaseView {
             $0.setImage(.checkOff.withTintColor(.grayscale400), for: .normal)
             $0.backgroundColor = .clear
         }
-        contentLabel.do {
-            $0.textColor = .grayscale400
-            $0.font = FontManager.cap2R12.font
-        }
+        contentLabel.applyByeBooFont(style: .cap2R12, color: .grayscale400) 
         viewMoreButton.do {
-            $0.setTitle("더보기", for: .normal)
-            $0.setTitleColor(.grayscale400, for: .normal)
-            $0.titleLabel?.font = FontManager.cap2R12.font
+            $0.applyByeBooFont(
+                style: .cap2R12,
+                text: "더보기",
+                color: .grayscale400
+            )
             $0.setUnderLine()
         }
     }

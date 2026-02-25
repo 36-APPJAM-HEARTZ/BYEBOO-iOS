@@ -19,7 +19,7 @@ final class EmotionBottomSheetView: BaseView {
     private let emotionChipFirstStackView = UIStackView()
     private let emotionChipSecondStackView = UIStackView()
     
-    let confirmButton = ByeBooButton(titleText: "완료", type: .disabled)
+    let confirmButton = ByeBooButton(titleText: "완료하기", type: .disabled)
     var emotionChips: [ByeBooEmotionChip] = []
     
     override func setUI() {
@@ -49,13 +49,13 @@ final class EmotionBottomSheetView: BaseView {
     override func setStyle() {
         backgroundColor = .grayscale900
         
-        titleLabel.do {
-            $0.text = "퀘스트를 완료한 후,\n어떤 감정이 느껴지시나요?"
-            $0.numberOfLines = 2
-            $0.font = FontManager.head1M24.font
-            $0.textColor = .grayscale50
-            $0.textAlignment = .center
-        }
+        titleLabel.applyByeBooFont(
+            style: .head2M22,
+            text: "퀘스트를 완료한 후,\n어떤 감정이 느껴지시나요?",
+            color: .grayscale50,
+            textAlignment: .center,
+            numberOfLines: 2
+        )
         
         warningStackView.do {
             $0.axis = .horizontal
@@ -67,11 +67,11 @@ final class EmotionBottomSheetView: BaseView {
             $0.contentMode = .scaleAspectFit
         }
         
-        warningLabel.do {
-            $0.text = "퀘스트 완료 후에는 감정을 수정할 수 없어요"
-            $0.font = FontManager.cap2R12.font
-            $0.textColor = .grayscale400
-        }
+        warningLabel.applyByeBooFont(
+            style: .cap2R12,
+            text: "퀘스트 완료 후에는 감정을 수정할 수 없어요",
+            color: .grayscale400
+        )
         
         [emotionChipFirstStackView, emotionChipSecondStackView].forEach {
             $0.do {
@@ -85,7 +85,7 @@ final class EmotionBottomSheetView: BaseView {
         titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(53.adjustedH)
             $0.centerX.equalToSuperview()
-            $0.height.equalTo(62.adjustedH)
+//            $0.height.equalTo(62.adjustedH)
         }
         
         warningStackView.snp.makeConstraints {

@@ -32,19 +32,25 @@ final class QuestStartView: BaseView {
                 rangedText: "QUEST JOURNEY",
                 originalTitleColor: .primary100
             )
-            $0.textAlignment = .center
-            $0.font = FontManager.head1M24.font
-            $0.numberOfLines = 2
+            $0.applyByeBooFont(
+                style: .head1M24,
+                color: .primary100,
+                textAlignment: .center,
+                numberOfLines: 2
+            )
         }
         cloverImageView.do {
             $0.image = .clover
             $0.contentMode = .scaleAspectFit
         }
         descriptionLabel.do {
-            $0.font = FontManager.body3R16.font
+            $0.applyByeBooFont(
+                style: .body3R16,
+                color: .grayscale300,
+                textAlignment: .center,
+                numberOfLines: 0
+            )
             $0.attributedText = nil
-            $0.textAlignment = .center
-            $0.numberOfLines = 0
         }
     }
     

@@ -26,18 +26,18 @@ final class TermsView: BaseView {
         backgroundImageView.do {
             $0.image = .bgDark
         }
-        mainTitleLabel.do {
-            $0.text = "필수 약관에 동의해 주세요"
-            $0.textColor = .grayscale50
-            $0.font = FontManager.head1M24.font
-        }
-        subTitleLabel.do {
-            $0.text = "Bye Boo 이용을 위해 필요해요"
-            $0.textColor = .grayscale400
-            $0.font = FontManager.body6R14.font
-        }
+        mainTitleLabel.applyByeBooFont (
+            style: .head1M24,
+            text: "필수 약관에 동의해 주세요",
+            color: .grayscale50
+        )
+        subTitleLabel.applyByeBooFont (
+            style: .body6R14,
+            text: "Bye Boo 이용을 위해 필요해요",
+            color: .grayscale400
+        )
         allAgreeView.do {
-            $0.backgroundColor = .white10
+            $0.backgroundColor = .white5
             $0.layer.cornerRadius = 12
         }
         allCheckButton.do {
@@ -45,11 +45,11 @@ final class TermsView: BaseView {
             $0.clipsToBounds = true
             $0.layer.cornerRadius = 9
         }
-        allAgreeLabel.do {
-            $0.text = "전체 동의"
-            $0.textColor = .grayscale300
-            $0.font = FontManager.body3R16.font
-        }
+        allAgreeLabel.applyByeBooFont (
+            style: .body3R16,
+            text: "전체 동의",
+            color: .grayscale300
+        )
     }
     
     override func setUI() {
@@ -133,7 +133,7 @@ extension TermsView {
     
     private func updateUI() {
         allAgreeView.do {
-            $0.backgroundColor = isAllAgreeButtonDidTap ? .primary30020 : .white10
+            $0.backgroundColor = isAllAgreeButtonDidTap ? .primary30020 : .white5
             $0.layer.borderWidth = isAllAgreeButtonDidTap ? 1 : 0
             $0.layer.borderColor = UIColor.primary300.cgColor
         }

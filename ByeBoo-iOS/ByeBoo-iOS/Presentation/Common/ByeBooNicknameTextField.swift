@@ -66,7 +66,7 @@ final class ByeBooNicknameTextField: BaseView {
     
     override func setStyle() {
         nicknameField.do {
-            $0.backgroundColor = .white10
+            $0.backgroundColor = .white5
             $0.layer.cornerRadius = 12.adjustedW
             $0.attributedPlaceholder = NSAttributedString(
                 string: "닉네임을 입력해주세요",
@@ -79,7 +79,7 @@ final class ByeBooNicknameTextField: BaseView {
             $0.autocapitalizationType = .none
         }
         deleteAllTextButton.do {
-            $0.backgroundColor = .white10
+            $0.backgroundColor = .white5
             $0.setImage(.union.withTintColor(.white).resize(newWidth: 10.adjustedW), for: .normal)
             $0.layer.cornerRadius = 9
             $0.isHidden = true

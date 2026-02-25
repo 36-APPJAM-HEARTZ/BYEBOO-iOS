@@ -43,12 +43,14 @@ final class LoginViewController: BaseViewController {
 extension LoginViewController{
     @objc
     private func kakaoLoginButtonDidTap() {
+        rootView.kakaoLoginButton.isUserInteractionEnabled = false
         self.platform = .KAKAO
         viewModel.action(.socialLoginButtonDidTap(platform: .KAKAO))
     }
     
     @objc
     private func appleLoginButtonDidTap() {
+        rootView.appleLoginButton.isUserInteractionEnabled = false
         self.platform = .APPLE
         viewModel.action(.socialLoginButtonDidTap(platform: .APPLE))
     }
@@ -57,12 +59,15 @@ extension LoginViewController{
 extension LoginViewController {
     private func bind() {
         viewModel.output.isRegisteredPublisher
-            .throttle(for: .seconds(1.0), scheduler: DispatchQueue.main, latest: false)
             .receive(on: DispatchQueue.main)
             .sink { result in
+                self.rootView.appleLoginButton.isUserInteractionEnabled = true
+                self.rootView.kakaoLoginButton.isUserInteractionEnabled = true
+                
                 switch result {
                 case .success(let isRegisterd):
-                    ByeBooLogger.debug(isRegisterd)
+                    ByeBooLogger.debug("온보딩 완료 여부 \(isRegisterd)")
+                    
                     let nextViewController: UIViewController
                     if isRegisterd {
                         nextViewController = ByeBooTabBar()

@@ -36,12 +36,12 @@ final class FinishJourneyView: BaseView {
         backgroundView.do {
             $0.backgroundColor = .black80
         }
-        titleLabel.do {
-            $0.text = "🎉 감정 직면 여정을 완료했어요! 🎉"
-            $0.font = FontManager.sub2Sb18.font
-            $0.textColor = .secondary300
-            $0.textAlignment = .center
-        }
+        titleLabel.applyByeBooFont (
+            style: .sub2Sb18,
+            text: "🎉 감정 직면 여정을 완료했어요! 🎉",
+            color: .secondary300,
+            textAlignment: .center
+        )
         characterLottie.do {
             $0.play()
             $0.loopMode = .loop
@@ -53,28 +53,31 @@ final class FinishJourneyView: BaseView {
             $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 4.adjustedW)
             $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 4.adjustedW, bottom: 0, right: 0)
         }
-        firstTextLabel.do {
-            $0.text = animationText[0]
-            $0.numberOfLines = 0
-            $0.font = FontManager.body5M14.font
-            $0.textColor = .secondary50
-            $0.textAlignment = .center
-        }
         
-        secondTextLabel.do {
-            $0.text = animationText[1]
-            $0.numberOfLines = 0
-            $0.font = FontManager.cap1M12.font
-            $0.textColor = .secondary5050
-            $0.textAlignment = .center
-        }
+        firstTextLabel.applyByeBooFont (
+            style: .body5M14,
+            text: animationText[0],
+            color: .secondary50,
+            textAlignment: .center,
+            numberOfLines: 0
+        )
+        
+        secondTextLabel.applyByeBooFont (
+            style: .cap1M12,
+            text: animationText[1],
+            color: .secondary5050,
+            textAlignment: .center,
+            numberOfLines: 0
+        )
         
         thirdTextLabel.do {
-            $0.text = animationText[2]
-            $0.numberOfLines = 0
-            $0.font = FontManager.cap1M12.font
-            $0.textColor = .secondary5050
-            $0.textAlignment = .center
+            $0.applyByeBooFont (
+                style: .cap1M12,
+                text: animationText[2],
+                color: .secondary5050,
+                textAlignment: .center,
+                numberOfLines: 0
+            )
             $0.alpha = 0
         }
     }

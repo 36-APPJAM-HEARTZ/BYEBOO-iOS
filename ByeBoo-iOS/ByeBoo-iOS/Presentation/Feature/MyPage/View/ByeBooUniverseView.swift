@@ -17,11 +17,12 @@ final class ByeBooUniverseView: BaseView {
         iconImageView.do {
             $0.image = .change
         }
-        titleLabel.do {
-            $0.text = "보리가 궁금하다면?"
-            $0.font = FontManager.body1Sb16.font
-            $0.textColor = .grayscale300
-        }
+        
+        titleLabel.applyByeBooFont (
+            style: .body1Sb16,
+            text: "보리가 궁금하다면?",
+            color: .grayscale300
+        )
     }
     
     override func setUI() {

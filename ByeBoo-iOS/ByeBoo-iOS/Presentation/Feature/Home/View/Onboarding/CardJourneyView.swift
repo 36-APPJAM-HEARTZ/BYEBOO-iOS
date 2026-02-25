@@ -25,35 +25,44 @@ final class CardJourneyView: BaseView {
         backgroundImageView.do {
             $0.image = .bgDark
         }
+        
         backgroundView.do {
             $0.backgroundColor = .black50
         }
-        tipDescriptionLabel.do {
-            $0.text = "카드를 뒤집어서 내용을 확인해 주세요!"
-            $0.font = FontManager.body3R16.font
-            $0.textColor = .white50
-        }
         
+        tipDescriptionLabel.applyByeBooFont(
+            style: .body3R16,
+            text: "카드를 뒤집어서 내용을 확인해 주세요!",
+            color: .white50
+        )
+    
         cardImageView.do {
             $0.isUserInteractionEnabled = true
         }
+        
         descriptionImageView.do {
             $0.isUserInteractionEnabled = true
             $0.isHidden = true
         }
+        
         descriptionLabel.do {
-            $0.numberOfLines = 0
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .secondary50
-            $0.textAlignment = .center
+            $0.applyByeBooFont(
+                style: .body6R14,
+                color: .secondary50,
+                textAlignment: .center,
+                numberOfLines: 0
+            )
             $0.isHidden = true
         }
+        
         confirmLabel.do {
-            $0.text = "확인했어요"
+            $0.applyByeBooFont(
+                style: .body4Sb14,
+                text: "확인했어요",
+                color: .secondary300,
+                textAlignment: .center
+            )
             $0.underLine(text: $0.text ?? "")
-            $0.font = FontManager.body4Sb14.font
-            $0.textColor = .secondary300
-            $0.textAlignment = .center
             $0.isHidden = true
         }
     }

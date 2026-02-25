@@ -97,13 +97,13 @@ final class QuestTipView: BaseView {
             $0.backgroundColor = .grayscale900
         }
         
-        titleLabel.do {
-            $0.text = "퀘스트 작성 TIP"
-            $0.textColor = .white
-            $0.font = FontManager.sub1Sb20.font
-        }
+        titleLabel.applyByeBooFont (
+            style: .sub1Sb20,
+            text: "퀘스트 작성 TIP",
+            color: .white
+        )
         
-        closeButton.do { 
+        closeButton.do {
             let image = UIImage.xicon.withRenderingMode(.alwaysTemplate)
             $0.setImage(image, for: .normal)
             $0.tintColor = .white
@@ -114,17 +114,16 @@ final class QuestTipView: BaseView {
             $0.spacing = 8
         }
         
-        questLabel.do {
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .grayscale500
-        }
+        questLabel.applyByeBooFont(style: .body6R14, color: .grayscale500)
         
         title.do {
-            $0.font = FontManager.head1M24.font
-            $0.textColor = .grayscale100
-            $0.textAlignment = .center
+            $0.applyByeBooFont(
+                style: .head1M24,
+                color: .grayscale100,
+                textAlignment: .center,
+                numberOfLines: 0
+            )
             $0.lineBreakMode = .byWordWrapping
-            $0.numberOfLines = 0
         }
     }
     

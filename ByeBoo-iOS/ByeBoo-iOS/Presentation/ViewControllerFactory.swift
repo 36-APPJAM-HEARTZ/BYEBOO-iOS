@@ -189,6 +189,19 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
         }
         return CompletedQuestsViewController(viewModel: viewModel)
     }
+    
+    func makeParentQuestViewController() -> ParentQuestViewController<QuestTabItem> {
+        return ParentQuestViewController(items: QuestTabItem.allCases)
+    }
+    
+    func makeCommonQuestViewController() -> CommonQuestViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: CommonQuestViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        
+        return .init(viewModel: viewModel)
+    }
 }
 
 extension ViewControllerFactory {

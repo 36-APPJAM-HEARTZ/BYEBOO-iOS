@@ -60,28 +60,17 @@ final class ArchiveQuestHeaderView: BaseView {
             $0.distribution = .equalCentering
         }
         
-        questNumberLabel.do {
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .grayscale500
-        }
-        
-        dateLabel.do {
-            $0.font = FontManager.body6R14.font
-            $0.textColor = .grayscale500
-        }
+        questNumberLabel.applyByeBooFont(style: .body6R14, color: .grayscale500)
+        dateLabel.applyByeBooFont(style: .body6R14, color: .grayscale500)
         
         questTitleLabel.do {
-            $0.font = FontManager.head1M24.font
-            $0.textColor = .grayscale100
-            $0.numberOfLines = 0
+            $0.applyByeBooFont (
+                style: .head1M24,
+                color: .grayscale100,
+                textAlignment: type == .complete ? .center : .left,
+                numberOfLines: 0
+            )
             $0.lineBreakMode = .byWordWrapping
-            
-            switch type {
-            case .complete:
-                $0.textAlignment = .center
-            case .archive:
-                $0.textAlignment = .left
-            }
         }
     }
     

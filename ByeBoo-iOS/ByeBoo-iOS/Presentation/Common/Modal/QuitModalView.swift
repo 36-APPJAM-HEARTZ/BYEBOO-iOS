@@ -19,7 +19,7 @@ final class QuitModalView: BaseView, ModalProtocol {
     let actionButton = ByeBooButton(titleText: "나가기", type: .outline)
     
     override func setUI() {
-        backgroundColor = .grayscale90080
+        backgroundColor = .grayscale900
         layer.cornerRadius = 12
         
         addSubviews(
@@ -34,26 +34,24 @@ final class QuitModalView: BaseView, ModalProtocol {
     }
     
     override func setStyle() {
-        titleLabel.do {
-            $0.text = "작성을 중단하시겠어요?"
-            $0.font = FontManager.sub3M18.font
-            $0.textColor = .grayscale50
-            $0.textAlignment = .center
-        }
+        titleLabel.applyByeBooFont(
+            style: .sub3M18,
+            text: "작성을 중단하시겠어요?",
+            color: .grayscale50,
+            textAlignment: .center
+        )
         
-        secondDescriptionLabel.do {
-            $0.text = "작성하시던 내용은 저장되지 않아요."
-            $0.font = FontManager.body3R16.font
-            $0.textColor = .grayscale400
-            $0.textAlignment = .center
-        }
+        secondDescriptionLabel.applyByeBooFont(
+            style: .body3R16,
+            text: "작성하시던 내용은 저장되지 않아요.",
+            color: .grayscale400,
+            textAlignment: .center
+        )
         
         buttonStackView.do {
             $0.axis = .horizontal
             $0.spacing = 16
         }
-        
-        setBlurEffect()
     }
     
     override func setLayout() {

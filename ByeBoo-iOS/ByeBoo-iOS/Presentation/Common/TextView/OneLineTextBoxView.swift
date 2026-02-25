@@ -43,23 +43,19 @@ final class OneLineTextBoxView: BaseView {
     
     override func setStyle() {
         layer.cornerRadius = 12
-        backgroundColor = .white10
+        backgroundColor = .white5
         
         if isHighlighted {
             layer.borderWidth = 1
             layer.borderColor = UIColor(.primary300).cgColor
         }
         
-        titleLabel.do {
-            $0.numberOfLines = 1
-            $0.isUserInteractionEnabled = false
-            $0.font = FontManager.body3R16.font
-            if isHighlighted {
-                $0.textColor = .grayscale50
-            } else {
-                $0.textColor = .grayscale300
-            }
-        }
+        titleLabel.applyByeBooFont(
+            style: .body3R16,
+            color: isHighlighted ? .grayscale50 : .grayscale300,
+            numberOfLines: 1
+        )
+        titleLabel.isUserInteractionEnabled = false
     }
     
     override func setUI() {

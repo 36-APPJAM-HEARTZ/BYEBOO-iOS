@@ -22,6 +22,12 @@ jobs:
           echo "BASE_URL = ${BASE_URL}" > ByeBoo-iOS/Data/Config/Config.xcconfig
         env:
           BASE_URL: ${{ secrets.BASE_URL }}
+          
+      - name: Generate GoogleService-Info.plist
+        run: |
+          echo "${GOOGLE_SERVICE_INFO_BASE64}" | base64 --decode > ByeBoo-iOS/GoogleService-Info.plist
+        env:
+          GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.GOOGLE_SERVICE_INFO_BASE64 }}
 
       - name: Build with xcodebuild
         run: |
