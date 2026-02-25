@@ -78,8 +78,8 @@ final class CommonQuestHistoryView: BaseView {
             questionContentLabel
         )
         
-        guard let profileIcon,
-              let nickname
+        guard let _ = profileIcon,
+              let _ = nickname
         else {
             answerView.addSubview(answerContentLabel)
             return
@@ -132,8 +132,8 @@ final class CommonQuestHistoryView: BaseView {
             $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
         
-        guard let profileIcon,
-              let nickname
+        guard let _ = profileIcon,
+              let _ = nickname
         else {
             answerContentLabel.snp.makeConstraints {
                 $0.top.equalToSuperview().inset(16.adjustedH)
