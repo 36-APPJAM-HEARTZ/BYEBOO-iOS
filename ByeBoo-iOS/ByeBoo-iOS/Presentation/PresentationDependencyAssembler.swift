@@ -269,12 +269,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: CommonQuestMyAnswerViewModel.self) { container in
-            guard let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self) else {
-                ByeBooLogger.error(ByeBooError.DIFailedError)
-                return
-            }
-            
-            return CommonQuestMyAnswerViewModel(getUserNameUseCase: getUserNameUseCase)
+            return CommonQuestMyAnswerViewModel()
         }
     }
 }
