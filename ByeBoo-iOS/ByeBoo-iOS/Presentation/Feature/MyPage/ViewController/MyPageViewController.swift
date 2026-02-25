@@ -17,7 +17,7 @@ final class MyPageViewController: BaseViewController {
     private var name: String?
     
     private let rootView = MyPageView()
-    private lazy var beforeNotificationStatus = rootView.noticeView.noticeSwitch.isOn
+    private lazy var beforeNotificationStatus = rootView.featuresView.noticeView.noticeSwitch.isOn
     private var didOpenSetting = false
     
     init(viewModel: MyPageViewModel) {
@@ -67,18 +67,22 @@ final class MyPageViewController: BaseViewController {
             action: #selector(moveButtonDidTap),
             for: .touchUpInside
         )
+        
+        let featuresView = rootView.featuresView
+        
         [
-            rootView.inquireView,
-            rootView.termAndPolicyView,
-            rootView.accountView,
-            rootView.participantView,
-            rootView.manageView
+            featuresView.inquireView,
+            featuresView.termAndPolicyView,
+            featuresView.accountView,
+            featuresView.participantView,
+            featuresView.manageView
         ].forEach {
             $0.featureButtons.forEach {
                 $0.addTarget(self, action: #selector(featureButtonDidTap(_:)), for: .touchUpInside)
             }
         }
-        rootView.noticeView.noticeSwitch.addTarget(
+        
+        featuresView.noticeView.noticeSwitch.addTarget(
             self,
             action: #selector(noticeSwitchValueChanged(_:)),
             for: .valueChanged
@@ -167,7 +171,7 @@ extension MyPageViewController {
                 case .success(let alarmEnabled):
                     self?.beforeNotificationStatus = alarmEnabled
                     DispatchQueue.main.async {
-                        self?.rootView.noticeView.noticeSwitch.setOn(alarmEnabled, animated: false)
+                        self?.rootView.featuresView.noticeView.noticeSwitch.setOn(alarmEnabled, animated: false)
                     }
                 case .failure(let error):
                     ByeBooLogger.error(error)
@@ -182,7 +186,7 @@ extension MyPageViewController {
                 switch result {
                 case .success(let hasEnter):
                     if !hasEnter {
-                        self?.rootView.noticeView.noticeSwitch.setOn(false, animated: false)
+                        self?.rootView.featuresView.noticeView.noticeSwitch.setOn(false, animated: false)
                         return
                     }
                     self?.viewModel.action(.checkAlarmEnabled)
@@ -198,7 +202,7 @@ extension MyPageViewController {
             .sink { [weak self] result in
                 switch result {
                 case .success(let alarmEnabled):
-                    self?.rootView.noticeView.noticeSwitch.setOn(alarmEnabled, animated: true)
+                    self?.rootView.featuresView.noticeView.noticeSwitch.setOn(alarmEnabled, animated: true)
                 case .failure(let error) :
                     ByeBooLogger.error(error)
                 }
@@ -228,7 +232,7 @@ extension MyPageViewController {
                 viewModel.action(.notificationSwitchDidTap)
             } else if !isAuthorized {
                 DispatchQueue.main.async {
-                    self.rootView.noticeView.noticeSwitch.setOn(false, animated: false)
+                    self.rootView.featuresView.noticeView.noticeSwitch.setOn(false, animated: false)
                 }
             }
             
@@ -439,7 +443,7 @@ extension MyPageViewController {
             style: .cancel
         ) { [weak self] _ in
             DispatchQueue.main.async {
-                self?.rootView.noticeView.noticeSwitch.setOn(false, animated: true)
+                self?.rootView.featuresView.noticeView.noticeSwitch.setOn(false, animated: true)
             }
         }
     }

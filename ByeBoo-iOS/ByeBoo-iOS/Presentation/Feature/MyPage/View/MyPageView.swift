@@ -20,30 +20,7 @@ final class MyPageView: BaseView {
     private(set) var myRecordView = MyRecordView()
     private(set) var worldView = ByeBooUniverseView()
     private let divider2 = SectionDividerView()
-    private(set) var inquireView = MyPageFeatureView(
-        title: MyPageFeatureType.inquire.rawValue,
-        features: MyPageFeatureType.inquire.features
-    )
-    private(set) var noticeView = MyPageFeatureView(
-        title: MyPageFeatureType.notice.rawValue,
-        features: MyPageFeatureType.notice.features
-    )
-    private(set) var participantView = MyPageFeatureView(
-        title: MyPageFeatureType.participant.rawValue,
-        features: MyPageFeatureType.participant.features
-    )
-    private(set) var manageView = MyPageFeatureView(
-        title: MyPageFeatureType.manage.rawValue,
-        features: MyPageFeatureType.manage.features
-    )
-    private(set) var termAndPolicyView = MyPageFeatureView(
-        title: MyPageFeatureType.termAndPolicy.rawValue,
-        features: MyPageFeatureType.termAndPolicy.features
-    )
-    private(set) var accountView = MyPageFeatureView(
-        title: MyPageFeatureType.account.rawValue,
-        features: MyPageFeatureType.account.features
-    )
+    private(set) var featuresView = MyPageFeaturesView()
     
     override func setStyle() {
         backgroundColor = .grayscale900
@@ -61,12 +38,7 @@ final class MyPageView: BaseView {
             myRecordView,
             worldView,
             divider2,
-            inquireView,
-            noticeView,
-            participantView,
-            manageView,
-            termAndPolicyView,
-            accountView
+            featuresView
         )
         nameView.addSubview(moveButton)
     }
@@ -105,28 +77,8 @@ final class MyPageView: BaseView {
             $0.top.equalTo(worldView.snp.bottom).offset(8.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
-        inquireView.snp.makeConstraints {
+        featuresView.snp.makeConstraints {
             $0.top.equalTo(divider2.snp.bottom).offset(8.adjustedH)
-            $0.horizontalEdges.equalToSuperview()
-        }
-        noticeView.snp.makeConstraints {
-            $0.top.equalTo(inquireView.snp.bottom)
-            $0.horizontalEdges.equalToSuperview()
-        }
-        participantView.snp.makeConstraints {
-            $0.top.equalTo(noticeView.snp.bottom)
-            $0.horizontalEdges.equalToSuperview()
-        }
-        manageView.snp.makeConstraints {
-            $0.top.equalTo(participantView.snp.bottom)
-            $0.horizontalEdges.equalToSuperview()
-        }
-        termAndPolicyView.snp.makeConstraints {
-            $0.top.equalTo(manageView.snp.bottom)
-            $0.horizontalEdges.equalToSuperview()
-        }
-        accountView.snp.makeConstraints {
-            $0.top.equalTo(termAndPolicyView.snp.bottom)
             $0.horizontalEdges.equalToSuperview()
             $0.bottom.equalToSuperview().inset(24.5.adjustedH)
         }
