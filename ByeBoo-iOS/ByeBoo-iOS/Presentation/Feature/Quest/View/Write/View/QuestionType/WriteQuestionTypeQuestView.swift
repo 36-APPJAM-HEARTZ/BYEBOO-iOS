@@ -95,7 +95,6 @@ extension WriteQuestionTypeQuestView: WriteQuestBaseProtocol {
     var questTextView: UITextView {
         questTextField.textView
     }
-    
     var questCountLabelView: UIView {
         questTextField.textCountLabel
     }

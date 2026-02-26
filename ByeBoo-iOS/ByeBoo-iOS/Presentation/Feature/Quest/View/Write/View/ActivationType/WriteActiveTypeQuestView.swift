@@ -175,11 +175,9 @@ extension WriteActiveTypeQuestView: WriteQuestBaseProtocol {
     var questTextView: UITextView {
         questTextField.textView
     }
-    
     var questCountLabelView: UIView {
         questTextField.textCountLabel
     }
-    
     var tipTagView: UIView {
         headerView.tipTag
     }
