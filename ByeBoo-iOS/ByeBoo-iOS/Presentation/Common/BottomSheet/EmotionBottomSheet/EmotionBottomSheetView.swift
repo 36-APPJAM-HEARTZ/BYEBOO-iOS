@@ -85,7 +85,6 @@ final class EmotionBottomSheetView: BaseView {
         titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(53.adjustedH)
             $0.centerX.equalToSuperview()
-//            $0.height.equalTo(62.adjustedH)
         }
         
         warningStackView.snp.makeConstraints {
