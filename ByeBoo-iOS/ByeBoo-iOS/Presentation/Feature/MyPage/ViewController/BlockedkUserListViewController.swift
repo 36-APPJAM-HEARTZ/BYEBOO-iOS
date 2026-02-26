@@ -43,7 +43,7 @@ final class BlockedkUserListViewController: BaseViewController {
             $0.dataSource = self
             $0.register(
                 BlockedUserCell.self,
-                forCellReuseIdentifier: "BlockedUserCell"
+                forCellReuseIdentifier: BlockedUserCell.identifier
             )
         }
     }
@@ -94,7 +94,7 @@ extension BlockedkUserListViewController: UITableViewDataSource {
     ) -> UITableViewCell {
         // TO-DO : extension 메서드로 수정
         guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: "BlockedUserCell",
+            withIdentifier: BlockedUserCell.identifier,
             for: indexPath
         ) as? BlockedUserCell else {
             return UITableViewCell()
