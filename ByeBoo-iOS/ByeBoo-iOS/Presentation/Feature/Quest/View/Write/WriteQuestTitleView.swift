@@ -11,22 +11,32 @@ import SnapKit
 import Then
 
 final class WriteQuestTitleView: BaseView {
-    private let stepStackView = UIStackView()
-    private let stepNum = ByeBooTextTag(type: .gray, text: "STEP 0")
-    private let stepTitle = UILabel()
-    
+    private let questScope: QuestScope?
     private var questNum: Int
     private let questNumLabel =  UILabel()
-    
     private let titleLabel = UILabel()
     let tipTag = ByeBooTipTag(text: "작성 TIP")
     
-        
-    init(stepNum: String, stepTitle: String, questNum: Int, title: String) {
-        self.stepTitle.text = stepTitle
+    init(
+        questScope: QuestScope? = nil,
+        questNum: Int,
+        title: String
+    ) {
+        self.questScope = questScope
         self.questNum = questNum
         self.titleLabel.text = title
-        self.questNumLabel.text = "\(questNum)번째 퀘스트"
+        
+        if let questScope {
+            self.questNumLabel.text = {
+                switch questScope {
+                case .common:
+                    "공통퀘스트"
+                case .personal:
+                    "\(questNum)번째 퀘스트"
+                }
+            }()
+        }
+        
         super.init(frame: .zero)
     }
     
@@ -35,17 +45,10 @@ final class WriteQuestTitleView: BaseView {
     }
 
     override func setUI() {
-        addSubviews(stepStackView, questNumLabel, titleLabel, tipTag)
-        stepStackView.addArrangedSubviews(stepNum, stepTitle)
+        addSubviews(questNumLabel, titleLabel, tipTag)
     }
     
     override func setStyle() {
-        stepStackView.do {
-            $0.axis = .horizontal
-            $0.spacing = 8.adjustedW
-        }
-                
-        stepTitle.applyByeBooFont(style: .body2M16, color: .grayscale500)
         questNumLabel.applyByeBooFont(style: .body6R14, color: .grayscale500)
         
         titleLabel.do {
@@ -64,19 +67,14 @@ final class WriteQuestTitleView: BaseView {
     }
     
     override func setLayout() {
-        stepStackView.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.centerX.equalToSuperview()
-        }
-        
         questNumLabel.snp.makeConstraints {
-            $0.top.equalTo(stepStackView.snp.bottom).offset(12.adjustedH)
+            $0.top.equalToSuperview()
             $0.centerX.equalToSuperview()
         }
         
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(questNumLabel.snp.bottom).offset(12.adjustedH)
-            $0.leading.trailing.equalToSuperview().inset(24.adjustedH)
+            $0.width.equalTo(327.adjustedW)
             $0.centerX.equalToSuperview()
         }
         
@@ -91,11 +89,21 @@ final class WriteQuestTitleView: BaseView {
 }
 
 extension WriteQuestTitleView {
-    func bind(stepNum: String, stepTitle: String, questNum: Int, title: String) {
-        self.stepNum.updateText("STEP \(stepNum)")
-        self.stepTitle.text = stepTitle
+    func bind(questScope: QuestScope?, questNum: Int, title: String) {
         self.questNum = questNum
         self.titleLabel.text = title
-        questNumLabel.text = "\(questNum)번째 퀘스트"
-       }
+        
+        if let questScope {
+            self.questNumLabel.text = {
+                switch questScope {
+                case .common:
+                    "공통퀘스트"
+                case .personal:
+                    "\(questNum)번째 퀘스트"
+                }
+            }()
+        } else {
+            self.questNumLabel.text = "\(questNum)번째 퀘스트"
+        }
+   }
 }

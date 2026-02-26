@@ -11,9 +11,8 @@ import UIKit
 import Kingfisher
 import Mixpanel
 
-final class WriteActiveTypeQuestViewController: BaseViewController {
-    
-    private let rootView = WriteActiveTypeQuestView()
+final class WriteActiveTypeQuestViewController: WriteQuestBaseViewController<WriteActiveTypeQuestView> {
+
     private let viewModel: WriteActiveTypeViewModel
     private var cancellables = Set<AnyCancellable>()
     var questMode: QuestMode = .write
@@ -25,49 +24,24 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
     private var answerText: String = ""
     private var emotionState: String = ""
     private var image: UIImage = UIImage()
-    private var isKeyboardUsed: Bool = false
+
     private var isImageChanged: Bool = false
     private var originalImageKey: String = ""
     
     private let bottomSheetViewController = EmotionBottomSheetViewController()
     
-    override func loadView() {
-        view = rootView
-    }
-    
     init(viewModel: WriteActiveTypeViewModel){
         self.viewModel = viewModel
-        super.init(nibName: nil, bundle: nil)
+        super.init(rootView: WriteActiveTypeQuestView())
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(textViewMoveUp),
-            name: UIResponder.keyboardWillShowNotification, object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(textViewMoveDown),
-            name: UIResponder.keyboardWillHideNotification, object: nil
-        )
-        isKeyboardUsed = false
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        ByeBooNavigationBar.makeNavigationBar(
-            navigationItem: self.navigationItem,
-            navigationController: self.navigationController,
-            type: .back(header: .black),
-            action: #selector(back)
-        )
         
-        setGesture()
         setDelegate()
         bind()
         presentPhotoPicker()
@@ -87,72 +61,21 @@ final class WriteActiveTypeQuestViewController: BaseViewController {
         )
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    override func setAddTarget() {
-        rootView.confirmButton.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
-    }
-    
     override func setDelegate() {
         rootView.questTextField.delegate = self
     }
     
-    private func setGesture() {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(endEditingOnTap))
-        let tipTagGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tipTagDidTap))
-        
-        tapGestureRecognizer.isEnabled = true
-        tapGestureRecognizer.delegate = self
-        tapGestureRecognizer.cancelsTouchesInView = false
-        
-        
-        tipTagGestureRecognizer.isEnabled = true
-        
-        self.rootView.title.tipTag.addGestureRecognizer(tipTagGestureRecognizer)
-        self.rootView.scrollView.addGestureRecognizer(tapGestureRecognizer)
-    }
-    
-    private func presentPhotoPicker() {
-        rootView.imageContainer.didTapAddImage = { [weak self] in
-            guard let self = self else { return }
-            self.openPhotosButtenPressed()
-        }
-    }
-}
-
-extension WriteActiveTypeQuestViewController {
     @objc
-    private func textViewMoveUp(_ notification: NSNotification) {
-        if self.view.window?.frame.origin.y == 0 && !isKeyboardUsed{
-            if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-                let keyboardHeight = keyboardFrame.cgRectValue.height
-                let safeAreaBottom = view.safeAreaInsets.bottom
-                let offsetY = keyboardHeight - safeAreaBottom
-                
-                UIView.animate(withDuration: 0.3) {
-                    self.rootView.transform = CGAffineTransform(translationX: 0, y: -offsetY)
-                }
-                
-                isKeyboardUsed = true
-            }
-        }
-        
+    override func tipTagDidTap() {
+        let viewController = ViewControllerFactory.shared.makeQuestTipViewController()
+        viewController.bind(questID: questID, questType: questType, questNumber: questNumber)
+        viewController.navigationItem.hidesBackButton = true
+        viewController.modalPresentationStyle = .fullScreen
+        self.present(viewController, animated: false)
     }
     
     @objc
-    private func textViewMoveDown(_ notification: NSNotification) {
-        UIView.animate(withDuration: 0.3) {
-            self.rootView.transform = .identity
-        }
-        isKeyboardUsed = false
-    }
-    
-    @objc
-    private func confirmButtonDidTap() {
+    override func confirmButtonDidTap() {
         if rootView.questTextField.textView.text == rootView.questTextField.placeholder ||
             rootView.questTextField.textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         {
@@ -186,21 +109,15 @@ extension WriteActiveTypeQuestViewController {
             properties: property.dictionary
         )
     }
-    
-    @objc
-    private func endEditingOnTap(sender: UITapGestureRecognizer){
-        self.view.endEditing(true)
-    }
-    
-    @objc
-    private func tipTagDidTap() {
-        let viewController = ViewControllerFactory.shared.makeQuestTipViewController()
-        viewController.bind(questID: questID, questType: questType, questNumber: questNumber)
-        viewController.navigationItem.hidesBackButton = true
-        viewController.modalPresentationStyle = .fullScreen
-        self.present(viewController, animated: false)
+        
+    private func presentPhotoPicker() {
+        rootView.imageContainer.didTapAddImage = { [weak self] in
+            guard let self = self else { return }
+            self.openPhotosButtenPressed()
+        }
     }
 }
+
 
 extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandler {
     
@@ -212,8 +129,6 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                 case .success(let quest):
                     self?.questNumber = quest.questNumber
                     self?.rootView.updateQuestTitle(
-                        step: quest.step,
-                        stepNum: quest.stepNumber,
                         questNumber: quest.questNumber,
                         questStyle: quest.questStyle,
                         question: quest.question
@@ -230,11 +145,24 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                 switch result {
                 case .success(()):
                     guard let self else { return }
-                    ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
-                    let viewController = ViewControllerFactory.shared.makeCompleteActiveTypeQuestViewController()
-                    viewController.configure(questID: self.questID, questNumber: self.questNumber)
-                    self.bottomSheetViewController.dismiss(animated: true)
-                    self.navigationController?.pushViewController(viewController, animated: true)
+                    self.bottomSheetViewController.dismiss(animated: true) {
+                        let modal = ModalBuilder(
+                            modalView: QuestCompleteModal(),
+                            action: nil,
+                            rootViewController: self
+                        )
+                        modal.present()
+                        
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            modal.dismiss()
+                            
+                            ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
+                            let viewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
+                            viewController.entryViewController = .writeQuest
+                            viewController.configure(questID: self.questID, questType: .activation)
+                            self.navigationController?.pushViewController(viewController, animated: true)
+                        }
+                    }
                 case .failure(let error):
                     self?.handleError(error)
                 }
@@ -247,8 +175,6 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                 switch result {
                 case .success(let quest):
                     self?.rootView.updateQuestTitle(
-                        step: quest.step,
-                        stepNum: quest.stepNumber,
                         questNumber: quest.questNumber,
                         questStyle: quest.questStyle,
                         question: quest.question
@@ -279,40 +205,15 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
         viewModel.output.isValidTextPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
+                guard let self else { return }
                 switch result {
                 case true:
-                    self?.rootView.confirmButton.updateType(.enabled)
+                    self.navigationItem.rightBarButtonItem?.isEnabled = true
                 case false:
-                    self?.rootView.confirmButton.updateType(.disabled)
+                    self.navigationItem.rightBarButtonItem?.isEnabled = false
                 }
             }
             .store(in: &cancellables)
-    }
-}
-
-extension WriteActiveTypeQuestViewController: BackNavigable {
-    func back() {
-        tabBarController?.tabBar.isHidden = true
-        
-        let action: (() -> Void) = {
-            self.navigationController?.popViewController(animated: true)
-            self.tabBarController?.tabBar.isHidden = false
-        }
-        
-        ModalBuilder(
-            modalView: QuitModalView(),
-            action: action,
-            rootViewController: self
-        ).present()
-    }
-}
-
-extension WriteActiveTypeQuestViewController: UIGestureRecognizerDelegate {
-    func gestureRecognizer(
-        _ agestureRecognizer: UIGestureRecognizer,
-        shouldReceive touch: UITouch)
-    -> Bool {
-        return true
     }
 }
 
@@ -399,14 +300,14 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
         rootView.imgCount = 1
         rootView.updateImageCountLabel(count: 1)
         rootView.imageContainer.changeIconHidden()
-        rootView.confirmButton.updateType(.disabled)
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
         
         if questAnswer.isEmpty {
             rootView.questTextField.textView.text = "꼭 적지 않아도 괜찮지만, 글로 정리해 보면 스스로에게 한 걸음 더 가까워질 수 있어요."
         }
         else {
             rootView.questTextField.textView.text = questAnswer
-            rootView.questTextField.textCount.text = "(\(questAnswer.count)/\(rootView.questTextField.limitCount))"
+            rootView.questTextField.textCountLabel.text = "(\(questAnswer.count)/\(rootView.questTextField.limitCount))"
             rootView.questTextField.isPlaceholderActive = false
         }
     }
@@ -415,13 +316,16 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
 extension WriteActiveTypeQuestViewController: QuestCompleteProtocol {
     func changeCount(count: Int) {
         if count == 1 {
-            rootView.confirmButton.updateType(.enabled)
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
         } else {
-            rootView.confirmButton.updateType(.disabled)
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
         }
     }
     
     func updateButtonWhenWriting(text: String) {
         viewModel.action(.textFieldEditing(answerText: self.answerText, text: text, imgCount: rootView.imgCount))
+        if isKeyboardUsed {
+            scrollCountLabelIfNeeded()
+        }
     }
 }

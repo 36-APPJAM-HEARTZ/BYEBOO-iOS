@@ -11,20 +11,21 @@ import UIKit
 enum ArchiveViewControllerEntryPoint {
     case mypage
     case questMain
+    case writeQuest
     case edit
 }
 
 final class ArchiveQuestViewController: BaseViewController {
         
     private var rootView = ArchiveQuestView(type: .activation)
-    private let viewModel: CompleteQuestViewModel
+    private let viewModel: ArchiveQuestViewModel
     private var cancellables = Set<AnyCancellable>()
     
     private var questID: Int = 1
     private var questType: QuestType = .activation
     var entryViewController: ArchiveViewControllerEntryPoint?
     
-    init(viewModel: CompleteQuestViewModel
+    init(viewModel: ArchiveQuestViewModel
     ) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -47,13 +48,24 @@ final class ArchiveQuestViewController: BaseViewController {
         super.viewDidLoad()
         self.navigationItem.hidesBackButton = true
         
-        ByeBooNavigationBar.makeNavigationBar(
-            navigationItem: self.navigationItem,
-            navigationController: self.navigationController,
-            type: .editAndClose(header: .black),
-            action: #selector(close),
-            secondAction: #selector(editButtonDidTap)
-        )
+        guard let entryViewController else { return }
+        switch entryViewController {
+        case .writeQuest:
+            ByeBooNavigationBar.makeNavigationBar(
+                navigationItem: self.navigationItem,
+                navigationController: self.navigationController,
+                type: .close(header: .black),
+                action: #selector(close)
+            )
+        case .mypage, .questMain, .edit:
+            ByeBooNavigationBar.makeNavigationBar(
+                navigationItem: self.navigationItem,
+                navigationController: self.navigationController,
+                type: .editAndClose(header: .black),
+                action: #selector(close),
+                secondAction: #selector(editButtonDidTap)
+            )
+        }
         viewModel.action(.questAnswerDidLoad(questID: questID))
         bind()
     }
@@ -66,8 +78,9 @@ extension ArchiveQuestViewController: ToastPresentable, ToastErrorHandler {
             .sink { [weak self] result in
                 switch result {
                 case .success(let entity):
-                    ByeBooLogger.debug("퀘스트 아이디 \(self?.questID)")
-                    self?.rootView.updateUI(entity)
+                    guard let self else { return }
+                    ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
+                    self.rootView.updateUI(entity)
                 case .failure(let error):
                     self?.handleError(error)
                 }
@@ -96,7 +109,7 @@ extension ArchiveQuestViewController: Dismissible {
         switch entryViewController {
         case .mypage, .questMain:
             self.navigationController?.popViewController(animated: true)
-        case .edit:
+        case .writeQuest, .edit:
             let viewController = ByeBooTabBar()
             viewController.selectedIndex = 1
             

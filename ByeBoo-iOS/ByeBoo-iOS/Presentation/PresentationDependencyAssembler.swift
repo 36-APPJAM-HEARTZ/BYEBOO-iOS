@@ -78,13 +78,13 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             )
         }
         
-        DIContainer.shared.register(type: CompleteQuestViewModel.self) { container in
+        DIContainer.shared.register(type: ArchiveQuestViewModel.self) { container in
             guard let questAnswerUseCase = container.resolve(type: QuestAnswerUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
-            return CompleteQuestViewModel(
+            return ArchiveQuestViewModel(
                 questAnswerCase: questAnswerUseCase
             )
         }
