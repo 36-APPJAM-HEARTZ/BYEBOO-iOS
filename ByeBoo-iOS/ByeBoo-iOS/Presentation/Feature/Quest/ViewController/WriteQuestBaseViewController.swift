@@ -102,12 +102,11 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
             return
         }
         keyboardFrameInWindow = keyboardFrame.cgRectValue
-        currentKeyboardOffset = 0
-        previousTextViewHeight = rootView.questTextView.bounds.height
         isKeyboardUsed = true
         
         DispatchQueue.main.async { [weak self] in
-            self?.adjustViewForKeyboard(mode: .caretTracking)
+            self?.applyKeyboardInset()
+            self?.scrollCountLabelIfNeeded()
         }
     }
     
@@ -115,9 +114,8 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
     private func textViewMoveDown(_ notification: NSNotification) {
         keyboardFrameInWindow = .zero
         currentKeyboardOffset = 0
-        previousTextViewHeight = 0
         UIView.animate(withDuration: 0.3) {
-            self.rootView.transform = .identity
+            self.rootView.scrollView.contentInset.bottom = 0
         }
         isKeyboardUsed = false
     }
@@ -129,70 +127,32 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
 }
 
 extension WriteQuestBaseViewController {
-    enum KeyboardAdjustMode {
-        case textGrowth
-        case caretTracking
+    func scrollCountLabelIfNeeded() {
+        let targetFrameInWindow = rootView.questCountLabelView.convert(rootView.questCountLabelView.bounds, to: nil)
+        guard keyboardOverlap(for: targetFrameInWindow) > 0 else { return }
+        
+        let targetRect = rootView.questCountLabelView.convert(rootView.questCountLabelView.bounds, to: rootView.scrollView)
+            .insetBy(dx: 0, dy: -24.adjustedH)
+        
+        rootView.scrollView.scrollRectToVisible(targetRect, animated: true)
     }
-    
-    func adjustViewForKeyboard(mode: KeyboardAdjustMode) {
-        guard isKeyboardUsed else { return }
-        guard !keyboardFrameInWindow.isEmpty else { return }
-        
-        switch mode {
-        case .textGrowth:
-            adjustViewForTextGrowth()
-        case .caretTracking:
-            adjustViewForCurrentCaret()
-        }
-    }
-    
-    private func adjustViewForTextGrowth() {
-        let currentHeight = rootView.questTextView.bounds.height
-        guard currentHeight > 0 else { return }
-        
-        if previousTextViewHeight == 0 {
-            previousTextViewHeight = currentHeight
-            return
-        }
-        
-        let diff = currentHeight - previousTextViewHeight
-        previousTextViewHeight = currentHeight
-        
-        guard abs(diff) > 0.5 else { return }
-        
-        let targetView = rootView.questCountLabelView
-        let targetViewFrameInWindow = targetView.convert(targetView.bounds, to: nil)
-        let overlap = keyboardOverlap(for: targetViewFrameInWindow)
-        let targetOffset = max(0, currentKeyboardOffset + overlap)
-        
-        applyKeyboardOffset(targetOffset)
-    }
-    
-    private func adjustViewForCurrentCaret() {
-        let textView = rootView.questTextView
-        guard textView.isFirstResponder,
-              let selectedRange = textView.selectedTextRange else { return }
-        
-        let caretRect = textView.caretRect(for: selectedRange.end)
-        let caretInWindow = textView.convert(caretRect, to: nil)
-        let overlap = keyboardOverlap(for: caretInWindow)
-        let targetOffset = max(0, overlap)
-        
-        applyKeyboardOffset(targetOffset)
-    }
-    
+
     private func keyboardOverlap(for rectInWindow: CGRect) -> CGFloat {
         let keyboardTop = keyboardFrameInWindow.minY
         let padding = 24.adjustedH
         return rectInWindow.maxY + padding - keyboardTop
     }
     
-    private func applyKeyboardOffset(_ targetOffset: CGFloat) {
+    private func applyKeyboardInset() {
+        let keyboardFrameInView = view.convert(keyboardFrameInWindow, from: nil)
+        let overlap = view.bounds.intersection(keyboardFrameInView).height
+        let targetOffset = max(0, overlap - view.safeAreaInsets.bottom)
+        
         guard abs(targetOffset - currentKeyboardOffset) > 0.5 else { return }
         currentKeyboardOffset = targetOffset
         
         UIView.animate(withDuration: 0.2) {
-            self.rootView.transform = CGAffineTransform(translationX: 0, y: -self.currentKeyboardOffset)
+            self.rootView.scrollView.contentInset.bottom = self.currentKeyboardOffset
         }
     }
 }
