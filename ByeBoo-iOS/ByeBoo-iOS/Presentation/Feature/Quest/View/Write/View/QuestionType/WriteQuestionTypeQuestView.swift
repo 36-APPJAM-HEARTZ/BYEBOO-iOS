@@ -69,7 +69,8 @@ final class WriteQuestionTypeQuestView: BaseView {
         contentView.snp.makeConstraints {
             $0.edges.equalTo(scrollView.contentLayoutGuide)
             $0.width.equalTo(scrollView.frameLayoutGuide)
-            $0.height.greaterThanOrEqualTo(scrollView.frameLayoutGuide)
+            $0.bottom.equalTo(questTextField.snp.bottom).offset(12.adjustedH)
+            $0.height.greaterThanOrEqualTo(scrollView.frameLayoutGuide).priority(250)
         }
         
         headerView.snp.makeConstraints {
