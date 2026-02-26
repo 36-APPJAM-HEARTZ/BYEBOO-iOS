@@ -184,6 +184,10 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
         
         return .init(viewModel: viewModel)
     }
+    
+    func makeBlockedUserListViewController() -> BlockedkUserListViewController {
+        .init(viewModel: BlockedUserListViewModel())
+    }
 }
 
 extension ViewControllerFactory {

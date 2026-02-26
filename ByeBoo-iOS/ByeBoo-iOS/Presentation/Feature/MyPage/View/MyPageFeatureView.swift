@@ -14,11 +14,11 @@ final class MyPageFeatureView: BaseView {
     private(set) var featureButtons: [UIButton] = []
     private(set) var noticeSwitch = UISwitch()
     
-    init(title: String, features: [MyPageDetailFeatureType]) {
-        titleLabel.text = title
+    init(type: MyPageFeatureType) {
+        titleLabel.text = type.rawValue
         super.init(frame: .zero)
         
-        setFeatures(features)
+        setFeatures(type.features)
     }
     
     required init?(coder: NSCoder) {
