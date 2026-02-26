@@ -55,7 +55,7 @@ final class QuestCardView: BaseView {
             style: .body6R14,
             color: .grayscale300,
             textAlignment: .center,
-            numberOfLines: 0
+            numberOfLines: 3
         )
     }
     
@@ -88,7 +88,7 @@ final class QuestCardView: BaseView {
             $0.top.equalTo(titleLabel.snp.bottom).offset(10.adjustedH)
             $0.centerX.equalToSuperview()
             $0.width.equalTo(114.adjustedW)
-            $0.height.equalTo(54.adjustedH)
+            $0.height.equalTo(63.adjustedH)
         }
     }
     

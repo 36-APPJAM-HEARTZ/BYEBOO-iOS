@@ -16,7 +16,7 @@ final class InformationViewModel {
     private(set) var output: Output
     
     private var currentNickname: String?
-    private var currentFeeling: Feeling?
+    private var currentFeeling: Feeling? = .exhausted
     private var currentQuestStyle: SelectQuestType?
     private var user: UserEntity = UserEntity(id: 1, name: "")
     

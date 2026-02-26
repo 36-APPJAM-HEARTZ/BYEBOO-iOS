@@ -36,7 +36,6 @@ final class InformationBaseView: BaseView {
         
         switch informationView {
         case let view as InputNicknameView: updateNicknameViewNextButton(view: view)
-        case let view as SelectEmotionView: updateEmotionViewNextButton(view: view)
         case let view as SelectQuestView: updateQuestViewNextButton(view: view)
         default: break
         }
@@ -107,17 +106,6 @@ extension InformationBaseView {
             }
             self?.nextButton.updateType(.disabled2)
         }
-    }
-    
-    private func updateEmotionViewNextButton(view: SelectEmotionView) {
-        view.emotionCardsView.emotionCards.forEach {
-            $0.onSelected = {
-                self.nextButton.updateType(.enabled)
-            }
-        }
-        
-        let hasSelected = view.emotionCardsView.emotionCards.contains { $0.isSelected }
-        updateButtonWhenBack(condition: hasSelected)
     }
     
     private func updateQuestViewNextButton(view: SelectQuestView) {

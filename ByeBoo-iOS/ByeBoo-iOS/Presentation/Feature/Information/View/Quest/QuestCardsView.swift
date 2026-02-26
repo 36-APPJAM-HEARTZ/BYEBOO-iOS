@@ -14,14 +14,14 @@ final class QuestCardsView: BaseView {
     
     private(set) var questCards = [
         QuestCardView(
-            title: "질문에 답하기",
-            subTitle: "질문을 통해 상황과 감정을 정리해요",
-            image: .book
+            title: "재회 준비",
+            subTitle: "X와의 재회를 위해\n나를 먼저 돌아보고\n상대를 이해해요",
+            image: .reunion
         ),
         QuestCardView(
-            title: "활동 인증하기",
-            subTitle: "작은 미션을 통해 몸과 마음을 가볍게 해요",
-            image: .shoe
+            title: "이별 극복",
+            subTitle: "질문과 미션을 통해\n나만의 삶을\n회복해 나가요",
+            image: .overcomingBreakup
         )
     ]
     

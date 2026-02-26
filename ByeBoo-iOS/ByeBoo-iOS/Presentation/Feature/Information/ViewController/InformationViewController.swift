@@ -13,7 +13,6 @@ import Mixpanel
 final class InformationViewController: BaseViewController {
     
     private let inputNicknameView = InputNicknameView()
-    private let selectEmotionView = SelectEmotionView(emotionCardsView: EmotionCardsView())
     private let selectQuestView = SelectQuestView(questCardsView: QuestCardsView())
     private lazy var informationBaseView = InformationBaseView(
         informationView: inputNicknameView,
@@ -81,7 +80,6 @@ extension InformationViewController {
     private func nextButtonDidTap() {
         switch informationBaseView.informationView {
         case is InputNicknameView: saveNickname()
-        case is SelectEmotionView: saveEmotion()
         case is SelectQuestView: saveQuest()
         default: break
         }
@@ -93,21 +91,7 @@ extension InformationViewController {
             viewModel.action(.nicknameButtonDidTap(nickname))
             Mixpanel.mainInstance().track(event: CommonEvents.Name.nicknameComplete)
         }
-        move(view: selectEmotionView, progress: .second)
-    }
-    
-    private func saveEmotion() {
-        let emotionCards = selectEmotionView.emotionCardsView.emotionCards
-        for (index, emotionCard) in emotionCards.enumerated() where emotionCard.isSelected {
-            if Feeling.allCases.indices.contains(index) {
-                let feeling = Feeling.allCases[index]
-                viewModel.action(.feelingButtonDidTap(feeling))
-                Mixpanel.mainInstance().track(event: CommonEvents.Name.currentEmotionComplete)
-                let userProperty = UserEvents.CurrentEmotionProperty(currentEmotion: feeling.mixpanelKey)
-                Mixpanel.mainInstance().people.set(properties: userProperty.dictionary)
-            }
-        }
-        move(view: selectQuestView, progress: .third)
+        move(view: selectQuestView, progress: .second)
     }
     
     private func saveQuest() {
@@ -184,8 +168,9 @@ extension InformationViewController {
         
         switch view {
         case is InputNicknameView: setTopNavigationBar(type: .none())
-        case is SelectEmotionView, is SelectQuestView: setTopNavigationBar(type: .back())
-        default: break
+        case is SelectQuestView: setTopNavigationBar(type: .back())
+        default:
+            break
         }
     }
 }
@@ -194,12 +179,9 @@ extension InformationViewController: BackNavigable {
     
     func back() {
         switch informationBaseView.informationView {
-        case is SelectEmotionView:
-            selectEmotionView.resetSelected()
-            move(view: inputNicknameView, progress: .first)
         case is SelectQuestView:
             selectQuestView.resetSelected()
-            move(view: selectEmotionView, progress: .second)
+            move(view: inputNicknameView, progress: .first)
         default:
             break
         }
