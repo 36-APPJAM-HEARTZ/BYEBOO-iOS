@@ -24,8 +24,6 @@ protocol ViewControllerFactoryProtocol {
     func makeQuestTipViewController() -> QuestTipViewController
     func makeWriteQuestionTypeQuestViewController() -> WriteQuestionTypeQuestViewController
     func makeWriteActiveTypeQuestViewController() -> WriteActiveTypeQuestViewController
-    func makeCompleteActiveTypeQuestViewController() -> CompleteActiveTypeQuestViewController
-    func makeCompleteQuestionTypeQuestViewController() -> CompleteQuestionTypeQuestViewController
     func makeFinishJourneyViewController() -> FinishJourneyViewController
 }
 
@@ -126,7 +124,7 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
     }
     
     func makeArchiveQuestViewController() -> ArchiveQuestViewController {
-        guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
+        guard let viewModel = DIContainer.shared.resolve(type: ArchiveQuestViewModel.self) else {
             DIErrorHandle()
             fatalError()
         }
@@ -155,22 +153,6 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
             fatalError()
         }
         return WriteActiveTypeQuestViewController(viewModel: viewModel)
-    }
-    
-    func makeCompleteActiveTypeQuestViewController() -> CompleteActiveTypeQuestViewController {
-        guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
-            DIErrorHandle()
-            fatalError()
-        }
-        return CompleteActiveTypeQuestViewController(viewModel: viewModel)
-    }
-    
-    func makeCompleteQuestionTypeQuestViewController() -> CompleteQuestionTypeQuestViewController {
-        guard let viewModel = DIContainer.shared.resolve(type: CompleteQuestViewModel.self) else {
-            DIErrorHandle()
-            fatalError()
-        }
-        return CompleteQuestionTypeQuestViewController(viewModel: viewModel)
     }
     
     func makeFinishJourneyViewController() -> FinishJourneyViewController {
@@ -214,6 +196,8 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
         }
         
         return .init(viewModel: viewModel)
+    func makeBlockedUserListViewController() -> BlockedkUserListViewController {
+        .init(viewModel: BlockedUserListViewModel())
     }
 }
 

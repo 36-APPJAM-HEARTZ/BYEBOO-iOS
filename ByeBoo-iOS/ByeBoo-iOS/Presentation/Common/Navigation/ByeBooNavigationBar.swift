@@ -22,6 +22,7 @@ enum NavigationBarType: Equatable {
     case titleAndClose(String, header: NavigationHeaderType = .clear)
     case titleAndBack(String, header: NavigationHeaderType = .clear)
     case editAndClose(header: NavigationHeaderType = .clear)
+    case confirmAndBack(String, header: NavigationHeaderType = .clear)
     case none(header: NavigationHeaderType = .clear)
 }
 
@@ -78,7 +79,8 @@ struct ByeBooNavigationBar {
                 .title(_, let header),
                 .titleAndClose(_, let header),
                 .editAndClose(let header),
-                .titleAndBack(_, let header):
+                .titleAndBack(_, let header),
+                .confirmAndBack(_, let header):
             headerType = header
         }
         return headerType
@@ -97,6 +99,16 @@ struct ByeBooNavigationBar {
             $0.titleTextAttributes = [
                 .font: FontManager.sub1Sb20.font,
                 .foregroundColor: UIColor.white
+            ]
+            
+            $0.buttonAppearance.normal.titleTextAttributes = [
+                .font: FontManager.body2M16.font,
+                .foregroundColor: UIColor.primary300
+            ]
+            
+            $0.buttonAppearance.disabled.titleTextAttributes = [
+                .font: FontManager.body2M16.font,
+                .foregroundColor: UIColor.grayscale600
             ]
         }
         return barAppearance
@@ -174,6 +186,19 @@ struct ByeBooNavigationBar {
                 navigationItem: navigationItem,
                 action: action
             )
+        case .confirmAndBack:
+            let backButtonItem = makeBarButtonItem(
+                image: .left.withTintColor(.white),
+                target: topViewController,
+                action: action
+            )
+            let confirmButtonItem = makeBarButtonItem(
+                title: "완료",
+                target: topViewController,
+                action: secondAction
+            )
+            navigationItem.leftBarButtonItem = backButtonItem
+            navigationItem.rightBarButtonItem = confirmButtonItem
         case .none:
             let emptyItem = makeBarButtonItem(
                 image: UIImage(),
@@ -195,12 +220,31 @@ struct ByeBooNavigationBar {
     }
     
     private static func makeBarButtonItem(
-        image: UIImage,
+        image: UIImage? = nil,
+        title: String? = nil,
         target: BaseViewController,
         action: Selector?
     ) -> UIBarButtonItem {
+        if let image {
+            return UIBarButtonItem(
+                image: image.withTintColor(.white).withRenderingMode(.alwaysOriginal),
+                style: .plain,
+                target: target,
+                action: action
+            )
+        }
+        
+        if let title {
+            return UIBarButtonItem(
+                title: title,
+                style: .plain,
+                target: target,
+                action: action
+            )
+        }
+        
         return UIBarButtonItem(
-            image: image.withTintColor(.white).withRenderingMode(.alwaysOriginal),
+            title: "기본",
             style: .plain,
             target: target,
             action: action

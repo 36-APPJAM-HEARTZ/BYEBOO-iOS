@@ -14,6 +14,8 @@ enum ExternalLink: String {
     case makeService = "https://forms.gle/BA77gAgZ1NCatart5"
     case serviceTerm = "https://lively-mars-3b7.notion.site/24cab823e68d801aac95ec5d0389d192"
     case privacyPolicy = "https://lively-mars-3b7.notion.site/24cab823e68d80a19ab1fbf87d6cfbc3"
+    case openChattingRoom = "https://open.kakao.com/o/p74inNhi"
+    case instagram = "https://www.instagram.com/byeboo.official"
     
     func openURL(for rootViewController: UIViewController) {
         guard let url = URL(string: self.rawValue) else {

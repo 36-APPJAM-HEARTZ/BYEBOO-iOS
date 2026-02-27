@@ -14,11 +14,7 @@ protocol ToastPresentable: AnyObject {
 extension ToastPresentable where Self: BaseViewController {
     
     func presentToastMessage(type: ToastMessageType) {
-        let toastMessageView = ToastMessageView(
-            image: type.image,
-            text: type.text
-        )
-        
+        let toastMessageView = ToastMessageView(type: type)
         setUI(toastMessageView)
         setLayout(toastMessageView)
         
@@ -33,7 +29,7 @@ extension ToastPresentable where Self: BaseViewController {
     
     private func setLayout(_ view: ToastMessageView) {
         view.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(104.adjustedH)
         }
     }
