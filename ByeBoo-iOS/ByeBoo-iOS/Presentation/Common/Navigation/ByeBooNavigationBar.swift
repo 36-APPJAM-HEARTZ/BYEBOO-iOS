@@ -16,6 +16,7 @@ enum NavigationHeaderType {
 
 enum NavigationBarType: Equatable {
     case back(header: NavigationHeaderType = .clear)
+    case backAndMenu(header: NavigationHeaderType = .clear)
     case title(String, header: NavigationHeaderType = .clear)
     case close(header: NavigationHeaderType = .clear)
     case titleAndClose(String, header: NavigationHeaderType = .clear)
@@ -72,13 +73,14 @@ struct ByeBooNavigationBar {
         
         switch barType {
         case .back(let header),
-             .close(let header),
-             .none(let header),
-             .title(_, let header),
-             .titleAndClose(_, let header),
-             .editAndClose(let header),
-             .titleAndBack(_, let header),
-             .confirmAndBack(_, let header):
+                .backAndMenu(let header),
+                .close(let header),
+                .none(let header),
+                .title(_, let header),
+                .titleAndClose(_, let header),
+                .editAndClose(let header),
+                .titleAndBack(_, let header),
+                .confirmAndBack(_, let header):
             headerType = header
         }
         return headerType
@@ -128,11 +130,25 @@ struct ByeBooNavigationBar {
             )
             navigationItem.leftBarButtonItem = backButtonItem
             
+        case .backAndMenu:
+            let backButtonItem = makeBarButtonItem(
+                image: .left.withTintColor(.white),
+                target: topViewController,
+                action: action
+            )
+            navigationItem.leftBarButtonItem = backButtonItem
+            makeTopRightButtonItem(
+                image: .menu,
+                target: topViewController,
+                navigationItem: navigationItem,
+                action: secondAction
+            )
+            
         case .title(let string, _):
             navigationItem.title = string
             
         case .close:
-            makeCloseButtonItem(
+            makeTopRightButtonItem(
                 image: .xicon,
                 target: topViewController,
                 navigationItem: navigationItem,
@@ -141,7 +157,7 @@ struct ByeBooNavigationBar {
             
         case .titleAndClose(let string, _):
             navigationItem.title = string
-            makeCloseButtonItem(
+            makeTopRightButtonItem(
                 image: .xicon,
                 target: topViewController,
                 navigationItem: navigationItem,
@@ -164,7 +180,7 @@ struct ByeBooNavigationBar {
                 action: secondAction
             )
             navigationItem.leftBarButtonItem = editButtonItem
-            makeCloseButtonItem(
+            makeTopRightButtonItem(
                 image: .xicon,
                 target: topViewController,
                 navigationItem: navigationItem,
@@ -234,8 +250,8 @@ struct ByeBooNavigationBar {
             action: action
         )
     }
-
-    private static func makeCloseButtonItem(
+    
+    private static func makeTopRightButtonItem(
         image: UIImage,
         target: BaseViewController,
         navigationItem: UINavigationItem,
