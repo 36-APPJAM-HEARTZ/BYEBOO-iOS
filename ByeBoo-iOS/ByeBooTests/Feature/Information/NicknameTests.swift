@@ -61,8 +61,18 @@ struct NicknameTests {
         arguments: ["허승준", "123", "Atom", "허1a"]
     )
     func isValidNickname__true(nickname: String) async {
-        let result = checkValidNicknameUseCase.execute(nickname: nickname)
+        let result = checkValidNicknameUseCase.isValidRegulation(nickname: nickname)
         
         #expect(result == true)
+    }
+    
+    @Test(
+        "🏁 설정 불가한 닉네임을 입력한 경우 ✅ true",
+        arguments: ["admin", "master", "test", "운영자", "관리자"]
+    )
+    func isPermittedNickname__false(nickname: String) async {
+        let result = checkValidNicknameUseCase.isPermitteed(nickname: nickname)
+        
+        #expect(result == false)
     }
 }
