@@ -18,7 +18,9 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         preAssembler.assemble()
         
         guard let getUserNameUseCase = DIContainer.shared.resolve(type: GetUserNameUseCase.self),
-              let fetchUserJourneyUseCase = DIContainer.shared.resolve(type: FetchUserJourneyUseCase.self) else {
+              let fetchUserJourneyUseCase = DIContainer.shared.resolve(type: FetchUserJourneyUseCase.self),
+              let isForbiddenWordUseCase = DIContainer.shared.resolve(type: IsForbiddenWordUseCase.self)
+        else {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             return
         }
@@ -66,13 +68,15 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: InformationViewModel.self) { container in
             guard let sendUserUseCase = container.resolve(type: SendUserUseCase.self),
-                  let checkValidNicknameUseCase = container.resolve(type: CheckValidNicknameUseCase.self) else {
+                  let checkValidNicknameUseCase = container.resolve(type: CheckValidNicknameUseCase.self)
+            else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
             return InformationViewModel(
                 checkValidNicknameUseCase: checkValidNicknameUseCase,
+                isForbiddenWordUseCase: isForbiddenWordUseCase,
                 sendUserUseCase: sendUserUseCase,
                 getUserNameUseCase: getUserNameUseCase
             )
@@ -208,6 +212,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             
             return ModifyNicknameViewModel(
                 checkValidNicknameUseCase: checkValidNicknameUseCase,
+                isForbiddenWordUseCase: isForbiddenWordUseCase,
                 modifyNicknameUseCase: modifyNicknameUseCase
             )
         }

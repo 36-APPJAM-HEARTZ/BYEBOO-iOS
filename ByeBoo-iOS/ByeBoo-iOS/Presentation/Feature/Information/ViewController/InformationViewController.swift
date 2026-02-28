@@ -91,7 +91,6 @@ extension InformationViewController {
             viewModel.action(.nicknameButtonDidTap(nickname))
             Mixpanel.mainInstance().track(event: CommonEvents.Name.nicknameComplete)
         }
-        move(view: selectQuestView, progress: .second)
     }
     
     private func saveQuest() {
@@ -138,6 +137,19 @@ extension InformationViewController: ToastPresentable, ToastErrorHandler {
                 }
                 self?.inputNicknameView.nicknameTextField.changeNicknameState(text: text, isValid: result)
                 self?.informationBaseView.updateButtonWhenBack(condition: result)
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.isForbiddenWordPublisher
+            .sink { [weak self] result in
+                guard let self else { return }
+                
+                switch result {
+                case .success:
+                    move(view: selectQuestView, progress: .second)
+                case .failure(let error):
+                    handleError(error)
+                }
             }
             .store(in: &cancellables)
     }

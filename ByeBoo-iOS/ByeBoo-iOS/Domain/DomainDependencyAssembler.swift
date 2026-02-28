@@ -19,7 +19,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         
         guard let userRepository = DIContainer.shared.resolve(type: UsersInterface.self),
               let questRepository = DIContainer.shared.resolve(type: QuestsInterface.self),
-              let authRepository = DIContainer.shared.resolve(type: AuthInterface.self) else {
+              let authRepository = DIContainer.shared.resolve(type: AuthInterface.self),
+              let forbiddenWordRepository = DIContainer.shared.resolve(type: ForbiddenWordInterface.self)
+        else {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             return
         }
@@ -162,6 +164,10 @@ struct DomainDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: CheckAlarmEnabledUseCase.self) { _ in
             return DefaultCheckAlarmEnabledUseCase(repository: userRepository)
+        }
+        
+        DIContainer.shared.register(type: IsForbiddenWordUseCase.self) { _ in
+            return DefaultIsForbiddenWordUseCase(repository: forbiddenWordRepository)
         }
     }
 }
