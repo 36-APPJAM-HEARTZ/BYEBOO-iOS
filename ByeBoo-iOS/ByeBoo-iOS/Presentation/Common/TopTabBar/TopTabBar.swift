@@ -54,7 +54,12 @@ final class TopTabBar: UIStackView {
 }
 
 extension TopTabBar {
-    
+    func select(index: Int) {
+         guard itemViews.indices.contains(index) else { return }
+         didTap?(index)
+         updateTabBar(tag: index)
+     }
+
     @objc
     private func barDidTap(_ sender: UITapGestureRecognizer) {
         guard let tag = sender.view?.tag else {

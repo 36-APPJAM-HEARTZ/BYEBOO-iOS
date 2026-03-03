@@ -41,10 +41,16 @@ final class ParentQuestViewController<T: TabItem>: BaseViewController {
             containerView
         )
     }
+    
+    func selectTab(index: Int) {
+        guard controllers.indices.contains(index) else { return }
+        show(controllers[index])
+        tabBar.select(index: index)
+    }
 }
 
 extension ParentQuestViewController {
-
+    
     private func setLayout() {
         tabBar.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(20.adjustedH)
