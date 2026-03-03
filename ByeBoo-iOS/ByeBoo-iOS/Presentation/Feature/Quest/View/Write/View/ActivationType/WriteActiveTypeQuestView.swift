@@ -180,7 +180,7 @@ extension WriteActiveTypeQuestView: WriteQuestBaseProtocol {
         questTextField.textCountLabel
     }
     var tipTagView: UIView {
-        headerView.tipTag
+        headerView.tipTag ?? UIView()
     }
 }
 

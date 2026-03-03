@@ -14,7 +14,7 @@ final class WriteQuestionTypeQuestView: BaseView {
     private let questScope: QuestScope
     private(set) var scrollView = UIScrollView()
     private let contentView = UIView()
-    private(set) var headerView = WriteQuestTitleView(questScope: .personal, questNum: 0, title: "")
+    private(set) var headerView = WriteQuestTitleView(questNum: 0, title: "")
     private let divider = UIView()
     private(set) var questTextField = QuestTextField(type: .question)
     
@@ -100,7 +100,7 @@ extension WriteQuestionTypeQuestView: WriteQuestBaseProtocol {
         questTextField.textCountLabel
     }
     var tipTagView: UIView {
-        headerView.tipTag
+        headerView.tipTag ?? UIView()
     }
 }
 
@@ -108,7 +108,6 @@ extension WriteQuestionTypeQuestView {
     func updateQuestTitle(
         questScope: QuestScope,
         questNumber: Int,
-        questStyle: String,
         question: String
     ) {
         headerView.bind(
