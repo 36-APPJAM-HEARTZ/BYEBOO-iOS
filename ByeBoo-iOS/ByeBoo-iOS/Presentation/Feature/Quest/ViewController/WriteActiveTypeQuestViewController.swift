@@ -85,7 +85,7 @@ final class WriteActiveTypeQuestViewController: WriteQuestBaseViewController<Wri
         }
         
         if questMode == .edit {
-            saveQuest()
+            saveQuest(isEdit: true, isCommonQuest: nil)
         } else {
             ByeBooLogger.debug(questID)
             bottomSheetViewController.bind(questNumber: questID, questType: questType)
@@ -246,7 +246,7 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
         self.emotionState = emotionState.key
     }
     
-    func saveQuest() {
+    func saveQuest(isEdit: Bool, isCommonQuest: Bool?) {
         var finalImageKey: String = ""
         
         if questMode == .edit && isImageChanged {
@@ -266,7 +266,7 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
             emotionState: self.emotionState,
             image: self.image,
             imageKey: finalImageKey.isEmpty ? originalImageKey : finalImageKey,
-            isEdit: questMode == .edit ? true : false,
+            isEdit: isEdit,
             isImageChanged: isImageChanged
         )
         )

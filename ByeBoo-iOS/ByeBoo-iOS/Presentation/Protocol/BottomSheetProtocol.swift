@@ -9,5 +9,5 @@ import Foundation
 
 protocol BottomSheetProtocol: AnyObject {
     func saveEmotionState(emotionState: ByeBooEmotion)
-    func saveQuest()
+    func saveQuest(isEdit: Bool, isCommonQuest: Bool?)
 }

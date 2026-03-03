@@ -18,6 +18,7 @@ struct WriteQuestionTypeViewModel: ViewModelType {
     private let getQuestInfoUseCase: GetQuestInfoUseCase
     private let editQuestTypeUseCase: EditQuestTypeUseCase
     private let isValidQuestAnswerUseCase: IsValidQuestAnswerUseCase
+    private let saveCommonQuestUseCase: SaveCommonQuestUseCase
     
     private let questInfoResultSubject: PassthroughSubject<Result<QuestInfoEntity, ByeBooError>, Never> = .init()
     private let questInfoWhenEditModeSubject: PassthroughSubject<Result<QuestInfoEntity, ByeBooError>, Never> = .init()
@@ -29,13 +30,15 @@ struct WriteQuestionTypeViewModel: ViewModelType {
         saveQuestTypeUseCase:  SaveQuestTypeUseCase,
         getQuestInfoUseCase: GetQuestInfoUseCase,
         editQuestTypeUseCase: EditQuestTypeUseCase,
-        isValidQuestAnswerUseCase: IsValidQuestAnswerUseCase
+        isValidQuestAnswerUseCase: IsValidQuestAnswerUseCase,
+        saveCommonQuestUseCase: SaveCommonQuestUseCase
         
     ){
         self.saveQuestTypeUseCase = saveQuestTypeUseCase
         self.getQuestInfoUseCase = getQuestInfoUseCase
         self.editQuestTypeUseCase = editQuestTypeUseCase
         self.isValidQuestAnswerUseCase = isValidQuestAnswerUseCase
+        self.saveCommonQuestUseCase = saveCommonQuestUseCase
         
         output = Output(
             questInfoResultPublisher: questInfoResultSubject.eraseToAnyPublisher(),
@@ -50,7 +53,7 @@ struct WriteQuestionTypeViewModel: ViewModelType {
 extension WriteQuestionTypeViewModel {
     enum Input {
         case viewDidLoad(quesetID: Int)
-        case presentCompleteView(questID: Int, answer: String, emotionState: String?, isEdit: Bool)
+        case saveQuest(questID: Int, answer: String, emotionState: String?, isEdit: Bool, isCommonQuest: Bool)
         case viewDidLoadWhenEditMode(questID: Int)
         case textFieldEditing(answerText: String, text: String)
     }
@@ -67,18 +70,31 @@ extension WriteQuestionTypeViewModel {
         switch trigger {
         case .viewDidLoad(let questID), .viewDidLoadWhenEditMode(let questID):
             getQuestInfo(questID: questID)
-        case let .presentCompleteView(
+        case let .saveQuest(
             questID,
             answer,
             emotionState,
-            isEdit
+            isEdit,
+            isCommonQuest
         ):
+            if isCommonQuest {
+                if isEdit {
+                    // 수정 api 연결
+                } else {
+                    saveCommonQuest(questID: questID, answer: answer)
+                }
+                return
+            }
+            
             if isEdit {
                 editQuestType(questID: questID, answer: answer)
-            } else {
-                guard let emotionState = emotionState else { return }
-                postQuestType(questID: questID, answer: answer, emotionState: emotionState)
+                return
             }
+            
+            guard let emotionState else { return }
+            postQuestType(questID: questID, answer: answer, emotionState: emotionState)
+            
+            
         case .textFieldEditing(let answerText, let text):
             isValidText(previousText: answerText, changingText: text)
         }
@@ -125,6 +141,21 @@ extension WriteQuestionTypeViewModel {
                     return
                 }
                 didSuccessEditSubject.send(.failure(error as ByeBooError))
+                ByeBooLogger.error(error)
+            }
+        }
+    }
+    
+    private func saveCommonQuest(questID: Int, answer: String) {
+        Task {
+            do {
+                try await saveCommonQuestUseCase.execute(questID: questID, answer: answer)
+                didSuccessPostSubject.send(.success(()))
+            } catch {
+                guard let error = error as? ByeBooError else {
+                    return
+                }
+                didSuccessPostSubject.send(.failure(error as ByeBooError))
                 ByeBooLogger.error(error)
             }
         }

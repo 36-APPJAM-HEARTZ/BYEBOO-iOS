@@ -78,7 +78,7 @@ final class EmotionBottomSheetViewController: BaseViewController {
         }
         
         self.delegate?.saveEmotionState(emotionState: selectedEmotion)
-        self.delegate?.saveQuest()
+        self.delegate?.saveQuest(isEdit: false, isCommonQuest: false)
         rootView.confirmButton.isEnabled = false
         
         let property = QuestEvents.QuestWriteFinishWithEmotionProperty(
