@@ -1,5 +1,5 @@
 //
-//  isValidQuestAnswerUseCase.swift
+//  IsValidQuestAnswerUseCase.swift
 //  ByeBoo-iOS
 //
 //  Created by 이나연 on 12/4/25.

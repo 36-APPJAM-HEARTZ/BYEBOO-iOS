@@ -72,7 +72,7 @@ final class CommonQuestContentCell: UITableViewCell {
     }
     
     private func setUI() {
-       addSubviews(
+        contentView.addSubviews(
             questionView,
             guideTimeLabel,
             moveWriteAnswerButton,

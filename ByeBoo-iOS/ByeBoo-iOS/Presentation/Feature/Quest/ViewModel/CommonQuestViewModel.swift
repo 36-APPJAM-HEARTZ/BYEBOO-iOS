@@ -58,6 +58,10 @@ extension CommonQuestViewModel {
         commonQuest?.question ?? ""
     }
     
+    var questID: Int {
+        commonQuest?.questID ?? 1 
+    }
+    
     var answersCount: Int {
         commonQuest?.answerCount ?? 0
     }

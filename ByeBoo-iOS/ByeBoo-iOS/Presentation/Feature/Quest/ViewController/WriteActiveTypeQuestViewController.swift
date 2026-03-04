@@ -85,7 +85,7 @@ final class WriteActiveTypeQuestViewController: WriteQuestBaseViewController<Wri
         }
         
         if questMode == .edit {
-            saveQuest()
+            saveQuest(isEdit: true, isCommonQuest: nil)
         } else {
             ByeBooLogger.debug(questID)
             bottomSheetViewController.bind(questNumber: questID, questType: questType)
@@ -130,7 +130,6 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                     self?.questNumber = quest.questNumber
                     self?.rootView.updateQuestTitle(
                         questNumber: quest.questNumber,
-                        questStyle: quest.questStyle,
                         question: quest.question
                     )
                 case .failure(let error):
@@ -176,7 +175,6 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                 case .success(let quest):
                     self?.rootView.updateQuestTitle(
                         questNumber: quest.questNumber,
-                        questStyle: quest.questStyle,
                         question: quest.question
                     )
                 case .failure(let error):
@@ -246,7 +244,7 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
         self.emotionState = emotionState.key
     }
     
-    func saveQuest() {
+    func saveQuest(isEdit: Bool, isCommonQuest: Bool?) {
         var finalImageKey: String = ""
         
         if questMode == .edit && isImageChanged {
@@ -266,7 +264,7 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
             emotionState: self.emotionState,
             image: self.image,
             imageKey: finalImageKey.isEmpty ? originalImageKey : finalImageKey,
-            isEdit: questMode == .edit ? true : false,
+            isEdit: isEdit,
             isImageChanged: isImageChanged
         )
         )
@@ -274,10 +272,17 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
 }
 
 extension WriteActiveTypeQuestViewController {
-    func configure(_ questID: Int, _ questNumber: Int, _ questType: QuestType) {
+    func configure(_ questID: Int, _ questNumber: Int, _ questType: QuestType, _ questionTitle: String?) {
         self.questID = questID
         self.questNumber = questNumber
         self.questType = questType
+        
+        self.questType = questType
+        rootView.updateQuestTitle(
+            questScope: .personal,
+            questNumber: self.questNumber,
+            question: questionTitle ?? ""
+        )
     }
 }
 

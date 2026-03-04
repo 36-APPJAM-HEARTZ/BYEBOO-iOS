@@ -16,13 +16,16 @@ final class ModifyNicknameViewModel: ViewModelType {
     private(set) var output: Output
     
     private let checkValidNicknameUseCase: CheckValidNicknameUseCase
+    private let isForbiddenWordUseCase: IsForbiddenWordUseCase
     private let modifyNicknameUseCase: ModifyNicknameUseCase
     
     init(
         checkValidNicknameUseCase: CheckValidNicknameUseCase,
+        isForbiddenWordUseCase: IsForbiddenWordUseCase,
         modifyNicknameUseCase: ModifyNicknameUseCase
     ) {
         self.checkValidNicknameUseCase = checkValidNicknameUseCase
+        self.isForbiddenWordUseCase = isForbiddenWordUseCase
         self.modifyNicknameUseCase = modifyNicknameUseCase
         
         output = Output(
@@ -34,7 +37,7 @@ final class ModifyNicknameViewModel: ViewModelType {
     func action(_ trigger: Input) {
         switch trigger {
         case .editingNickname(let name):
-            let isValidNickname = checkValidNicknameUseCase.execute(nickname: name)
+            let isValidNickname = checkValidNicknameUseCase.isValidRegulation(nickname: name)
             checkValidNameSubject.send(isValidNickname)
         case .modifyNameDidTap(let name):
             modifyUserName(name: name)
@@ -58,6 +61,12 @@ extension ModifyNicknameViewModel {
 extension ModifyNicknameViewModel {
     
     private func modifyUserName(name: String) {
+        if isForbiddenWordUseCase.execute(word: name) ||
+           !checkValidNicknameUseCase.isPermitteed(nickname: name) {
+            userNameSubject.send(.failure(.nicknameViolation))
+            return
+        }
+        
         Task {
             do {
                 let name = try await modifyNicknameUseCase.execute(name: name)

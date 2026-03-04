@@ -34,6 +34,6 @@ struct ModalBuilder {
     }
     
     func dismiss() {
-        modalViewController.dismiss(animated: false)
+        modalViewController.dismiss(animated: true)
     }
 }

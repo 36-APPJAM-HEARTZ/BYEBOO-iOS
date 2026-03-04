@@ -17,7 +17,7 @@ enum ArchiveViewControllerEntryPoint {
 
 final class ArchiveQuestViewController: BaseViewController {
         
-    private var rootView = ArchiveQuestView(type: .activation)
+    private var rootView = ArchiveQuestView(type: .question)
     private let viewModel: ArchiveQuestViewModel
     private var cancellables = Set<AnyCancellable>()
     

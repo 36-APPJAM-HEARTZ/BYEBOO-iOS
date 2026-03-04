@@ -75,7 +75,7 @@ final class ArchiveQuestHeaderView: BaseView {
                 color: .grayscale100,
                 numberOfLines: 0
             )
-            $0.lineBreakMode = .byWordWrapping
+            $0.lineBreakStrategy = .hangulWordPriority 
         }
     }
     

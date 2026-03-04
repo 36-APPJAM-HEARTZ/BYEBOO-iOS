@@ -77,14 +77,14 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     
     private func moveToWriteQuestion(questID: Int, questNumber: Int, questType: QuestType) {
         let questionQuestViewController = ViewControllerFactory.shared.makeWriteQuestionTypeQuestViewController()
-        questionQuestViewController.configure(questID, questNumber, questType)
+        questionQuestViewController.configure(questID, questNumber, questType, nil)
         rootViewController?.tabBarController?.tabBar.isHidden = true
         rootViewController?.navigationController?.pushViewController(questionQuestViewController, animated: false)
     }
     
     private func moveToWriteActivity(questID: Int, questNumber: Int, questType: QuestType) {
         let activationQuestViewController = ViewControllerFactory.shared.makeWriteActiveTypeQuestViewController()
-        activationQuestViewController.configure(questID, questNumber, questType)
+        activationQuestViewController.configure(questID, questNumber, questType, nil)
         rootViewController?.tabBarController?.tabBar.isHidden = true
         rootViewController?.navigationController?.pushViewController(activationQuestViewController, animated: false)
     }

@@ -18,7 +18,9 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         preAssembler.assemble()
         
         guard let getUserNameUseCase = DIContainer.shared.resolve(type: GetUserNameUseCase.self),
-              let fetchUserJourneyUseCase = DIContainer.shared.resolve(type: FetchUserJourneyUseCase.self) else {
+              let fetchUserJourneyUseCase = DIContainer.shared.resolve(type: FetchUserJourneyUseCase.self),
+              let isForbiddenWordUseCase = DIContainer.shared.resolve(type: IsForbiddenWordUseCase.self)
+        else {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             return
         }
@@ -34,7 +36,10 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             guard let getQuestInfoUseCase = container.resolve(type: GetQuestInfoUseCase.self),
                   let saveQuestTypeUseCase = container.resolve(type: SaveQuestTypeUseCase.self),
                   let editQuestTypeUseCase = container.resolve(type: EditQuestTypeUseCase.self),
-                  let isValidQuestAnswerUseCase = container.resolve(type: IsValidQuestAnswerUseCase.self) else {
+                  let isValidQuestAnswerUseCase = container.resolve(type: IsValidQuestAnswerUseCase.self),
+                  let saveCommonQuestUseCase = container.resolve(type: SaveCommonQuestUseCase.self),
+                  let isForbbidenWordUseCoase = container.resolve(type: IsForbiddenWordUseCase.self)
+            else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -42,7 +47,10 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 saveQuestTypeUseCase: saveQuestTypeUseCase,
                 getQuestInfoUseCase: getQuestInfoUseCase,
                 editQuestTypeUseCase: editQuestTypeUseCase,
-                isValidQuestAnswerUseCase: isValidQuestAnswerUseCase
+                isValidQuestAnswerUseCase: isValidQuestAnswerUseCase,
+                saveCommonQuestUseCase: saveCommonQuestUseCase,
+                isForbiddenWordUseCase: isForbiddenWordUseCase
+                
             )
         }
         
@@ -66,13 +74,15 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: InformationViewModel.self) { container in
             guard let sendUserUseCase = container.resolve(type: SendUserUseCase.self),
-                  let checkValidNicknameUseCase = container.resolve(type: CheckValidNicknameUseCase.self) else {
+                  let checkValidNicknameUseCase = container.resolve(type: CheckValidNicknameUseCase.self)
+            else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
             return InformationViewModel(
                 checkValidNicknameUseCase: checkValidNicknameUseCase,
+                isForbiddenWordUseCase: isForbiddenWordUseCase,
                 sendUserUseCase: sendUserUseCase,
                 getUserNameUseCase: getUserNameUseCase
             )
@@ -210,6 +220,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             
             return ModifyNicknameViewModel(
                 checkValidNicknameUseCase: checkValidNicknameUseCase,
+                isForbiddenWordUseCase: isForbiddenWordUseCase,
                 modifyNicknameUseCase: modifyNicknameUseCase
             )
         }
