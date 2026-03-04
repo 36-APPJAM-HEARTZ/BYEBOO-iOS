@@ -131,11 +131,21 @@ struct DefaultQuestRepository: QuestsInterface {
         return result.toEntity()
     }
     
-    func fetchAIAnswer(questID: Int) async throws -> AIAnswerEntity {
-        let result = try await network.request(
-            QuestAPI.fetchAIAnswer(questID: questID),
-            decodingType: AIAnswerResponseDTO.self
-        )
+    func fetchAIAnswer(questID: Int, isAnswerExists: Bool) async throws -> AIAnswerEntity {
+        let result: AIAnswerResponseDTO
+        
+        if isAnswerExists {
+            result = try await network.request(
+                QuestAPI.fetchAIAnswer(questID: questID),
+                decodingType: AIAnswerResponseDTO.self
+            )
+        } else {
+            result = try await network.request(
+                QuestAPI.createAIAnswer(questID: questID),
+                decodingType: AIAnswerResponseDTO.self
+            )
+        }
+        
         return result.toEntity()
     }
     
@@ -249,13 +259,9 @@ final class MockQuestsRepository: QuestsInterface {
         .stub()
     }
     
-    func createAIAnswer(questID: Int) async throws -> AIAnswerEntity {
+    func fetchAIAnswer(questID: Int, isAnswerExists: Bool) async throws -> AIAnswerEntity {
         try await Task.sleep(for: .seconds(2))
         throw ByeBooError.unknownError
 //        .stub()
-    }
-    
-    func fetchAIAnswer(questID: Int) async throws -> AIAnswerEntity {
-        .stub()
     }
 }

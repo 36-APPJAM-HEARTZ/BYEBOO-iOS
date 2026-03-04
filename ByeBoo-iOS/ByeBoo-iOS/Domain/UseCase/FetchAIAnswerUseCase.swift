@@ -17,10 +17,6 @@ struct DefaultFetchAIAnswerUseCase: FetchAIAnswerUseCase {
     }
     
     func execute(questID: Int, isAnswerExists: Bool) async throws -> AIAnswerEntity {
-        if !isAnswerExists {
-            try await repository.createAIAnswer(questID: questID)
-        } else {
-            try await repository.fetchAIAnswer(questID: questID)
-        }
+        try await repository.fetchAIAnswer(questID: questID, isAnswerExists: isAnswerExists)
     }
 }
