@@ -67,7 +67,7 @@ enum ByeBooError: Error, LocalizedError, Equatable {
         case .fileNotFound:
             return "파일을 찾을 수 없음"
         case .nicknameViolation:
-            return nil
+            return "비속어나 부적절한 단어가 포함된 닉네임"
         }
     }
 }
