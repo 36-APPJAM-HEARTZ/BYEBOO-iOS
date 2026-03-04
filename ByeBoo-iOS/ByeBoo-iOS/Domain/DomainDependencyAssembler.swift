@@ -20,7 +20,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
         guard let userRepository = DIContainer.shared.resolve(type: UsersInterface.self),
               let questRepository = DIContainer.shared.resolve(type: QuestsInterface.self),
               let authRepository = DIContainer.shared.resolve(type: AuthInterface.self),
-              let forbiddenWordRepository = DIContainer.shared.resolve(type: ForbiddenWordInterface.self)
+              let forbiddenWordRepository = DIContainer.shared.resolve(type: ForbiddenWordInterface.self),
               let commonQuestRepository = DIContainer.shared.resolve(type: CommonQuestInterface.self) else {
                   ByeBooLogger.error(ByeBooError.DIFailedError)
                   return
