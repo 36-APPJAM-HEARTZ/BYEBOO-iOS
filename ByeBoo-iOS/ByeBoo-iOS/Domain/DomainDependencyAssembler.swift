@@ -20,11 +20,11 @@ struct DomainDependencyAssembler: DependencyAssembler {
         guard let userRepository = DIContainer.shared.resolve(type: UsersInterface.self),
               let questRepository = DIContainer.shared.resolve(type: QuestsInterface.self),
               let authRepository = DIContainer.shared.resolve(type: AuthInterface.self),
-              let forbiddenWordRepository = DIContainer.shared.resolve(type: ForbiddenWordInterface.self)
-        else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            return
-        }
+              let forbiddenWordRepository = DIContainer.shared.resolve(type: ForbiddenWordInterface.self),
+              let commonQuestRepository = DIContainer.shared.resolve(type: CommonQuestInterface.self) else {
+                  ByeBooLogger.error(ByeBooError.DIFailedError)
+                  return
+              }
         
         DIContainer.shared.register(type: FetchUserJourneyUseCase.self) { _ in
             return DefaultFetchUserJourneyUseCase(repository: userRepository)
@@ -141,7 +141,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: FetchCommonQuestByDateUseCase.self) { _ in
             return DefaultFetchCommonQuestByDateUseCase(repository: questRepository)
         }
-              
+        
         DIContainer.shared.register(type: AutoLoginUseCase.self) { _ in
             return DefaultAutoLoginUseCase(repository: authRepository)
         }
@@ -168,6 +168,10 @@ struct DomainDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: IsForbiddenWordUseCase.self) { _ in
             return DefaultIsForbiddenWordUseCase(repository: forbiddenWordRepository)
+        }
+        
+        DIContainer.shared.register(type: SaveCommonQuestUseCase.self) { _ in
+            return DefaultSaveCommonQuestUseCase(repository: commonQuestRepository)
         }
     }
 }

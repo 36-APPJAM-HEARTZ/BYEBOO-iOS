@@ -36,7 +36,10 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             guard let getQuestInfoUseCase = container.resolve(type: GetQuestInfoUseCase.self),
                   let saveQuestTypeUseCase = container.resolve(type: SaveQuestTypeUseCase.self),
                   let editQuestTypeUseCase = container.resolve(type: EditQuestTypeUseCase.self),
-                  let isValidQuestAnswerUseCase = container.resolve(type: IsValidQuestAnswerUseCase.self) else {
+                  let isValidQuestAnswerUseCase = container.resolve(type: IsValidQuestAnswerUseCase.self),
+                  let saveCommonQuestUseCase = container.resolve(type: SaveCommonQuestUseCase.self),
+                  let isForbbidenWordUseCoase = container.resolve(type: IsForbiddenWordUseCase.self)
+            else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -44,7 +47,10 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 saveQuestTypeUseCase: saveQuestTypeUseCase,
                 getQuestInfoUseCase: getQuestInfoUseCase,
                 editQuestTypeUseCase: editQuestTypeUseCase,
-                isValidQuestAnswerUseCase: isValidQuestAnswerUseCase
+                isValidQuestAnswerUseCase: isValidQuestAnswerUseCase,
+                saveCommonQuestUseCase: saveCommonQuestUseCase,
+                isForbiddenWordUseCase: isForbiddenWordUseCase
+                
             )
         }
         

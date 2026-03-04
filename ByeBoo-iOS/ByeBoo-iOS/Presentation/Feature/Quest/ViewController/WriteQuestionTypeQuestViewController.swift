@@ -41,7 +41,7 @@ final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<W
         bind()
         setDelegate()
         
-        if questMode == .write {
+        if questMode == .write && questScope == .personal {
             viewModel.action(.viewDidLoad(quesetID: self.questID))
         }
         
@@ -73,14 +73,16 @@ final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<W
     override func confirmButtonDidTap() {
         answerText = rootView.questTextField.textView.text
         
-        if questMode == .edit {
-            saveQuest()
-        } else {
-            switch questScope {
-            case .common:
-                //TODO: 공통인 경우 뷰 연결
-                ByeBooLogger.debug("common 완료")
-            case .personal:
+        switch questScope {
+        case .common:
+            let isEdit = questMode == .edit ? true : false
+            saveQuest(isEdit: isEdit, isCommonQuest: true)
+            ByeBooLogger.debug("common quest 완료")
+            
+        case .personal:
+            if questMode == .edit {
+                saveQuest(isEdit: true, isCommonQuest: false)
+            } else {
                 bottomSheetViewController.bind(questNumber: questNumber, questType: questType)
                 bottomSheetViewController.delegate = self
                 if let sheet = bottomSheetViewController.sheetPresentationController{
@@ -119,7 +121,6 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                     self.rootView.updateQuestTitle(
                         questScope: self.questScope,
                         questNumber: quest.questNumber,
-                        questStyle: quest.questStyle,
                         question: quest.question
                     )
                 case .failure(let error):
@@ -134,29 +135,18 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                 switch result {
                 case .success(()):
                     guard let self else { return }
-                    self.bottomSheetViewController.dismiss(animated: true) {
-                        let modal = ModalBuilder(
-                            modalView: QuestCompleteModal(),
-                            action: nil,
-                            rootViewController: self
-                        )
-                        modal.present()
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            modal.dismiss()
-                            
-                            ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
-                            let viewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
-                            viewController.entryViewController = .writeQuest
-                            viewController.configure(questID: self.questID, questType: .question)
-                            self.navigationController?.pushViewController(viewController, animated: true)
-                        }
+                    switch questScope {
+                    case .personal:
+                        personalQuestComplete()
+                    case .common:
+                        commonQuestComplete()
                     }
                 case .failure(let error):
                     self?.handleError(error)
                 }
             }
             .store(in: &cancellables)
+        
         
         viewModel.output.didSuccessEditPublisher
             .receive(on: DispatchQueue.main)
@@ -186,6 +176,18 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.output.isForbiddenWordPublisher
+            .sink { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success:
+                    ByeBooLogger.debug("공통 퀘스트 비속어 없음")
+                case .failure(let error):
+                    presentToastMessage(type: .questViolation)
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -194,23 +196,25 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
         self.emotionState = emotionState.key
     }
     
-    func saveQuest() {
+    func saveQuest(isEdit: Bool, isCommonQuest: Bool?) {
         ByeBooLogger.debug("text: \(answerText)")
         ByeBooLogger.debug("emtionState: \(emotionState)")
         ByeBooLogger.debug("questID: \(questID)")
-        
-        viewModel.action(.presentCompleteView(
-            questID: questID,
-            answer: answerText,
-            emotionState: emotionState,
-            isEdit: questMode == .edit ? true : false
-        )
-        )
+        if let isCommonQuest = isCommonQuest {
+            viewModel.action(.saveQuest(
+                questID: questID,
+                answer: answerText,
+                emotionState: emotionState,
+                isEdit: isEdit,
+                isCommonQuest: isCommonQuest
+            )
+            )
+        }
     }
 }
 
 extension WriteQuestionTypeQuestViewController {
-    func configure(_ questID: Int, _ questNumber: Int?, _ questType: QuestType) {
+    func configure(_ questID: Int, _ questNumber: Int?, _ questType: QuestType, _ questionTitle: String?) {
         self.questID = questID
         
         if let questNumber {
@@ -221,6 +225,69 @@ extension WriteQuestionTypeQuestViewController {
         }
         
         self.questType = questType
+        rootView.updateQuestTitle(
+            questScope: self.questScope,
+            questNumber: self.questNumber,
+            question: questionTitle ?? ""
+        )
+    }
+    
+    private func personalQuestComplete() {
+        ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
+    
+        bottomSheetViewController.dismiss(animated: true) {
+            let archiveViewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
+            archiveViewController.entryViewController = .writeQuest
+            archiveViewController.configure(questID: self.questID, questType: .question)
+            
+            CATransaction.begin()
+            CATransaction.setCompletionBlock {
+                let modal = ModalBuilder(
+                    modalView: QuestCompleteModal(),
+                    action: nil,
+                    rootViewController: self
+                )
+                modal.present()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    modal.dismiss()
+                }
+            }
+            self.navigationController?.pushViewController(archiveViewController, animated: true)
+            CATransaction.commit()
+        }
+    }
+    
+    private func commonQuestComplete() {
+        let viewController = ByeBooTabBar()
+        viewController.selectedIndex = 1
+        guard let questMaintab = viewController.viewControllers?[1] as? UINavigationController,
+              let commonQuestTab = questMaintab.viewControllers.first as? ParentQuestViewController<QuestTabItem> else { return }
+        
+        commonQuestTab.loadViewIfNeeded()
+        commonQuestTab.selectTab(index: 1)
+        
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+            
+            ViewControllerUtils.setRootViewController(
+                window: window,
+                viewController: viewController,
+                withAnimation: true
+            )
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
+            let modal = ModalBuilder(
+                modalView: QuestCompleteModal(),
+                action: nil,
+                rootViewController: viewController
+            )
+            modal.present()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                modal.dismiss()
+            }
+        }
     }
 }
 

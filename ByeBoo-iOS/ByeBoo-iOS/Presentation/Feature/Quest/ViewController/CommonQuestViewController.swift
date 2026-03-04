@@ -79,9 +79,14 @@ extension CommonQuestViewController: DateNavigatorDelegate {
     
     @objc
     private func moveWriteAnswerButtonDidTap() {
-        
+        let questID = viewModel.questID
+        let writeCommonQuestViewController = ViewControllerFactory.shared.makeWriteQuestionTypeQuestViewController()
+        writeCommonQuestViewController.navigationItem.hidesBackButton = true
+        writeCommonQuestViewController.questScope = .common
+        writeCommonQuestViewController.configure(questID, nil, QuestType.question, viewModel.question)
+        self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)
     }
-    
+
     func dateDidChanged(to date: String) {
         let _ = viewModel.action(
             .moveDateButtonDidTap(selectedDate: date)
@@ -91,7 +96,7 @@ extension CommonQuestViewController: DateNavigatorDelegate {
 }
 
 extension CommonQuestViewController: UITableViewDelegate {
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 || !viewModel.isExistAnswer {
             return

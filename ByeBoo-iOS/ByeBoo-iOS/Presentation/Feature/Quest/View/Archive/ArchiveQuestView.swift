@@ -88,8 +88,8 @@ final class ArchiveQuestView: BaseView {
         }
         
         contentView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-            $0.width.equalToSuperview()
+            $0.edges.equalTo(scrollView.contentLayoutGuide)
+            $0.width.equalTo(scrollView.frameLayoutGuide)
             $0.height.greaterThanOrEqualTo(scrollView.frameLayoutGuide)
         }
         
@@ -108,15 +108,13 @@ final class ArchiveQuestView: BaseView {
         
         textBoxView.snp.makeConstraints {
             if let photoBoxView {
-                if !descriptionText.isEmpty {
-                    $0.top.equalTo(photoBoxView.snp.bottom).offset(20.adjustedH)
-                }
+                $0.top.equalTo(photoBoxView.snp.bottom).offset(20.adjustedH)
             } else {
                 $0.top.equalTo(headerView.snp.bottom).offset(20.adjustedH)
             }
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
-    
+        
         feelView.snp.makeConstraints {
             $0.top.equalTo(textBoxView.snp.bottom).offset(20.adjustedH)
             $0.horizontalEdges.equalToSuperview()
@@ -150,9 +148,9 @@ extension ArchiveQuestView {
         case .activation:
             guard let photoBoxView else { return }
             
-            if let url = URL(string: entity.imageUrl!) {
-                photoBoxView.kf.setImage(with: url)
-            }
+            guard let imageUrl = entity.imageUrl,
+                let url = URL(string: imageUrl) else { return }
+            photoBoxView.kf.setImage(with: url)
             
             if entity.answer.isEmpty {
                 textBoxView.removeFromSuperview()

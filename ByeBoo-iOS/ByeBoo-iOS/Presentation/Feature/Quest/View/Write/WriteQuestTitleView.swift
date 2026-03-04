@@ -15,7 +15,7 @@ final class WriteQuestTitleView: BaseView {
     private var questNum: Int
     private let questNumLabel =  UILabel()
     private let titleLabel = UILabel()
-    let tipTag = ByeBooTipTag(text: "작성 TIP")
+    private(set) var tipTag = ByeBooTipTag(text: "작성 TIP")
     
     init(
         questScope: QuestScope? = nil,
@@ -27,14 +27,14 @@ final class WriteQuestTitleView: BaseView {
         self.titleLabel.text = title
         
         if let questScope {
-            self.questNumLabel.text = {
-                switch questScope {
-                case .common:
-                    "공통퀘스트"
-                case .personal:
-                    "\(questNum)번째 퀘스트"
-                }
-            }()
+            switch questScope {
+            case .common:
+                questNumLabel.text = "공통퀘스트"
+            case .personal:
+                questNumLabel.text = "\(questNum)번째 퀘스트"
+            }
+        } else {
+            questNumLabel.text = "\(questNum)번째 퀘스트"
         }
         
         super.init(frame: .zero)
@@ -43,7 +43,7 @@ final class WriteQuestTitleView: BaseView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
     override func setUI() {
         addSubviews(questNumLabel, titleLabel, tipTag)
     }
@@ -61,9 +61,16 @@ final class WriteQuestTitleView: BaseView {
             $0.lineBreakMode = .byWordWrapping
         }
         
+        
         tipTag.do {
             $0.isUserInteractionEnabled = true
+            if questScope == .common {
+                $0.isHidden = true
+            } else {
+                $0.isHidden = false
+            }
         }
+        
     }
     
     override func setLayout() {
@@ -76,6 +83,9 @@ final class WriteQuestTitleView: BaseView {
             $0.top.equalTo(questNumLabel.snp.bottom).offset(12.adjustedH)
             $0.width.equalTo(327.adjustedW)
             $0.centerX.equalToSuperview()
+            if questScope == .common {
+                $0.bottom.equalToSuperview().inset(16.adjustedH)
+            }
         }
         
         tipTag.snp.makeConstraints {
@@ -85,6 +95,7 @@ final class WriteQuestTitleView: BaseView {
             $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().inset(16.adjustedH)
         }
+        
     }
 }
 
@@ -94,16 +105,21 @@ extension WriteQuestTitleView {
         self.titleLabel.text = title
         
         if let questScope {
-            self.questNumLabel.text = {
-                switch questScope {
-                case .common:
-                    "공통퀘스트"
-                case .personal:
-                    "\(questNum)번째 퀘스트"
+            switch questScope {
+            case .common:
+                questNumLabel.text = "공통퀘스트"
+                tipTag.isHidden = true
+                
+                titleLabel.snp.makeConstraints {
+                    $0.top.equalTo(questNumLabel.snp.bottom).offset(12.adjustedH)
+                    $0.width.equalTo(327.adjustedW)
+                    $0.centerX.equalToSuperview()
+                    $0.bottom.equalToSuperview().inset(16.adjustedH)
                 }
-            }()
-        } else {
-            self.questNumLabel.text = "\(questNum)번째 퀘스트"
+            case .personal:
+                questNumLabel.text = "\(questNum)번째 퀘스트"
+                tipTag.isHidden = false
+            }
         }
-   }
+    }
 }

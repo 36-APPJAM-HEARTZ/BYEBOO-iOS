@@ -27,6 +27,7 @@ enum ByeBooError: Error, LocalizedError, Equatable {
     case configError
     case fileNotFound
     case nicknameViolation
+    case questViolation
     
     var errorDescription: String? {
         switch self {
@@ -68,6 +69,8 @@ enum ByeBooError: Error, LocalizedError, Equatable {
             return "파일을 찾을 수 없음"
         case .nicknameViolation:
             return "비속어나 부적절한 단어가 포함된 닉네임"
+        case .questViolation:
+            return "비속어나 부적절한 단어가 포함된 답변"
         }
     }
 }
