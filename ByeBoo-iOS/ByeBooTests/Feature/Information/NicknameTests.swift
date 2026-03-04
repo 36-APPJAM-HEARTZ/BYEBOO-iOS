@@ -17,7 +17,7 @@ struct NicknameTests {
         arguments: ["a", "abcdef"]
     )
     func isNicknameLessThan2OrGreaterThan5__false(nickname: String) async {
-        let result = checkValidNicknameUseCase.execute(nickname: nickname)
+        let result = checkValidNicknameUseCase.isValidRegulation(nickname: nickname)
         
         #expect(result == false)
     }
@@ -27,21 +27,21 @@ struct NicknameTests {
         arguments: ["고ㅜ", "ㄱ우"]
     )
     func isNicknamUsingKoreanConsonantsOrVowelsAlone__false(nickname: String) async {
-        let result = checkValidNicknameUseCase.execute(nickname: nickname)
+        let result = checkValidNicknameUseCase.isValidRegulation(nickname: nickname)
         
         #expect(result == false)
     }
     
     @Test("🏁 한글 자음과 모음이 혼합되어있지만 불완전한 글자일 때 ✅ false")
     func isNicknamUsingIncompleteKorean__false() async {
-        let result = checkValidNicknameUseCase.execute(nickname: "ㄱㅗ우")
+        let result = checkValidNicknameUseCase.isValidRegulation(nickname: "ㄱㅗ우")
         
         #expect(result == false)
     }
     
     @Test("🏁 닉네임에 특수문자가 포함되어있을 때 ✅ false")
     func isNicknameContainsSpecialCharacter__false() async {
-        let result = checkValidNicknameUseCase.execute(nickname: "가나디@")
+        let result = checkValidNicknameUseCase.isValidRegulation(nickname: "가나디@")
 
         #expect(result == false)
     }
@@ -51,7 +51,7 @@ struct NicknameTests {
         arguments: [" 가나디", "가 나디", "가나디 "]
     )
     func isNicknamContainsSpace__false(nickname: String) async {
-        let result = checkValidNicknameUseCase.execute(nickname: nickname)
+        let result = checkValidNicknameUseCase.isValidRegulation(nickname: nickname)
         
         #expect(result == false)
     }
@@ -61,8 +61,18 @@ struct NicknameTests {
         arguments: ["허승준", "123", "Atom", "허1a"]
     )
     func isValidNickname__true(nickname: String) async {
-        let result = checkValidNicknameUseCase.execute(nickname: nickname)
+        let result = checkValidNicknameUseCase.isValidRegulation(nickname: nickname)
         
         #expect(result == true)
+    }
+    
+    @Test(
+        "🏁 설정 불가한 닉네임을 입력한 경우 ✅ true",
+        arguments: ["admin", "master", "test", "운영자", "관리자"]
+    )
+    func isPermittedNickname__false(nickname: String) async {
+        let result = checkValidNicknameUseCase.isPermitteed(nickname: nickname)
+        
+        #expect(result == false)
     }
 }

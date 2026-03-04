@@ -15,6 +15,8 @@ extension ToastErrorHandler where Self: BaseViewController & ToastPresentable {
         switch error {
         case .networkConnect:
             presentToastMessage(type: .connectServerError)
+        case .nicknameViolation:
+            presentToastMessage(type: .nicknameViolation)
         default:
             ByeBooLogger.error(error)
         }

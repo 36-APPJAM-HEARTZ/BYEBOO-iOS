@@ -44,12 +44,8 @@ struct DataDependencyAssembler: DependencyAssembler {
             )
         }
         
-        DIContainer.shared.register(type: DefaultNotificationRepository.self) { _ in
-            return DefaultNotificationRepository(
-                network: networkService,
-                userDefaultsService: userDefaultService,
-                keychainService: keychainService
-            )
+        DIContainer.shared.register(type: ForbiddenWordInterface.self) { _ in
+            return DefaultForbiddenWordRepository()
         }
     }
 }

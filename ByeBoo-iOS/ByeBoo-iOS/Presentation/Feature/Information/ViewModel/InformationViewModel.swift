@@ -11,6 +11,7 @@ final class InformationViewModel {
     
     private var cancellables = Set<AnyCancellable>()
     private let nicknameValidationSubject = CurrentValueSubject<Bool, Never>(false)
+    private let isForbiddenWordSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>()
     private let userInformationSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>()
     private let userNameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>()
     private(set) var output: Output
@@ -21,20 +22,24 @@ final class InformationViewModel {
     private var user: UserEntity = UserEntity(id: 1, name: "")
     
     private let checkValidNicknameUseCase: CheckValidNicknameUseCase
+    private let isForbiddenWordUseCase: IsForbiddenWordUseCase
     private let sendUserUseCase: SendUserUseCase
     private let getUserNameUseCase: GetUserNameUseCase
     
     init(
         checkValidNicknameUseCase: CheckValidNicknameUseCase,
+        isForbiddenWordUseCase: IsForbiddenWordUseCase,
         sendUserUseCase: SendUserUseCase,
         getUserNameUseCase: GetUserNameUseCase
     ) {
         self.checkValidNicknameUseCase = checkValidNicknameUseCase
+        self.isForbiddenWordUseCase = isForbiddenWordUseCase
         self.sendUserUseCase = sendUserUseCase
         self.getUserNameUseCase = getUserNameUseCase
         
         self.output = Output(
             nicknameValidationPublisher: nicknameValidationSubject.eraseToAnyPublisher(),
+            isForbiddenWordPublisher: isForbiddenWordSubject.eraseToAnyPublisher(),
             userInformationPublisher: userInformationSubject.eraseToAnyPublisher(),
             userNamePublisher: userNameSubject.eraseToAnyPublisher()
         )
@@ -80,6 +85,7 @@ extension InformationViewModel: ViewModelType {
     
     struct Output {
         let nicknameValidationPublisher: AnyPublisher<Bool, Never>
+        let isForbiddenWordPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
         let userInformationPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
         let userNamePublisher: AnyPublisher<Result<String, ByeBooError>, Never>
     }
@@ -87,12 +93,22 @@ extension InformationViewModel: ViewModelType {
     func action(_ trigger: Input) {
         switch trigger {
         case .editingNickname(let nickname):
-            let isValidNickname = checkValidNicknameUseCase.execute(nickname: nickname)
+            let isValidNickname = checkValidNicknameUseCase.isValidRegulation(nickname: nickname)
             nicknameValidationSubject.send(isValidNickname)
+            
         case .nicknameButtonDidTap(let nickname):
+            guard checkValidNicknameUseCase.isPermitteed(nickname: nickname),
+                  !isForbiddenWordUseCase.execute(word: nickname)
+            else {
+                isForbiddenWordSubject.send(.failure(.nicknameViolation))
+                return
+            }
             currentNickname = nickname
+            isForbiddenWordSubject.send(.success(()))
+            
         case .feelingButtonDidTap(let feeling):
             currentFeeling = feeling
+            
         case .questButtonDidTap(let questStyle):
             currentQuestStyle = questStyle
             createUserInformation(
