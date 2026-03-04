@@ -148,9 +148,9 @@ extension ArchiveQuestView {
         case .activation:
             guard let photoBoxView else { return }
             
-            if let url = URL(string: entity.imageUrl!) {
-                photoBoxView.kf.setImage(with: url)
-            }
+            guard let imageUrl = entity.imageUrl,
+                let url = URL(string: imageUrl) else { return }
+            photoBoxView.kf.setImage(with: url)
             
             if entity.answer.isEmpty {
                 textBoxView.removeFromSuperview()
