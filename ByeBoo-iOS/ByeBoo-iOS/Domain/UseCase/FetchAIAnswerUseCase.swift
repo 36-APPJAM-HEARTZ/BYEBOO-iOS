@@ -13,7 +13,7 @@ struct DefaultFetchAIAnswerUseCase: FetchAIAnswerUseCase {
     private let repository: QuestsInterface
     
     init(repository: QuestsInterface) {
-        self.repository = MockQuestsRepository()
+        self.repository = repository
     }
     
     func execute(questID: Int, isAnswerExists: Bool) async throws -> AIAnswerEntity {

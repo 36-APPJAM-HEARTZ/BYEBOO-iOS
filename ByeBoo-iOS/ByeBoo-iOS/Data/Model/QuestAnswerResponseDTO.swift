@@ -33,7 +33,7 @@ extension QuestAnswerResponseDTO {
             imageUrl: imageUrl ?? "",
             imageKey: imageKey ?? "",
             emotionDescription: emotionDescription,
-            AIAnswerExists: aiAnswerExists ?? true
+            AIAnswerExists: aiAnswerExists ?? false
         )
     }
 }
