@@ -130,7 +130,6 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                     self?.questNumber = quest.questNumber
                     self?.rootView.updateQuestTitle(
                         questNumber: quest.questNumber,
-                        questStyle: quest.questStyle,
                         question: quest.question
                     )
                 case .failure(let error):
@@ -176,7 +175,6 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                 case .success(let quest):
                     self?.rootView.updateQuestTitle(
                         questNumber: quest.questNumber,
-                        questStyle: quest.questStyle,
                         question: quest.question
                     )
                 case .failure(let error):
@@ -274,10 +272,17 @@ extension WriteActiveTypeQuestViewController: BottomSheetProtocol {
 }
 
 extension WriteActiveTypeQuestViewController {
-    func configure(_ questID: Int, _ questNumber: Int, _ questType: QuestType) {
+    func configure(_ questID: Int, _ questNumber: Int, _ questType: QuestType, _ questionTitle: String?) {
         self.questID = questID
         self.questNumber = questNumber
         self.questType = questType
+        
+        self.questType = questType
+        rootView.updateQuestTitle(
+            questScope: .personal,
+            questNumber: self.questNumber,
+            question: questionTitle ?? ""
+        )
     }
 }
 

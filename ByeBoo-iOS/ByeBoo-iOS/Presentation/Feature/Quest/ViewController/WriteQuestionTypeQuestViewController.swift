@@ -137,61 +137,9 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                     guard let self else { return }
                     switch questScope {
                     case .personal:
-                        self.bottomSheetViewController.dismiss(animated: true)
-                        
-                        ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
-                        let viewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
-                        viewController.entryViewController = .writeQuest
-                        viewController.configure(questID: self.questID, questType: .question)
-                        
-                        CATransaction.begin()
-                        CATransaction.setCompletionBlock {
-                            let modal = ModalBuilder(
-                                modalView: QuestCompleteModal(),
-                                action: nil,
-                                rootViewController: self
-                            )
-                            modal.present()
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                modal.dismiss()
-                            }
-                        }
-                        self.navigationController?.pushViewController(viewController, animated: true)
-                        CATransaction.commit()
-                        
+                        personalQuestComplete()
                     case .common:
-                        let viewController = ByeBooTabBar()
-                        viewController.selectedIndex = 1
-                        guard let questMaintab = viewController.viewControllers?[1] as? UINavigationController,
-                              let commonQuestTab = questMaintab.viewControllers.first as? ParentQuestViewController<QuestTabItem> else { return }
-                        
-                        commonQuestTab.loadViewIfNeeded()
-                        commonQuestTab.selectTab(index: 1)
-                        
-                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
-                            
-                            ViewControllerUtils.setRootViewController(
-                                window: window,
-                                viewController: viewController,
-                                withAnimation: true
-                            )
-                        }
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
-                            let modal = ModalBuilder(
-                                modalView: QuestCompleteModal(),
-                                action: nil,
-                                rootViewController: viewController
-                            )
-                            modal.present()
-                            
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                modal.dismiss()
-                            }
-                        }
-                        
+                        commonQuestComplete()
                     }
                 case .failure(let error):
                     self?.handleError(error)
@@ -271,6 +219,64 @@ extension WriteQuestionTypeQuestViewController {
             questNumber: self.questNumber,
             question: questionTitle ?? ""
         )
+    }
+    
+    private func personalQuestComplete() {
+        ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
+    
+        bottomSheetViewController.dismiss(animated: true) {
+            let archiveViewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
+            archiveViewController.entryViewController = .writeQuest
+            archiveViewController.configure(questID: self.questID, questType: .question)
+            
+            CATransaction.begin()
+            CATransaction.setCompletionBlock {
+                let modal = ModalBuilder(
+                    modalView: QuestCompleteModal(),
+                    action: nil,
+                    rootViewController: self
+                )
+                modal.present()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    modal.dismiss()
+                }
+            }
+            self.navigationController?.pushViewController(archiveViewController, animated: true)
+            CATransaction.commit()
+        }
+    }
+    
+    private func commonQuestComplete() {
+        let viewController = ByeBooTabBar()
+        viewController.selectedIndex = 1
+        guard let questMaintab = viewController.viewControllers?[1] as? UINavigationController,
+              let commonQuestTab = questMaintab.viewControllers.first as? ParentQuestViewController<QuestTabItem> else { return }
+        
+        commonQuestTab.loadViewIfNeeded()
+        commonQuestTab.selectTab(index: 1)
+        
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+            
+            ViewControllerUtils.setRootViewController(
+                window: window,
+                viewController: viewController,
+                withAnimation: true
+            )
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
+            let modal = ModalBuilder(
+                modalView: QuestCompleteModal(),
+                action: nil,
+                rootViewController: viewController
+            )
+            modal.present()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                modal.dismiss()
+            }
+        }
     }
 }
 
