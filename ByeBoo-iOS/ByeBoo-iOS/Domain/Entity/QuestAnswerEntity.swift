@@ -8,15 +8,16 @@
 import Foundation
 
 struct QuestAnswerEntity {
-    var stepNumber: Int
-    var questNumber: Int
-    var createdAt: String
-    var question: String
-    var answer: String
-    var questEmotionState: String
-    var imageUrl: String?
-    var imageKey: String?
-    var emotionDescription: String
+    let stepNumber: Int
+    let questNumber: Int
+    let createdAt: String
+    let question: String
+    let answer: String
+    let questEmotionState: String
+    let imageUrl: String?
+    let imageKey: String?
+    let emotionDescription: String
+    let AIAnswerExists: Bool
 }
 
 extension QuestAnswerEntity: Equatable {
@@ -28,7 +29,10 @@ extension QuestAnswerEntity: Equatable {
             question: "어쩌구 저쩌구 question",
             answer: "답변입니다 ~",
             questEmotionState: "mock emotion state",
-            emotionDescription: "mock emotion description"
+            imageUrl: nil,
+            imageKey: nil,
+            emotionDescription: "mock emotion description",
+            AIAnswerExists: true
         )
     }
 }

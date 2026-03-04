@@ -123,6 +123,22 @@ struct DefaultQuestRepository: QuestsInterface {
         .stub()
     }
     
+    func createAIAnswer(questID: Int) async throws -> AIAnswerEntity {
+        let result = try await network.request(
+            QuestAPI.createAIAnswer(questID: questID),
+            decodingType: AIAnswerResponseDTO.self
+        )
+        return result.toEntity()
+    }
+    
+    func fetchAIAnswer(questID: Int) async throws -> AIAnswerEntity {
+        let result = try await network.request(
+            QuestAPI.fetchAIAnswer(questID: questID),
+            decodingType: AIAnswerResponseDTO.self
+        )
+        return result.toEntity()
+    }
+    
     // MARK: private function
     
     private func makeSignedURL(imageKey: String) async throws -> String {
@@ -230,6 +246,16 @@ final class MockQuestsRepository: QuestsInterface {
     }
     
     func fetchCommoncQuest(date: String) async throws -> CommonQuestAnswersEntity {
+        .stub()
+    }
+    
+    func createAIAnswer(questID: Int) async throws -> AIAnswerEntity {
+        try await Task.sleep(for: .seconds(2))
+        throw ByeBooError.unknownError
+//        .stub()
+    }
+    
+    func fetchAIAnswer(questID: Int) async throws -> AIAnswerEntity {
         .stub()
     }
 }
