@@ -188,7 +188,6 @@ extension WriteActiveTypeQuestView {
     func updateQuestTitle(
         questScope: QuestScope? = nil,
         questNumber: Int,
-        questStyle: String,
         question: String
     ) {
         headerView.bind(

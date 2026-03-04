@@ -33,6 +33,8 @@ final class WriteQuestTitleView: BaseView {
             case .personal:
                 questNumLabel.text = "\(questNum)번째 퀘스트"
             }
+        } else {
+            questNumLabel.text = "\(questNum)번째 퀘스트"
         }
         
         super.init(frame: .zero)
