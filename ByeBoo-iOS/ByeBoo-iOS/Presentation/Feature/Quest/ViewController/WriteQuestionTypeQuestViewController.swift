@@ -177,6 +177,17 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
             }
             .store(in: &cancellables)
         
+        viewModel.output.isForbiddenWordPublisher
+            .sink { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success:
+                    ByeBooLogger.debug("공통 퀘스트 비속어 없음")
+                case .failure(let error):
+                    presentToastMessage(type: .questViolation)
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
