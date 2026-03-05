@@ -160,6 +160,7 @@ extension CommonQuestViewController: UITableViewDelegate {
             return nil
         }
         
+        navigator.delegate = self
         return navigator
     }
     
