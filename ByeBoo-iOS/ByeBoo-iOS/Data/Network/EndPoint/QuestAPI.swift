@@ -106,9 +106,6 @@ extension QuestAPI: EndPoint {
             return try? dto.toDictionary()
         case let .editActive(_, dto):
             return try? dto.toDictionary()
-        case .checkQuest, .tip, .answer, .progressingQuests, .fetchCompletedJourney, .postJourney, .completedQuests:
-            return nil
-            // TODO: ai 답변 추가
         default:
             return nil
         }
