@@ -9,4 +9,5 @@ import Foundation
 
 protocol CommonQuestInterface {
     func saveCommonQuest(questID: Int, answer: String) async throws
+    func fetchCommonQuest(date: String, cursor: Int?) async throws -> CommonQuestAnswersEntity
 }

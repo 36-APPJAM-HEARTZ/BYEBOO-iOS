@@ -19,6 +19,8 @@ final class CommonQuestViewModel {
     
     private var commonQuest: CommonQuestAnswersEntity?
     private var answers: [CommonQuestAnswerEntity] = []
+    private(set) var hasMorePages = true
+    private var nextCursor: Int? = nil
     private var currentDate: String = DateFormatter.apiDate.string(from: .now)
     
     init(fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase) {
@@ -30,18 +32,24 @@ final class CommonQuestViewModel {
     
     private func fetchCommonQuestByDate(
         date: String,
-        answerID: Int? = nil
+        cursor: Int? = nil
     ) {
         Task {
             do {
                 let result = try await fetchCommonQuestByDateUseCase.execute(
                     date: date,
-                    answerID: nil,
-                    limit: 10
+                    cursor: cursor
                 )
-                
                 commonQuest = result
-                answers.append(contentsOf: result.answers)
+                hasMorePages = result.hasNext
+                nextCursor = result.nextCursor
+                
+                if let _ = cursor {
+                    answers.append(contentsOf: result.answers)
+                } else {
+                    answers = result.answers
+                }
+                
                 commonQuestSubject.send(.success(result))
             } catch {
                 commonQuestSubject.send(.failure(error as! ByeBooError))
@@ -55,7 +63,7 @@ extension CommonQuestViewModel: ViewModelType {
     enum Input {
         case viewDidLoad
         case moveDateButtonDidTap(selectedDate: String)
-        case scrollAnswer(answerID: Int)
+        case scrollAnswer
     }
     
     struct Output {
@@ -68,9 +76,14 @@ extension CommonQuestViewModel: ViewModelType {
             fetchCommonQuestByDate(date: currentDate)
         case .moveDateButtonDidTap(let selectedDate):
             currentDate = selectedDate
+            nextCursor = nil
+            hasMorePages = true
             fetchCommonQuestByDate(date: selectedDate)
-        case .scrollAnswer(let answerID):
-            fetchCommonQuestByDate(date: currentDate, answerID: answerID)
+        case .scrollAnswer:
+            guard hasMorePages else {
+                return
+            }
+            fetchCommonQuestByDate(date: currentDate, cursor: nextCursor)
         }
     }
 }
@@ -102,7 +115,7 @@ extension CommonQuestViewModel {
     }
     
     var questID: Int {
-        commonQuest?.questID ?? 1 
+        commonQuest?.questID ?? 1
     }
     
     var answersCount: Int {
@@ -117,19 +130,29 @@ extension CommonQuestViewModel {
         self.answers.count
     }
     
-    func getAnswer(at index: Int) -> CommonQuestAnswerEntity {
-        commonQuest?.answers[index] ?? .stub()
+    func getAnswer(at index: Int) -> CommonQuestAnswerEntity? {
+        guard index >= 0 && index < answers.count else {
+            return nil
+        }
+        return self.answers[index]
     }
     
     func getProfileIcon(at index: Int) -> UIImage? {
-        let iconString = commonQuest?.answers[index].profileIcon
+        guard index >= 0 && index < answers.count else {
+            return nil
+        }
+        
+        let iconString = self.answers[index].profileIcon
         let profileIcon = ProfileIcon.allCases
             .first { $0.rawValue == iconString }?
             .image
         return profileIcon
     }
     
-    func getWrittenAt(at index: Int) -> String {
-        commonQuest?.answers[index].writtenAt ?? ""
+    func getWrittenAt(at index: Int) -> String? {
+        guard index >= 0 && index < answers.count else {
+            return nil
+        }
+        return self.answers[index].writtenAt
     }
 }

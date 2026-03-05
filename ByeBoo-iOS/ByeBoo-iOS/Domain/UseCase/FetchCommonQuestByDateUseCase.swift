@@ -8,8 +8,7 @@
 protocol FetchCommonQuestByDateUseCase {
     func execute(
         date: String,
-        answerID: Int?,
-        limit: Int
+        cursor: Int?
     ) async throws -> CommonQuestAnswersEntity
 }
 
@@ -23,13 +22,11 @@ struct DefaultFetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase {
     
     func execute(
         date: String,
-        answerID: Int?,
-        limit: Int
+        cursor: Int?
     ) async throws -> CommonQuestAnswersEntity {
         try await repository.fetchCommonQuest(
             date: date,
-            answerID: answerID,
-            limit: limit
+            cursor: cursor
         )
     }
 }
@@ -38,9 +35,36 @@ struct MockFetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase {
     
     func execute(
         date: String,
-        answerID: Int?,
-        limit: Int
+        cursor: Int?
     ) async throws -> CommonQuestAnswersEntity {
-        .stub()
+        let limit = 10
+        let startIndex: Int
+        let allAnswersCount = CommonQuestAnswersEntity.allAnswers.count
+        
+        if let cursor {
+            let cursorIndex = CommonQuestAnswersEntity.getCursorIndex(cursor: cursor)
+            startIndex = cursorIndex + 1
+        } else {
+            startIndex = 0
+        }
+        
+        let endIndex = min(startIndex + limit, allAnswersCount)
+        guard startIndex < CommonQuestAnswersEntity.allAnswers.count else {
+            return .emptyAnswerStub()
+        }
+        
+        let limitedAnswer = CommonQuestAnswersEntity.getLimitedAnswers(from: startIndex, to: endIndex)
+        let hasNext = endIndex < allAnswersCount
+        let nextCursor = hasNext ? limitedAnswer.last?.answerID : nil
+        
+        return .init(
+            question: "오늘 하루 어떤 감정을 가장 많이 느꼈나요?",
+            questID: 1,
+            answerCount: allAnswersCount,
+            isAnswered: true,
+            hasNext: hasNext,
+            nextCursor: nextCursor,
+            answers: limitedAnswer
+        )
     }
 }

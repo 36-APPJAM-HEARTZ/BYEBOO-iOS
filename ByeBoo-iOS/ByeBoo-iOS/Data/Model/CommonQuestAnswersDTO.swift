@@ -12,6 +12,7 @@ struct CommonQuestAnswersResponseDTO: Decodable {
     let answers: [CommonQuestAnswerResponseDTO]
     let hasNext: Bool
     let nextCursor: Int?
+    let questId: Int
 }
 
 struct CommonQuestAnswerResponseDTO: Decodable {
@@ -26,6 +27,7 @@ extension CommonQuestAnswersResponseDTO {
     func toEntity() -> CommonQuestAnswersEntity {
         .init(
             question: question,
+            questID: questId,
             answerCount: answerCount,
             isAnswered: isAnswered,
             hasNext: hasNext,

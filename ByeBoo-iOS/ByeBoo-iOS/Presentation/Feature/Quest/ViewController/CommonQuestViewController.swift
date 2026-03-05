@@ -174,14 +174,17 @@ extension CommonQuestViewController: UITableViewDelegate {
         willDisplay cell: UITableViewCell,
         forRowAt indexPath: IndexPath
     ) {
-        guard let cell = cell as? CommonQuestAnswerCell else {
+        let prefetchOffset = 3
+        let trigger = max(1, viewModel.currentAnswerCount - prefetchOffset)
+        
+        guard cell is CommonQuestAnswerCell,
+              viewModel.hasMorePages,
+              indexPath.row == trigger
+        else {
             return
         }
         
-        if viewModel.answersCount == indexPath.row,
-           let answerID = cell.getAnswewrID() {
-            viewModel.action(.scrollAnswer(answerID: answerID))
-        }
+        viewModel.action(.scrollAnswer)
     }
 }
 
@@ -239,11 +242,14 @@ extension CommonQuestViewController: UITableViewDataSource {
         let profileIcon = viewModel.getProfileIcon(at: indexPath.row - 1)
         let writtenAt = viewModel.getWrittenAt(at: indexPath.row - 1)
         
-        cell.bind(
-            profileIcon: profileIcon,
-            answer: answer,
-            writtenAt: writtenAt
-        )
+        if let answer,
+           let writtenAt {
+            cell.bind(
+                profileIcon: profileIcon,
+                answer: answer,
+                writtenAt: writtenAt
+            )
+        }
         
         return cell
     }
