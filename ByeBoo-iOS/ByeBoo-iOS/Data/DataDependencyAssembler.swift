@@ -50,12 +50,8 @@ struct DataDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: CommonQuestInterface.self) { _ in
-            return DefaultCommonQuestRepository(network: networkService)
-        }
-        
-        DIContainer.shared.register(type: CommonQuestInterface.self) { _ in
             return DefaultCommonQuestRepository(
-                networkService: networkService,
+                network: networkService,
                 keychainService: keychainService
             )
         }
