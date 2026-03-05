@@ -5,12 +5,15 @@
 //  Created by APPLE on 2/12/26.
 //
 
+import Combine
 import UIKit
 
 final class CommonQuestViewController: BaseViewController {
     
     private let rootView = CommonQuestView()
     private let viewModel: CommonQuestViewModel
+    
+    private var cancellable = Set<AnyCancellable>()
     
     init(viewModel: CommonQuestViewModel) {
         self.viewModel = viewModel
@@ -33,7 +36,8 @@ final class CommonQuestViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let _ = viewModel.action(.viewDidLoad)
+        bind()
+        viewModel.action(.viewDidLoad)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -64,6 +68,23 @@ final class CommonQuestViewController: BaseViewController {
     }
 }
 
+extension CommonQuestViewController {
+    
+    func bind() {
+        viewModel.output.commonQuestPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let answers):
+                    self?.rootView.commonQuestTableView.reloadData()
+                case .failure(let error):
+                    ByeBooLogger.error(error)
+                }
+            }
+            .store(in: &cancellable)
+    }
+}
+
 extension CommonQuestViewController: DateNavigatorDelegate {
     
     @objc
@@ -90,7 +111,7 @@ extension CommonQuestViewController: DateNavigatorDelegate {
     func dateDidChanged(to date: String) {
         let _ = viewModel.action(
             .moveDateButtonDidTap(selectedDate: date)
-        ).commonQuestAnswers
+        )
         rootView.commonQuestTableView.reloadData()
     }
 }
@@ -147,6 +168,21 @@ extension CommonQuestViewController: UITableViewDelegate {
     ) -> CGFloat {
         76.adjustedH
     }
+    
+    func tableView(
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
+    ) {
+        guard let cell = cell as? CommonQuestAnswerCell else {
+            return
+        }
+        
+        if viewModel.answersCount == indexPath.row,
+           let answerID = cell.getAnswewrID() {
+            viewModel.action(.scrollAnswer(answerID: answerID))
+        }
+    }
 }
 
 extension CommonQuestViewController: UITableViewDataSource {
@@ -201,7 +237,7 @@ extension CommonQuestViewController: UITableViewDataSource {
         
         let answer = viewModel.getAnswer(at: indexPath.row - 1)
         let profileIcon = viewModel.getProfileIcon(at: indexPath.row - 1)
-        let writtenAt = DateFormatter.standard.string(from: viewModel.getWrittenAt(at: indexPath.row - 1))
+        let writtenAt = viewModel.getWrittenAt(at: indexPath.row - 1)
         
         cell.bind(
             profileIcon: profileIcon,

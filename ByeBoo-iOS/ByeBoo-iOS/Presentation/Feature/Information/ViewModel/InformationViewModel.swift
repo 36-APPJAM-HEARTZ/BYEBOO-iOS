@@ -58,7 +58,6 @@ final class InformationViewModel {
             do {
                 try await sendUserUseCase.execute(
                     name: name,
-                    feeling: feeling.key,
                     questStyle: questStyle.key
                 )
                 getUserName()

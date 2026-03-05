@@ -31,9 +31,10 @@ final class LoginViewController: BaseViewController {
         view = rootView
         setAddTarget()
         rootView.startAnimation()
+        requestNoticeAuthorization()
         bind()
     }
-        
+    
     override func setAddTarget() {
         rootView.kakaoLoginButton.addTarget(self, action: #selector(kakaoLoginButtonDidTap) , for: .touchUpInside)
         rootView.appleLoginButton.addTarget(self, action: #selector(appleLoginButtonDidTap), for: .touchUpInside)
@@ -41,6 +42,25 @@ final class LoginViewController: BaseViewController {
 }
 
 extension LoginViewController{
+    
+    private func requestNoticeAuthorization() {
+        UNUserNotificationCenter.current().getNotificationSettings {
+            guard $0.authorizationStatus == .notDetermined else {
+                return
+            }
+            
+            let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+            UNUserNotificationCenter.current().requestAuthorization(
+                options: authOptions,
+                completionHandler: { _, _ in
+                    DispatchQueue.main.async {
+                        UIApplication.shared.registerForRemoteNotifications()
+                    }
+                }
+            )
+        }
+    }
+    
     @objc
     private func kakaoLoginButtonDidTap() {
         rootView.kakaoLoginButton.isUserInteractionEnabled = false

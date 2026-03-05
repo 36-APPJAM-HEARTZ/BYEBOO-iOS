@@ -283,8 +283,6 @@ extension MyPageViewController {
                         
             DispatchQueue.main.async {
                 switch settings.authorizationStatus {
-                case .notDetermined:
-                    self.requestNoticeAuthorization()
                 case .authorized, .provisional, .ephemeral:
                     self.viewModel.action(.notificationSwitchDidTap)
                 case .denied:
@@ -292,6 +290,8 @@ extension MyPageViewController {
                         isOn: sender.isOn,
                         status: .denied
                     )
+                case .notDetermined:
+                    break
                 @unknown default:
                     break
                 }
@@ -387,19 +387,6 @@ extension MyPageViewController {
         
         sceneDelegate.window?.rootViewController = navigationController
         sceneDelegate.window?.makeKeyAndVisible()
-    }
-    
-    private func requestNoticeAuthorization() {
-        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-        UNUserNotificationCenter.current().requestAuthorization(
-            options: authOptions,
-            completionHandler: { [weak self] _, _ in
-                DispatchQueue.main.async {
-                    UIApplication.shared.registerForRemoteNotifications()
-                }
-                self?.checkNoticeAuthorizationWhenBack()
-            }
-        )
     }
     
     private func presentMoveSettingAlert(

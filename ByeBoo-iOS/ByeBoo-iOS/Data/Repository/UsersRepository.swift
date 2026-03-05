@@ -10,20 +10,24 @@ import Foundation
 struct DefaultUsersRepository: UsersInterface {
     private let network: NetworkService
     private let userDefaultsService: UserDefaultService
+    private let keychainService: KeychainService
     
     init(
         network: NetworkService,
-        userDefaultsService: UserDefaultService
+        userDefaultsService: UserDefaultService,
+        keychainService: KeychainService
     ) {
         self.network = network
         self.userDefaultsService = userDefaultsService
+        self.keychainService = keychainService
     }
     
     // MARK: Network
     
     func fetchJourney() async throws -> JourneyEntity {
+        let accessToken = loadAccessToken()
         let result = try await network.request(
-            UsersAPI.journey,
+            UsersAPI.journey(accessToken: accessToken),
             decodingType: UserJourneyResponseDTO.self
         )
         
@@ -32,12 +36,19 @@ struct DefaultUsersRepository: UsersInterface {
     
     func sendUser(
         name: String,
-        feeling: String,
         questStyle: String
     ) async throws -> UserEntity {
-        let userRequestDTO: UserRequestDTO = .init(name: name, feeling: feeling, questStyle: questStyle)
+        let accessToken = loadAccessToken()
+        let userRequestDTO: UserRequestDTO = .init(
+            name: name,
+            feeling: "EXHAUSTED",
+            questStyle: questStyle
+        )
         let result = try await network.request(
-            UsersAPI.sendUser(requestDTO: userRequestDTO),
+            UsersAPI.sendUser(
+                accessToken: accessToken,
+                requestDTO: userRequestDTO
+            ),
             decodingType: UserResponseDTO.self
         )
         let _ = userDefaultsService.save(result.id, key: .userID)
@@ -51,8 +62,9 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func fetchCharacterDialogue() async throws -> DialogueEntity {
+        let accessToken = loadAccessToken()
         let result = try await network.request(
-            UsersAPI.character,
+            UsersAPI.character(accessToken: accessToken),
             decodingType: DialogueResponseDTO.self
         )
         
@@ -60,8 +72,9 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func fetchQuestStatus() async throws -> UserQuestStatusEntity {
+        let accessToken = loadAccessToken()
         let result = try await network.request(
-            UsersAPI.count,
+            UsersAPI.count(accessToken: accessToken),
             decodingType: UserQuestStatusResponseDTO.self
         )
         
@@ -69,7 +82,8 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func startJourney() async throws {
-        try await network.request(UsersAPI.start)
+        let accessToken = loadAccessToken()
+        try await network.request(UsersAPI.start(accessToken: accessToken))
     }
     
     // MARK: Persistence
@@ -95,8 +109,14 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func modifyUserNickname(name: String) async throws -> String {
+        let accessToken = loadAccessToken()
         let result = try await network.request(
-            UsersAPI.modifyName(requestDTO: UserNameRequestDTO(name: name)),
+            UsersAPI.modifyName(
+                accessToken: accessToken,
+                requestDTO: UserNameRequestDTO(
+                    name: name
+                )
+            ),
             decodingType: UserNameResponseDTO.self
         )
         let _ = userDefaultsService.save(result.name, key: .userName)
@@ -109,8 +129,9 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func updateNotificationPermission() async throws -> Bool {
+        let accessToken = loadAccessToken()
         let result = try await network.request(
-            UsersAPI.updateNotificationPermission,
+            UsersAPI.updateNotificationPermission(accessToken: accessToken),
             decodingType: AlarmEnabledResponseDTO.self
         )
         let alarmEnabled = result.alarmEnabled
@@ -137,6 +158,10 @@ struct DefaultUsersRepository: UsersInterface {
             }
             return alarmEnabled
         }
+    }
+    
+    private func loadAccessToken() -> String {
+        keychainService.load(key: .accessToken)
     }
 }
 
@@ -182,12 +207,11 @@ final class MockUserRepository: UsersInterface {
     
     func sendUser(
         name: String,
-        feeling: String,
         questStyle: String
     ) async throws -> UserEntity {
         return .stub(
             name: name,
-            feeling: feeling,
+            feeling: "RECORDING",
             questStyle: questStyle
         )
     }

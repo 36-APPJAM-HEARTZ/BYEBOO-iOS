@@ -10,18 +10,24 @@ import Foundation
 import Alamofire
 
 enum UsersAPI {
-    case journey
-    case sendUser(requestDTO: UserRequestDTO)
-    case character
-    case count
-    case start
-    case modifyName(requestDTO: UserNameRequestDTO)
-    case updateNotificationPermission
+    case journey(accessToken: String)
+    case sendUser(accessToken: String, requestDTO: UserRequestDTO)
+    case character(accessToken: String)
+    case count(accessToken: String)
+    case start(accessToken: String)
+    case modifyName(accessToken: String, requestDTO: UserNameRequestDTO)
+    case updateNotificationPermission(accessToken: String)
 }
 
 extension UsersAPI: EndPoint {
     var basePath: String {
         return "/api/v1/users"
+
+//        switch self {
+//        case .journey, .character, .count, .start, .modifyName, .updateNotificationPermission:
+//        case .sendUser:
+//            return "/api/v2/users"
+//        }
     }
     
     var path: String {
@@ -54,9 +60,14 @@ extension UsersAPI: EndPoint {
     
     var headers: HeaderType {
         switch self {
-        case .journey, .sendUser, .character, .count, .start, .modifyName, .updateNotificationPermission:
-            let keychainService = DefaultKeychainService()
-            return .withAuth(acessToken: keychainService.load(key: .accessToken))
+        case .journey(let accessToken),
+                .sendUser(let accessToken, _),
+                .character(let accessToken),
+                .count(let accessToken),
+                .start(let accessToken),
+                .modifyName(let accessToken, _),
+                .updateNotificationPermission(let accessToken):
+            return .withAuth(acessToken: accessToken)
         }
     }
     
@@ -77,9 +88,9 @@ extension UsersAPI: EndPoint {
         switch self {
         case .journey, .character, .count, .start, .updateNotificationPermission:
             return nil
-        case .sendUser(let dto):
+        case .sendUser(_, let dto):
             return try? dto.toDictionary()
-        case .modifyName(let dto):
+        case .modifyName(_, let dto):
             return try? dto.toDictionary()
         }
     }

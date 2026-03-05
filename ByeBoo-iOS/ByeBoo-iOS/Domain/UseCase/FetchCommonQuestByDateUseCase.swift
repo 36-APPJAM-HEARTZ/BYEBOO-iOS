@@ -6,25 +6,41 @@
 //
 
 protocol FetchCommonQuestByDateUseCase {
-    func execute(date: String) async throws -> CommonQuestAnswersEntity
+    func execute(
+        date: String,
+        answerID: Int?,
+        limit: Int
+    ) async throws -> CommonQuestAnswersEntity
 }
 
 struct DefaultFetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase {
     
-    private let repository: QuestsInterface
+    private let repository: CommonQuestInterface
     
-    init(repository: QuestsInterface) {
+    init(repository: CommonQuestInterface) {
         self.repository = repository
     }
     
-    func execute(date: String) async throws -> CommonQuestAnswersEntity {
-        try await repository.fetchCommoncQuest(date: date)
+    func execute(
+        date: String,
+        answerID: Int?,
+        limit: Int
+    ) async throws -> CommonQuestAnswersEntity {
+        try await repository.fetchCommonQuest(
+            date: date,
+            answerID: answerID,
+            limit: limit
+        )
     }
 }
 
 struct MockFetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase {
     
-    func execute(date: String) async throws -> CommonQuestAnswersEntity {
+    func execute(
+        date: String,
+        answerID: Int?,
+        limit: Int
+    ) async throws -> CommonQuestAnswersEntity {
         .stub()
     }
 }

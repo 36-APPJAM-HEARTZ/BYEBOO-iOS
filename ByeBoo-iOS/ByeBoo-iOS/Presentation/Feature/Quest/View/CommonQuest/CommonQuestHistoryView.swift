@@ -165,13 +165,13 @@ extension CommonQuestHistoryView {
     
     func configure(
         question: String,
-        writtenAt: Date,
+        writtenAt: String,
         profileIcon: UIImage?,
         nickname: String?,
         content: String
     ) {
         questionContentLabel.text = question
-        dateLabel.text = DateFormatter.standard.string(from: writtenAt)
+        dateLabel.text = writtenAt
         answerContentLabel.text = content
         
         if let profileIcon {

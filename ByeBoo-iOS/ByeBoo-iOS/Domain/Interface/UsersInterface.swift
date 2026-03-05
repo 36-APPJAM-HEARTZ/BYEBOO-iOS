@@ -14,7 +14,7 @@ protocol UsersInterface {
     func setHelperShown()
     func getIsHelperShown() -> Bool?
     func fetchJourney() async throws -> JourneyEntity
-    func sendUser(name: String, feeling: String, questStyle: String) async throws -> UserEntity
+    func sendUser(name: String, questStyle: String) async throws -> UserEntity
     func fetchCharacterDialogue() async throws -> DialogueEntity
     func fetchQuestStatus() async throws -> UserQuestStatusEntity
     func startJourney() async throws

@@ -139,7 +139,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: FetchCommonQuestByDateUseCase.self) { _ in
-            return DefaultFetchCommonQuestByDateUseCase(repository: questRepository)
+            return DefaultFetchCommonQuestByDateUseCase(repository: commonQuestRepository)
         }
         
         DIContainer.shared.register(type: AutoLoginUseCase.self) { _ in

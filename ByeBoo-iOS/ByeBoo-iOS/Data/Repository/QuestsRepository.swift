@@ -119,10 +119,6 @@ struct DefaultQuestRepository: QuestsInterface {
         try await editQuest(questID: questID, answer: answer, imageKey: imageKey)
     }
     
-    func fetchCommoncQuest(date: String) async throws -> CommonQuestAnswersEntity {
-        .stub()
-    }
-    
     // MARK: private function
     
     private func makeSignedURL(imageKey: String) async throws -> String {
