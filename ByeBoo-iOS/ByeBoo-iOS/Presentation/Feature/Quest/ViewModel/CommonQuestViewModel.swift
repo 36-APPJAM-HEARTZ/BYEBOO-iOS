@@ -11,7 +11,7 @@ import UIKit
 final class CommonQuestViewModel {
     
     private let cancellables = Set<AnyCancellable>()
-    private let commonQuestSubject = PassthroughSubject<Result<CommonQuestAnswersEntity, ByeBooError>, Never>.init()
+    private let commonQuestSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>.init()
     
     private(set) var output: Output
     
@@ -50,7 +50,7 @@ final class CommonQuestViewModel {
                     answers = result.answers
                 }
                 
-                commonQuestSubject.send(.success(result))
+                commonQuestSubject.send(.success(()))
             } catch {
                 commonQuestSubject.send(.failure(error as! ByeBooError))
             }
@@ -67,7 +67,7 @@ extension CommonQuestViewModel: ViewModelType {
     }
     
     struct Output {
-        let commonQuestPublisher: AnyPublisher<Result<CommonQuestAnswersEntity, ByeBooError>, Never>
+        let commonQuestPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {

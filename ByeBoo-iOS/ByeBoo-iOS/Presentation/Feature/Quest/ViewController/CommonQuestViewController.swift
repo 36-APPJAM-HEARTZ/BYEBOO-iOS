@@ -75,7 +75,7 @@ extension CommonQuestViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 switch result {
-                case .success(let answers):
+                case .success:
                     self?.rootView.commonQuestTableView.reloadData()
                 case .failure(let error):
                     ByeBooLogger.error(error)
