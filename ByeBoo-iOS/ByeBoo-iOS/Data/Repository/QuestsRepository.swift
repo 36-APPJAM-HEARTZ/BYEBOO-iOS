@@ -226,6 +226,6 @@ final class MockQuestsRepository: QuestsInterface {
     }
     
     func fetchCommoncQuest(date: String) async throws -> CommonQuestAnswersEntity {
-        .stub()
+        .emptyAnswerStub()
     }
 }

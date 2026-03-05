@@ -26,15 +26,28 @@ struct CommonQuestAnswerEntity {
 }
 
 extension CommonQuestAnswersEntity {
-    static func stub() -> Self {
+    
+    static let profileIcons = ["SAD", "SO_SO", "RELIEVED", "SELF_UNDERSTANDING"]
+    
+    static let allAnswers: [CommonQuestAnswerEntity] = (1...30).map {
+        CommonQuestAnswerEntity(
+            answerID: $0,
+            writer: "유저\($0)",
+            profileIcon: profileIcons[$0 % 4],
+            writtenAt: Date.now.toString(),
+            content: "\($0)번째 테스트 답변"
+        )
+    }
+    
+    static func emptyAnswerStub() -> Self {
         .init(
-            question: "연애에서 반복된 문제 패턴 3가지를 생각해보아요",
+            question: "Question",
             questID: 1,
-            answerCount: 5,
-            isAnswered: false,
-            hasNext: true,
+            answerCount: allAnswers.count,
+            isAnswered: true,
+            hasNext: false,
             nextCursor: nil,
-            answers: [.stub(), .stub(), .stub(), .stub(), .stub()]
+            answers: []
         )
     }
 }

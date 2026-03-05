@@ -39,28 +39,28 @@ struct MockFetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase {
     ) async throws -> CommonQuestAnswersEntity {
         let limit = 10
         let startIndex: Int
-        let allAnswersCount = CommonQuestAnswersEntity.allAnswers.count
+        let allAnswers = CommonQuestAnswersEntity.allAnswers
         
         if let cursor {
-            let cursorIndex = CommonQuestAnswersEntity.getCursorIndex(cursor: cursor)
+            let cursorIndex = allAnswers.firstIndex { $0.answerID == cursor } ?? -1
             startIndex = cursorIndex + 1
         } else {
             startIndex = 0
         }
         
-        let endIndex = min(startIndex + limit, allAnswersCount)
-        guard startIndex < CommonQuestAnswersEntity.allAnswers.count else {
+        let endIndex = min(startIndex + limit, allAnswers.count)
+        guard startIndex < allAnswers.count else {
             return .emptyAnswerStub()
         }
         
-        let limitedAnswer = CommonQuestAnswersEntity.getLimitedAnswers(from: startIndex, to: endIndex)
-        let hasNext = endIndex < allAnswersCount
+        let limitedAnswer = Array(allAnswers[startIndex..<endIndex])
+        let hasNext = endIndex < allAnswers.count
         let nextCursor = hasNext ? limitedAnswer.last?.answerID : nil
         
         return .init(
             question: "오늘 하루 어떤 감정을 가장 많이 느꼈나요?",
             questID: 1,
-            answerCount: allAnswersCount,
+            answerCount: allAnswers.count,
             isAnswered: true,
             hasNext: hasNext,
             nextCursor: nextCursor,
