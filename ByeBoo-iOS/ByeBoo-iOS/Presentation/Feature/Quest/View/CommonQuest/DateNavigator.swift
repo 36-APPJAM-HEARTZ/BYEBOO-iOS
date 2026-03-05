@@ -8,7 +8,7 @@
 import UIKit
 
 protocol DateNavigatorDelegate: AnyObject {
-    func dateDidChanged(to date: String)
+    func dateDidChanged(to date: Date)
 }
 
 final class DateNavigator: UITableViewHeaderFooterView {
@@ -123,7 +123,7 @@ extension DateNavigator {
         updateNextButton()
         
         // TO-DO : 실제 날짜 형식으로 수정
-        delegate?.dateDidChanged(to: currentDate.toString())
+        delegate?.dateDidChanged(to: currentDate)
     }
     
     @objc
@@ -132,7 +132,7 @@ extension DateNavigator {
         dateLabel.text = dateFormatter.string(from: currentDate)
         updateNextButton()
         
-        delegate?.dateDidChanged(to: currentDate.toString())
+        delegate?.dateDidChanged(to: currentDate)
     }
     
     private func getDate(by value: Int) -> Date? {

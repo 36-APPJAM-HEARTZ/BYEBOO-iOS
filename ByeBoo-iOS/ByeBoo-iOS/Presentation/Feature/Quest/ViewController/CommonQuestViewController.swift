@@ -107,24 +107,25 @@ extension CommonQuestViewController: DateNavigatorDelegate {
         writeCommonQuestViewController.configure(questID, nil, QuestType.question, viewModel.question)
         self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)
     }
-
-    func dateDidChanged(to date: String) {
+    
+    func dateDidChanged(to date: Date) {
         let _ = viewModel.action(
-            .moveDateButtonDidTap(selectedDate: date)
+            .moveDateButtonDidTap(selectedDate: DateFormatter.apiDate.string(from: date))
         )
-        rootView.commonQuestTableView.reloadData()
     }
 }
 
 extension CommonQuestViewController: UITableViewDelegate {
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 || !viewModel.isExistAnswer {
             return
         }
         
         let answerIndex = indexPath.row - 1
-        let answer = viewModel.getAnswer(at: answerIndex)
+        guard let answer = viewModel.getAnswer(at: answerIndex) else {
+            return
+        }
         
         let historyViewController = ViewControllerFactory.shared.makeCommonQuestHistoryViewController()
         historyViewController.configure(
