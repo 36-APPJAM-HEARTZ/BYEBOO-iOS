@@ -31,4 +31,5 @@ protocol QuestsInterface {
         imageKey: String,
         isImageChanged: Bool) async throws
     func fetchCommoncQuest(date: String) async throws -> CommonQuestAnswersEntity
+    func fetchAIAnswer(questID: Int, isAnswerExists: Bool) async throws -> AIAnswerEntity
 }
