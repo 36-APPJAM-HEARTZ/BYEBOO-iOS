@@ -119,6 +119,28 @@ struct DefaultQuestRepository: QuestsInterface {
         try await editQuest(questID: questID, answer: answer, imageKey: imageKey)
     }
     
+    func fetchCommoncQuest(date: String) async throws -> CommonQuestAnswersEntity {
+        .stub()
+    }
+    
+    func fetchAIAnswer(questID: Int, isAnswerExists: Bool) async throws -> AIAnswerEntity {
+        let result: AIAnswerResponseDTO
+        
+        if isAnswerExists {
+            result = try await network.request(
+                QuestAPI.fetchAIAnswer(questID: questID),
+                decodingType: AIAnswerResponseDTO.self
+            )
+        } else {
+            result = try await network.request(
+                QuestAPI.createAIAnswer(questID: questID),
+                decodingType: AIAnswerResponseDTO.self
+            )
+        }
+        
+        return result.toEntity()
+    }
+    
     // MARK: private function
     
     private func makeSignedURL(imageKey: String) async throws -> String {
@@ -166,6 +188,14 @@ struct DefaultQuestRepository: QuestsInterface {
         let _ = try await network.request(
             QuestAPI.editActive(questID: questID, request: editQuestActiveDTO)
         )
+    }
+    
+    private func createAIAnswer(questID: Int) async throws -> AIAnswerEntity {
+        let result = try await network.request(
+            QuestAPI.createAIAnswer(questID: questID),
+            decodingType: AIAnswerResponseDTO.self
+        )
+        return result.toEntity()
     }
 }
 
@@ -227,5 +257,11 @@ final class MockQuestsRepository: QuestsInterface {
     
     func fetchCommoncQuest(date: String) async throws -> CommonQuestAnswersEntity {
         .emptyAnswerStub()
+    }
+    
+    func fetchAIAnswer(questID: Int, isAnswerExists: Bool) async throws -> AIAnswerEntity {
+        try await Task.sleep(for: .seconds(2))
+        throw ByeBooError.unknownError
+//        .stub()
     }
 }

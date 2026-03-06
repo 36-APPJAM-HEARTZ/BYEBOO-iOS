@@ -69,6 +69,14 @@ final class ArchiveQuestViewController: BaseViewController {
         viewModel.action(.questAnswerDidLoad(questID: questID))
         bind()
     }
+    
+    override func setAddTarget() {
+        rootView.AIAnswerButton.addTarget(
+            self,
+            action: #selector(AIAnswerButtonDidTap),
+            for: .touchUpInside
+        )
+    }
 }
 
 extension ArchiveQuestViewController: ToastPresentable, ToastErrorHandler {
@@ -145,6 +153,18 @@ extension ArchiveQuestViewController {
         viewController.getExistingQuest(questID: self.viewModel.questID ,questAnswer: entity.answer, image: entity.imageUrl, imageKey: entity.imageKey)
         viewController.tabBarController?.tabBar.isHidden = true
         self.navigationController?.pushViewController(viewController, animated: false)
+    }
+    
+    @objc
+    private func AIAnswerButtonDidTap() {
+        let viewController = ViewControllerFactory.shared.makeAIAnswerViewController()
+        
+        viewController.configure(
+            questID: questID,
+            isAIAnswerExists: viewModel.isAIAnswerExists()
+        )
+        
+        navigationController?.pushViewController(viewController, animated: false)
     }
     
     private func setNavigateViewController(type: QuestType) -> ( BaseViewController & EditQuestProtocol ) {

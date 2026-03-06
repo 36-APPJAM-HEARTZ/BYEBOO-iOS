@@ -8,15 +8,17 @@
 import Foundation
 
 struct QuestAnswerResponseDTO: Decodable {
-    var stepNumber: Int
-    var questNumber: Int
-    var createdAt: String
-    var question: String
-    var answer: String?
-    var questEmotionState: String
-    var imageUrl: String?
-    var imageKey: String?
-    var emotionDescription: String
+    let stepNumber: Int
+    let questNumber: Int
+    let createdAt: String
+    let question: String
+    let answer: String?
+    let questEmotionState: String
+    let imageUrl: String?
+    let imageKey: String?
+    let emotionDescription: String
+    // TODO: API 변동되면 옵셔널 해제
+    let aiAnswerExists: Bool?
 }
 
 extension QuestAnswerResponseDTO {
@@ -30,7 +32,8 @@ extension QuestAnswerResponseDTO {
             questEmotionState: questEmotionState,
             imageUrl: imageUrl ?? "",
             imageKey: imageKey ?? "",
-            emotionDescription: emotionDescription
+            emotionDescription: emotionDescription,
+            AIAnswerExists: aiAnswerExists ?? false
         )
     }
 }

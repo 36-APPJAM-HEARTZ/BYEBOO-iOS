@@ -166,6 +166,11 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultCheckAlarmEnabledUseCase(repository: userRepository)
         }
         
+        DIContainer.shared.register(type: FetchAIAnswerUseCase.self) { _ in
+            return DefaultFetchAIAnswerUseCase(repository: questRepository)
+            
+        }
+        
         DIContainer.shared.register(type: IsForbiddenWordUseCase.self) { _ in
             return DefaultIsForbiddenWordUseCase(repository: forbiddenWordRepository)
         }

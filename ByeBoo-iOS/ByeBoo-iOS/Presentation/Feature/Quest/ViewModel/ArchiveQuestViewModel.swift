@@ -19,13 +19,14 @@ final class ArchiveQuestViewModel: ViewModelType {
     private var resultSubject = PassthroughSubject<Result<QuestAnswerEntity, ByeBooError>, Never>()
     private var loadingSubject = PassthroughSubject<
         Bool, Never>()
+    
     private(set) var entity: QuestAnswerEntity?
     private(set) var questID: Int = 1
     
     init(
-        questAnswerCase: QuestAnswerUseCase
+        questAnswerUseCase: QuestAnswerUseCase
     ) {
-        self.questAnswerUseCase = questAnswerCase
+        self.questAnswerUseCase = questAnswerUseCase
         
         output = Output(
             resultPublisher: resultSubject.eraseToAnyPublisher(),
@@ -50,6 +51,12 @@ extension ArchiveQuestViewModel {
             self.questID = questID
             fetchQuestAnswer(questID: questID)
         }
+    }
+}
+
+extension ArchiveQuestViewModel {
+    func isAIAnswerExists() -> Bool {
+        return entity?.AIAnswerExists ?? false
     }
 }
 
