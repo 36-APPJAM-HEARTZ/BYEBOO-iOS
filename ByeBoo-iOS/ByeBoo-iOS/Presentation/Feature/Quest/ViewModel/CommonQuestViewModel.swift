@@ -12,11 +12,12 @@ final class CommonQuestViewModel {
     
     private let cancellables = Set<AnyCancellable>()
     private let commonQuestSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>.init()
+    private let fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase
+    private let minute: Double = 60
+    private let hour: Double = 3600
+    private let day: Double = 86400
     
     private(set) var output: Output
-    
-    private let fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase
-    
     private var commonQuest: CommonQuestAnswersEntity?
     private var answers: [CommonQuestAnswerEntity] = []
     private(set) var hasMorePages = true
@@ -109,7 +110,7 @@ extension CommonQuestViewModel {
             }
         }
     }
-    
+        
     var question: String {
         commonQuest?.question ?? ""
     }
@@ -127,14 +128,14 @@ extension CommonQuestViewModel {
     }
     
     var currentAnswerCount: Int {
-        self.answers.count
+        answers.count
     }
     
     func getAnswer(at index: Int) -> CommonQuestAnswerEntity? {
         guard index >= 0 && index < answers.count else {
             return nil
         }
-        return self.answers[index]
+        return answers[index]
     }
     
     func getProfileIcon(at index: Int) -> UIImage? {
@@ -150,9 +151,25 @@ extension CommonQuestViewModel {
     }
     
     func getWrittenAt(at index: Int) -> String? {
-        guard index >= 0 && index < answers.count else {
+        guard index >= 0 && index < answers.count,
+              let writtenAt = DateFormatter.detailDate.date(from: answers[index].writtenAt)
+        else {
             return nil
         }
-        return self.answers[index].writtenAt
+        
+        let diffTime = Date().timeIntervalSince(writtenAt)
+        
+        switch diffTime {
+        case ..<minute:
+            return "방금 전"
+        case minute..<hour:
+            let minutes = Int(diffTime / minute)
+            return "\(minutes)분 전"
+        case hour..<day:
+            let hours = Int(diffTime / hour)
+            return "\(hours)시간 전"
+        default:
+            return DateFormatter.displayDate.string(from: writtenAt)
+        }
     }
 }

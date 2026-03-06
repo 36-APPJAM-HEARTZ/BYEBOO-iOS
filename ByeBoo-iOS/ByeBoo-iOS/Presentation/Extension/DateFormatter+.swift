@@ -20,4 +20,10 @@ extension DateFormatter {
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter
     }()
+    
+    static let detailDate: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ssSSS"
+        return formatter
+    }()
 }
