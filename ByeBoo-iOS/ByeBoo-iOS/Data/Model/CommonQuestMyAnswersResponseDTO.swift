@@ -7,7 +7,7 @@
 
 struct CommonQuestMyAnswersResponseDTO: Decodable {
     let hasNext: Bool
-    let nextCursor: Int
+    let nextCursor: Int?
     let answers: [CommonQuestMyAnswerResponseDTO]
 }
 

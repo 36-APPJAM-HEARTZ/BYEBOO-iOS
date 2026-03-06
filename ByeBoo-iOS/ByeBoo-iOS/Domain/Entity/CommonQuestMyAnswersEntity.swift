@@ -5,9 +5,11 @@
 //  Created by APPLE on 3/6/26.
 //
 
+import Foundation
+
 struct CommonQuestMyAnswersEntity {
     let hasNext: Bool
-    let nextCursor: Int
+    let nextCursor: Int?
     let answers: [CommonQuestMyAnswerEntity]
 }
 
