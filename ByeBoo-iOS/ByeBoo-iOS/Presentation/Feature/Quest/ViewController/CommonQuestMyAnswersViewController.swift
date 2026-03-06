@@ -139,6 +139,24 @@ extension CommonQuestMyAnswersViewController: UITableViewDelegate {
     ) -> CGFloat {
         section == 0 ? 0 : 5.adjustedH
     }
+    
+    func tableView(
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
+    ) {
+        let prefetchOffset = 3
+        let trigger = max(1, viewModel.answersCount - prefetchOffset)
+        
+        guard cell is CommonQuestMyAnswerCell,
+              viewModel.hasMorePages,
+              indexPath.section == trigger
+        else {
+            return
+        }
+        
+        viewModel.action(.scrollAnswer)
+    }
 }
 
 extension CommonQuestMyAnswersViewController: UITableViewDataSource {
