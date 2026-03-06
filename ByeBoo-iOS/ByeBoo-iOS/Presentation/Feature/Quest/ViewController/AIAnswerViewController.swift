@@ -16,7 +16,6 @@ final class AIAnswerViewController: BaseViewController {
     
     private var questID: Int = 1
     private var isAIAnswerExists: Bool = false
-    private var answerState: AIAnswerState = .loading
     
     init(viewModel: AIAnswerViewModel) {
         self.viewModel = viewModel

@@ -123,14 +123,6 @@ struct DefaultQuestRepository: QuestsInterface {
         .stub()
     }
     
-    func createAIAnswer(questID: Int) async throws -> AIAnswerEntity {
-        let result = try await network.request(
-            QuestAPI.createAIAnswer(questID: questID),
-            decodingType: AIAnswerResponseDTO.self
-        )
-        return result.toEntity()
-    }
-    
     func fetchAIAnswer(questID: Int, isAnswerExists: Bool) async throws -> AIAnswerEntity {
         let result: AIAnswerResponseDTO
         
@@ -196,6 +188,14 @@ struct DefaultQuestRepository: QuestsInterface {
         let _ = try await network.request(
             QuestAPI.editActive(questID: questID, request: editQuestActiveDTO)
         )
+    }
+    
+    private func createAIAnswer(questID: Int) async throws -> AIAnswerEntity {
+        let result = try await network.request(
+            QuestAPI.createAIAnswer(questID: questID),
+            decodingType: AIAnswerResponseDTO.self
+        )
+        return result.toEntity()
     }
 }
 
