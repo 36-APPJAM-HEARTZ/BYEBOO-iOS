@@ -280,12 +280,17 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: CommonQuestMyAnswerViewModel.self) { container in
-            guard let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self) else {
+            guard let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
+                  let fetchCommonQuestMyAnswersUseCase = container.resolve(type: FetchCommonQuestMyAnswersUseCase.self)
+            else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
-            return CommonQuestMyAnswerViewModel(getUserNameUseCase: getUserNameUseCase)
+            return CommonQuestMyAnswerViewModel(
+                getUserNameUseCase: getUserNameUseCase,
+                fetchCommonQuestMyAnswersUseCase: fetchCommonQuestMyAnswersUseCase
+            )
         }
     }
 }
