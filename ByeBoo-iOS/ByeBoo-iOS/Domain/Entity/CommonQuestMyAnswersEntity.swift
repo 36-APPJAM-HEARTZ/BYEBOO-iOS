@@ -21,6 +21,23 @@ struct CommonQuestMyAnswerEntity {
 }
 
 extension CommonQuestMyAnswersEntity {
+    
+    static let allAnswers: [CommonQuestMyAnswerEntity] = (1...30).map {
+        CommonQuestMyAnswerEntity(
+            answerID: $0,
+            writtenAt: Date.now.toString(),
+            content: "\($0)번째 테스트 답변",
+            question: "\($0)번째 질문"
+        )
+    }
+    
+    static func emptyAnswerStub() -> Self {
+        .init(
+            hasNext: false,
+            nextCursor: nil,
+            answers: []
+        )
+    }
     static func stub() -> Self {
         .init(hasNext: true, nextCursor: 5, answers: CommonQuestMyAnswerEntity.stubs())
     }
