@@ -8,7 +8,7 @@
 import Foundation
 
 protocol SendUserUseCase {
-    func execute(name: String, feeling: String, questStyle: String) async throws -> UserEntity
+    func execute(name: String, questStyle: String) async throws -> UserEntity
 }
 
 struct DefaultSenduserUseCase: SendUserUseCase {
@@ -20,12 +20,10 @@ struct DefaultSenduserUseCase: SendUserUseCase {
     
     func execute(
         name: String,
-        feeling: String,
         questStyle: String
     ) async throws -> UserEntity {
         try await repository.sendUser(
             name: name,
-            feeling: feeling,
             questStyle: questStyle
         )
     }

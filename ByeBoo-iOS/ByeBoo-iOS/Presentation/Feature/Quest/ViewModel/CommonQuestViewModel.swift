@@ -5,30 +5,87 @@
 //  Created by APPLE on 2/17/26.
 //
 
+import Combine
 import UIKit
 
 final class CommonQuestViewModel {
     
-    private var commonQuest: CommonQuestAnswersEntity?
+    private let cancellables = Set<AnyCancellable>()
+    private let commonQuestSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>.init()
     private let fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase
+    private let minute: Double = 60
+    private let hour: Double = 3600
+    private let day: Double = 86400
+    
+    private(set) var output: Output
+    private var commonQuest: CommonQuestAnswersEntity?
+    private var answers: [CommonQuestAnswerEntity] = []
+    private(set) var hasMorePages = true
+    private var nextCursor: Int? = nil
+    private var currentDate: String = DateFormatter.apiDate.string(from: .now)
     
     init(fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase) {
         self.fetchCommonQuestByDateUseCase = fetchCommonQuestByDateUseCase
+        self.output = Output(
+            commonQuestPublisher: commonQuestSubject.eraseToAnyPublisher()
+        )
     }
+    
+    private func fetchCommonQuestByDate(
+        date: String,
+        cursor: Int? = nil
+    ) {
+        Task {
+            do {
+                let result = try await fetchCommonQuestByDateUseCase.execute(
+                    date: date,
+                    cursor: cursor
+                )
+                commonQuest = result
+                hasMorePages = result.hasNext
+                nextCursor = result.nextCursor
+                
+                if let _ = cursor {
+                    answers.append(contentsOf: result.answers)
+                } else {
+                    answers = result.answers
+                }
+                
+                commonQuestSubject.send(.success(()))
+            } catch {
+                commonQuestSubject.send(.failure(error as! ByeBooError))
+            }
+        }
+    }
+}
+
+extension CommonQuestViewModel: ViewModelType {
     
     enum Input {
         case viewDidLoad
         case moveDateButtonDidTap(selectedDate: String)
+        case scrollAnswer
     }
     
     struct Output {
-        let commonQuestAnswers: CommonQuestAnswersEntity
+        let commonQuestPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
     }
     
-    func action(_ trigger: Input) -> Output {
-        let result: CommonQuestAnswersEntity = .stub()
-        commonQuest = result
-        return .init(commonQuestAnswers: result)
+    func action(_ trigger: Input) {
+        switch trigger {
+        case .viewDidLoad:
+            fetchCommonQuestByDate(date: currentDate)
+        case .moveDateButtonDidTap(let selectedDate):
+            currentDate = selectedDate
+            nextCursor = nil
+            hasMorePages = true
+            fetchCommonQuestByDate(date: selectedDate)
+        case .scrollAnswer:
+            guard hasMorePages else {
+                return
+            }
+            fetchCommonQuestByDate(date: currentDate, cursor: nextCursor)
+        }
     }
 }
 
@@ -53,13 +110,13 @@ extension CommonQuestViewModel {
             }
         }
     }
-    
+        
     var question: String {
         commonQuest?.question ?? ""
     }
     
     var questID: Int {
-        commonQuest?.questID ?? 1 
+        commonQuest?.questID ?? 1
     }
     
     var answersCount: Int {
@@ -70,19 +127,49 @@ extension CommonQuestViewModel {
         commonQuest?.answerCount != 0
     }
     
-    func getAnswer(at index: Int) -> CommonQuestAnswerEntity {
-        commonQuest?.answers[index] ?? .stub()
+    var currentAnswerCount: Int {
+        answers.count
+    }
+    
+    func getAnswer(at index: Int) -> CommonQuestAnswerEntity? {
+        guard index >= 0 && index < answers.count else {
+            return nil
+        }
+        return answers[index]
     }
     
     func getProfileIcon(at index: Int) -> UIImage? {
-        let iconString = commonQuest?.answers[index].profileIcon
+        guard index >= 0 && index < answers.count else {
+            return nil
+        }
+        
+        let iconString = self.answers[index].profileIcon
         let profileIcon = ProfileIcon.allCases
             .first { $0.rawValue == iconString }?
             .image
         return profileIcon
     }
     
-    func getWrittenAt(at index: Int) -> Date {
-        commonQuest?.answers[index].writtenAt ?? .now
+    func getWrittenAt(at index: Int) -> String? {
+        guard index >= 0 && index < answers.count,
+              let writtenAt = DateFormatter.detailDate.date(from: answers[index].writtenAt)
+        else {
+            return nil
+        }
+        
+        let diffTime = Date().timeIntervalSince(writtenAt)
+        
+        switch diffTime {
+        case ..<minute:
+            return "방금 전"
+        case minute..<hour:
+            let minutes = Int(diffTime / minute)
+            return "\(minutes)분 전"
+        case hour..<day:
+            let hours = Int(diffTime / hour)
+            return "\(hours)시간 전"
+        default:
+            return DateFormatter.displayDate.string(from: writtenAt)
+        }
     }
 }

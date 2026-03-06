@@ -5,12 +5,15 @@
 //  Created by APPLE on 2/12/26.
 //
 
+import Combine
 import UIKit
 
 final class CommonQuestViewController: BaseViewController {
     
     private let rootView = CommonQuestView()
     private let viewModel: CommonQuestViewModel
+    
+    private var cancellable = Set<AnyCancellable>()
     
     init(viewModel: CommonQuestViewModel) {
         self.viewModel = viewModel
@@ -33,7 +36,8 @@ final class CommonQuestViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let _ = viewModel.action(.viewDidLoad)
+        bind()
+        viewModel.action(.viewDidLoad)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -64,6 +68,23 @@ final class CommonQuestViewController: BaseViewController {
     }
 }
 
+extension CommonQuestViewController {
+    
+    func bind() {
+        viewModel.output.commonQuestPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success:
+                    self?.rootView.commonQuestTableView.reloadData()
+                case .failure(let error):
+                    ByeBooLogger.error(error)
+                }
+            }
+            .store(in: &cancellable)
+    }
+}
+
 extension CommonQuestViewController: DateNavigatorDelegate {
     
     @objc
@@ -86,24 +107,25 @@ extension CommonQuestViewController: DateNavigatorDelegate {
         writeCommonQuestViewController.configure(questID, nil, QuestType.question, viewModel.question)
         self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)
     }
-
-    func dateDidChanged(to date: String) {
+    
+    func dateDidChanged(to date: Date) {
         let _ = viewModel.action(
-            .moveDateButtonDidTap(selectedDate: date)
-        ).commonQuestAnswers
-        rootView.commonQuestTableView.reloadData()
+            .moveDateButtonDidTap(selectedDate: DateFormatter.apiDate.string(from: date))
+        )
     }
 }
 
 extension CommonQuestViewController: UITableViewDelegate {
-
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 || !viewModel.isExistAnswer {
             return
         }
         
         let answerIndex = indexPath.row - 1
-        let answer = viewModel.getAnswer(at: answerIndex)
+        guard let answer = viewModel.getAnswer(at: answerIndex) else {
+            return
+        }
         
         let historyViewController = ViewControllerFactory.shared.makeCommonQuestHistoryViewController()
         historyViewController.configure(
@@ -138,6 +160,7 @@ extension CommonQuestViewController: UITableViewDelegate {
             return nil
         }
         
+        navigator.delegate = self
         return navigator
     }
     
@@ -146,6 +169,24 @@ extension CommonQuestViewController: UITableViewDelegate {
         heightForHeaderInSection section: Int
     ) -> CGFloat {
         76.adjustedH
+    }
+    
+    func tableView(
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
+    ) {
+        let prefetchOffset = 3
+        let trigger = max(1, viewModel.currentAnswerCount - prefetchOffset)
+        
+        guard cell is CommonQuestAnswerCell,
+              viewModel.hasMorePages,
+              indexPath.row == trigger
+        else {
+            return
+        }
+        
+        viewModel.action(.scrollAnswer)
     }
 }
 
@@ -201,13 +242,16 @@ extension CommonQuestViewController: UITableViewDataSource {
         
         let answer = viewModel.getAnswer(at: indexPath.row - 1)
         let profileIcon = viewModel.getProfileIcon(at: indexPath.row - 1)
-        let writtenAt = DateFormatter.standard.string(from: viewModel.getWrittenAt(at: indexPath.row - 1))
+        let writtenAt = viewModel.getWrittenAt(at: indexPath.row - 1)
         
-        cell.bind(
-            profileIcon: profileIcon,
-            answer: answer,
-            writtenAt: writtenAt
-        )
+        if let answer,
+           let writtenAt {
+            cell.bind(
+                profileIcon: profileIcon,
+                answer: answer,
+                writtenAt: writtenAt
+            )
+        }
         
         return cell
     }

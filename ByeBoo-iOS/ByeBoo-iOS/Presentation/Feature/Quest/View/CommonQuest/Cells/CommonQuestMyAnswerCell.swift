@@ -114,10 +114,10 @@ extension CommonQuestMyAnswerCell {
     func bind(
         question: String,
         content: String,
-        writtenAt: Date
+        writtenAt: String
     ) {
         questionContentLabel.text = question
         answerContentLabel.text = content
-        writtenDateLabel.text = DateFormatter.standard.string(from: writtenAt)
+        writtenDateLabel.text = writtenAt
     }
 }

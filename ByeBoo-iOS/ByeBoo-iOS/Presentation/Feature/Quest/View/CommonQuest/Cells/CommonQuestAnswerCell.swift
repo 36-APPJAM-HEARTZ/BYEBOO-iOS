@@ -9,6 +9,8 @@ import UIKit
 
 final class CommonQuestAnswerCell: UITableViewCell {
         
+    private var answerID: Int?
+    
     private let containerView = UIView()
     private let userIconView = UIImageView()
     private let userNicknameLabel = UILabel()
@@ -111,5 +113,11 @@ extension CommonQuestAnswerCell {
         userNicknameLabel.text = answer.writer
         answerContentLabel.text = answer.content
         writtenDateLabel.text = writtenAt
+        
+        answerID = answer.answerID
+    }
+    
+    func getAnswewrID() -> Int? {
+        return answerID
     }
 }

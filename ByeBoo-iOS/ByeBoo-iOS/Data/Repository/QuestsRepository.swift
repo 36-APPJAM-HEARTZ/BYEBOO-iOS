@@ -120,7 +120,7 @@ struct DefaultQuestRepository: QuestsInterface {
     }
     
     func fetchCommoncQuest(date: String) async throws -> CommonQuestAnswersEntity {
-        .stub()
+        .emptyAnswerStub()
     }
     
     func fetchAIAnswer(questID: Int, isAnswerExists: Bool) async throws -> AIAnswerEntity {
@@ -256,7 +256,7 @@ final class MockQuestsRepository: QuestsInterface {
     }
     
     func fetchCommoncQuest(date: String) async throws -> CommonQuestAnswersEntity {
-        .stub()
+        .emptyAnswerStub()
     }
     
     func fetchAIAnswer(questID: Int, isAnswerExists: Bool) async throws -> AIAnswerEntity {

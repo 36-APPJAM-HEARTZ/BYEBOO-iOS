@@ -9,9 +9,21 @@ import Foundation
 
 extension DateFormatter {
     
-    static let standard: DateFormatter = {
+    static let displayDate: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy.MM.dd."
+        return formatter
+    }()
+    
+    static let apiDate: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter
+    }()
+    
+    static let detailDate: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
         return formatter
     }()
 }
