@@ -15,7 +15,7 @@ extension DateFormatter {
         return formatter
     }()
     
-    private static let apiDate: DateFormatter = {
+    private static let APIDate: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter
@@ -28,7 +28,7 @@ extension DateFormatter {
     }()
     
     static func toAPIDateString(from date: Date) -> String {
-        DateFormatter.apiDate.string(from: date)
+        DateFormatter.APIDate.string(from: date)
     }
     
     static func toDisplayDateString(from date: Date) -> String {
