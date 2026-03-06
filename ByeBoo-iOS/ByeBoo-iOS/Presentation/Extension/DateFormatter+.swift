@@ -9,21 +9,33 @@ import Foundation
 
 extension DateFormatter {
     
-    static let displayDate: DateFormatter = {
+    private static let displayDate: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy.MM.dd."
         return formatter
     }()
     
-    static let apiDate: DateFormatter = {
+    private static let apiDate: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter
     }()
     
-    static let detailDate: DateFormatter = {
+    private static let detailDate: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
         return formatter
     }()
+    
+    static func toAPIDateString(from date: Date) -> String {
+        DateFormatter.apiDate.string(from: date)
+    }
+    
+    static func toDisplayDateString(from date: Date) -> String {
+        DateFormatter.displayDate.string(from: date)
+    }
+    
+    static func toDetailDate(from string: String) -> Date? {
+        DateFormatter.detailDate.date(from: string)
+    }
 }
