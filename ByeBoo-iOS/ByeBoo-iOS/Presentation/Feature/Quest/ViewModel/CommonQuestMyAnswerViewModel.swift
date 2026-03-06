@@ -90,7 +90,7 @@ extension CommonQuestMyAnswerViewModel {
             return nil
         }
         
-        var answer = answers[index]
+        let answer = answers[index]
         let displayDate = DateFormatter.toDetailDate(from: answer.writtenAt).map {
             DateFormatter.toDisplayDateString(from: $0)
         } ?? answer.writtenAt
