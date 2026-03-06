@@ -82,7 +82,7 @@ extension CommonQuestMyAnswerViewModel: ViewModelType {
 extension CommonQuestMyAnswerViewModel {
     
     var answersCount: Int {
-        commonQuestAnswers?.answers.count ?? 0
+        answers.count
     }
     
     func getAnswer(at index: Int) -> CommonQuestMyAnswerEntity? {
