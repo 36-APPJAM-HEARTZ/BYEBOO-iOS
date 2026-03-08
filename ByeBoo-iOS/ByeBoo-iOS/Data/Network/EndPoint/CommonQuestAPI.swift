@@ -12,6 +12,7 @@ import Alamofire
 enum CommonQuestAPI {
     case postCommonQuest(accessToken: String, questID: Int, dto: SaveCommonQuestRequestDTO)
     case fetchCommonQuest(accessToken: String, date: String, cursor: Int?)
+    case updateCommonQuest(accessToken: String, answerID: Int, dto: UpdateCommonQuestRequestDTO)
 }
 
 extension CommonQuestAPI: EndPoint {
@@ -26,6 +27,8 @@ extension CommonQuestAPI: EndPoint {
             return "/\(questID)"
         case .fetchCommonQuest:
             return ""
+        case .updateCommonQuest(_ , let answerID, _):
+            return "/\(answerID)"
         }
     }
     
@@ -35,20 +38,23 @@ extension CommonQuestAPI: EndPoint {
             return .post
         case .fetchCommonQuest:
             return .get
+        case .updateCommonQuest:
+            return .patch
         }
     }
     
     var headers: HeaderType {
         switch self {
         case .postCommonQuest(let accessToken, _, _),
-                .fetchCommonQuest(let accessToken, _, _):
+                .fetchCommonQuest(let accessToken, _, _),
+                .updateCommonQuest(let accessToken, _, _):
             return .withAuth(acessToken: accessToken)
         }
     }
     
     var parameterEncoding: any ParameterEncoding {
         switch self {
-        case .postCommonQuest:
+        case .postCommonQuest, .updateCommonQuest:
             return JSONEncoding.default
         case .fetchCommonQuest:
             return  URLEncoding.default
@@ -57,7 +63,7 @@ extension CommonQuestAPI: EndPoint {
     
     var queryParameters: [String : String]? {
         switch self {
-        case .postCommonQuest:
+        case .postCommonQuest, .updateCommonQuest:
             return nil
         case .fetchCommonQuest(_, let date, let cursor):
             if let cursor {
@@ -76,6 +82,8 @@ extension CommonQuestAPI: EndPoint {
             return try? dto.toDictionary()
         case .fetchCommonQuest:
             return nil
+        case .updateCommonQuest(_, _, let dto):
+            return try? dto.toDictionary()
         }
     }
 }

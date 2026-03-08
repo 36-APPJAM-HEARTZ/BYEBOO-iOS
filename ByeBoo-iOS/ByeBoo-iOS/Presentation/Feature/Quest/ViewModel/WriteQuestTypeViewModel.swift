@@ -20,6 +20,7 @@ struct WriteQuestionTypeViewModel: ViewModelType {
     private let isValidQuestAnswerUseCase: IsValidQuestAnswerUseCase
     private let saveCommonQuestUseCase: SaveCommonQuestUseCase
     private let isForbiddenWordUseCase: IsForbiddenWordUseCase
+    private let updateCommonQuestUseCase: UpdateCommonQuestUseCase
     
     private let questInfoResultSubject: PassthroughSubject<Result<QuestInfoEntity, ByeBooError>, Never> = .init()
     private let questInfoWhenEditModeSubject: PassthroughSubject<Result<QuestInfoEntity, ByeBooError>, Never> = .init()
@@ -27,6 +28,7 @@ struct WriteQuestionTypeViewModel: ViewModelType {
     private let didSuccessEditSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private let isValidTextSubject: PassthroughSubject<Bool, Never> = .init()
     private let isForbiddenWordSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
+    private let didSucessUpdateSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     
     init(
         saveQuestTypeUseCase:  SaveQuestTypeUseCase,
@@ -34,7 +36,8 @@ struct WriteQuestionTypeViewModel: ViewModelType {
         editQuestTypeUseCase: EditQuestTypeUseCase,
         isValidQuestAnswerUseCase: IsValidQuestAnswerUseCase,
         saveCommonQuestUseCase: SaveCommonQuestUseCase,
-        isForbiddenWordUseCase: IsForbiddenWordUseCase
+        isForbiddenWordUseCase: IsForbiddenWordUseCase,
+        updateCommonQuestUseCase: UpdateCommonQuestUseCase
     ){
         self.saveQuestTypeUseCase = saveQuestTypeUseCase
         self.getQuestInfoUseCase = getQuestInfoUseCase
@@ -42,6 +45,7 @@ struct WriteQuestionTypeViewModel: ViewModelType {
         self.isValidQuestAnswerUseCase = isValidQuestAnswerUseCase
         self.saveCommonQuestUseCase = saveCommonQuestUseCase
         self.isForbiddenWordUseCase = isForbiddenWordUseCase
+        self.updateCommonQuestUseCase = updateCommonQuestUseCase
         
         output = Output(
             questInfoResultPublisher: questInfoResultSubject.eraseToAnyPublisher(),
@@ -49,7 +53,8 @@ struct WriteQuestionTypeViewModel: ViewModelType {
             questInfoWhenEditModeResultPublisher: questInfoWhenEditModeSubject.eraseToAnyPublisher(),
             didSuccessEditPublisher: didSuccessEditSubject.eraseToAnyPublisher(),
             isValidTextPublisher: isValidTextSubject.eraseToAnyPublisher(),
-            isForbiddenWordPublisher: isForbiddenWordSubject.eraseToAnyPublisher()
+            isForbiddenWordPublisher: isForbiddenWordSubject.eraseToAnyPublisher(),
+            didSucessUpdatePublisher: didSucessUpdateSubject.eraseToAnyPublisher()
         )
     }
 }
@@ -57,7 +62,14 @@ struct WriteQuestionTypeViewModel: ViewModelType {
 extension WriteQuestionTypeViewModel {
     enum Input {
         case viewDidLoad(quesetID: Int)
-        case saveQuest(questID: Int, answer: String, emotionState: String?, isEdit: Bool, isCommonQuest: Bool)
+        case saveQuest(
+            questID: Int,
+            answer: String,
+            emotionState: String?,
+            isEdit: Bool,
+            isCommonQuest: Bool,
+            answerID: Int?
+        )
         case viewDidLoadWhenEditMode(questID: Int)
         case textFieldEditing(answerText: String, text: String)
     }
@@ -69,6 +81,7 @@ extension WriteQuestionTypeViewModel {
         let didSuccessEditPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
         let isValidTextPublisher: AnyPublisher<Bool, Never>
         let isForbiddenWordPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
+        let didSucessUpdatePublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
@@ -80,19 +93,20 @@ extension WriteQuestionTypeViewModel {
             answer,
             emotionState,
             isEdit,
-            isCommonQuest
+            isCommonQuest,
+            answerID
         ):
             if isCommonQuest && isForbiddenWordUseCase.execute(word: answer) {
-                  isForbiddenWordSubject.send(.failure(.questViolation))
-                  return
-              }
+                isForbiddenWordSubject.send(.failure(.questViolation))
+                return
+            }
             
             if isCommonQuest {
                 if isEdit {
-                    // 수정 api 연결
-                } else {
-                    saveCommonQuest(questID: questID, answer: answer)
+                    updateCommonQuest(answerID: answerID, answer: answer)
+                    return
                 }
+                saveCommonQuest(questID: questID, answer: answer)
                 return
             }
             
@@ -174,5 +188,25 @@ extension WriteQuestionTypeViewModel {
     private func isValidText(previousText: String, changingText: String) {
         let isValidText: Bool = isValidQuestAnswerUseCase.executeWhenQuestionType(previousText: previousText, changingText: changingText)
         isValidTextSubject.send(isValidText)
+    }
+    
+    private func updateCommonQuest(answerID: Int?, answer: String) {
+        guard let answerID else {
+            ByeBooLogger.error(ByeBooError.noData)
+            return
+        }
+        
+        Task {
+            do {
+                try await updateCommonQuestUseCase.execute(answerID: answerID, answer: answer)
+                didSucessUpdateSubject.send(.success(()))
+            } catch {
+                guard let error = error as? ByeBooError else {
+                    return
+                }
+                didSuccessPostSubject.send(.failure(error as ByeBooError))
+                ByeBooLogger.error(error)
+            }
+        }
     }
 }
