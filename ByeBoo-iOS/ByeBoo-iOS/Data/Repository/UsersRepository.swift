@@ -8,6 +8,7 @@
 import Foundation
 
 struct DefaultUsersRepository: UsersInterface {
+    
     private let network: NetworkService
     private let userDefaultsService: UserDefaultService
     private let keychainService: KeychainService
@@ -151,6 +152,18 @@ struct DefaultUsersRepository: UsersInterface {
         return hasEnterMyPage
     }
     
+    func fetchMyCommonQuestAnswers(cursor: Int?) async throws -> CommonQuestMyAnswersEntity {
+        let accessToken = loadAccessToken()
+        let result = try await network.request(
+            UsersAPI.fetchCommonQuestAnswers(
+                accessToken: accessToken,
+                cursor: cursor
+            ),
+            decodingType: CommonQuestMyAnswersResponseDTO.self
+        )
+        return result.toEntity()
+    }
+    
     var alarmEnabled: Bool {
         get {
             guard let alarmEnabled: Bool = userDefaultsService.load(key: .alarmEnabled) else {
@@ -245,6 +258,10 @@ final class MockUserRepository: UsersInterface {
     
     func checkHasEnterMyPage() -> Bool {
         return true
+    }
+    
+    func fetchMyCommonQuestAnswers(cursor: Int?) async throws -> CommonQuestMyAnswersEntity {
+        .stub()
     }
     
     var alarmEnabled: Bool {

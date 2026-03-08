@@ -22,7 +22,7 @@ final class CommonQuestViewModel {
     private var answers: [CommonQuestAnswerEntity] = []
     private(set) var hasMorePages = true
     private var nextCursor: Int? = nil
-    private var currentDate: String = DateFormatter.apiDate.string(from: .now)
+    private var currentDate: String = DateFormatter.toAPIDateString(from: .now)
     
     init(fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase) {
         self.fetchCommonQuestByDateUseCase = fetchCommonQuestByDateUseCase
@@ -152,7 +152,7 @@ extension CommonQuestViewModel {
     
     func getWrittenAt(at index: Int) -> String? {
         guard index >= 0 && index < answers.count,
-              let writtenAt = DateFormatter.detailDate.date(from: answers[index].writtenAt)
+              let writtenAt = DateFormatter.toDetailDate(from: answers[index].writtenAt)
         else {
             return nil
         }
@@ -169,7 +169,7 @@ extension CommonQuestViewModel {
             let hours = Int(diffTime / hour)
             return "\(hours)시간 전"
         default:
-            return DateFormatter.displayDate.string(from: writtenAt)
+            return DateFormatter.toDisplayDateString(from: writtenAt)
         }
     }
 }
