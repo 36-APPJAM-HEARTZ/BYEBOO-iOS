@@ -188,6 +188,14 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultBlockUserCase(repository: blocksRepository)
         }
         
+        DIContainer.shared.register(type: GetBlockedUsersListUseCase.self) { _ in
+            return DefaultGetBlockedUsersListUseCase(repository: blocksRepository)
+        }
+        
+        DIContainer.shared.register(type: DeleteBlockedUserUseCase.self) { _ in
+            return DefaultDeleteBlockedUser(repository: blocksRepository)
+        }
+        
         DIContainer.shared.register(type: ReportsCommonQuestAnswerUseCase.self) { _ in
             return DefaultReportsCommonQuestAnswerUseCase(repository: reportsRepository)
         }

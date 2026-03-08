@@ -200,7 +200,12 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
     }
     
     func makeBlockedUserListViewController() -> BlockedkUserListViewController {
-        .init(viewModel: BlockedUserListViewModel())
+        guard let viewModel = DIContainer.shared.resolve(type: BlockedUserListViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        
+        return .init(viewModel: viewModel)
     }
     
     func makeCommonQuestBottomSheetViewController() -> CommonQuestBottomSheetViewController {

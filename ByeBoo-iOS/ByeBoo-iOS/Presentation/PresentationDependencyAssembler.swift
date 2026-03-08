@@ -69,7 +69,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                     isValidQuestAnswerUseCase: isValidQuestAnswerUseCase,
                     saveCommonQuestUseCase: saveCommonQuestUseCase,
                     isForbiddenWordUseCase: isForbiddenWordUseCase
-                
+                    
                 )
             }
         
@@ -112,7 +112,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                     ByeBooLogger.error(ByeBooError.DIFailedError)
                     return
                 }
-            
+                
                 return InformationViewModel(
                     checkValidNicknameUseCase: checkValidNicknameUseCase,
                     isForbiddenWordUseCase: isForbiddenWordUseCase,
@@ -127,6 +127,10 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                     ByeBooLogger.error(ByeBooError.DIFailedError)
                     return
                 }
+                
+                return ArchiveQuestViewModel(
+                    questAnswerCase: questAnswerUseCase
+                )
             
             return InformationViewModel(
                 checkValidNicknameUseCase: checkValidNicknameUseCase,
@@ -189,7 +193,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                     ByeBooLogger.error(ByeBooError.DIFailedError)
                     return
                 }
-            
+                
                 return QuestStartViewModel(
                     startJourneyUseCase: startJourneyUseCase,
                     getUserNameUseCase: getUserNameUseCase,
@@ -207,7 +211,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                     ByeBooLogger.error(ByeBooError.DIFailedError)
                     return
                 }
-            
+                
                 return ProgressingQuestsViewModel(
                     progressingQuestsUseCase: progressingQuestsUseCase,
                     getUserNameUseCase: getUserNameUseCase,
@@ -273,7 +277,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                     ByeBooLogger.error(ByeBooError.DIFailedError)
                     return
                 }
-            
+                
                 return LookBackJourneyViewModel(
                     useCase: getLookBackJourneyUseCase
                 )
@@ -288,7 +292,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                     ByeBooLogger.error(ByeBooError.DIFailedError)
                     return
                 }
-            
+                
                 return NewJourneyViewModel(
                     getNewJourneyUseCase: getNewJourneyUseCase
                 )
@@ -306,7 +310,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                     ByeBooLogger.error(ByeBooError.DIFailedError)
                     return
                 }
-            
+                
                 return ModifyNicknameViewModel(
                     checkValidNicknameUseCase: checkValidNicknameUseCase,
                     isForbiddenWordUseCase: isForbiddenWordUseCase,
@@ -364,7 +368,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                     ByeBooLogger.error(ByeBooError.DIFailedError)
                     return
                 }
-            
+                
                 return FinishJourneyViewModel(
                     getUserNameUseCase: getUserNameUseCase,
                     getLastJourneyUseCase: getLastJourneyUseCase
@@ -377,7 +381,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                     ByeBooLogger.error(ByeBooError.DIFailedError)
                     return
                 }
-            
+                
                 return CommonQuestViewModel(
                     fetchCommonQuestByDateUseCase: fetchCommonQuestByDateUseCase
                 )
@@ -389,7 +393,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                     ByeBooLogger.error(ByeBooError.DIFailedError)
                     return
                 }
-            
+                
                 return CommonQuestMyAnswerViewModel(
                     getUserNameUseCase: getUserNameUseCase
                 )
@@ -404,16 +408,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                     ByeBooLogger.error(ByeBooError.DIFailedError)
                     return
                 }
-            
-            return CommonQuestViewModel(fetchCommonQuestByDateUseCase: fetchCommonQuestByDateUseCase)
-        }
-        
-        DIContainer.shared.register(type: CommonQuestMyAnswerViewModel.self) { container in
-            guard let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
-                  let fetchCommonQuestMyAnswersUseCase = container.resolve(type: FetchCommonQuestMyAnswersUseCase.self)
-            else {
-                ByeBooLogger.error(ByeBooError.DIFailedError)
-                return
+                
                 return CommonQuestBottomSheetViewModel(
                     blockUserUseCase: blockUserUseCase,
                     reportCommonQuestUseCase: reportQuestAnswerUseCase
@@ -433,6 +428,19 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             }
             
             return AIAnswerViewModel(fetchAIAnswerUseCase: fetchAIAnswerUseCase)
+        }
+        
+        DIContainer.shared.register(type: BlockedUserListViewModel.self) { container in
+            guard let getBlockedUsersListUseCase = container.resolve(type: GetBlockedUsersListUseCase.self),
+            let deleteBlockedUserUseCase = container.resolve(type: DeleteBlockedUserUseCase.self) else  {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return BlockedUserListViewModel(
+                getBlockedUsersListUseCase: getBlockedUsersListUseCase,
+                deleteBlockedUserUseCase: deleteBlockedUserUseCase
+            )
         }
     }
 }
