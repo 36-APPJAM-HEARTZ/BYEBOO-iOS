@@ -10,7 +10,21 @@ import UIKit
 
 final class AIAnswerViewController: BaseViewController {
     
-    private let rootView = AIAnswerView(answerState: .success)
+    private let rootView = AIAnswerView()
+    private let viewModel: AIAnswerViewModel
+    private var cancellables = Set<AnyCancellable>()
+    
+    private var questID: Int = 1
+    private var isAIAnswerExists: Bool = false
+    
+    init(viewModel: AIAnswerViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = rootView
@@ -27,6 +41,43 @@ final class AIAnswerViewController: BaseViewController {
             type: .close(header: .black),
             action: #selector(close)
         )
+        
+        bind()
+        viewModel.action(
+            .viewDidLoad(
+                questID: questID,
+                isAIAnswerExists: isAIAnswerExists
+            )
+        )
+    }
+}
+
+extension AIAnswerViewController {
+    private func bind() {
+        viewModel.output.AILoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case true:
+                    self?.rootView.updateState(state: .loading)
+                case false:
+                    break
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.AIResultPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let answer):
+                    self?.rootView.cardView.updateText(answer: answer)
+                    self?.rootView.updateState(state: .success)
+                case .failure:
+                    self?.rootView.updateState(state: .fail)
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -38,5 +89,11 @@ extension AIAnswerViewController: Dismissible {
 }
 
 extension AIAnswerViewController {
-    func configure( ) { }
+    func configure(
+        questID: Int,
+        isAIAnswerExists: Bool
+    ) {
+        self.questID = questID
+        self.isAIAnswerExists = isAIAnswerExists
+    }
 }

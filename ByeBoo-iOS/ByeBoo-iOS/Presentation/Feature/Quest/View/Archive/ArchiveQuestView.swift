@@ -24,7 +24,7 @@ final class ArchiveQuestView: BaseView {
     private let textBoxView = TextBoxView(title: "")
     private let photoBoxView: UIImageView?
     private let feelView =  FeelView(emotionType: "", descriptionText: "")
-    private let AIAnswerButton = ByeBooButton(
+    private(set) var AIAnswerButton = ByeBooButton(
         titleText: "보리의 답장 보러가기",
         type: .enabled
     )

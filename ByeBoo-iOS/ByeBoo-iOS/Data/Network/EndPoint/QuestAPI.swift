@@ -22,6 +22,8 @@ enum QuestAPI {
     case completedQuests(journey: JourneyType)
     case editRecording(questID: Int, request: EditQuestRequestDTO)
     case editActive(questID: Int, request: EditQuestActiveRequestDTO)
+    case createAIAnswer(questID: Int)
+    case fetchAIAnswer(questID: Int)
 }
 
 extension QuestAPI: EndPoint {
@@ -50,14 +52,16 @@ extension QuestAPI: EndPoint {
             return "/journey"
         case .completedQuests:
             return "/all/completed"
+        case .createAIAnswer(let questID), .fetchAIAnswer(let questID):
+            return "/\(questID)/ai-answer"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .checkQuest, .tip, .answer, .progressingQuests, .fetchCompletedJourney, .completedQuests:
+        case .checkQuest, .tip, .answer, .progressingQuests, .fetchCompletedJourney, .completedQuests, .fetchAIAnswer:
             return .get
-        case .recording, .active, .images, .postJourney:
+        case .recording, .active, .images, .postJourney, .createAIAnswer:
             return .post
         case .editRecording, .editActive:
             return .patch
@@ -66,8 +70,7 @@ extension QuestAPI: EndPoint {
     
     var headers: HeaderType {
         switch self {
-        case .checkQuest, .recording, .active, .tip, .images, .answer, .progressingQuests, .fetchCompletedJourney,
-                .postJourney, .completedQuests, .editRecording, .editActive:
+        default:
             let keychainService = DefaultKeychainService()
             return .withAuth(acessToken: keychainService.load(key: .accessToken))
         }
@@ -75,7 +78,7 @@ extension QuestAPI: EndPoint {
     
     var parameterEncoding: any ParameterEncoding {
         switch self {
-        case .checkQuest, .tip, .answer, .progressingQuests, .fetchCompletedJourney, .postJourney, .completedQuests:
+        case .checkQuest, .tip, .answer, .progressingQuests, .fetchCompletedJourney, .postJourney, .completedQuests, .createAIAnswer, .fetchAIAnswer:
             return URLEncoding.default
         case .recording, .active, .images, .editRecording, .editActive:
             return JSONEncoding.default
@@ -103,7 +106,7 @@ extension QuestAPI: EndPoint {
             return try? dto.toDictionary()
         case let .editActive(_, dto):
             return try? dto.toDictionary()
-        case .checkQuest, .tip, .answer, .progressingQuests, .fetchCompletedJourney, .postJourney, .completedQuests:
+        default:
             return nil
         }
     }

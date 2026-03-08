@@ -89,13 +89,15 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: ArchiveQuestViewModel.self) { container in
-            guard let questAnswerUseCase = container.resolve(type: QuestAnswerUseCase.self) else {
+            guard let questAnswerUseCase = container.resolve(type: QuestAnswerUseCase.self),
+            let fetchAIAnswerUseCase = container.resolve(type: FetchAIAnswerUseCase.self)
+            else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
             return ArchiveQuestViewModel(
-                questAnswerCase: questAnswerUseCase
+                questAnswerUseCase: questAnswerUseCase
             )
         }
         
@@ -291,6 +293,15 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 getUserNameUseCase: getUserNameUseCase,
                 fetchCommonQuestMyAnswersUseCase: fetchCommonQuestMyAnswersUseCase
             )
+        }
+        
+        DIContainer.shared.register(type: AIAnswerViewModel.self) { container in
+            guard let fetchAIAnswerUseCase = container.resolve(type: FetchAIAnswerUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return AIAnswerViewModel(fetchAIAnswerUseCase: fetchAIAnswerUseCase)
         }
     }
 }

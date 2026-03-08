@@ -201,6 +201,15 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
     func makeBlockedUserListViewController() -> BlockedkUserListViewController {
         .init(viewModel: BlockedUserListViewModel())
     }
+    
+    func makeAIAnswerViewController() -> AIAnswerViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: AIAnswerViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        
+        return .init(viewModel: viewModel)
+    }
 }
 
 extension ViewControllerFactory {

@@ -9,23 +9,10 @@ import UIKit
 
 final class AIAnswerView: BaseView {
     
-    private let answerState: AIAnswerState
-    
     private let stackView = UIStackView()
     private let imageView = UIImageView()
     private let textLabel = UILabel()
-    private let cardView = AIAnswerCardView()
-    
-    init(answerState: AIAnswerState) {
-        self.answerState = answerState
-        
-        super.init(frame: .zero)
-        updateState(state: answerState)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    let cardView = AIAnswerCardView()
     
     override func setStyle() {
         backgroundColor = .grayscale900
@@ -38,7 +25,7 @@ final class AIAnswerView: BaseView {
         textLabel.do {
             $0.applyByeBooFont(
                 style: .body3R16,
-                text: answerState.text,
+                text: AIAnswerState.loading.text,
                 color: .grayscale100,
                 textAlignment: .center
             )
