@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ParentQuestViewController<T: TabItem>: BaseViewController {
+final class ParentQuestViewController<T: TabItem>: BaseViewController, ToastPresentable {
     
     private let tabBar: TopTabBar
     private let containerView = UIView()
@@ -33,6 +33,14 @@ final class ParentQuestViewController<T: TabItem>: BaseViewController {
         if let controller = controllers.first {
             show(controller)
         }
+        
+        NotificationCenter.default.addObserver(
+                self,
+                selector: #selector(handleToast(_:)),
+                name: .showToastMessage,
+                object: nil
+        )
+
     }
     
     override func setView() {
@@ -46,6 +54,19 @@ final class ParentQuestViewController<T: TabItem>: BaseViewController {
         guard controllers.indices.contains(index) else { return }
         show(controllers[index])
         tabBar.select(index: index)
+    }
+    
+    @objc
+    private func handleToast(_ notification: Notification) {
+        guard let type = notification.userInfo?["type"] as? CommonQuestArchiveType.Action else { return }
+        switch type {
+        case .block:
+            self.presentToastMessage(type: .block)
+        case .report:
+            self.presentToastMessage(type: .report)
+        case .edit, .delete:
+            return
+        }
     }
 }
 

@@ -10,6 +10,7 @@ import UIKit
 final class CommonQuestHistoryViewController: BaseViewController {
     
     private let rootView = CommonQuestHistoryView()
+    private var commonQuestArchiveType: CommonQuestArchiveType = .mine
     
     override func loadView() {
         view = rootView
@@ -39,7 +40,16 @@ extension CommonQuestHistoryViewController {
     
     @objc
     private func bottomUp() {
-        
+        let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
+        commonQuestBottomSheet.configure(sheeetType: commonQuestArchiveType)
+        commonQuestBottomSheet.delegate = self
+        if let sheet =  commonQuestBottomSheet.sheetPresentationController{
+            sheet.detents = [.custom { _ in 224.adjustedH }]
+            sheet.prefersGrabberVisible = true
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+            sheet.preferredCornerRadius = 8
+        }
+        self.present(commonQuestBottomSheet, animated: true)
     }
 }
 
@@ -52,6 +62,8 @@ extension CommonQuestHistoryViewController {
         nickname: String? = nil,
         content: String
     ) {
+        commonQuestArchiveType = nickname == nil ? .mine : .other
+        
         rootView.configure(
             question: question,
             writtenAt: writtenAt,
@@ -59,5 +71,17 @@ extension CommonQuestHistoryViewController {
             nickname: nickname,
             content: content
         )
+    }
+}
+
+extension CommonQuestHistoryViewController: BlockReportProtocol {
+    func completeBlockReport(type: CommonQuestArchiveType.Action) {
+        ViewControllerUtils.changeQuestTabWithIndex(index: 1) {
+            NotificationCenter.default.post(
+                name: .showToastMessage,
+                object: nil,
+                userInfo: ["type": type]
+            )
+        }
     }
 }

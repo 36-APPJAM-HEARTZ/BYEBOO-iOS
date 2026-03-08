@@ -10,4 +10,5 @@ import Foundation
 extension Notification.Name {
     static let navigateLoginViewController = Notification.Name("navigateLoginViewController")
     static let appWillEnterForeground = Notification.Name("appWillEnterForeground")
+    static let showToastMessage = Notification.Name("showToastMessage")
 }
