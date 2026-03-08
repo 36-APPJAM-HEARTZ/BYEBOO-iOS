@@ -28,6 +28,12 @@ final class CommonQuestMyAnswersViewController: BaseViewController {
         view = rootView
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        viewModel.action(.viewWillAppear)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
                 
@@ -39,7 +45,6 @@ final class CommonQuestMyAnswersViewController: BaseViewController {
         )
         
         bind()
-        viewModel.action(.viewDidLoad)
     }
     
     override func setDelegate() {
@@ -110,7 +115,8 @@ extension CommonQuestMyAnswersViewController: UITableViewDelegate {
         historyViewController.configure(
             question: answer.question,
             writtenAt: answer.writtenAt,
-            content: answer.content
+            content: answer.content,
+            answerID: answer.answerID
         )
         
         self.navigationController?.pushViewController(historyViewController, animated: false)
