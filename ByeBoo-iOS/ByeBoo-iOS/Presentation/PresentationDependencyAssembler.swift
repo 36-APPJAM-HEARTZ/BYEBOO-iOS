@@ -38,7 +38,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                   let editQuestTypeUseCase = container.resolve(type: EditQuestTypeUseCase.self),
                   let isValidQuestAnswerUseCase = container.resolve(type: IsValidQuestAnswerUseCase.self),
                   let saveCommonQuestUseCase = container.resolve(type: SaveCommonQuestUseCase.self),
-                  let isForbbidenWordUseCoase = container.resolve(type: IsForbiddenWordUseCase.self)
+                  let isForbiddenWordUseCase = container.resolve(type: IsForbiddenWordUseCase.self),
+                  let updateCommonQuestUseCase = container.resolve(type: UpdateCommonQuestUseCase.self)
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -49,8 +50,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 editQuestTypeUseCase: editQuestTypeUseCase,
                 isValidQuestAnswerUseCase: isValidQuestAnswerUseCase,
                 saveCommonQuestUseCase: saveCommonQuestUseCase,
-                isForbiddenWordUseCase: isForbiddenWordUseCase
-                
+                isForbiddenWordUseCase: isForbiddenWordUseCase,
+                updateCommonQuestUseCase: updateCommonQuestUseCase
             )
         }
         
@@ -59,7 +60,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                   let saveActiveTypeUseCase = container.resolve(type: SaveQuestActiveUseCase.self),
                   let saveQuestTypeUseCase = container.resolve(type: SaveQuestTypeUseCase.self),
                   let editActiveQuestType = container.resolve(type: EditQuestActiveUseCase.self),
-            let isValidTextUseCase = container.resolve(type: IsValidQuestAnswerUseCase.self) else  {
+                  let isValidTextUseCase = container.resolve(type: IsValidQuestAnswerUseCase.self) else  {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -90,7 +91,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: ArchiveQuestViewModel.self) { container in
             guard let questAnswerUseCase = container.resolve(type: QuestAnswerUseCase.self),
-            let fetchAIAnswerUseCase = container.resolve(type: FetchAIAnswerUseCase.self)
+                  let fetchAIAnswerUseCase = container.resolve(type: FetchAIAnswerUseCase.self)
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -282,12 +283,17 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: CommonQuestMyAnswerViewModel.self) { container in
-            guard let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self) else {
+            guard let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
+                  let fetchCommonQuestMyAnswersUseCase = container.resolve(type: FetchCommonQuestMyAnswersUseCase.self)
+            else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
-            return CommonQuestMyAnswerViewModel(getUserNameUseCase: getUserNameUseCase)
+            return CommonQuestMyAnswerViewModel(
+                getUserNameUseCase: getUserNameUseCase,
+                fetchCommonQuestMyAnswersUseCase: fetchCommonQuestMyAnswersUseCase
+            )
         }
         
         DIContainer.shared.register(type: AIAnswerViewModel.self) { container in
