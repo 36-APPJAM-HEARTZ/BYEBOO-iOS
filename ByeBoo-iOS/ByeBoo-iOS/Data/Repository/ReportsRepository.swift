@@ -17,7 +17,7 @@ struct DefaultReportsRepository: ReportsInterface {
     
     func reportCommonQuest(answerID: Int) async throws {
         let _ = try await networkService.request(
-            ReportsAPI.postReport(answerID: 87)
+            ReportsAPI.postReport(answerID: answerID)
         )
     }
 }
