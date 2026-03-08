@@ -57,13 +57,11 @@ struct ViewControllerUtils {
         
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
            let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
-            ByeBooLogger.debug("setRootViewController 호출 전")
             ViewControllerUtils.setRootViewController(
                 window: window,
                 viewController: viewController,
                 withAnimation: true,
                 completion: {
-                    ByeBooLogger.debug("completion 호출됨")
                     completion?()
                 }
             )
