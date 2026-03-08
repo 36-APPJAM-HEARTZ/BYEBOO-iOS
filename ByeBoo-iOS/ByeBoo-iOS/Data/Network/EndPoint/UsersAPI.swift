@@ -17,6 +17,7 @@ enum UsersAPI {
     case start(accessToken: String)
     case modifyName(accessToken: String, requestDTO: UserNameRequestDTO)
     case updateNotificationPermission(accessToken: String)
+    case fetchCommonQuestAnswers(accessToken: String, cursor: Int?)
 }
 
 extension UsersAPI: EndPoint {
@@ -46,12 +47,14 @@ extension UsersAPI: EndPoint {
             return "/name"
         case .updateNotificationPermission:
             return "/alarm"
+        case .fetchCommonQuestAnswers(accessToken: let accessToken, cursor: let cursor):
+            return "/me/common-quests"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .journey, .character, .count:
+        case .journey, .character, .count, .fetchCommonQuestAnswers:
             return .get
         case .sendUser, .start, .modifyName, .updateNotificationPermission:
             return .patch
@@ -66,14 +69,15 @@ extension UsersAPI: EndPoint {
                 .count(let accessToken),
                 .start(let accessToken),
                 .modifyName(let accessToken, _),
-                .updateNotificationPermission(let accessToken):
+                .updateNotificationPermission(let accessToken),
+                .fetchCommonQuestAnswers(let accessToken, _):
             return .withAuth(acessToken: accessToken)
         }
     }
     
     var parameterEncoding: ParameterEncoding {
         switch self {
-        case .journey, .character, .count, .start:
+        case .journey, .character, .count, .start, .fetchCommonQuestAnswers:
             return URLEncoding.default
         case .sendUser, .modifyName, .updateNotificationPermission:
             return JSONEncoding.default
@@ -81,12 +85,17 @@ extension UsersAPI: EndPoint {
     }
     
     var queryParameters: [String : String]? {
-        nil
+        switch self {
+        case .fetchCommonQuestAnswers(_, let cursor):
+            return cursor.map { ["cursor": "\($0)"] }
+        default:
+            return nil
+        }
     }
     
     var bodyParameters: Parameters? {
         switch self {
-        case .journey, .character, .count, .start, .updateNotificationPermission:
+        case .journey, .character, .count, .start, .updateNotificationPermission, .fetchCommonQuestAnswers:
             return nil
         case .sendUser(_, let dto):
             return try? dto.toDictionary()
@@ -95,4 +104,3 @@ extension UsersAPI: EndPoint {
         }
     }
 }
-

@@ -22,5 +22,6 @@ protocol UsersInterface {
     func getLastJourneyType() -> JourneyType
     func updateNotificationPermission() async throws -> Bool
     func checkHasEnterMyPage() -> Bool
+    func fetchMyCommonQuestAnswers(cursor: Int?) async throws -> CommonQuestMyAnswersEntity
     var alarmEnabled: Bool { get }
 }

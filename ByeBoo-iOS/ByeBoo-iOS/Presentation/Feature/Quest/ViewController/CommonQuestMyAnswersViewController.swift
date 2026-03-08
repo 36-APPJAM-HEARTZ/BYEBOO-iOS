@@ -5,12 +5,15 @@
 //  Created by APPLE on 2/24/26.
 //
 
+import Combine
 import UIKit
 
 final class CommonQuestMyAnswersViewController: BaseViewController {
     
     private let rootView = CommonQuestMyAnswersView()
     private let viewModel: CommonQuestMyAnswerViewModel
+    
+    private var cancellable = Set<AnyCancellable>()
     
     init(viewModel: CommonQuestMyAnswerViewModel) {
         self.viewModel = viewModel
@@ -25,17 +28,23 @@ final class CommonQuestMyAnswersViewController: BaseViewController {
         view = rootView
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        viewModel.action(.viewWillAppear)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        rootView.configure(userName: viewModel.getUserName())
-        
+                
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
             type: .back(header: .black),
             action: #selector(back)
         )
+        
+        bind()
     }
     
     override func setDelegate() {
@@ -55,22 +64,59 @@ extension CommonQuestMyAnswersViewController: BackNavigable {
     }
 }
 
+extension CommonQuestMyAnswersViewController {
+    
+    private func bind() {
+        bindName()
+        bindCommonQuestAnswers()
+    }
+    
+    private func bindName() {
+        viewModel.output.namePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let name):
+                    self?.rootView.configure(userName: name)
+                case .failure(let error):
+                    ByeBooLogger.error(error)
+                }
+            }
+            .store(in: &cancellable)
+    }
+    
+    private func bindCommonQuestAnswers() {
+        viewModel.output.answersPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success:
+                    self?.rootView.answersTableView.reloadData()
+                case .failure(let error):
+                    ByeBooLogger.error(error)
+                }
+            }
+            .store(in: &cancellable)
+    }
+}
+
 extension CommonQuestMyAnswersViewController: UITableViewDelegate {
     
     func tableView(
         _ tableView: UITableView,
         didSelectRowAt indexPath: IndexPath
     ) {
-        guard let record = viewModel.getRecord(at: indexPath.section) else {
+        guard let answer = viewModel.getAnswer(at: indexPath.section) else {
             return
         }
         
         let historyViewController = ViewControllerFactory.shared.makeCommonQuestHistoryViewController()
         historyViewController.navigationItem.hidesBackButton = true
         historyViewController.configure(
-            question: record.question,
-            writtenAt: record.writtenAt,
-            content: record.answer
+            question: answer.question,
+            writtenAt: answer.writtenAt,
+            content: answer.content,
+            answerID: answer.answerID
         )
         
         self.navigationController?.pushViewController(historyViewController, animated: false)
@@ -80,7 +126,7 @@ extension CommonQuestMyAnswersViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForRowAt indexPath: IndexPath
     ) -> CGFloat {
-        if viewModel.dataCount == 0 {
+        if viewModel.answersCount == 0 {
             return UITableView.automaticDimension
         }
         return 149.adjustedH
@@ -99,12 +145,30 @@ extension CommonQuestMyAnswersViewController: UITableViewDelegate {
     ) -> CGFloat {
         section == 0 ? 0 : 5.adjustedH
     }
+    
+    func tableView(
+        _ tableView: UITableView,
+        willDisplay cell: UITableViewCell,
+        forRowAt indexPath: IndexPath
+    ) {
+        let prefetchOffset = 3
+        let trigger = max(1, viewModel.answersCount - prefetchOffset)
+        
+        guard cell is CommonQuestMyAnswerCell,
+              viewModel.hasMorePages,
+              indexPath.section == trigger
+        else {
+            return
+        }
+        
+        viewModel.action(.scrollAnswer)
+    }
 }
 
 extension CommonQuestMyAnswersViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        viewModel.dataCount == 0 ? 1 : viewModel.dataCount
+        viewModel.answersCount == 0 ? 1 : viewModel.answersCount
     }
     
     func tableView(
@@ -118,23 +182,23 @@ extension CommonQuestMyAnswersViewController: UITableViewDataSource {
         _ tableView: UITableView,
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
-        if viewModel.dataCount == 0 {
+        if viewModel.answersCount == 0 {
             let cell: NoAnswerCell = tableView.dequeueReusableCell(for: indexPath)
             
             cell.topConstraint?.update(inset: 185.adjustedH)
             return cell
         }
         
-        guard let record = viewModel.getRecord(at: indexPath.section) else {
+        guard let answer = viewModel.getAnswer(at: indexPath.section) else {
             return UITableViewCell()
         }
         
         let cell: CommonQuestMyAnswerCell = tableView.dequeueReusableCell(for: indexPath)
         
         cell.bind(
-            question: record.question,
-            content: record.answer,
-            writtenAt: record.writtenAt
+            question: answer.question,
+            content: answer.content,
+            writtenAt: answer.writtenAt
         )
         return cell
     }
