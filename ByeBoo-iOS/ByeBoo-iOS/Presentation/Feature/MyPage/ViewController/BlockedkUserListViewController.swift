@@ -5,12 +5,15 @@
 //  Created by APPLE on 2/22/26.
 //
 
+import Combine
 import UIKit
 
 final class BlockedkUserListViewController: BaseViewController {
     
     private let rootView = BlockedUserListView()
     private let viewModel: BlockedUserListViewModel
+    private var cancellables = Set<AnyCancellable>()
+    private var index: Int = 0
     
     init(viewModel: BlockedUserListViewModel) {
         self.viewModel = viewModel
@@ -28,7 +31,9 @@ final class BlockedkUserListViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        viewModel.getBlockedUsers()
+        viewModel.action(.viewDidLoad)
+        bind()
+        
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
@@ -49,6 +54,35 @@ final class BlockedkUserListViewController: BaseViewController {
     }
 }
 
+extension BlockedkUserListViewController {
+    private func bind() {
+        viewModel.output.getBlockedUsersListPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success(let blockedList):
+                    ByeBooLogger.debug("차단 사용자 조회 성공 \(blockedList)")
+                    self.rootView.userTableView.reloadData()
+                case .failure(let error):
+                    ByeBooLogger.error(error)
+                }
+                
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.deleteBlockUserPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success:
+                    self.viewModel.action(.viewDidLoad)
+                case .failure(let error):
+                    ByeBooLogger.error(error)
+                }
+            }
+            .store(in: &cancellables)
+    }
+}
 extension BlockedkUserListViewController: BackNavigable {
     
     func back() {
@@ -113,6 +147,12 @@ extension BlockedkUserListViewController: UITableViewDataSource {
         return cell
     }
     
+    func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath) {
+            index = indexPath.row
+    }
+    
     @objc
     private func clearButtonDidTap() {
         let dismissButton = ByeBooButton(
@@ -128,7 +168,9 @@ extension BlockedkUserListViewController: UITableViewDataSource {
             dismissButton: dismissButton,
             actionButton: actionButton
         )
-        let action: (() -> Void) = {}
+        let action: (() -> Void) = {
+            self.viewModel.action(.deleteBlocedUser(index: self.index))
+        }
         
         ModalBuilder(
             modalView: modal,
