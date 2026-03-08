@@ -18,7 +18,7 @@ struct DefaultBlocksRepository: BlocksInterface {
     }
     
     func blockUser(userID: Int) async throws {
-        try await networkService.request(BlocksAPI.blockUser(userID: 850))
+        try await networkService.request(BlocksAPI.blockUser(userID: userID))
     }
     
     func deleteBlockedUser(blockID: Int) async throws {
