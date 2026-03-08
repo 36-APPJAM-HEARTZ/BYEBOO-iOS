@@ -79,7 +79,6 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
         case .block:
             viewModel.action(.block(userID: userID))
         case .report:
-            // TODO: 신고하기
             viewModel.action(.report(answerID: answerID))
         default:
             return
