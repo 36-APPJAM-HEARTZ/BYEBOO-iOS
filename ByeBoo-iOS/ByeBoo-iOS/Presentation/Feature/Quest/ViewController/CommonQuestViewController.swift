@@ -110,7 +110,8 @@ extension CommonQuestViewController: DateNavigatorDelegate {
     
     func dateDidChanged(to date: Date) {
         let _ = viewModel.action(
-            .moveDateButtonDidTap(selectedDate: DateFormatter.apiDate.string(from: date))
+            .moveDateButtonDidTap(selectedDate: DateFormatter.toAPIDateString(from: date)
+                                 )
         )
     }
 }
