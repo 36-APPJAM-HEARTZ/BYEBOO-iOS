@@ -7,9 +7,24 @@
 
 import UIKit
 
+protocol CommonQuestBottomSheetDelegate: AnyObject {
+    func didTapEdit(
+        answerID: Int,
+        answer: String,
+        question: String,
+        writtenAt: String
+    )
+}
+
 final class CommonQuestBottomSheetViewController: BaseViewController {
+    
     private var rootView = CommonQuestBottomSheetView(sheetType: .other)
     var sheetType: CommonQuestArchiveType?
+    private(set) var answerID: Int?
+    private(set) var answer: String?
+    private(set) var question: String?
+    private(set) var writtenAt: String?
+    weak var delegate: CommonQuestBottomSheetDelegate?
     
     override func loadView() {
         view = rootView
@@ -25,9 +40,19 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
         }
     }
     
-    
-    func configure(sheeetTYpe: CommonQuestArchiveType) {
-        self.sheetType = sheeetTYpe
+    func configure(
+        sheeetType: CommonQuestArchiveType,
+        answerID: Int? = nil,
+        answer: String? = nil,
+        question: String? = nil,
+        writtenAt: String? = nil
+    ) {
+        self.sheetType = sheeetType
+        self.answerID = answerID
+        self.answer = answer
+        self.question = question
+        self.writtenAt = writtenAt
+        
         if let sheetType {
             rootView = CommonQuestBottomSheetView(sheetType: sheetType)
         }
@@ -36,7 +61,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     @objc
     private func sheetItemDidTap(_ tapRecognizer: UITapGestureRecognizer) {
         guard let tappedView = tapRecognizer.view,
-        let sheetType = sheetType else { return }
+              let sheetType = sheetType else { return }
         
         let index = tappedView.tag
         guard sheetType.items.indices.contains(index) else { return }
@@ -45,8 +70,19 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
         
         switch action {
         case .edit:
-            // TODO: 수정하기
-            ByeBooLogger.debug("edit")
+            guard let answerID, let answer, let question, let writtenAt
+            else {
+                return
+            }
+            
+            dismiss(animated: false) { [weak self] in
+                self?.delegate?.didTapEdit(
+                    answerID: answerID,
+                    answer: answer,
+                    question: question,
+                    writtenAt: writtenAt
+                )
+            }
         case .delete:
             // TODO: 삭제하기
             ByeBooLogger.debug("delete")
