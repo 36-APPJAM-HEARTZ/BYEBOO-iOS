@@ -74,7 +74,7 @@ extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
         let writeCommonQuestViewController = ViewControllerFactory.shared.makeWriteQuestionTypeQuestViewController()
         writeCommonQuestViewController.navigationItem.hidesBackButton = true
         writeCommonQuestViewController.questScope = .common
-        writeCommonQuestViewController.configure(
+        writeCommonQuestViewController.configureToEdit(
             nil, .question, question, answerID, answer, writtenAt
         )
         self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)

@@ -245,7 +245,7 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
 }
 
 extension WriteQuestionTypeQuestViewController {
-    func configure(
+    func configureToWrite(
         _ questID: Int,
         _ questNumber: Int?,
         _ questType: QuestType,
@@ -255,7 +255,7 @@ extension WriteQuestionTypeQuestViewController {
         setQuestInformation(questNumber, questType, questionTitle)
     }
     
-    func configure(
+    func configureToEdit(
         _ questNumber: Int?,
         _ questType: QuestType,
         _ questionTitle: String?,

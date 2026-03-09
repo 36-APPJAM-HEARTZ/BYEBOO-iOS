@@ -104,7 +104,7 @@ extension CommonQuestViewController: DateNavigatorDelegate {
         let writeCommonQuestViewController = ViewControllerFactory.shared.makeWriteQuestionTypeQuestViewController()
         writeCommonQuestViewController.navigationItem.hidesBackButton = true
         writeCommonQuestViewController.questScope = .common
-        writeCommonQuestViewController.configure(questID, nil, QuestType.question, viewModel.question)
+        writeCommonQuestViewController.configureToWrite(questID, nil, QuestType.question, viewModel.question)
         self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)
     }
     
