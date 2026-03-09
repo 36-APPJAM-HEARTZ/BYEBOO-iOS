@@ -8,10 +8,10 @@
 extension JourneyType {
     var key: String {
         switch self {
-        case .face:
-            "FACE_EMOTION"
-        case .process:
-            "PROCESS_EMOTION"
+        case .recording:
+            "RECORDING"
+        case .reunion:
+            "REUNION"
         }
     }
     

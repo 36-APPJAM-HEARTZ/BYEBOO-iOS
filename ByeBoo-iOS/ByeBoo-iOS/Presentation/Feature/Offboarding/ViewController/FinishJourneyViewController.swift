@@ -16,7 +16,7 @@ final class FinishJourneyViewController: BaseViewController {
     private let viewModel: FinishJourneyViewModel
     
     private var cancellables = Set<AnyCancellable>()
-    private var journeyType: JourneyType = .face
+    private var journeyType: JourneyType = .recording
     
     init(viewModel: FinishJourneyViewModel) {
         self.viewModel = viewModel
@@ -91,7 +91,7 @@ extension FinishJourneyViewController {
         .receive(on: DispatchQueue.main)
         .sink { [weak self] name, journey in
             self?.rootView.updateText(nickname: name, journey: journey)
-            self?.journeyType = JourneyType.titleToEnum(journey) ?? .face
+            self?.journeyType = JourneyType.titleToEnum(journey) ?? .recording
         }
         .store(in: &cancellables)
     }

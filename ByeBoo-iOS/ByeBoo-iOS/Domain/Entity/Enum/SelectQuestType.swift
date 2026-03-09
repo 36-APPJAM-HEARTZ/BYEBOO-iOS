@@ -8,17 +8,17 @@
 // 온보딩 시에 퀘스트 방식 선택
 
 enum SelectQuestType: CaseIterable {
+    case reunion
     case recording
-    case active
 }
 
 extension SelectQuestType {
     var mixpanelKey: String {
         switch self {
         case .recording:
-            "질문형"
-        case .active:
-            "행동형"
+            "이별극복"
+        case .reunion:
+            "재회준비"
         }
     }
 }

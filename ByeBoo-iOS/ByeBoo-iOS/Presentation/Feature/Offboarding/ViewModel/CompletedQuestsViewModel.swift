@@ -43,7 +43,7 @@ final class CompletedQuestsViewModel {
         Task {
             do {
                 let completedQuestsEntity = try await fetchCompletedQuestsUseCase.execute(
-                    journey: JourneyType.titleToEnum(journey) ?? .face
+                    journey: JourneyType.titleToEnum(journey) ?? .recording
                 )
                 self.questsEntity = completedQuestsEntity
                 questsSubject.send(.success(completedQuestsEntity))

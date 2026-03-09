@@ -16,6 +16,6 @@ struct JourneyEntity {
 
 extension JourneyEntity: Equatable {
     static func stub() -> Self {
-        return .init(title: "감정 직면", description: "설명", style: .face, questType: .question)
+        return .init(title: "이별 극복", description: "설명", style: .recording, questType: .question)
     }
 }

@@ -101,7 +101,7 @@ extension NewJourneySelectViewController {
         viewController.delegate = self
         self.present(viewController, animated: false)
         
-        let journeyType = JourneyType.titleToEnum(journeyView.title) ?? .face
+        let journeyType = JourneyType.titleToEnum(journeyView.title) ?? .recording
         let property = QuestEvents.NewJourneyProperty(newJourneyType: journeyType.mixpanelKey)
         Mixpanel.mainInstance().track(
             event: QuestEvents.Name.journeyNewClick,
