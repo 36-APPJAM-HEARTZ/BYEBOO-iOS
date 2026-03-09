@@ -42,7 +42,7 @@ extension BlocksAPI: EndPoint {
     
     var headers: HeaderType {
         let keychainService = DefaultKeychainService()
-        return .withAuth(acessToken: keychainService.load(key: .accessToken))
+        return .withAuth
     }
     
     var parameterEncoding: any Alamofire.ParameterEncoding {
