@@ -25,6 +25,7 @@ protocol ViewControllerFactoryProtocol {
     func makeWriteQuestionTypeQuestViewController() -> WriteQuestionTypeQuestViewController
     func makeWriteActiveTypeQuestViewController() -> WriteActiveTypeQuestViewController
     func makeFinishJourneyViewController() -> FinishJourneyViewController
+    func makeCommonQuestBottomSheetViewController() -> CommonQuestBottomSheetViewController
 }
 
 final class ViewControllerFactory: ViewControllerFactoryProtocol {
@@ -199,7 +200,20 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
     }
     
     func makeBlockedUserListViewController() -> BlockedkUserListViewController {
-        .init(viewModel: BlockedUserListViewModel())
+        guard let viewModel = DIContainer.shared.resolve(type: BlockedUserListViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        
+        return .init(viewModel: viewModel)
+    }
+    
+    func makeCommonQuestBottomSheetViewController() -> CommonQuestBottomSheetViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: CommonQuestBottomSheetViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        return .init(viewModel: viewModel)
     }
     
     func makeAIAnswerViewController() -> AIAnswerViewController {

@@ -58,6 +58,14 @@ struct DataDependencyAssembler: DependencyAssembler {
                 keychainService: keychainService
             )
         }
+        
+        DIContainer.shared.register(type: BlocksInterface.self) { _ in
+            return DefaultBlocksRepository(networkService: networkService)
+        }
+        
+        DIContainer.shared.register(type: ReportsInterface.self) { _ in
+            return DefaultReportsRepository(networkService: networkService)
+        }
     }
 }
 

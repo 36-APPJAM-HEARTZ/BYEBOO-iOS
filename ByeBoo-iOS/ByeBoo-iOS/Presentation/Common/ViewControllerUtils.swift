@@ -8,10 +8,15 @@
 import UIKit
 
 struct ViewControllerUtils {
-    static func setRootViewController(window: UIWindow, viewController: UIViewController, withAnimation: Bool) {
+    static func setRootViewController(
+        window: UIWindow,
+        viewController: UIViewController,
+        withAnimation: Bool,
+        completion: (() -> Void)? = nil) {
         if !withAnimation {
             window.rootViewController = viewController
             window.makeKeyAndVisible()
+            completion?() 
             return
         }
         
@@ -25,6 +30,7 @@ struct ViewControllerUtils {
                     snapshot.layer.opacity = 0
                 }, completion: { _ in
                     snapshot.removeFromSuperview()
+                    completion?()
                 })
             }
         }
@@ -36,6 +42,29 @@ struct ViewControllerUtils {
            let tabBarController = window.rootViewController as? UITabBarController {
             guard tabBarController.viewControllers?[safe: index] != nil else { return }
             tabBarController.selectedIndex = index
+        }
+    }
+    
+    static func changeQuestTabWithIndex(index: Int, completion: (() -> Void)? = nil) {
+        let viewController = ByeBooTabBar()
+        viewController.selectedIndex = 1
+        guard let questMaintab = viewController.viewControllers?[1] as? UINavigationController,
+              let commonQuestTab = questMaintab.viewControllers.first as? ParentQuestViewController<QuestTabItem> else {
+            return }
+        
+        commonQuestTab.loadViewIfNeeded()
+        commonQuestTab.selectTab(index: index)
+        
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+            ViewControllerUtils.setRootViewController(
+                window: window,
+                viewController: viewController,
+                withAnimation: true,
+                completion: {
+                    completion?()
+                }
+            )
         }
     }
 }

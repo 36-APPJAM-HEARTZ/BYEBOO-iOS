@@ -248,22 +248,7 @@ extension WriteQuestionTypeQuestViewController {
     
     private func commonQuestComplete() {
         let viewController = ByeBooTabBar()
-        viewController.selectedIndex = 1
-        guard let questMaintab = viewController.viewControllers?[1] as? UINavigationController,
-              let commonQuestTab = questMaintab.viewControllers.first as? ParentQuestViewController<QuestTabItem> else { return }
-        
-        commonQuestTab.loadViewIfNeeded()
-        commonQuestTab.selectTab(index: 1)
-        
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
-            
-            ViewControllerUtils.setRootViewController(
-                window: window,
-                viewController: viewController,
-                withAnimation: true
-            )
-        }
+        ViewControllerUtils.changeQuestTabWithIndex(index: 1)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
             let modal = ModalBuilder(

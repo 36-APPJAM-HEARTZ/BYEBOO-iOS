@@ -174,6 +174,15 @@ extension CommonQuestHistoryView {
         dateLabel.text = writtenAt
         answerContentLabel.text = content
         
+        answerContentLabel.do {
+            $0.applyByeBooFont(
+                style: .body3R16,
+                text: content,
+                color: .grayscale100,
+                numberOfLines: 0
+            )
+        }
+        
         if let profileIcon {
             self.profileIcon = profileIcon
             profileIconImageView.image = profileIcon
