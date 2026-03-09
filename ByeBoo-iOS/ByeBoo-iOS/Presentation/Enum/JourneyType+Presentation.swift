@@ -10,19 +10,10 @@ import UIKit
 extension JourneyType {
     var title: String {
         switch self {
-        case .face:
-            "재회 준비"
-        case .process:
+        case .recording:
             "이별 극복"
-        }
-    }
-    
-    var image: UIImage {
-        switch self {
-        case .face:
-                .faceEmotion
-        case .process:
-                .processEmotion
+        case .reunion:
+            "재회 준비"
         }
     }
     
@@ -32,19 +23,19 @@ extension JourneyType {
     
     var frontImage: UIImage {
         switch self {
-        case .face:
-                .reunionFront
-        case .process:
+        case .recording:
                 .overcomingFront
+        case .reunion:
+                .reunionFront
         }
     }
     
     var backImage: UIImage {
         switch self {
-        case .face:
-                .reunionBack
-        case .process:
+        case .recording:
                 .overcomingBack
+        case .reunion:
+                .reunionBack
         }
     }
     
