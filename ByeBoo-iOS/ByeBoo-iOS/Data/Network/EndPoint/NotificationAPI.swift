@@ -10,9 +10,9 @@ import Foundation
 import Alamofire
 
 enum NotificationAPI {
-    case saveToken(accessToken: String, dto: FCMTokenDTO)
-    case updateToken(accessToken: String, dto: FCMTokenDTO)
-    case deleteToken(accessToken: String, dto: FCMTokenDTO)
+    case saveToken(dto: FCMTokenDTO)
+    case updateToken(dto: FCMTokenDTO)
+    case deleteToken(dto: FCMTokenDTO)
 }
 
 extension NotificationAPI: EndPoint {
@@ -41,8 +41,8 @@ extension NotificationAPI: EndPoint {
     
     var headers: HeaderType {
         switch self {
-        case .saveToken(let accessToken, _), .updateToken(let accessToken, _), .deleteToken(let accessToken, _):
-            return .withAuth(acessToken: accessToken)
+        case .saveToken, .updateToken, .deleteToken:
+            return .withAuth
         }
     }
     
@@ -62,7 +62,7 @@ extension NotificationAPI: EndPoint {
     
     var bodyParameters: Parameters? {
         switch self {
-        case .saveToken(_, let dto), .updateToken(_, let dto), .deleteToken(_, let dto):
+        case .saveToken(let dto), .updateToken(let dto), .deleteToken(let dto):
             return try? dto.toDictionary()
         }
     }

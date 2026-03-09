@@ -28,7 +28,7 @@ struct DefaultUsersRepository: UsersInterface {
     func fetchJourney() async throws -> JourneyEntity {
         let accessToken = loadAccessToken()
         let result = try await network.request(
-            UsersAPI.journey(accessToken: accessToken),
+            UsersAPI.journey,
             decodingType: UserJourneyResponseDTO.self
         )
         
@@ -47,7 +47,6 @@ struct DefaultUsersRepository: UsersInterface {
         )
         let result = try await network.request(
             UsersAPI.sendUser(
-                accessToken: accessToken,
                 requestDTO: userRequestDTO
             ),
             decodingType: UserResponseDTO.self
@@ -65,7 +64,7 @@ struct DefaultUsersRepository: UsersInterface {
     func fetchCharacterDialogue() async throws -> DialogueEntity {
         let accessToken = loadAccessToken()
         let result = try await network.request(
-            UsersAPI.character(accessToken: accessToken),
+            UsersAPI.character,
             decodingType: DialogueResponseDTO.self
         )
         
@@ -75,7 +74,7 @@ struct DefaultUsersRepository: UsersInterface {
     func fetchQuestStatus() async throws -> UserQuestStatusEntity {
         let accessToken = loadAccessToken()
         let result = try await network.request(
-            UsersAPI.count(accessToken: accessToken),
+            UsersAPI.count,
             decodingType: UserQuestStatusResponseDTO.self
         )
         
@@ -84,7 +83,7 @@ struct DefaultUsersRepository: UsersInterface {
     
     func startJourney() async throws {
         let accessToken = loadAccessToken()
-        try await network.request(UsersAPI.start(accessToken: accessToken))
+        try await network.request(UsersAPI.start)
     }
     
     // MARK: Persistence
@@ -113,7 +112,6 @@ struct DefaultUsersRepository: UsersInterface {
         let accessToken = loadAccessToken()
         let result = try await network.request(
             UsersAPI.modifyName(
-                accessToken: accessToken,
                 requestDTO: UserNameRequestDTO(
                     name: name
                 )
@@ -132,7 +130,7 @@ struct DefaultUsersRepository: UsersInterface {
     func updateNotificationPermission() async throws -> Bool {
         let accessToken = loadAccessToken()
         let result = try await network.request(
-            UsersAPI.updateNotificationPermission(accessToken: accessToken),
+            UsersAPI.updateNotificationPermission,
             decodingType: AlarmEnabledResponseDTO.self
         )
         let alarmEnabled = result.alarmEnabled
@@ -155,10 +153,7 @@ struct DefaultUsersRepository: UsersInterface {
     func fetchMyCommonQuestAnswers(cursor: Int?) async throws -> CommonQuestMyAnswersEntity {
         let accessToken = loadAccessToken()
         let result = try await network.request(
-            UsersAPI.fetchCommonQuestAnswers(
-                accessToken: accessToken,
-                cursor: cursor
-            ),
+            UsersAPI.fetchCommonQuestAnswers(cursor: cursor),
             decodingType: CommonQuestMyAnswersResponseDTO.self
         )
         return result.toEntity()

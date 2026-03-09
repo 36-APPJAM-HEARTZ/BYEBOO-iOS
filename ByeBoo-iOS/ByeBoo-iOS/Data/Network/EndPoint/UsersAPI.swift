@@ -10,25 +10,25 @@ import Foundation
 import Alamofire
 
 enum UsersAPI {
-    case journey(accessToken: String)
-    case sendUser(accessToken: String, requestDTO: UserRequestDTO)
-    case character(accessToken: String)
-    case count(accessToken: String)
-    case start(accessToken: String)
-    case modifyName(accessToken: String, requestDTO: UserNameRequestDTO)
-    case updateNotificationPermission(accessToken: String)
-    case fetchCommonQuestAnswers(accessToken: String, cursor: Int?)
+    case journey
+    case sendUser(requestDTO: UserRequestDTO)
+    case character
+    case count
+    case start
+    case modifyName(requestDTO: UserNameRequestDTO)
+    case updateNotificationPermission
+    case fetchCommonQuestAnswers(cursor: Int?)
 }
 
 extension UsersAPI: EndPoint {
     var basePath: String {
         return "/api/v1/users"
-
-//        switch self {
-//        case .journey, .character, .count, .start, .modifyName, .updateNotificationPermission:
-//        case .sendUser:
-//            return "/api/v2/users"
-//        }
+        
+        //        switch self {
+        //        case .journey, .character, .count, .start, .modifyName, .updateNotificationPermission:
+        //        case .sendUser:
+        //            return "/api/v2/users"
+        //        }
     }
     
     var path: String {
@@ -47,7 +47,7 @@ extension UsersAPI: EndPoint {
             return "/name"
         case .updateNotificationPermission:
             return "/alarm"
-        case .fetchCommonQuestAnswers(accessToken: let accessToken, cursor: let cursor):
+        case .fetchCommonQuestAnswers(cursor: let cursor):
             return "/me/common-quests"
         }
     }
@@ -63,15 +63,10 @@ extension UsersAPI: EndPoint {
     
     var headers: HeaderType {
         switch self {
-        case .journey(let accessToken),
-                .sendUser(let accessToken, _),
-                .character(let accessToken),
-                .count(let accessToken),
-                .start(let accessToken),
-                .modifyName(let accessToken, _),
-                .updateNotificationPermission(let accessToken),
-                .fetchCommonQuestAnswers(let accessToken, _):
-            return .withAuth(acessToken: accessToken)
+        case .journey,.sendUser, .character, .count,
+                .start,.modifyName,.updateNotificationPermission,
+                .fetchCommonQuestAnswers:
+            return .withAuth
         }
     }
     
@@ -86,7 +81,7 @@ extension UsersAPI: EndPoint {
     
     var queryParameters: [String : String]? {
         switch self {
-        case .fetchCommonQuestAnswers(_, let cursor):
+        case .fetchCommonQuestAnswers(let cursor):
             return cursor.map { ["cursor": "\($0)"] }
         default:
             return nil
@@ -97,9 +92,9 @@ extension UsersAPI: EndPoint {
         switch self {
         case .journey, .character, .count, .start, .updateNotificationPermission, .fetchCommonQuestAnswers:
             return nil
-        case .sendUser(_, let dto):
+        case .sendUser(let dto):
             return try? dto.toDictionary()
-        case .modifyName(_, let dto):
+        case .modifyName(let dto):
             return try? dto.toDictionary()
         }
     }
