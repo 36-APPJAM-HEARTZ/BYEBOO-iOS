@@ -16,7 +16,10 @@ struct DataDependencyAssembler: DependencyAssembler {
     
     init() {
         self.tokenService = DefaultTokenService(keychainService: keychainService)
-        self.interceptor = NetworkInterceptor(tokenService: tokenService)
+        self.interceptor = NetworkInterceptor(
+            tokenService: tokenService,
+            keychainService: keychainService
+        )
         self.networkService = DefaultNetworkService(interceptor: interceptor)
     }
     
