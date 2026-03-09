@@ -96,9 +96,15 @@ extension CommonQuestHistoryViewController {
         self.question = question
         self.writtenAt = writtenAt
         
+        let formattedWrittenAt = DateFormatter.toDetailDate(from: writtenAt).map {
+            DateFormatter.toDisplayDateString(from: $0)
+        }
+        
+        guard let formattedWrittenAt else { return }
+        
         rootView.configure(
             question: question,
-            writtenAt: writtenAt,
+            writtenAt: formattedWrittenAt,
             profileIcon: profileIcon,
             nickname: nickname,
             content: content
