@@ -11,6 +11,7 @@ import Foundation
 
 enum JourneyType: CaseIterable {
     case recording
+    case active
     case reunion
 }
 
@@ -19,6 +20,8 @@ extension JourneyType {
         switch self {
         case .recording:
             "이별 극복"
+        case .active:
+            "감정 정리"
         case .reunion:
             "재회 준비"
         }

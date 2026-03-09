@@ -12,6 +12,8 @@ extension JourneyType {
         switch self {
         case .recording:
             "이별 극복"
+        case .active:
+            "감정 정리"
         case .reunion:
             "재회 준비"
         }
@@ -21,21 +23,25 @@ extension JourneyType {
         return "\(title) 여정"
     }
     
-    var frontImage: UIImage {
+    var frontImage: UIImage? {
         switch self {
         case .recording:
-                .overcomingFront
+            .overcomingFront
         case .reunion:
-                .reunionFront
+            .reunionFront
+        case .active:
+            nil
         }
     }
     
-    var backImage: UIImage {
+    var backImage: UIImage? {
         switch self {
         case .recording:
-                .overcomingBack
+            .overcomingBack
         case .reunion:
-                .reunionBack
+            .reunionBack
+        case .active:
+            nil
         }
     }
     
