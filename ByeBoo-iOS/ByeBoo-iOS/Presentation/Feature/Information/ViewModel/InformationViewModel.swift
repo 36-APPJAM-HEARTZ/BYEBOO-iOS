@@ -17,7 +17,6 @@ final class InformationViewModel {
     private(set) var output: Output
     
     private var currentNickname: String?
-    private var currentFeeling: Feeling? = .exhausted
     private var currentQuestStyle: SelectQuestType?
     private var user: UserEntity = UserEntity(id: 1, name: "")
     
@@ -47,16 +46,14 @@ final class InformationViewModel {
     
     private func createUserInformation(
         nickname: String?,
-        feeling: Feeling?,
         questStyle: SelectQuestType?
     ) {
         guard let name = currentNickname,
-              let feeling = currentFeeling,
               let questStyle = currentQuestStyle else { return }
         
         Task {
             do {
-                try await sendUserUseCase.execute(
+                let _ = try await sendUserUseCase.execute(
                     name: name,
                     questStyle: questStyle.key
                 )
@@ -78,7 +75,6 @@ extension InformationViewModel: ViewModelType {
     enum Input {
         case editingNickname(String)
         case nicknameButtonDidTap(String)
-        case feelingButtonDidTap(Feeling)
         case questButtonDidTap(SelectQuestType)
     }
     
@@ -105,14 +101,10 @@ extension InformationViewModel: ViewModelType {
             currentNickname = nickname
             isForbiddenWordSubject.send(.success(()))
             
-        case .feelingButtonDidTap(let feeling):
-            currentFeeling = feeling
-            
         case .questButtonDidTap(let questStyle):
             currentQuestStyle = questStyle
             createUserInformation(
                 nickname: currentNickname,
-                feeling: currentFeeling,
                 questStyle: currentQuestStyle
             )
             userInformationSubject.send(.success(()))
@@ -123,7 +115,6 @@ extension InformationViewModel: ViewModelType {
 extension InformationViewModel {
     
     func resetData() {
-        currentFeeling = nil
         currentQuestStyle = nil
     }
 }
