@@ -57,10 +57,10 @@ struct DefaultAuthRepository: AuthInterface {
         switch loginPlatform {
         case "KAKAO":
             ByeBooLogger.debug("카카오 post login")
-            header = .withAuth(acessToken: keychainService.load(key: .authorization))
+            header = .kakaoLoginHeader(accessToken: keychainService.load(key: .authorization))
         case "APPLE":
             ByeBooLogger.debug("apple post login")
-            header = .withAuthCode(
+            header = .appleLoginHeader(
                 acessToken: keychainService.load(key: .authorization),
                 authorizationCode: keychainService.load(key: .authorizationCode)
             )
@@ -89,7 +89,7 @@ struct DefaultAuthRepository: AuthInterface {
             let fcmToken = try await Messaging.messaging().token()
             let fcmTokenDTO = FCMTokenDTO(token: fcmToken)
             try await network.request(
-                NotificationAPI.saveToken(accessToken: result.accessToken, dto: fcmTokenDTO)
+                NotificationAPI.saveToken(dto: fcmTokenDTO)
             )
         } catch (let error) {
             ByeBooLogger.error(error)
@@ -116,7 +116,7 @@ struct DefaultAuthRepository: AuthInterface {
     
     func logout() async throws -> Bool {
         let accessToken = keychainService.load(key: .accessToken)
-        let header: HeaderType = .withAuth(acessToken: accessToken)
+        let header: HeaderType = .withAuth
         
         do {
             try await network.request(
@@ -127,7 +127,7 @@ struct DefaultAuthRepository: AuthInterface {
                 return false
             }
             try await network.request(
-                NotificationAPI.deleteToken(accessToken: accessToken, dto: .init(token: fcmToken))
+                NotificationAPI.deleteToken(dto: .init(token: fcmToken))
             )
         }
         catch (let error) {
@@ -142,7 +142,7 @@ struct DefaultAuthRepository: AuthInterface {
     }
     
     func withdraw() async throws -> Bool {
-        let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .accessToken))
+        let header: HeaderType = .withAuth
         
         do {
             try await network.request(
