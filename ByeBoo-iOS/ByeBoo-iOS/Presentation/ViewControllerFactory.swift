@@ -65,7 +65,7 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
     }
     
     func makeCardJourneyViewController() -> CardJourneyViewController {
-        guard let viewModel = DIContainer.shared.resolve(type: JourneyResultViewModel.self) else {
+        guard let viewModel = DIContainer.shared.resolve(type: CardJourneyViewModel.self) else {
             DIErrorHandle()
             fatalError()
         }
