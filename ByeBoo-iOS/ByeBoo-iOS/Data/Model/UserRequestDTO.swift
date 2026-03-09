@@ -7,6 +7,5 @@
 
 struct UserRequestDTO: Encodable {
     let name: String
-    let feeling: String
     let questStyle: String
 }
