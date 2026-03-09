@@ -10,8 +10,8 @@ import Foundation
 import Alamofire
 
 enum CommonQuestAPI {
-    case postCommonQuest(accessToken: String, questID: Int, dto: SaveCommonQuestRequestDTO)
-    case fetchCommonQuest(accessToken: String, date: String, cursor: Int?)
+    case postCommonQuest(questID: Int, dto: SaveCommonQuestRequestDTO)
+    case fetchCommonQuest(date: String, cursor: Int?)
 }
 
 extension CommonQuestAPI: EndPoint {
@@ -22,7 +22,7 @@ extension CommonQuestAPI: EndPoint {
     
     var path: String {
         switch self {
-        case .postCommonQuest(_, let questID, _):
+        case .postCommonQuest(let questID, _):
             return "/\(questID)"
         case .fetchCommonQuest:
             return ""
@@ -40,9 +40,8 @@ extension CommonQuestAPI: EndPoint {
     
     var headers: HeaderType {
         switch self {
-        case .postCommonQuest(let accessToken, _, _),
-                .fetchCommonQuest(let accessToken, _, _):
-            return .withAuth(acessToken: accessToken)
+        case .postCommonQuest, .fetchCommonQuest:
+            return .withAuth
         }
     }
     
@@ -59,7 +58,7 @@ extension CommonQuestAPI: EndPoint {
         switch self {
         case .postCommonQuest:
             return nil
-        case .fetchCommonQuest(_, let date, let cursor):
+        case .fetchCommonQuest(let date, let cursor):
             if let cursor {
                 return [
                     "date": date,
@@ -72,7 +71,7 @@ extension CommonQuestAPI: EndPoint {
     
     var bodyParameters: Parameters? {
         switch self {
-        case .postCommonQuest(_, _, let dto):
+        case .postCommonQuest(_, let dto):
             return try? dto.toDictionary()
         case .fetchCommonQuest:
             return nil

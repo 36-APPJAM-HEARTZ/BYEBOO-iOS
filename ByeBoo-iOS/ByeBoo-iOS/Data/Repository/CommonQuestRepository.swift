@@ -25,7 +25,6 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
         
         let _ = try await network.request(
             CommonQuestAPI.postCommonQuest(
-                accessToken: loadAccessToken(),
                 questID: questID,
                 dto: saveCommonQuestRequestDTO
             )
@@ -38,16 +37,11 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
     ) async throws -> CommonQuestAnswersEntity {
         let commonQuest = try await network.request(
             CommonQuestAPI.fetchCommonQuest(
-                accessToken: loadAccessToken(),
                 date: date,
                 cursor: cursor
             ),
             decodingType: CommonQuestAnswersResponseDTO.self
         )
         return commonQuest.toEntity()
-    }
-    
-    private func loadAccessToken() -> String {
-        keychainService.load(key: .accessToken)
     }
 }

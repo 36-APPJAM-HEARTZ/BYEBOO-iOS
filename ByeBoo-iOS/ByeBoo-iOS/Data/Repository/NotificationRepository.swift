@@ -38,7 +38,7 @@ struct DefaultNotificationRepository: NotificationInterface {
         
         let fcmTokenDTO = createDTO(token: token)
         try await network.request(
-            NotificationAPI.saveToken(accessToken: accessToken, dto: fcmTokenDTO)
+            NotificationAPI.saveToken(dto: fcmTokenDTO)
         )
         saveToken(token: token)
     }
@@ -53,7 +53,7 @@ struct DefaultNotificationRepository: NotificationInterface {
         
         let fcmTokenDTO = createDTO(token: token)
         try await network.request(
-            NotificationAPI.updateToken(accessToken: accessToken, dto: fcmTokenDTO)
+            NotificationAPI.updateToken(dto: fcmTokenDTO)
         )
         saveToken(token: token)
     }
@@ -66,7 +66,7 @@ struct DefaultNotificationRepository: NotificationInterface {
         let fcmTokenDTO = createDTO(token: token)
         let accessToken = keychainService.load(key: .accessToken)
         try await network.request(
-            NotificationAPI.deleteToken(accessToken: accessToken, dto: fcmTokenDTO)
+            NotificationAPI.deleteToken(dto: fcmTokenDTO)
         )
         let _ = userDefaultsService.delete(key: .fcmToken)
     }
