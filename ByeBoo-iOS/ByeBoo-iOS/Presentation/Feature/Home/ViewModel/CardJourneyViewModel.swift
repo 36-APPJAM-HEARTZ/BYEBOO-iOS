@@ -8,7 +8,7 @@
 import Combine
 import Foundation
 
-final class JourneyResultViewModel: ViewModelType {
+final class CardJourneyViewModel: ViewModelType {
     
     private var cancellables = Set<AnyCancellable>()
     private var journeyResultSubject: PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never> = .init()
@@ -42,7 +42,7 @@ final class JourneyResultViewModel: ViewModelType {
     }
 }
 
-extension JourneyResultViewModel {
+extension CardJourneyViewModel {
     enum Input {
         case viewDidLoad
     }
@@ -53,7 +53,7 @@ extension JourneyResultViewModel {
     }
 }
 
-extension JourneyResultViewModel {
+extension CardJourneyViewModel {
     private func fetchJourney() {
         Task {
             do {
