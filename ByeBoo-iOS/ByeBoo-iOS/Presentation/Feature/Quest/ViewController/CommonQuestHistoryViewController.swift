@@ -11,6 +11,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
     
     private let rootView = CommonQuestHistoryView()
     private var commonQuestArchiveType: CommonQuestArchiveType = .mine
+    private var writerID: Int = 0
     
     override func loadView() {
         view = rootView
@@ -41,7 +42,7 @@ extension CommonQuestHistoryViewController {
     @objc
     private func bottomUp() {
         let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
-        commonQuestBottomSheet.configure(sheeetType: commonQuestArchiveType)
+        commonQuestBottomSheet.configure(sheeetType: commonQuestArchiveType, writerID: writerID)
         commonQuestBottomSheet.delegate = self
         if let sheet =  commonQuestBottomSheet.sheetPresentationController{
             sheet.detents = [.custom { _ in 224.adjustedH }]
@@ -60,9 +61,14 @@ extension CommonQuestHistoryViewController {
         writtenAt: String,
         profileIcon: UIImage? = nil,
         nickname: String? = nil,
-        content: String
+        content: String,
+        writerID: Int? = nil
     ) {
         commonQuestArchiveType = nickname == nil ? .mine : .other
+        
+        if let writerID {
+            self.writerID = writerID
+        }
         
         rootView.configure(
             question: question,

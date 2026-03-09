@@ -21,6 +21,7 @@ struct CommonQuestAnswerResponseDTO: Decodable {
     let profileIcon: String
     let writtenAt: String
     let content: String
+    let writerId: Int
 }
 
 extension CommonQuestAnswersResponseDTO {
@@ -44,7 +45,8 @@ extension CommonQuestAnswerResponseDTO {
             writer: writer,
             profileIcon: profileIcon,
             writtenAt: writtenAt,
-            content: content
+            content: content,
+            writerID: writerId
         )
     }
 }

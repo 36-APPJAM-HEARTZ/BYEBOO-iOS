@@ -17,7 +17,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     private var rootView = CommonQuestBottomSheetView(sheetType: .other)
     private let viewModel: CommonQuestBottomSheetViewModel
     private var answerID: Int = 0
-    private var userID: Int = 0
+    private var writerID: Int = 0
     private var cancellables = Set<AnyCancellable>()
     weak var delegate: BlockReportProtocol?
     var sheetType: CommonQuestArchiveType?
@@ -52,8 +52,9 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     }
     
     
-    func configure(sheeetType: CommonQuestArchiveType) {
+    func configure(sheeetType: CommonQuestArchiveType, writerID: Int) {
         self.sheetType = sheeetType
+        self.writerID = writerID
         if let sheetType {
             rootView = CommonQuestBottomSheetView(sheetType: sheetType)
         }
@@ -77,7 +78,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
             // TODO: 삭제하기
             ByeBooLogger.debug("delete")
         case .block:
-            viewModel.action(.block(userID: userID))
+            viewModel.action(.block(userID: writerID))
         case .report:
             viewModel.action(.report(answerID: answerID))
         default:
