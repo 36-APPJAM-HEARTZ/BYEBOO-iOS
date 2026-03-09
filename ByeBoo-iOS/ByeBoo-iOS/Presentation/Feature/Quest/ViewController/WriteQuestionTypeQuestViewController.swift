@@ -183,7 +183,7 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                 switch result {
                 case .success:
                     ByeBooLogger.debug("공통 퀘스트 비속어 없음")
-                case .failure(let error):
+                case .failure(_):
                     presentToastMessage(type: .questViolation)
                 }
             }
@@ -239,21 +239,10 @@ extension WriteQuestionTypeQuestViewController {
             let archiveViewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
             archiveViewController.entryViewController = .writeQuest
             archiveViewController.configure(questID: self.questID, questType: .question)
-            
-            CATransaction.begin()
-            CATransaction.setCompletionBlock {
-                let modal = ModalBuilder(
-                    modalView: QuestCompleteModal(),
-                    action: nil,
-                    rootViewController: self
-                )
-                modal.present()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    modal.dismiss()
-                }
-            }
             self.navigationController?.pushViewController(archiveViewController, animated: true)
-            CATransaction.commit()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                archiveViewController.presentCompleteModal()
+            }
         }
     }
     

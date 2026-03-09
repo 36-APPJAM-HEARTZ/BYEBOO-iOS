@@ -141,6 +141,18 @@ extension ArchiveQuestViewController {
         rootView = ArchiveQuestView(type: questType)
     }
     
+    func presentCompleteModal() {
+        let modal = ModalBuilder(
+            modalView: QuestCompleteModal(),
+            action: nil,
+            rootViewController: self
+        )
+        modal.present()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            modal.dismiss()
+        }
+    }
+    
     @objc
     private func editButtonDidTap() {
         ByeBooLogger.debug("버튼 터치, entity: \(String(describing: viewModel.entity))")
