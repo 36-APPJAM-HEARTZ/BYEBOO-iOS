@@ -70,7 +70,7 @@ extension BlockedkUserListViewController {
             }
             .store(in: &cancellables)
         
-        viewModel.output.deleteBlockUserPublisher
+        viewModel.output.deleteBlockedUserPublisher
             .receive(on: DispatchQueue.main)
             .sink { result in
                 switch result {
@@ -169,7 +169,7 @@ extension BlockedkUserListViewController: UITableViewDataSource {
             actionButton: actionButton
         )
         let action: (() -> Void) = {
-            self.viewModel.action(.deleteBlocedUser(index: self.index))
+            self.viewModel.action(.deleteBlockedUser(index: self.index))
         }
         
         ModalBuilder(

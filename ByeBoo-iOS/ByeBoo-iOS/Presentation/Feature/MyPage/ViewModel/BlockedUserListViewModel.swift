@@ -19,7 +19,7 @@ final class BlockedUserListViewModel {
     var output: Output {
         Output(
             getBlockedUsersListPublisher: getBlockedUsersListSubject.eraseToAnyPublisher(),
-            deleteBlockUserPublisher: deleteBlockUserSubject.eraseToAnyPublisher()
+            deleteBlockedUserPublisher: deleteBlockUserSubject.eraseToAnyPublisher()
         )
     }
     init(
@@ -45,19 +45,19 @@ final class BlockedUserListViewModel {
 extension BlockedUserListViewModel: ViewModelType {
     enum Input {
         case viewDidLoad
-        case deleteBlocedUser(index: Int)
+        case deleteBlockedUser(index: Int)
     }
     
     struct Output {
         let getBlockedUsersListPublisher: AnyPublisher<Result<[BlockedUserEntity], ByeBooError>, Never>
-        let deleteBlockUserPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
+        let deleteBlockedUserPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
         switch trigger {
         case .viewDidLoad:
             fetchBlocedUserList()
-        case .deleteBlocedUser(let index):
+        case .deleteBlockedUser(let index):
             deleteBlockedUser(index: index)
         }
     }

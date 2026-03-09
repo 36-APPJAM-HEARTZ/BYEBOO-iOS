@@ -22,8 +22,6 @@ final class CommonQuestBottomSheetViewModel {
     
     private let blockUserUseCase: BlockUserUseCase
     private let reportCommonQuestUseCase: ReportsCommonQuestAnswerUseCase
-    
-    
     private var cancellables = Set<AnyCancellable>()
     
     init(
@@ -33,7 +31,6 @@ final class CommonQuestBottomSheetViewModel {
         self.blockUserUseCase = blockUserUseCase
         self.reportCommonQuestUseCase = reportCommonQuestUseCase
     }
-    
 }
 
 extension CommonQuestBottomSheetViewModel: ViewModelType {

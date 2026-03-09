@@ -12,7 +12,7 @@ import Alamofire
 enum BlocksAPI {
     case getBlockList
     case blockUser(userID: Int)
-    case deleteBlockUser(userID: Int)
+    case deleteBlockedUser(userID: Int)
 }
 
 extension BlocksAPI: EndPoint {
@@ -24,7 +24,7 @@ extension BlocksAPI: EndPoint {
         switch self {
         case .getBlockList:
             return ""
-        case .blockUser(let userID), .deleteBlockUser(let userID):
+        case .blockUser(let userID), .deleteBlockedUser(let userID):
             return "/\(userID)"
         }
     }
@@ -35,7 +35,7 @@ extension BlocksAPI: EndPoint {
             return .get
         case .blockUser:
             return .post
-        case .deleteBlockUser:
+        case .deleteBlockedUser:
             return .delete
         }
     }
@@ -49,7 +49,7 @@ extension BlocksAPI: EndPoint {
         switch self {
         case .blockUser:
             return JSONEncoding.default
-        case .getBlockList, .deleteBlockUser:
+        case .getBlockList, .deleteBlockedUser:
             return URLEncoding.default
         }
     }
