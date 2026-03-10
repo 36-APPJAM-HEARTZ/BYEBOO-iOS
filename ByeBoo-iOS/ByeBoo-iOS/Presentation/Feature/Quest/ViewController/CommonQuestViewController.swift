@@ -231,6 +231,7 @@ extension CommonQuestViewController: UITableViewDataSource {
         let cell: CommonQuestContentCell = tableView.dequeueReusableCell(for: indexPath)
         
         cell.bind(
+            isAnswered: viewModel.isUserAnswered,
             question: viewModel.question,
             answersCount: viewModel.answersCount
         )
