@@ -259,10 +259,12 @@ extension WriteQuestionTypeQuestViewController {
         _ questNumber: Int?,
         _ questType: QuestType,
         _ questionTitle: String?,
-        _ answerID: Int,
+        _ answerID: Int?,
         _ answer: String,
         _ writtenAt: String
     ) {
+        guard let answerID else { return }
+        
         setQuestInformation(questNumber, questType, questionTitle)
         setQuestTextField(answer: answer)
         
