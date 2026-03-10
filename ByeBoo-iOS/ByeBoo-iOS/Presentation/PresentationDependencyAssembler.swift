@@ -17,15 +17,14 @@ struct PresentationDependencyAssembler: DependencyAssembler {
     func assemble() {
         preAssembler.assemble()
         
-        guard let getUserNameUseCase = DIContainer.shared.resolve(type: GetUserNameUseCase.self),
-              let fetchUserJourneyUseCase = DIContainer.shared.resolve(type: FetchUserJourneyUseCase.self),
-              let isForbiddenWordUseCase = DIContainer.shared.resolve(type: IsForbiddenWordUseCase.self)
-        else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            return
-        }
-        
-        DIContainer.shared.register(type: JourneyResultViewModel.self) { _ in
+        DIContainer.shared.register(type: JourneyResultViewModel.self) { container in
+            guard let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
+                  let fetchUserJourneyUseCase = container.resolve(type: FetchUserJourneyUseCase.self),
+                  let isForbiddenWordUseCase = container.resolve(type: IsForbiddenWordUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
             return JourneyResultViewModel(
                 fetchUserJourneyUseCase: fetchUserJourneyUseCase,
                 getUserNameUseCase: getUserNameUseCase
@@ -74,15 +73,16 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: InformationViewModel.self) { container in
-            guard let sendUserUseCase = container.resolve(type: SendUserUseCase.self),
-                  let checkValidNicknameUseCase = container.resolve(type: CheckValidNicknameUseCase.self)
-            else {
-                ByeBooLogger.error(ByeBooError.DIFailedError)
-                return
-            }
+            guard let checkValidNickNameUseCase = container.resolve(type: CheckValidNicknameUseCase.self),
+                  let isForbiddenWordUseCase = container.resolve(type: IsForbiddenWordUseCase.self),
+                  let sendUserUseCase = container.resolve(type: SendUserUseCase.self),
+                  let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self) else {
+                      ByeBooLogger.error(ByeBooError.DIFailedError)
+                      return
+                  }
             
             return InformationViewModel(
-                checkValidNicknameUseCase: checkValidNicknameUseCase,
+                checkValidNicknameUseCase: checkValidNickNameUseCase,
                 isForbiddenWordUseCase: isForbiddenWordUseCase,
                 sendUserUseCase: sendUserUseCase,
                 getUserNameUseCase: getUserNameUseCase
@@ -102,12 +102,14 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             )
         }
         
+        
         DIContainer.shared.register(type: HomeViewModel.self) { container in
             guard let characterUseCase = container.resolve(type: FetchCharacterDialogueUseCase.self),
                   let questStatusUseCase = container.resolve(type: FetchQuestStatusUseCase.self),
                   let setHelperUseCase = container.resolve(type: SetHelperUseCase.self),
-                  let getHelperUseCase = container.resolve(type: GetHelperUseCase.self)
-            else {
+                  let fetchUserJourneyUseCase = container.resolve(type: FetchUserJourneyUseCase.self),
+                  let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
+                  let getHelperUseCase = container.resolve(type: GetHelperUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -122,39 +124,46 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             )
         }
         
-        DIContainer.shared.register(type: QuestStartViewModel.self) { container in
-            guard let startJourneyUseCase = container.resolve(type: StartJourneyUseCase.self),
-                  let postNewJourneyUseCase = container.resolve(type: FetchNewJourneyUseCase.self)
-            else {
-                ByeBooLogger.error(ByeBooError.DIFailedError)
-                return
+        DIContainer.shared
+            .register(type: QuestStartViewModel.self) { container in
+                guard let startJourneyUseCase = container.resolve(type: StartJourneyUseCase.self),
+                      let fetchUserJourneyUseCase = container.resolve(type: FetchUserJourneyUseCase.self),
+                      let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
+                      let postNewJourneyUseCase = container.resolve(type: FetchNewJourneyUseCase.self) else {
+                    ByeBooLogger.error(ByeBooError.DIFailedError)
+                    return
+                }
+                
+                return QuestStartViewModel(
+                    startJourneyUseCase: startJourneyUseCase,
+                    getUserNameUseCase: getUserNameUseCase,
+                    fetchJourneyUseCase: fetchUserJourneyUseCase,
+                    postJourneyUseCase: postNewJourneyUseCase
+                )
             }
-            
-            return QuestStartViewModel(
-                startJourneyUseCase: startJourneyUseCase,
-                getUserNameUseCase: getUserNameUseCase,
-                fetchJourneyUseCase: fetchUserJourneyUseCase,
-                postJourneyUseCase: postNewJourneyUseCase
-            )
-        }
         
-        DIContainer.shared.register(type: ProgressingQuestsViewModel.self) { container in
-            guard let progressingQuestsUseCase = container.resolve(type: GetProgressingQuestsUseCase.self),
-                  let calculateRemainingTimeUseCase = container.resolve(type: CalculateRemainingTimeUseCase.self) else {
-                ByeBooLogger.error(ByeBooError.DIFailedError)
-                return
+        DIContainer.shared
+            .register(type: ProgressingQuestsViewModel.self) { container in
+                guard let progressingQuestsUseCase = container.resolve(type: GetProgressingQuestsUseCase.self),
+                      let fetchUserJourneyUseCase = container.resolve(type: FetchUserJourneyUseCase.self),
+                      let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
+                      let calculateRemainingTimeUseCase = container.resolve(type: CalculateRemainingTimeUseCase.self) else {
+                    ByeBooLogger.error(ByeBooError.DIFailedError)
+                    return
+                }
+                
+                return ProgressingQuestsViewModel(
+                    progressingQuestsUseCase: progressingQuestsUseCase,
+                    getUserNameUseCase: getUserNameUseCase,
+                    fetchUserJourneyUseCase: fetchUserJourneyUseCase,
+                    calculateRemainingTimeUseCase: calculateRemainingTimeUseCase
+                )
             }
-            
-            return ProgressingQuestsViewModel(
-                progressingQuestsUseCase: progressingQuestsUseCase,
-                getUserNameUseCase: getUserNameUseCase,
-                fetchUserJourneyUseCase: fetchUserJourneyUseCase,
-                calculateRemainingTimeUseCase: calculateRemainingTimeUseCase
-            )
-        }
         
         DIContainer.shared.register(type: QuestTipViewModel.self) { container in
-            guard let questTipUseCase = container.resolve(type: QuestTipUseCase.self)
+            guard let questTipUseCase = container.resolve(
+                type: QuestTipUseCase.self
+            )
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -188,7 +197,9 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: LookBackJourneyViewModel.self) { container in
-            guard let getLookBackJourneyUseCase = container.resolve(type: GetLookBackJourneyUseCase.self)
+            guard let getLookBackJourneyUseCase = container.resolve(
+                type: GetLookBackJourneyUseCase.self
+            )
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -200,8 +211,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: NewJourneyViewModel.self) { container in
-            guard let getNewJourneyUseCase = container.resolve(type: GetNewJourneyUseCase.self)
-            else {
+            guard let getNewJourneyUseCase = container.resolve(type: GetNewJourneyUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -213,8 +223,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: ModifyNicknameViewModel.self) { container in
             guard let checkValidNicknameUseCase = container.resolve(type: CheckValidNicknameUseCase.self),
-                  let modifyNicknameUseCase = container.resolve(type: ModifyNicknameUseCase.self)
-            else {
+                  let isForbiddenWordUseCase =  container.resolve(type: IsForbiddenWordUseCase.self),
+                  let modifyNicknameUseCase = container.resolve(type: ModifyNicknameUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -225,11 +235,11 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 modifyNicknameUseCase: modifyNicknameUseCase
             )
         }
+        
         DIContainer.shared.register(type: LoginViewModel.self) { container in
             guard let socialLoginUseCase = container.resolve(type: SocialLoginUseCase.self),
                   let getIsRegisteredUseCase = container.resolve(type: GetIsRegisteredUseCase.self),
-                  let getUserIDUseCase = container.resolve(type: GetUserIDUseCase.self)
-            else {
+                  let getUserIDUseCase = container.resolve(type: GetUserIDUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -242,7 +252,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: CompletedQuestsViewModel.self) { container in
-            guard let fetchCompletedQuestsUseCase = container.resolve(type: FetchCompletedQuestsUseCase.self) else {
+            guard let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
+                  let fetchCompletedQuestsUseCase = container.resolve(type: FetchCompletedQuestsUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -253,7 +264,9 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: SplashViewModel.self) { container in
-            guard let autoLoginUseCase = container.resolve(type: AutoLoginUseCase.self)
+            guard let autoLoginUseCase = container.resolve(
+                type: AutoLoginUseCase.self
+            )
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -262,7 +275,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: FinishJourneyViewModel.self) { container in
-            guard let getLastJourneyUseCase = container.resolve(type: GetLastJourneyUseCase.self) else {
+            guard let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
+                  let getLastJourneyUseCase = container.resolve(type: GetLastJourneyUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -279,13 +293,14 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 return
             }
             
-            return CommonQuestViewModel(fetchCommonQuestByDateUseCase: fetchCommonQuestByDateUseCase)
+            return CommonQuestViewModel(
+                fetchCommonQuestByDateUseCase: fetchCommonQuestByDateUseCase
+            )
         }
         
         DIContainer.shared.register(type: CommonQuestMyAnswerViewModel.self) { container in
             guard let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
-                  let fetchCommonQuestMyAnswersUseCase = container.resolve(type: FetchCommonQuestMyAnswersUseCase.self)
-            else {
+                  let fetchCommonQuestMyAnswersUseCase = container.resolve(type: FetchCommonQuestMyAnswersUseCase.self) else  {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -296,6 +311,22 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             )
         }
         
+        DIContainer.shared.register(type: CommonQuestBottomSheetViewModel.self) { container in
+            guard let blockUserUseCase = container.resolve(
+                type: BlockUserUseCase.self
+            ),
+                  let reportQuestAnswerUseCase = container.resolve(type: ReportsCommonQuestAnswerUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return CommonQuestBottomSheetViewModel(
+                blockUserUseCase: blockUserUseCase,
+                reportCommonQuestUseCase: reportQuestAnswerUseCase
+            )
+        }
+        
+        
         DIContainer.shared.register(type: AIAnswerViewModel.self) { container in
             guard let fetchAIAnswerUseCase = container.resolve(type: FetchAIAnswerUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
@@ -303,6 +334,19 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             }
             
             return AIAnswerViewModel(fetchAIAnswerUseCase: fetchAIAnswerUseCase)
+        }
+        
+        DIContainer.shared.register(type: BlockedUserListViewModel.self) { container in
+            guard let getBlockedUsersListUseCase = container.resolve(type: GetBlockedUsersListUseCase.self),
+                  let deleteBlockedUserUseCase = container.resolve(type: DeleteBlockedUserUseCase.self) else  {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return BlockedUserListViewModel(
+                getBlockedUsersListUseCase: getBlockedUsersListUseCase,
+                deleteBlockedUserUseCase: deleteBlockedUserUseCase
+            )
         }
     }
 }

@@ -71,8 +71,7 @@ extension QuestAPI: EndPoint {
     var headers: HeaderType {
         switch self {
         default:
-            let keychainService = DefaultKeychainService()
-            return .withAuth(acessToken: keychainService.load(key: .accessToken))
+            return .withAuth
         }
     }
     

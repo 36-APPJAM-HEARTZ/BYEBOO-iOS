@@ -58,19 +58,26 @@ extension EndPoint {
 
 enum HeaderType {
     case basic
-    case withAuth(acessToken: String)
-    case withAuthCode(acessToken: String, authorizationCode: String)
+    case withAuth
+    case refresh(refreshToken: String)
+    case kakaoLoginHeader(accessToken: String)
+    case appleLoginHeader(acessToken: String, authorizationCode: String)
     
     var value: HTTPHeaders {
         switch self {
         case .basic:
             return ["Content-Type": "application/json"]
-        case .withAuth(let acessToken):
+        case .withAuth:
             return [
                 "Content-Type": "application/json",
-                "Authorization": "Bearer \(acessToken)"
+                "X-Requires-Auth": "true"
             ]
-        case .withAuthCode(let acessToken, let authorizationCode):
+        case .refresh(let token), .kakaoLoginHeader(let token):
+            return [
+                "Content-Type": "application/json",
+                "Authorization": "Bearer \(token)"
+            ]
+        case .appleLoginHeader(let acessToken, let authorizationCode):
             return [
                 "Content-Type": "application/json",
                 "Authorization": "Bearer \(acessToken)",

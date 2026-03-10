@@ -11,19 +11,31 @@ import Alamofire
 
 final class NetworkInterceptor: RequestInterceptor {
     private let tokenService: TokenService
+    private let keychainService: KeychainService
     private let retryLimit = 3
     
     init(
-        tokenService: TokenService
+        tokenService: TokenService,
+        keychainService: KeychainService
     ) {
         self.tokenService = tokenService
+        self.keychainService = keychainService
     }
     
     func adapt(
         _ urlRequest: URLRequest,
         for session: Alamofire.Session,
         completion: @escaping @Sendable (Result<URLRequest, any Error>) -> Void) {
-            completion(.success(urlRequest))
+            var request = urlRequest
+            guard request.value(forHTTPHeaderField: "X-Requires-Auth") == "true" else {
+                completion(.success(request))
+                return
+            }
+            request.headers.remove(name: "X-Requires-Auth")
+            
+            let accessToken = keychainService.load(key: .accessToken)
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            completion(.success(request))
         }
     
     func retry(

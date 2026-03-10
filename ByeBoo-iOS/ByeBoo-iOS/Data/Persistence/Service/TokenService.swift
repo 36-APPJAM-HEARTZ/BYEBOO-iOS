@@ -40,7 +40,7 @@ actor DefaultTokenService: TokenService {
     }
     
     private func fetchAuthReissue() async throws {
-        let header: HeaderType = .withAuth(acessToken: keychainService.load(key: .refreshToken))
+        let header: HeaderType = .refresh(refreshToken: keychainService.load(key: .refreshToken))
         let endPoint: EndPoint = AuthAPI.reissue(header: header)
         ByeBooLogger.debug("토큰 재발급 시작")
         

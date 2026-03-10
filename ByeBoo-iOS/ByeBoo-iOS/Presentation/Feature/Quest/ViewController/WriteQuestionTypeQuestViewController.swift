@@ -186,7 +186,7 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                 switch result {
                 case .success:
                     ByeBooLogger.debug("공통 퀘스트 비속어 없음")
-                case .failure(let error):
+                case .failure(_):
                     presentToastMessage(type: .questViolation)
                 }
             }
@@ -308,42 +308,16 @@ extension WriteQuestionTypeQuestViewController {
             let archiveViewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
             archiveViewController.entryViewController = .writeQuest
             archiveViewController.configure(questID: self.questID, questType: .question)
-            
-            CATransaction.begin()
-            CATransaction.setCompletionBlock {
-                let modal = ModalBuilder(
-                    modalView: QuestCompleteModal(),
-                    action: nil,
-                    rootViewController: self
-                )
-                modal.present()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    modal.dismiss()
-                }
-            }
             self.navigationController?.pushViewController(archiveViewController, animated: true)
-            CATransaction.commit()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                archiveViewController.presentCompleteModal()
+            }
         }
     }
     
     private func commonQuestComplete() {
         let viewController = ByeBooTabBar()
-        viewController.selectedIndex = 1
-        guard let questMaintab = viewController.viewControllers?[1] as? UINavigationController,
-              let commonQuestTab = questMaintab.viewControllers.first as? ParentQuestViewController<QuestTabItem> else { return }
-        
-        commonQuestTab.loadViewIfNeeded()
-        commonQuestTab.selectTab(index: 1)
-        
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
-            
-            ViewControllerUtils.setRootViewController(
-                window: window,
-                viewController: viewController,
-                withAnimation: true
-            )
-        }
+        ViewControllerUtils.changeQuestTabWithIndex(index: 1)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
             let modal = ModalBuilder(

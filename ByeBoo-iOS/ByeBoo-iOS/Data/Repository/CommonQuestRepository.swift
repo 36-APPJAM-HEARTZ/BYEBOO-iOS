@@ -25,7 +25,6 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
         
         let _ = try await network.request(
             CommonQuestAPI.postCommonQuest(
-                accessToken: loadAccessToken(),
                 questID: questID,
                 dto: saveCommonQuestRequestDTO
             )
@@ -38,7 +37,6 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
     ) async throws -> CommonQuestAnswersEntity {
         let commonQuest = try await network.request(
             CommonQuestAPI.fetchCommonQuest(
-                accessToken: loadAccessToken(),
                 date: date,
                 cursor: cursor
             ),

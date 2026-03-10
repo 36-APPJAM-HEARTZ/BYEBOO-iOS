@@ -5,6 +5,7 @@
 //  Created by 이나연 on 2/23/26.
 //
 
+import Combine
 import UIKit
 
 protocol CommonQuestBottomSheetDelegate: AnyObject {
@@ -16,9 +17,18 @@ protocol CommonQuestBottomSheetDelegate: AnyObject {
     )
 }
 
+protocol BlockReportProtocol: AnyObject {
+    func completeBlockReport(type: CommonQuestArchiveType.Action)
+}
+
 final class CommonQuestBottomSheetViewController: BaseViewController {
     
     private var rootView = CommonQuestBottomSheetView(sheetType: .other)
+    private let viewModel: CommonQuestBottomSheetViewModel
+    private var answerID: Int = 0
+    private var writerID: Int = 0
+    private var cancellables = Set<AnyCancellable>()
+    weak var delegate: BlockReportProtocol?
     var sheetType: CommonQuestArchiveType?
     private(set) var answerID: Int?
     private(set) var answer: String?
@@ -28,6 +38,11 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     
     override func loadView() {
         view = rootView
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        bind()
     }
     
     override func setAddTarget() {
@@ -52,7 +67,12 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
         self.answer = answer
         self.question = question
         self.writtenAt = writtenAt
+    }
         
+    
+    func configure(sheeetType: CommonQuestArchiveType, writerID: Int) {
+        self.sheetType = sheeetType
+        self.writerID = writerID
         if let sheetType {
             rootView = CommonQuestBottomSheetView(sheetType: sheetType)
         }
@@ -66,7 +86,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
         let index = tappedView.tag
         guard sheetType.items.indices.contains(index) else { return }
         
-        let action = sheetType.items[index].action
+        action = sheetType.items[index].action
         
         switch action {
         case .edit:
@@ -87,16 +107,50 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
             // TODO: 삭제하기
             ByeBooLogger.debug("delete")
         case .block:
-            // TODO: 차단하기
-            ByeBooLogger.debug("block")
+            viewModel.action(.block(userID: writerID))
         case .report:
-            // TODO: 신고하기
-            ByeBooLogger.debug("report")
+            viewModel.action(.report(answerID: answerID))
+        default:
+            return
         }
     }
     
     @objc
     private func dismissButtonDidTap() {
         presentingViewController?.dismiss(animated: true)
+    }
+}
+
+extension CommonQuestBottomSheetViewController {
+    private func bind() {
+        viewModel.output.blockUserPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success():
+                    ByeBooLogger.debug("차단 성공")
+                    self.dismiss(animated: false)
+                    self.delegate?.completeBlockReport(type: .block)
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.reportQuestPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success():
+                    ByeBooLogger.debug("신고 성공")
+                    self.delegate?.completeBlockReport(type: .report)
+                    self.dismiss(animated: false)
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellables)
     }
 }

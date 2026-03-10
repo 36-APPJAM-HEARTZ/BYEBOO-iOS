@@ -17,6 +17,7 @@ final class BlockedUserListView: BaseView {
         }
         userTableView.do {
             $0.backgroundColor = .grayscale900
+            $0.separatorStyle = .none
         }
     }
     

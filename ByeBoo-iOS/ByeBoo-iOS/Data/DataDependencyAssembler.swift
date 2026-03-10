@@ -16,7 +16,10 @@ struct DataDependencyAssembler: DependencyAssembler {
     
     init() {
         self.tokenService = DefaultTokenService(keychainService: keychainService)
-        self.interceptor = NetworkInterceptor(tokenService: tokenService)
+        self.interceptor = NetworkInterceptor(
+            tokenService: tokenService,
+            keychainService: keychainService
+        )
         self.networkService = DefaultNetworkService(interceptor: interceptor)
     }
     
@@ -54,6 +57,14 @@ struct DataDependencyAssembler: DependencyAssembler {
                 network: networkService,
                 keychainService: keychainService
             )
+        }
+        
+        DIContainer.shared.register(type: BlocksInterface.self) { _ in
+            return DefaultBlocksRepository(networkService: networkService)
+        }
+        
+        DIContainer.shared.register(type: ReportsInterface.self) { _ in
+            return DefaultReportsRepository(networkService: networkService)
         }
     }
 }

@@ -15,6 +15,8 @@ final class CommonQuestHistoryViewController: BaseViewController {
     private var answer: String?
     private var question: String?
     private var writtenAt: String?
+    private var commonQuestArchiveType: CommonQuestArchiveType = .mine
+    private var writerID: Int = 0
     
     override func loadView() {
         view = rootView
@@ -28,7 +30,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
             navigationController: self.navigationController,
             type: .backAndMenu(header: .black),
             action: #selector(back),
-            secondAction: #selector(bottomsheetUp)
+            secondAction: #selector(bottomUp)
         )
     }
     
@@ -47,16 +49,20 @@ extension CommonQuestHistoryViewController: BackNavigable {
 extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
     
     @objc
-    private func bottomsheetUp() {
-        bottomsheet.configure(
+    private func bottomUp() {
+        let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
+        commonQuestBottomSheet.configure(sheeetType: commonQuestArchiveType, writerID: writerID)
+        commonQuestBottomSheet.delegate = self
+      
+        commonQuestBottomSheet.configure(
             sheeetType: .mine,
             answerID: answerID,
             answer: answer,
             question: question,
             writtenAt: writtenAt
         )
-        
-        if let sheet = bottomsheet.sheetPresentationController {
+      
+        if let sheet =  commonQuestBottomSheet.sheetPresentationController{
             sheet.detents = [.custom { _ in 224.adjustedH }]
             sheet.prefersGrabberVisible = true
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
@@ -89,12 +95,19 @@ extension CommonQuestHistoryViewController {
         profileIcon: UIImage? = nil,
         nickname: String? = nil,
         content: String,
-        answerID: Int? = nil
+        answerID: Int? = nil,
+        writerID: Int? = nil
     ) {
         self.answerID = answerID
         self.answer = content
         self.question = question
         self.writtenAt = writtenAt
+
+        commonQuestArchiveType = nickname == nil ? .mine : .other
+        
+        if let writerID {
+            self.writerID = writerID
+        }
         
         rootView.configure(
             question: question,
@@ -103,5 +116,17 @@ extension CommonQuestHistoryViewController {
             nickname: nickname,
             content: content
         )
+    }
+}
+
+extension CommonQuestHistoryViewController: BlockReportProtocol {
+    func completeBlockReport(type: CommonQuestArchiveType.Action) {
+        ViewControllerUtils.changeQuestTabWithIndex(index: 1) {
+            NotificationCenter.default.post(
+                name: .showToastMessage,
+                object: nil,
+                userInfo: ["type": type]
+            )
+        }
     }
 }

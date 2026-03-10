@@ -144,23 +144,14 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                 switch result {
                 case .success(()):
                     guard let self else { return }
-                    self.bottomSheetViewController.dismiss(animated: true) {
-                        let modal = ModalBuilder(
-                            modalView: QuestCompleteModal(),
-                            action: nil,
-                            rootViewController: self
-                        )
-                        modal.present()
-                        
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                            modal.dismiss()
-                            
-                            ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
-                            let viewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
-                            viewController.entryViewController = .writeQuest
-                            viewController.configure(questID: self.questID, questType: .activation)
-                            self.navigationController?.pushViewController(viewController, animated: true)
-                        }
+                    self.bottomSheetViewController.dismiss(animated: true)
+                    ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
+                    let archiveViewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
+                    archiveViewController.entryViewController = .writeQuest
+                    archiveViewController.configure(questID: self.questID, questType: .activation)
+                    self.navigationController?.pushViewController(archiveViewController, animated: true)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        archiveViewController.presentCompleteModal()
                     }
                 case .failure(let error):
                     self?.handleError(error)

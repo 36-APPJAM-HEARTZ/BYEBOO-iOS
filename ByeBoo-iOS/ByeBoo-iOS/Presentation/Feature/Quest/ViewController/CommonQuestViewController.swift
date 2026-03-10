@@ -31,13 +31,13 @@ final class CommonQuestViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        viewModel.action(.viewWillAppear)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         bind()
-        viewModel.action(.viewDidLoad)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -141,7 +141,8 @@ extension CommonQuestViewController: UITableViewDelegate {
             writtenAt: formattedWrittenAt,
             profileIcon: viewModel.getProfileIcon(at: answerIndex),
             nickname: answer.writer,
-            content: answer.content
+            content: answer.content,
+            writerID: answer.writerID
         )
         historyViewController.navigationItem.hidesBackButton = true
         

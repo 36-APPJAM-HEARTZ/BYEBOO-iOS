@@ -62,7 +62,7 @@ final class CommonQuestViewModel {
 extension CommonQuestViewModel: ViewModelType {
     
     enum Input {
-        case viewDidLoad
+        case viewWillAppear
         case moveDateButtonDidTap(selectedDate: String)
         case scrollAnswer
     }
@@ -73,7 +73,7 @@ extension CommonQuestViewModel: ViewModelType {
     
     func action(_ trigger: Input) {
         switch trigger {
-        case .viewDidLoad:
+        case .viewWillAppear:
             fetchCommonQuestByDate(date: currentDate)
         case .moveDateButtonDidTap(let selectedDate):
             currentDate = selectedDate

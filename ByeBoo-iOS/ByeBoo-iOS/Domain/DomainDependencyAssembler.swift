@@ -21,10 +21,12 @@ struct DomainDependencyAssembler: DependencyAssembler {
               let questRepository = DIContainer.shared.resolve(type: QuestsInterface.self),
               let authRepository = DIContainer.shared.resolve(type: AuthInterface.self),
               let forbiddenWordRepository = DIContainer.shared.resolve(type: ForbiddenWordInterface.self),
-              let commonQuestRepository = DIContainer.shared.resolve(type: CommonQuestInterface.self) else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            return
-        }
+              let commonQuestRepository = DIContainer.shared.resolve(type: CommonQuestInterface.self),
+              let blocksRepository = DIContainer.shared.resolve(type: BlocksInterface.self),
+              let reportsRepository = DIContainer.shared.resolve(type: ReportsInterface.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
         
         DIContainer.shared.register(type: FetchUserJourneyUseCase.self) { _ in
             return DefaultFetchUserJourneyUseCase(repository: userRepository)
@@ -184,6 +186,22 @@ struct DomainDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: UpdateCommonQuestUseCase.self) { _ in
             return DefaultUpdateCommonQuestUseCase(repository: commonQuestRepository)
+        }
+      
+        DIContainer.shared.register(type: BlockUserUseCase.self) { _ in
+            return DefaultBlockUserCase(repository: blocksRepository)
+        }
+        
+        DIContainer.shared.register(type: GetBlockedUsersListUseCase.self) { _ in
+            return DefaultGetBlockedUsersListUseCase(repository: blocksRepository)
+        }
+        
+        DIContainer.shared.register(type: DeleteBlockedUserUseCase.self) { _ in
+            return DefaultDeleteBlockedUser(repository: blocksRepository)
+        }
+        
+        DIContainer.shared.register(type: ReportsCommonQuestAnswerUseCase.self) { _ in
+            return DefaultReportsCommonQuestAnswerUseCase(repository: reportsRepository)
         }
     }
 }
