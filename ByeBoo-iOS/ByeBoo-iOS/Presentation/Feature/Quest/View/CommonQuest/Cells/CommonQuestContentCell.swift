@@ -44,17 +44,22 @@ final class CommonQuestContentCell: UITableViewCell {
         questionContentLabel.do {
             $0.applyByeBooFont(
                 style: .sub3M18,
+                text: " ",
                 color: .grayscale50,
                 numberOfLines: 0
             )
             $0.lineBreakStrategy = []
         }
-        guideTimeLabel.applyByeBooFont(
-            style: .cap2R12,
-            text: "23:59까지 답변 가능해요",
-            color: .grayscale400,
-            textAlignment: .left
-        )
+        guideTimeLabel.do {
+            $0.applyByeBooFont(
+                style: .cap2R12,
+                text: "23:59까지 답변 가능해요",
+                color: .grayscale400,
+                textAlignment: .left
+            )
+            $0.setContentHuggingPriority(.required, for: .vertical)
+            $0.setContentCompressionResistancePriority(.required, for: .vertical)
+        }
         moveWriteAnswerButton.do {
             $0.applyByeBooFont(
                 style: .body2M16,
@@ -66,6 +71,7 @@ final class CommonQuestContentCell: UITableViewCell {
         }
         answersCountLabel.applyByeBooFont(
             style: .cap2R12,
+            text: " ",
             color: .grayscale400,
             textAlignment: .left
         )
@@ -90,35 +96,49 @@ final class CommonQuestContentCell: UITableViewCell {
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
         questionMarkLabel.snp.makeConstraints {
-            $0.top.equalToSuperview()
+            $0.top.equalTo(questionContentLabel.snp.top)
             $0.leading.equalToSuperview()
             $0.width.equalTo(17.adjustedW)
         }
         questionContentLabel.snp.makeConstraints {
-            $0.verticalEdges.equalToSuperview()
+            $0.top.bottom.equalToSuperview()
             $0.leading.equalTo(questionMarkLabel.snp.trailing).offset(4.adjustedW)
             $0.trailing.equalToSuperview()
+            $0.height.greaterThanOrEqualTo(22)
         }
         guideTimeLabel.snp.makeConstraints {
             $0.top.equalTo(questionView.snp.bottom).offset(12.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedW)
+            $0.trailing.lessThanOrEqualToSuperview().inset(24.adjustedW)
         }
         moveWriteAnswerButton.snp.makeConstraints {
             $0.top.equalTo(guideTimeLabel.snp.bottom).offset(16.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.height.equalTo(53.adjustedH)
         }
-        answersCountLabel.snp.makeConstraints {
-            $0.top.equalTo(moveWriteAnswerButton.snp.bottom).offset(24.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-        }
     }
 }
 
 extension CommonQuestContentCell {
     
-    func bind(question: String, answersCount: Int) {
+    func bind(
+        isAnswered: Bool,
+        question: String,
+        answersCount: Int
+    ) {
+        guideTimeLabel.isHidden = isAnswered
+        moveWriteAnswerButton.isHidden = isAnswered
         questionContentLabel.text = question
-        guideTimeLabel.text = "\(answersCount)개의 답변"
+        answersCountLabel.text = "\(answersCount)개의 답변"
+        
+        answersCountLabel.snp.remakeConstraints {
+            if isAnswered {
+                $0.top.equalTo(questionView.snp.bottom).offset(12.adjustedH)
+            } else {
+                $0.top.equalTo(moveWriteAnswerButton.snp.bottom).offset(24.adjustedH)
+            }
+            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.bottom.equalToSuperview()
+        }
     }
 }
