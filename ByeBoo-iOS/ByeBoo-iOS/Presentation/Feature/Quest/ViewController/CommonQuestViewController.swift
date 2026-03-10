@@ -156,7 +156,7 @@ extension CommonQuestViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForRowAt indexPath: IndexPath
     ) -> CGFloat {
-        indexPath.row == 0 ? 141.adjustedH : 171.adjustedH
+        indexPath.row == 0 ? UITableView.automaticDimension : 171.adjustedH
     }
     
     func tableView(
