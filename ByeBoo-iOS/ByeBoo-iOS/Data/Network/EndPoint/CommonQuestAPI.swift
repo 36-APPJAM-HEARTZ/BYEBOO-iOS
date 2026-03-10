@@ -27,7 +27,7 @@ extension CommonQuestAPI: EndPoint {
             return "/\(questID)"
         case .fetchCommonQuest:
             return ""
-        case .updateCommonQuest(_ , let answerID, _):
+        case .updateCommonQuest(let answerID, _):
             return "/\(answerID)"
         }
     }

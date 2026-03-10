@@ -49,14 +49,9 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
         let requestDTO = UpdateCommonQuestRequestDTO(answer: answer)
         try await network.request(
             CommonQuestAPI.updateCommonQuest(
-                accessToken: loadAccessToken(),
                 answerID: answerID,
                 dto: requestDTO
             )
         )
-    }
-    
-    private func loadAccessToken() -> String {
-        keychainService.load(key: .accessToken)
     }
 }
