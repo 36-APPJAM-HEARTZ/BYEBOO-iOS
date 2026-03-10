@@ -20,7 +20,7 @@ final class HomeViewController: BaseViewController {
     
     private var state: HomeState = .beforeJourneyStart
     private var isFirstVisit: Bool = true
-    private var journeyType: JourneyType = .face
+    private var journeyType: JourneyType = .recording
     private var isAnimating: Bool = false
     
     init(viewModel: HomeViewModel) {
@@ -156,11 +156,11 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
                         progress: state.questCount,
                         journey: journey.title
                     )
-                    self?.journeyType = JourneyType.titleToEnum(journey.title) ?? .face
+                    self?.journeyType = JourneyType.titleToEnum(journey.title) ?? .recording
                 case let (_, .success(journey), .failure(.notFound)):
                     self?.rootView.updateState(.beforeJourneyStart, journey.title)
                     self?.state = .beforeJourneyStart
-                    self?.journeyType = JourneyType.titleToEnum(journey.title) ?? .face
+                    self?.journeyType = JourneyType.titleToEnum(journey.title) ?? .recording
                 case let (_, .failure(.notFound), .success(state)):
                     self?.rootView.updateState(state.currentStatus)
                     self?.state = state.currentStatus

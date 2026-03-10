@@ -88,7 +88,6 @@ struct DefaultQuestRepository: QuestsInterface {
     
     func postNewJourney(journey: JourneyType) async throws {
         ByeBooLogger.debug(journey)
-        // TODO: 로그인 붙인 후 주석 해제
         let _ = try await network.request(
             QuestAPI.postJourney(journey: journey)
         )

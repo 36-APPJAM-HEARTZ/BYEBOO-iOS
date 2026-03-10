@@ -23,7 +23,7 @@ final class QuestStartViewController: BaseViewController {
     
     private var journeyTitle: String = ""
     private var isFirst: Bool = true
-    private var journeyType: JourneyType = .face
+    private var journeyType: JourneyType = .recording
     
     weak var delegate: StartModalDelegate?
     

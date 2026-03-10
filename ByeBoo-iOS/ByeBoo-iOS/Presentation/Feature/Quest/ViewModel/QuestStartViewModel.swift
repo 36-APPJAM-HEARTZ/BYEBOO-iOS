@@ -86,7 +86,7 @@ extension QuestStartViewModel {
     private func postNewJourneys(journey: String) {
         Task {
             do {
-                let _ = try await postJourneyUseCase.execute(journey: JourneyType.titleToEnum(journey) ?? .face)
+                let _ = try await postJourneyUseCase.execute(journey: JourneyType.titleToEnum(journey) ?? .recording)
                 startResultSubject.send(.success(true))
             } catch {
                 guard let error = error as? ByeBooError else {

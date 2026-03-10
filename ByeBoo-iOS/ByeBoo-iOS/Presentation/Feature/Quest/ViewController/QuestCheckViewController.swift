@@ -20,7 +20,7 @@ final class QuestCheckViewController: BaseViewController {
     var coordinator: QuestCheckCoordinating?
     private var cancellable = Set<AnyCancellable>()
     
-    private var journeyType: JourneyType = .face
+    private var journeyType: JourneyType = .recording
     private var isFirst: Bool = true
     
     init(viewModel: ProgressingQuestsViewModel) {

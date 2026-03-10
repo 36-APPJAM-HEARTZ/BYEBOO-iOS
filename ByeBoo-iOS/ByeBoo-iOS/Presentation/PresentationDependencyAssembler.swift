@@ -17,15 +17,16 @@ struct PresentationDependencyAssembler: DependencyAssembler {
     func assemble() {
         preAssembler.assemble()
         
-        DIContainer.shared.register(type: JourneyResultViewModel.self) { container in
-            guard let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
-                  let fetchUserJourneyUseCase = container.resolve(type: FetchUserJourneyUseCase.self),
-                  let isForbiddenWordUseCase = container.resolve(type: IsForbiddenWordUseCase.self) else {
-                ByeBooLogger.error(ByeBooError.DIFailedError)
-                return
-            }
-            
-            return JourneyResultViewModel(
+        guard let getUserNameUseCase = DIContainer.shared.resolve(type: GetUserNameUseCase.self),
+              let fetchUserJourneyUseCase = DIContainer.shared.resolve(type: FetchUserJourneyUseCase.self),
+              let isForbiddenWordUseCase = DIContainer.shared.resolve(type: IsForbiddenWordUseCase.self)
+        else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            return
+        }
+        
+        DIContainer.shared.register(type: CardJourneyViewModel.self) { _ in
+            return CardJourneyViewModel(
                 fetchUserJourneyUseCase: fetchUserJourneyUseCase,
                 getUserNameUseCase: getUserNameUseCase
             )

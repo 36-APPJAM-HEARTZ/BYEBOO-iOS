@@ -42,7 +42,6 @@ struct DefaultUsersRepository: UsersInterface {
         let accessToken = loadAccessToken()
         let userRequestDTO: UserRequestDTO = .init(
             name: name,
-            feeling: "EXHAUSTED",
             questStyle: questStyle
         )
         let result = try await network.request(
@@ -57,6 +56,7 @@ struct DefaultUsersRepository: UsersInterface {
         let _ = userDefaultsService.save(false, key: .hasEnterMyPage)
         let _ = userDefaultsService.save(false, key: .alarmEnabled)
         
+        ByeBooLogger.debug("유저 여정 \(questStyle)")
         ByeBooLogger.debug("유저 정보 저장 완료")
         return result.toEntity()
     }
@@ -124,7 +124,7 @@ struct DefaultUsersRepository: UsersInterface {
     
     func getLastJourneyType() -> JourneyType {
         let journey: String? = userDefaultsService.load(key: .journey)
-        return JourneyType.keyToEnum(journey ?? "") ?? .face
+        return JourneyType.keyToEnum(journey ?? "") ?? .recording
     }
     
     func updateNotificationPermission() async throws -> Bool {
@@ -243,7 +243,7 @@ final class MockUserRepository: UsersInterface {
     }
     
     func getLastJourneyType() -> JourneyType {
-        .process
+        .reunion
     }
     
     func updateNotificationPermission() -> Bool {

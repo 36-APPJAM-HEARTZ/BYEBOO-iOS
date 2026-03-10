@@ -107,7 +107,7 @@ struct QuestTests {
         let questsRepository = MockQuestsRepository()
         let fetchNewJourneyUseCase = DefaultFetchNewJourneyUseCase(fetchNewJourneyRepository: questsRepository)
         
-        let _ = try await fetchNewJourneyUseCase.execute(journey: .face)
+        let _ = try await fetchNewJourneyUseCase.execute(journey: .recording)
         
         #expect(questsRepository.postNewJourneyCalled)
     }
@@ -116,7 +116,7 @@ struct QuestTests {
     func fetchCompletedQuests__success() async throws {
         let fetchCompletedQuestsUseCase = DefaultFetchCompletedQuestsUseCase(repository: questsRepository)
         
-        let result = try await fetchCompletedQuestsUseCase.execute(journey: .face)
+        let result = try await fetchCompletedQuestsUseCase.execute(journey: .recording)
         
         #expect(result == CompletedQuestsEntity.stub())
     }

@@ -99,6 +99,7 @@ extension InformationViewController {
             if SelectQuestType.allCases.indices.contains(index) {
                 let quest = SelectQuestType.allCases[index]
                 viewModel.action(.questButtonDidTap(quest))
+                ByeBooLogger.debug("선택 여정 \(quest)")
                 let property = CommonEvents.SelectQuestTypeProperty(questType: quest.mixpanelKey)
                 Mixpanel.mainInstance().track(
                     event: CommonEvents.Name.questTypeComplete,

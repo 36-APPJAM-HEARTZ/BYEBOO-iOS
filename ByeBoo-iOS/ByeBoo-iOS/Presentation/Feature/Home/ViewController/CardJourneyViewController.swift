@@ -12,13 +12,13 @@ import Mixpanel
 
 final class CardJourneyViewController: BaseViewController {
     
-    private let viewModel: JourneyResultViewModel
+    private let viewModel: CardJourneyViewModel
     private var cancellables = Set<AnyCancellable>()
     
     private let rootView = CardJourneyView()
-    private var journeyType: JourneyType = .face
+    private var journeyType: JourneyType = .recording
     
-    init(viewModel: JourneyResultViewModel) {
+    init(viewModel: CardJourneyViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -79,10 +79,10 @@ extension CardJourneyViewController: ToastPresentable, ToastErrorHandler {
                 switch result {
                 case .success(let journey):
                     self?.rootView.updateJourney(
-                        journeyType: JourneyType.titleToEnum(journey.title) ?? .face,
+                        journeyType: JourneyType.titleToEnum(journey.title) ?? .recording,
                         journeyDescription: journey.description ?? ""
                     )
-                    self?.journeyType = JourneyType.titleToEnum(journey.title) ?? .face
+                    self?.journeyType = JourneyType.titleToEnum(journey.title) ?? .recording
                 case .failure(let error):
                     self?.handleError(error)
                 }

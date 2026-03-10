@@ -22,13 +22,13 @@ enum UsersAPI {
 
 extension UsersAPI: EndPoint {
     var basePath: String {
-        return "/api/v1/users"
-        
-        //        switch self {
-        //        case .journey, .character, .count, .start, .modifyName, .updateNotificationPermission:
-        //        case .sendUser:
-        //            return "/api/v2/users"
-        //        }
+        switch self {
+        case .journey, .character, .count, .start,
+            .modifyName, .updateNotificationPermission, .fetchCommonQuestAnswers:
+            return "/api/v1/users"
+        case .sendUser:
+            return "/api/v2/users"
+        }
     }
     
     var path: String {

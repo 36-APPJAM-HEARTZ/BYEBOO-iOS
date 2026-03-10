@@ -10,8 +10,8 @@ extension SelectQuestType {
         switch self {
         case .recording:
             "RECORDING"
-        case .active:
-            "ACTIVE"
+        case .reunion:
+            "REUNION"
         }
     }
     

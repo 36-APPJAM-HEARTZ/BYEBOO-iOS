@@ -49,7 +49,7 @@ final class CompletedQuestsViewController: BaseViewController {
             type: .close(header: .black),
             action: #selector(close)
         )
-        let journeyType = JourneyType.titleToEnum(journeyTitle ?? "") ?? .face
+        let journeyType = JourneyType.titleToEnum(journeyTitle ?? "") ?? .recording
         let property = QuestEvents.QuestAllLookBackProperty(reviewJourneyType: journeyType.mixpanelKey)
         Mixpanel.mainInstance().track(
             event: QuestEvents.Name.journeyReviewAllPageView,
