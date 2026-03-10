@@ -163,5 +163,23 @@ extension CommonQuestBottomSheetViewController {
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.output.deleteQuestPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success():
+                    ByeBooLogger.debug("삭제 성공")
+                    
+                    guard let self else { return }
+                    
+                    self.dismiss(animated: false) { [weak self] in
+                        self?.deleteDelegate?.completeDeleteCommonQuest()
+                    }
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellables)
     }
 }
