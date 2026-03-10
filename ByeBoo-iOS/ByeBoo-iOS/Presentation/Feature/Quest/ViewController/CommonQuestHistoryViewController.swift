@@ -10,7 +10,6 @@ import UIKit
 final class CommonQuestHistoryViewController: BaseViewController {
     
     private let rootView = CommonQuestHistoryView()
-    private let bottomsheet = CommonQuestBottomSheetViewController()
     private var answerID: Int?
     private var answer: String?
     private var question: String?
@@ -33,10 +32,6 @@ final class CommonQuestHistoryViewController: BaseViewController {
             secondAction: #selector(bottomUp)
         )
     }
-    
-    override func setDelegate() {
-        bottomsheet.delegate = self
-    }
 }
 
 extension CommonQuestHistoryViewController: BackNavigable {
@@ -52,10 +47,10 @@ extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
     private func bottomUp() {
         let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
         commonQuestBottomSheet.configure(sheeetType: commonQuestArchiveType, writerID: writerID)
-        commonQuestBottomSheet.delegate = self
+        commonQuestBottomSheet.bottomDelegate = self
       
         commonQuestBottomSheet.configure(
-            sheeetType: .mine,
+            sheeetType: commonQuestArchiveType,
             answerID: answerID,
             answer: answer,
             question: question,
@@ -68,7 +63,7 @@ extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
             sheet.preferredCornerRadius = 8
         }
-        self.present(bottomsheet, animated: true)
+        self.present(commonQuestBottomSheet, animated: true)
     }
     
     func didTapEdit(
