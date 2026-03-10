@@ -25,16 +25,27 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     
     private var rootView = CommonQuestBottomSheetView(sheetType: .other)
     private let viewModel: CommonQuestBottomSheetViewModel
-    private var answerID: Int = 0
     private var writerID: Int = 0
     private var cancellables = Set<AnyCancellable>()
-    weak var delegate: BlockReportProtocol?
-    var sheetType: CommonQuestArchiveType?
     private(set) var answerID: Int?
     private(set) var answer: String?
     private(set) var question: String?
     private(set) var writtenAt: String?
-    weak var delegate: CommonQuestBottomSheetDelegate?
+    
+    var sheetType: CommonQuestArchiveType?
+    var action: CommonQuestArchiveType.Action?
+    
+    weak var blockDelegate: BlockReportProtocol?
+    weak var bottomDelegate: CommonQuestBottomSheetDelegate?
+    
+    init(viewModel: CommonQuestBottomSheetViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = rootView
@@ -68,7 +79,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
         self.question = question
         self.writtenAt = writtenAt
     }
-        
+    
     
     func configure(sheeetType: CommonQuestArchiveType, writerID: Int) {
         self.sheetType = sheeetType
@@ -96,7 +107,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
             }
             
             dismiss(animated: false) { [weak self] in
-                self?.delegate?.didTapEdit(
+                self?.bottomDelegate?.didTapEdit(
                     answerID: answerID,
                     answer: answer,
                     question: question,
@@ -109,7 +120,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
         case .block:
             viewModel.action(.block(userID: writerID))
         case .report:
-            viewModel.action(.report(answerID: answerID))
+            viewModel.action(.report(answerID: answerID ?? 0))
         default:
             return
         }
@@ -131,7 +142,7 @@ extension CommonQuestBottomSheetViewController {
                 case .success():
                     ByeBooLogger.debug("차단 성공")
                     self.dismiss(animated: false)
-                    self.delegate?.completeBlockReport(type: .block)
+                    self.blockDelegate?.completeBlockReport(type: .block)
                 case .failure(let error):
                     ByeBooLogger.debug(error)
                 }
@@ -145,7 +156,7 @@ extension CommonQuestBottomSheetViewController {
                 switch result {
                 case .success():
                     ByeBooLogger.debug("신고 성공")
-                    self.delegate?.completeBlockReport(type: .report)
+                    self.blockDelegate?.completeBlockReport(type: .report)
                     self.dismiss(animated: false)
                 case .failure(let error):
                     ByeBooLogger.debug(error)
