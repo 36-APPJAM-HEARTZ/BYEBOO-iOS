@@ -43,29 +43,6 @@ extension CommonQuestHistoryViewController: BackNavigable {
 
 extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
     
-    @objc
-    private func bottomUp() {
-        let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
-        commonQuestBottomSheet.configure(sheeetType: commonQuestArchiveType, writerID: writerID)
-        commonQuestBottomSheet.bottomDelegate = self
-      
-        commonQuestBottomSheet.configure(
-            sheeetType: commonQuestArchiveType,
-            answerID: answerID,
-            answer: answer,
-            question: question,
-            writtenAt: writtenAt
-        )
-      
-        if let sheet =  commonQuestBottomSheet.sheetPresentationController{
-            sheet.detents = [.custom { _ in 224.adjustedH }]
-            sheet.prefersGrabberVisible = true
-            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-            sheet.preferredCornerRadius = 8
-        }
-        self.present(commonQuestBottomSheet, animated: true)
-    }
-    
     func didTapEdit(
         answerID: Int,
         answer: String,
@@ -79,6 +56,42 @@ extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
             nil, .question, question, answerID, answer, writtenAt
         )
         self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)
+    }
+    
+    @objc
+    private func bottomUp() {
+        let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
+        commonQuestBottomSheet.configure(sheeetType: commonQuestArchiveType, writerID: writerID)
+        commonQuestBottomSheet.configure(
+            sheeetType: commonQuestArchiveType,
+            answerID: answerID,
+            answer: answer,
+            question: question,
+            writtenAt: writtenAt
+        )
+        setDelegate(bottomSheet: commonQuestBottomSheet)
+      
+        if let sheet =  commonQuestBottomSheet.sheetPresentationController{
+            sheet.detents = [.custom { _ in 224.adjustedH }]
+            sheet.prefersGrabberVisible = true
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+            sheet.preferredCornerRadius = 8
+        }
+        self.present(commonQuestBottomSheet, animated: true)
+    }
+    
+    private func setDelegate(bottomSheet: CommonQuestBottomSheetViewController) {
+        bottomSheet.do {
+            $0.bottomDelegate = self
+            $0.deleteDelegate = self
+            $0.blockDelegate = self
+        }
+    }
+}
+
+extension CommonQuestHistoryViewController: DeleteCommonQuestDelegate {
+    func completeDeleteCommonQuest() {
+        self.navigationController?.popViewController(animated: false)
     }
 }
 
