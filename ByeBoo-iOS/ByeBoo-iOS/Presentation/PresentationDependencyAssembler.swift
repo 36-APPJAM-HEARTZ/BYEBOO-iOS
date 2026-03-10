@@ -77,9 +77,9 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                   let isForbiddenWordUseCase = container.resolve(type: IsForbiddenWordUseCase.self),
                   let sendUserUseCase = container.resolve(type: SendUserUseCase.self),
                   let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self) else {
-                      ByeBooLogger.error(ByeBooError.DIFailedError)
-                      return
-                  }
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
             
             return InformationViewModel(
                 checkValidNicknameUseCase: checkValidNickNameUseCase,
@@ -315,14 +315,17 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             guard let blockUserUseCase = container.resolve(
                 type: BlockUserUseCase.self
             ),
-                  let reportQuestAnswerUseCase = container.resolve(type: ReportsCommonQuestAnswerUseCase.self) else {
+                  let reportQuestAnswerUseCase = container.resolve(type: ReportsCommonQuestAnswerUseCase.self),
+                  let deleteCommonQuestUseCase = container.resolve(type: DeleteCommonQuestUseCase.self)
+            else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
             return CommonQuestBottomSheetViewModel(
                 blockUserUseCase: blockUserUseCase,
-                reportCommonQuestUseCase: reportQuestAnswerUseCase
+                reportCommonQuestUseCase: reportQuestAnswerUseCase,
+                deleteCommonQuestUseCase: deleteCommonQuestUseCase
             )
         }
         
