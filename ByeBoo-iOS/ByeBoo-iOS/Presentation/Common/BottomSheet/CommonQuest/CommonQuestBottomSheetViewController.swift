@@ -21,7 +21,14 @@ protocol BlockReportProtocol: AnyObject {
     func completeBlockReport(type: CommonQuestArchiveType.Action)
 }
 
+protocol DeleteCommonQuestDelegate: AnyObject {
+    func completeDeleteCommonQuest()
+}
+
 final class CommonQuestBottomSheetViewController: BaseViewController {
+    
+    private let yesAnswer = "예"
+    private let noAnswer = "아니오"
     
     private var rootView = CommonQuestBottomSheetView(sheetType: .other)
     private let viewModel: CommonQuestBottomSheetViewModel
@@ -37,6 +44,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     
     weak var blockDelegate: BlockReportProtocol?
     weak var bottomDelegate: CommonQuestBottomSheetDelegate?
+    weak var deleteDelegate: DeleteCommonQuestDelegate?
     
     init(viewModel: CommonQuestBottomSheetViewModel) {
         self.viewModel = viewModel
