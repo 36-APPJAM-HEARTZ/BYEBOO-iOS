@@ -99,4 +99,3 @@ extension UsersAPI: EndPoint {
         }
     }
 }
-

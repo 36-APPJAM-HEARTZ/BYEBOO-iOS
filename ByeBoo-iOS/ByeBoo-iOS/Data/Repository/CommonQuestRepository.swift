@@ -44,4 +44,14 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
         )
         return commonQuest.toEntity()
     }
+    
+    func updateCommonQuest(answerID: Int, answer: String) async throws {
+        let requestDTO = UpdateCommonQuestRequestDTO(answer: answer)
+        try await network.request(
+            CommonQuestAPI.updateCommonQuest(
+                answerID: answerID,
+                dto: requestDTO
+            )
+        )
+    }
 }

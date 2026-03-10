@@ -12,6 +12,7 @@ import Alamofire
 enum CommonQuestAPI {
     case postCommonQuest(questID: Int, dto: SaveCommonQuestRequestDTO)
     case fetchCommonQuest(date: String, cursor: Int?)
+    case updateCommonQuest(answerID: Int, dto: UpdateCommonQuestRequestDTO)
 }
 
 extension CommonQuestAPI: EndPoint {
@@ -26,6 +27,8 @@ extension CommonQuestAPI: EndPoint {
             return "/\(questID)"
         case .fetchCommonQuest:
             return ""
+        case .updateCommonQuest(let answerID, _):
+            return "/\(answerID)"
         }
     }
     
@@ -35,19 +38,21 @@ extension CommonQuestAPI: EndPoint {
             return .post
         case .fetchCommonQuest:
             return .get
+        case .updateCommonQuest:
+            return .patch
         }
     }
     
     var headers: HeaderType {
         switch self {
-        case .postCommonQuest, .fetchCommonQuest:
+        case .postCommonQuest, .fetchCommonQuest, .updateCommonQuest:
             return .withAuth
         }
     }
     
     var parameterEncoding: any ParameterEncoding {
         switch self {
-        case .postCommonQuest:
+        case .postCommonQuest, .updateCommonQuest:
             return JSONEncoding.default
         case .fetchCommonQuest:
             return  URLEncoding.default
@@ -56,7 +61,7 @@ extension CommonQuestAPI: EndPoint {
     
     var queryParameters: [String : String]? {
         switch self {
-        case .postCommonQuest:
+        case .postCommonQuest, .updateCommonQuest:
             return nil
         case .fetchCommonQuest(let date, let cursor):
             if let cursor {
@@ -75,6 +80,8 @@ extension CommonQuestAPI: EndPoint {
             return try? dto.toDictionary()
         case .fetchCommonQuest:
             return nil
+        case .updateCommonQuest(_, let dto):
+            return try? dto.toDictionary()
         }
     }
 }

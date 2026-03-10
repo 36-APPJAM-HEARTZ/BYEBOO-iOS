@@ -184,6 +184,10 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultSaveCommonQuestUseCase(repository: commonQuestRepository)
         }
         
+        DIContainer.shared.register(type: UpdateCommonQuestUseCase.self) { _ in
+            return DefaultUpdateCommonQuestUseCase(repository: commonQuestRepository)
+        }
+      
         DIContainer.shared.register(type: BlockUserUseCase.self) { _ in
             return DefaultBlockUserCase(repository: blocksRepository)
         }

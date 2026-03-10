@@ -10,6 +10,10 @@ import UIKit
 final class CommonQuestHistoryViewController: BaseViewController {
     
     private let rootView = CommonQuestHistoryView()
+    private var answerID: Int?
+    private var answer: String?
+    private var question: String?
+    private var writtenAt: String?
     private var commonQuestArchiveType: CommonQuestArchiveType = .mine
     private var writerID: Int = 0
     
@@ -37,13 +41,22 @@ extension CommonQuestHistoryViewController: BackNavigable {
     }
 }
 
-extension CommonQuestHistoryViewController {
+extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
     
     @objc
     private func bottomUp() {
         let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
         commonQuestBottomSheet.configure(sheeetType: commonQuestArchiveType, writerID: writerID)
-        commonQuestBottomSheet.delegate = self
+        commonQuestBottomSheet.bottomDelegate = self
+      
+        commonQuestBottomSheet.configure(
+            sheeetType: commonQuestArchiveType,
+            answerID: answerID,
+            answer: answer,
+            question: question,
+            writtenAt: writtenAt
+        )
+      
         if let sheet =  commonQuestBottomSheet.sheetPresentationController{
             sheet.detents = [.custom { _ in 224.adjustedH }]
             sheet.prefersGrabberVisible = true
@@ -51,6 +64,21 @@ extension CommonQuestHistoryViewController {
             sheet.preferredCornerRadius = 8
         }
         self.present(commonQuestBottomSheet, animated: true)
+    }
+    
+    func didTapEdit(
+        answerID: Int,
+        answer: String,
+        question: String,
+        writtenAt: String
+    ) {
+        let writeCommonQuestViewController = ViewControllerFactory.shared.makeWriteQuestionTypeQuestViewController()
+        writeCommonQuestViewController.navigationItem.hidesBackButton = true
+        writeCommonQuestViewController.questScope = .common
+        writeCommonQuestViewController.configureToEdit(
+            nil, .question, question, answerID, answer, writtenAt
+        )
+        self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)
     }
 }
 
@@ -62,8 +90,14 @@ extension CommonQuestHistoryViewController {
         profileIcon: UIImage? = nil,
         nickname: String? = nil,
         content: String,
+        answerID: Int? = nil,
         writerID: Int? = nil
     ) {
+        self.answerID = answerID
+        self.answer = content
+        self.question = question
+        self.writtenAt = writtenAt
+
         commonQuestArchiveType = nickname == nil ? .mine : .other
         
         if let writerID {

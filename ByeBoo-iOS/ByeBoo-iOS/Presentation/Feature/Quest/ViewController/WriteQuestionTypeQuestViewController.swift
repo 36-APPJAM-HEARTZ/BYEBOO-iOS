@@ -20,9 +20,12 @@ final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<W
     private var questID: Int = 1
     private var questNumber: Int = 1
     private var questType: QuestType = .activation
+    private var questTitle: String = ""
     
     private var answerText: String = ""
     private var emotionState: String = ""
+    private var answerID: Int = 1
+    private var writtenAt: String = ""
     
     private let bottomSheetViewController = EmotionBottomSheetViewController()
     
@@ -188,6 +191,33 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                 }
             }
             .store(in: &cancellables)
+        
+        viewModel.output.didSucessUpdatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success:
+                    if let viewControllers = self.navigationController?.viewControllers,
+                       viewControllers.count >= 2 {
+                        
+                        let previousVC = viewControllers[viewControllers.count - 2]
+                        
+                        if let historyVC = previousVC as? CommonQuestHistoryViewController {
+                            historyVC.configure(
+                                question: questTitle,
+                                writtenAt: writtenAt,
+                                content: self.rootView.questTextField.textView.text
+                            )
+                        }
+                    }
+                    
+                    self.navigationController?.popViewController(animated: true)
+                case .failure(let error):
+                    self.handleError(error)
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
@@ -206,7 +236,8 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
                 answer: answerText,
                 emotionState: emotionState,
                 isEdit: isEdit,
-                isCommonQuest: isCommonQuest
+                isCommonQuest: isCommonQuest,
+                answerID: answerID
             )
             )
         }
@@ -214,9 +245,40 @@ extension WriteQuestionTypeQuestViewController: BottomSheetProtocol {
 }
 
 extension WriteQuestionTypeQuestViewController {
-    func configure(_ questID: Int, _ questNumber: Int?, _ questType: QuestType, _ questionTitle: String?) {
+    func configureToWrite(
+        _ questID: Int,
+        _ questNumber: Int?,
+        _ questType: QuestType,
+        _ questionTitle: String?
+    ) {
         self.questID = questID
+        setQuestInformation(questNumber, questType, questionTitle)
+    }
+    
+    func configureToEdit(
+        _ questNumber: Int?,
+        _ questType: QuestType,
+        _ questionTitle: String?,
+        _ answerID: Int?,
+        _ answer: String,
+        _ writtenAt: String
+    ) {
+        guard let answerID else { return }
         
+        setQuestInformation(questNumber, questType, questionTitle)
+        setQuestTextField(answer: answer)
+        
+        self.answerText = answer
+        self.answerID = answerID
+        self.questMode = .edit
+        self.writtenAt = writtenAt
+    }
+    
+    private func setQuestInformation(
+        _ questNumber: Int?,
+        _ questType: QuestType,
+        _ questionTitle: String?
+    ) {
         if let questNumber {
             questScope = .personal
             self.questNumber = questNumber
@@ -225,6 +287,7 @@ extension WriteQuestionTypeQuestViewController {
         }
         
         self.questType = questType
+        self.questTitle = questionTitle ?? ""
         rootView.updateQuestTitle(
             questScope: self.questScope,
             questNumber: self.questNumber,
@@ -232,9 +295,17 @@ extension WriteQuestionTypeQuestViewController {
         )
     }
     
+    private func setQuestTextField(answer: String) {
+        rootView.questTextField.do {
+            $0.applyTextViewStyle(text: answer, color: .grayscale100)
+            $0.isPlaceholderActive = false
+            $0.textCountLabel.text = "(\(answer.count)/\(rootView.questTextField.limitCount))"
+        }
+    }
+    
     private func personalQuestComplete() {
         ByeBooLogger.debug("퀘스트 아이디 \(self.questID)")
-    
+        
         bottomSheetViewController.dismiss(animated: true) {
             let archiveViewController = ViewControllerFactory.shared.makeArchiveQuestViewController()
             archiveViewController.entryViewController = .writeQuest
@@ -266,16 +337,21 @@ extension WriteQuestionTypeQuestViewController {
 }
 
 extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
-    func getExistingQuest(questID: Int, questAnswer: String?, image: String?, imageKey: String?) {
+    func getExistingQuest(
+        questID: Int,
+        questAnswer: String?,
+        image: String?,
+        imageKey: String?
+    ) {
         self.questID = questID
         self.viewModel.action(.viewDidLoadWhenEditMode(questID: questID))
-        guard let questAnswer = questAnswer else { return }
-        self.answerText = questAnswer
-        rootView.questTextField.applyTextViewStyle(text: answerText, color: .grayscale100)
         
-        let textCount = questAnswer.count
-        rootView.questTextField.textCountLabel.text = "(\(textCount)/\(rootView.questTextField.limitCount))"
-        rootView.questTextField.isPlaceholderActive = false
+        guard let questAnswer = questAnswer else {
+            return
+        }
+        
+        self.answerText = questAnswer
+        setQuestTextField(answer: questAnswer)
         self.navigationItem.rightBarButtonItem?.isEnabled = false
     }
 }

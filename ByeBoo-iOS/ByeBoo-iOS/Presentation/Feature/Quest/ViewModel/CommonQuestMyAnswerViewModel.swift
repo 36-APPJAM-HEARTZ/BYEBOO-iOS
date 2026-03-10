@@ -42,6 +42,10 @@ final class CommonQuestMyAnswerViewModel {
     private func fetchUserCommonQuestAnswers(cursor: Int? = nil) {
         Task {
             do {
+                if cursor == nil {
+                    answers.removeAll()
+                }
+                
                 let result = try await fetchCommonQuestMyAnswersUseCase.execute(cursor: cursor)
                 commonQuestAnswers = result
                 hasMorePages = result.hasNext
@@ -59,7 +63,7 @@ final class CommonQuestMyAnswerViewModel {
 extension CommonQuestMyAnswerViewModel: ViewModelType {
     
     enum Input {
-        case viewDidLoad
+        case viewWillAppear
         case scrollAnswer
     }
     
@@ -70,7 +74,7 @@ extension CommonQuestMyAnswerViewModel: ViewModelType {
     
     func action(_ trigger: Input) {
         switch trigger {
-        case .viewDidLoad:
+        case .viewWillAppear:
             getUserName()
             fetchUserCommonQuestAnswers()
         case .scrollAnswer:
