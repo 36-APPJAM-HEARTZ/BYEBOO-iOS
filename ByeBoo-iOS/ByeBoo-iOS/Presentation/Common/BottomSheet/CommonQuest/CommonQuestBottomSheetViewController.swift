@@ -65,6 +65,9 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
             item.isUserInteractionEnabled = true
         }
     }
+}
+
+extension CommonQuestBottomSheetViewController {
     
     func configure(
         sheeetType: CommonQuestArchiveType,
@@ -115,8 +118,8 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
                 )
             }
         case .delete:
-            // TODO: 삭제하기
-            ByeBooLogger.debug("delete")
+            guard let answerID else { return }
+            presentDeleteQuestModal(answerID: answerID)
         case .block:
             viewModel.action(.block(userID: writerID))
         case .report:
@@ -129,6 +132,27 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     @objc
     private func dismissButtonDidTap() {
         presentingViewController?.dismiss(animated: true)
+    }
+    
+    private func presentDeleteQuestModal(answerID: Int) {
+        let modalView = createModalView()
+        let action: () -> Void = { self.viewModel.action(.delete(answerID: answerID)) }
+        
+        ModalBuilder(
+            modalView: modalView,
+            action: action,
+            rootViewController: self
+        ).present()
+    }
+    
+    private func createModalView() -> ConfirmModalView {
+        let dismissButton: ByeBooButton? = ByeBooButton(titleText: noAnswer, type: .outline)
+        let actionButton = ByeBooButton(titleText: yesAnswer, type: .enabled)
+        return ConfirmModalView(
+            modalType: .delete,
+            dismissButton: dismissButton,
+            actionButton: actionButton
+        )
     }
 }
 
