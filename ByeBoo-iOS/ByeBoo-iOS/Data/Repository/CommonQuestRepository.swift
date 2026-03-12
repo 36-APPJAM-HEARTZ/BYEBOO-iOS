@@ -54,4 +54,10 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
             )
         )
     }
+    
+    func deleteCommonQuest(answerID: Int) async throws {
+        try await network.request(
+            CommonQuestAPI.deleteCommonQuest(answerID: answerID)
+        )
+    }
 }

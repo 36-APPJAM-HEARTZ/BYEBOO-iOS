@@ -203,5 +203,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: ReportsCommonQuestAnswerUseCase.self) { _ in
             return DefaultReportsCommonQuestAnswerUseCase(repository: reportsRepository)
         }
+        
+        DIContainer.shared.register(type: DeleteCommonQuestUseCase.self) { _ in
+            return DefaultDeleteCommonQuestUseCase(repository: commonQuestRepository)
+        }
     }
 }

@@ -20,7 +20,7 @@ final class DateNavigator: UITableViewHeaderFooterView {
     private let tommorw: Int = 1
     private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "M월 dd일"
+        formatter.dateFormat = "M월 d일"
         return formatter
     }()
     

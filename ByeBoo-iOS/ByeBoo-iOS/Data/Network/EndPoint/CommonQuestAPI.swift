@@ -13,6 +13,7 @@ enum CommonQuestAPI {
     case postCommonQuest(questID: Int, dto: SaveCommonQuestRequestDTO)
     case fetchCommonQuest(date: String, cursor: Int?)
     case updateCommonQuest(answerID: Int, dto: UpdateCommonQuestRequestDTO)
+    case deleteCommonQuest(answerID: Int)
 }
 
 extension CommonQuestAPI: EndPoint {
@@ -27,7 +28,7 @@ extension CommonQuestAPI: EndPoint {
             return "/\(questID)"
         case .fetchCommonQuest:
             return ""
-        case .updateCommonQuest(let answerID, _):
+        case .updateCommonQuest(let answerID, _), .deleteCommonQuest(let answerID):
             return "/\(answerID)"
         }
     }
@@ -40,12 +41,14 @@ extension CommonQuestAPI: EndPoint {
             return .get
         case .updateCommonQuest:
             return .patch
+        case .deleteCommonQuest:
+            return .delete
         }
     }
     
     var headers: HeaderType {
         switch self {
-        case .postCommonQuest, .fetchCommonQuest, .updateCommonQuest:
+        case .postCommonQuest, .fetchCommonQuest, .updateCommonQuest, .deleteCommonQuest:
             return .withAuth
         }
     }
@@ -54,14 +57,14 @@ extension CommonQuestAPI: EndPoint {
         switch self {
         case .postCommonQuest, .updateCommonQuest:
             return JSONEncoding.default
-        case .fetchCommonQuest:
+        case .fetchCommonQuest, .deleteCommonQuest:
             return  URLEncoding.default
         }
     }
     
     var queryParameters: [String : String]? {
         switch self {
-        case .postCommonQuest, .updateCommonQuest:
+        case .postCommonQuest, .updateCommonQuest, .deleteCommonQuest:
             return nil
         case .fetchCommonQuest(let date, let cursor):
             if let cursor {
@@ -78,7 +81,7 @@ extension CommonQuestAPI: EndPoint {
         switch self {
         case .postCommonQuest(_, let dto):
             return try? dto.toDictionary()
-        case .fetchCommonQuest:
+        case .fetchCommonQuest, .deleteCommonQuest:
             return nil
         case .updateCommonQuest(_, let dto):
             return try? dto.toDictionary()

@@ -131,6 +131,10 @@ extension CommonQuestViewModel {
         answers.count
     }
     
+    var isUserAnswered: Bool {
+        commonQuest?.isAnswered ?? false
+    }
+    
     func getAnswer(at index: Int) -> CommonQuestAnswerEntity? {
         guard index >= 0 && index < answers.count else {
             return nil

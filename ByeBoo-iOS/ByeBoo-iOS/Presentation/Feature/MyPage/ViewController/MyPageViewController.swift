@@ -364,7 +364,7 @@ extension MyPageViewController {
                 self.viewModel.action(.withdrawActionButtonDidTap)
                 
                 Mixpanel.mainInstance().track(event: MyPageEvents.Name.withdrawConfirmClick)
-            case .block:
+            case .block, .delete:
                 break
             }
         }

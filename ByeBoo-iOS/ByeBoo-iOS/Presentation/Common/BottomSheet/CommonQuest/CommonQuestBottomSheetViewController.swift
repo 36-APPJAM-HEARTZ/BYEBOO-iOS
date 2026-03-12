@@ -21,7 +21,14 @@ protocol BlockReportProtocol: AnyObject {
     func completeBlockReport(type: CommonQuestArchiveType.Action)
 }
 
+protocol DeleteCommonQuestDelegate: AnyObject {
+    func completeDeleteCommonQuest()
+}
+
 final class CommonQuestBottomSheetViewController: BaseViewController {
+    
+    private let yesAnswer = "예"
+    private let noAnswer = "아니오"
     
     private var rootView = CommonQuestBottomSheetView(sheetType: .other)
     private let viewModel: CommonQuestBottomSheetViewModel
@@ -37,6 +44,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     
     weak var blockDelegate: BlockReportProtocol?
     weak var bottomDelegate: CommonQuestBottomSheetDelegate?
+    weak var deleteDelegate: DeleteCommonQuestDelegate?
     
     init(viewModel: CommonQuestBottomSheetViewModel) {
         self.viewModel = viewModel
@@ -65,6 +73,9 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
             item.isUserInteractionEnabled = true
         }
     }
+}
+
+extension CommonQuestBottomSheetViewController {
     
     func configure(
         sheeetType: CommonQuestArchiveType,
@@ -115,8 +126,8 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
                 )
             }
         case .delete:
-            // TODO: 삭제하기
-            ByeBooLogger.debug("delete")
+            guard let answerID else { return }
+            presentDeleteQuestModal(answerID: answerID)
         case .block:
             viewModel.action(.block(userID: writerID))
         case .report:
@@ -129,6 +140,27 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     @objc
     private func dismissButtonDidTap() {
         presentingViewController?.dismiss(animated: true)
+    }
+    
+    private func presentDeleteQuestModal(answerID: Int) {
+        let modalView = createModalView()
+        let action: () -> Void = { self.viewModel.action(.delete(answerID: answerID)) }
+        
+        ModalBuilder(
+            modalView: modalView,
+            action: action,
+            rootViewController: self
+        ).present()
+    }
+    
+    private func createModalView() -> ConfirmModalView {
+        let dismissButton: ByeBooButton? = ByeBooButton(titleText: noAnswer, type: .outline)
+        let actionButton = ByeBooButton(titleText: yesAnswer, type: .enabled)
+        return ConfirmModalView(
+            modalType: .delete,
+            dismissButton: dismissButton,
+            actionButton: actionButton
+        )
     }
 }
 
@@ -158,6 +190,24 @@ extension CommonQuestBottomSheetViewController {
                     ByeBooLogger.debug("신고 성공")
                     self.blockDelegate?.completeBlockReport(type: .report)
                     self.dismiss(animated: false)
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellables)
+        
+        viewModel.output.deleteQuestPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success():
+                    ByeBooLogger.debug("삭제 성공")
+                    
+                    guard let self else { return }
+                    
+                    self.dismiss(animated: false) { [weak self] in
+                        self?.deleteDelegate?.completeDeleteCommonQuest()
+                    }
                 case .failure(let error):
                     ByeBooLogger.debug(error)
                 }
