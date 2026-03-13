@@ -74,7 +74,7 @@ final class QuestTextField: BaseView {
         
         textCountLabel.applyByeBooFont (
             style: .cap2R12,
-            text: "(\(count)/\(limitCount))",
+            text: "\(count)/\(limitCount)",
             color: .grayscale400
         )
         
@@ -150,7 +150,7 @@ extension QuestTextField: UITextViewDelegate {
             textView.deleteBackward()
         }
         count = textView.text.count
-        textCountLabel.text = "(\(count)/\(limitCount))"
+        textCountLabel.text = "\(count)/\(limitCount)"
         updateTextViewHeight()
         delegate?.updateButtonWhenWriting(text: textView.text)
     }

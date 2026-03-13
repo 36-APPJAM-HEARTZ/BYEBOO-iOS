@@ -168,7 +168,7 @@ final class WriteActiveTypeQuestView: BaseView {
     }
     
     func updateImageCountLabel(count: Int) {
-        imgCountLabel.text = "(\(count)/1)"
+        imgCountLabel.text = "\(count)/1"
     }
 }
 
