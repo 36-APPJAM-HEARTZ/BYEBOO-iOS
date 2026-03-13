@@ -17,8 +17,7 @@ struct QuestAnswerResponseDTO: Decodable {
     let imageUrl: String?
     let imageKey: String?
     let emotionDescription: String
-    // TODO: API 변동되면 옵셔널 해제
-    let aiAnswerExists: Bool?
+    let aiAnswerExists: Bool
 }
 
 extension QuestAnswerResponseDTO {
@@ -33,7 +32,7 @@ extension QuestAnswerResponseDTO {
             imageUrl: imageUrl ?? "",
             imageKey: imageKey ?? "",
             emotionDescription: emotionDescription,
-            AIAnswerExists: aiAnswerExists ?? false
+            AIAnswerExists: aiAnswerExists
         )
     }
 }
