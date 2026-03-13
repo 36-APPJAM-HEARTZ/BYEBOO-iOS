@@ -6,7 +6,18 @@
 //
 
 extension JourneyType {
-    var key: String {
+    var responseKey: String {
+        switch self {
+        case .recording:
+            "RECORDING"
+        case .active:
+            "ACTIVE"
+        case .reunion:
+            "REUNION"
+        }
+    }
+    
+    var requestKey: String {
         switch self {
         case .recording:
             "FACE_EMOTION"
@@ -17,7 +28,7 @@ extension JourneyType {
         }
     }
     
-    static func keyToEnum(_ key: String) -> Self? {
-        return Self.allCases.first { $0.key == key }
+    static func responseKeyToEnum(_ key: String) -> Self? {
+        return Self.allCases.first { $0.responseKey == key }
     }
 }
