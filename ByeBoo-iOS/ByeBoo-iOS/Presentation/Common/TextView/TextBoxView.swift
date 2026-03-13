@@ -40,8 +40,8 @@ final class TextBoxView: BaseView {
         backgroundColor = .white5
         
         titleLabel.applyByeBooFont(
-            style: .body6R14,
-            color: .grayscale300,
+            style: .body3R16,
+            color: .grayscale100,
             numberOfLines: 0
         )
         titleLabel.lineBreakMode = .byCharWrapping
@@ -75,9 +75,9 @@ final class TextBoxView: BaseView {
 extension TextBoxView {
     func updateText(_ text: String) {
         titleLabel.applyByeBooFont(
-            style: .body6R14,
+            style: .body3R16,
             text: text,
-            color: .grayscale300,
+            color: .grayscale100,
             numberOfLines: 0
         )
     }
@@ -86,7 +86,7 @@ extension TextBoxView {
         titleLabel.applyByeBooFont(
             style: .body6R14,
             text: text,
-            color: .grayscale300,
+            color: .grayscale100,
             numberOfLines: 0
         )
         self.emotionChip?.updateEmotion(ByeBooEmotion.toEmotion(text: emotionState))
