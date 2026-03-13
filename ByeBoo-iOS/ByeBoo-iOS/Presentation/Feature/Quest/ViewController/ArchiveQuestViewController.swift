@@ -57,7 +57,15 @@ final class ArchiveQuestViewController: BaseViewController {
                 type: .close(header: .black),
                 action: #selector(close)
             )
-        case .mypage, .questMain, .edit:
+        case .questMain:
+            ByeBooNavigationBar.makeNavigationBar(
+                navigationItem: self.navigationItem,
+                navigationController: self.navigationController,
+                type: .backAndEdit(header: .clear),
+                action: #selector(close),
+                secondAction: #selector(editButtonDidTap)
+            )
+        case .mypage, .edit:
             ByeBooNavigationBar.makeNavigationBar(
                 navigationItem: self.navigationItem,
                 navigationController: self.navigationController,
