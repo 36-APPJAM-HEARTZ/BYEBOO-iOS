@@ -104,14 +104,17 @@ extension CommonQuestHistoryViewController {
         nickname: String? = nil,
         content: String,
         answerID: Int? = nil,
-        writerID: Int? = nil
+        writerID: Int? = nil,
+        isMyAnswer: Bool? = nil
     ) {
         self.answerID = answerID
         self.answer = content
         self.question = question
         self.writtenAt = writtenAt
 
-        commonQuestArchiveType = nickname == nil ? .mine : .other
+        if let isMyAnswer {
+            commonQuestArchiveType = isMyAnswer ? .mine : .other
+        }
         
         if let writerID {
             self.writerID = writerID

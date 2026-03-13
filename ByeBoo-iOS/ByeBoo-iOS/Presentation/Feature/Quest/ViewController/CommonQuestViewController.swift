@@ -142,7 +142,8 @@ extension CommonQuestViewController: UITableViewDelegate {
             profileIcon: viewModel.getProfileIcon(at: answerIndex),
             nickname: answer.writer,
             content: answer.content,
-            writerID: answer.writerID
+            writerID: answer.writerID,
+            isMyAnswer: answer.isMyAnswer
         )
         historyViewController.navigationItem.hidesBackButton = true
         

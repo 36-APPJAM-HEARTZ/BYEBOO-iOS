@@ -18,6 +18,7 @@ struct CommonQuestAnswersEntity {
 }
 
 struct CommonQuestAnswerEntity {
+    let isMyAnswer: Bool
     let answerID: Int
     let writer: String
     let profileIcon: String
@@ -32,6 +33,7 @@ extension CommonQuestAnswersEntity {
     
     static let allAnswers: [CommonQuestAnswerEntity] = (1...30).map {
         CommonQuestAnswerEntity(
+            isMyAnswer: false,
             answerID: $0,
             writer: "유저\($0)",
             profileIcon: profileIcons[$0 % 4],
@@ -57,6 +59,7 @@ extension CommonQuestAnswersEntity {
 extension CommonQuestAnswerEntity {
     static func stub() -> Self {
         .init(
+            isMyAnswer: false,
             answerID: 1,
             writer: "장원영",
             profileIcon: "SO_SO",
