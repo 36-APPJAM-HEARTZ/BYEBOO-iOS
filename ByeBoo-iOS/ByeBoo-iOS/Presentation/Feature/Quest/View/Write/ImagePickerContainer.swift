@@ -50,7 +50,7 @@ final class ImagePickerContainer: BaseView {
         plusIcon.do {
             $0.image = .plus.withRenderingMode(.alwaysTemplate)
             $0.contentMode = .scaleAspectFit
-            $0.tintColor = .primary300
+            $0.tintColor = .grayscale500
         }
     }
     
