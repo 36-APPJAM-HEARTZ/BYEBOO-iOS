@@ -66,7 +66,7 @@ final class MyPageView: BaseView {
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
         myRecordView.snp.makeConstraints {
-            $0.top.equalTo(divider1.snp.bottom).offset(8.adjustedH)
+            $0.top.equalTo(divider1.snp.bottom)
             $0.horizontalEdges.equalToSuperview()
         }
         worldView.snp.makeConstraints {
