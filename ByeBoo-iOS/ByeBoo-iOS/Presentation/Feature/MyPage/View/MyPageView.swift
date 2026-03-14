@@ -14,7 +14,7 @@ final class MyPageView: BaseView {
     
     private(set) var scrollView = UIScrollView()
     private let contentView = UIView()
-    private(set) var nameView = OneLineTextBoxView(title: "")
+    private(set) var nameView = OneLineTextBoxView(title: "", titleColor: .grayscale100)
     private(set) var moveButton = UIButton()
     private let divider1 = SectionDividerView()
     private(set) var myRecordView = MyRecordView()

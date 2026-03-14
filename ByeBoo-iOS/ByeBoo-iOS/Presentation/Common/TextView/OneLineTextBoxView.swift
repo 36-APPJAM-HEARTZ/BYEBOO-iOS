@@ -15,17 +15,20 @@ final class OneLineTextBoxView: BaseView {
     private let tagTitle: String?
     private let tagType: ByeBooFilledTagType?
     private let isHighlighted: Bool
+    private let titleColor: UIColor?
     
     init(
         title: String,
         tagTitle: String? = nil,
         tagType: ByeBooFilledTagType? = nil,
-        isHighlighted: Bool = false
+        isHighlighted: Bool = false,
+        titleColor: UIColor? = nil
     ) {
         self.title = title
         self.tagTitle = tagTitle
         self.tagType = tagType
         self.isHighlighted = isHighlighted
+        self.titleColor = titleColor
         
         if let tagType,
            let tagTitle {
@@ -50,9 +53,10 @@ final class OneLineTextBoxView: BaseView {
             layer.borderColor = UIColor(.primary300).cgColor
         }
         
+        let finalColor = titleColor ?? (isHighlighted ? .grayscale50 : .grayscale300)
         titleLabel.applyByeBooFont(
             style: .body3R16,
-            color: isHighlighted ? .grayscale50 : .grayscale300,
+            color: finalColor,
             numberOfLines: 1
         )
         titleLabel.isUserInteractionEnabled = false
