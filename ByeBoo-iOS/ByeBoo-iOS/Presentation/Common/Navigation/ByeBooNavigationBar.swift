@@ -128,7 +128,7 @@ struct ByeBooNavigationBar {
                 target: topViewController,
                 action: action
             )
-            navigationItem.leftBarButtonItem = backButtonItem
+            navigationItem.leftBarButtonItems = [makeSpacer(), backButtonItem]
             
         case .backAndMenu:
             let backButtonItem = makeBarButtonItem(
@@ -136,12 +136,13 @@ struct ByeBooNavigationBar {
                 target: topViewController,
                 action: action
             )
-            navigationItem.leftBarButtonItem = backButtonItem
+            navigationItem.leftBarButtonItems = [makeSpacer(), backButtonItem]
             makeTopRightButtonItem(
                 image: .menu,
                 target: topViewController,
                 navigationItem: navigationItem,
-                action: secondAction
+                action: secondAction,
+                padding: 0
             )
             
         case .title(let string, _):
@@ -171,7 +172,7 @@ struct ByeBooNavigationBar {
                 target: topViewController,
                 action: action
             )
-            navigationItem.leftBarButtonItem = backButtonItem
+            navigationItem.leftBarButtonItems = [makeSpacer(), backButtonItem]
             
         case .editAndClose:
             let editButtonItem = makeBarButtonItem(
@@ -179,12 +180,13 @@ struct ByeBooNavigationBar {
                 target: topViewController,
                 action: secondAction
             )
-            navigationItem.leftBarButtonItem = editButtonItem
+            navigationItem.leftBarButtonItems = [makeSpacer(), editButtonItem]
             makeTopRightButtonItem(
                 image: .xicon,
                 target: topViewController,
                 navigationItem: navigationItem,
-                action: action
+                action: action,
+                padding: 8.adjustedH
             )
         case .confirmAndBack:
             let backButtonItem = makeBarButtonItem(
@@ -197,8 +199,8 @@ struct ByeBooNavigationBar {
                 target: topViewController,
                 action: secondAction
             )
-            navigationItem.leftBarButtonItem = backButtonItem
-            navigationItem.rightBarButtonItem = confirmButtonItem
+            navigationItem.leftBarButtonItems = [makeSpacer(), backButtonItem]
+            navigationItem.rightBarButtonItems = [makeSpacer(padding: 16), confirmButtonItem]
         case .none:
             let emptyItem = makeBarButtonItem(
                 image: UIImage(),
@@ -255,9 +257,22 @@ struct ByeBooNavigationBar {
         image: UIImage,
         target: BaseViewController,
         navigationItem: UINavigationItem,
-        action: Selector?
+        action: Selector?,
+        padding: CGFloat = 16.adjustedW
     ) {
         let closeButtonItem = makeBarButtonItem(image: image, target: target, action: action)
-        navigationItem.rightBarButtonItem = closeButtonItem
+        let spacer = makeSpacer(padding: padding)
+        navigationItem.rightBarButtonItems = [spacer, closeButtonItem]
+    }
+    
+    private static func makeSpacer(padding: CGFloat = 2.adjustedW) -> UIBarButtonItem {
+        let spacer = UIBarButtonItem(
+            barButtonSystemItem: .fixedSpace,
+            target: nil,
+            action: nil
+        )
+        spacer.width = padding
+        
+        return spacer
     }
 }
