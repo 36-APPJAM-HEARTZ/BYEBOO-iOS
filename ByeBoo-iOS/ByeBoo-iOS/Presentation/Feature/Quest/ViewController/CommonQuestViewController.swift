@@ -142,6 +142,7 @@ extension CommonQuestViewController: UITableViewDelegate {
             profileIcon: viewModel.getProfileIcon(at: answerIndex),
             nickname: answer.writer,
             content: answer.content,
+            answerID: answer.answerID,
             writerID: answer.writerID,
             isMyAnswer: answer.isMyAnswer
         )
