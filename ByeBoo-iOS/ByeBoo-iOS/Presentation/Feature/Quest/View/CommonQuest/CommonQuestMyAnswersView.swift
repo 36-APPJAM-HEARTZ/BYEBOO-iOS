@@ -20,6 +20,7 @@ final class CommonQuestMyAnswersView: BaseView {
         )
         answersTableView.do {
             $0.backgroundColor = .grayscale900
+            $0.separatorStyle = .none
         }
     }
     

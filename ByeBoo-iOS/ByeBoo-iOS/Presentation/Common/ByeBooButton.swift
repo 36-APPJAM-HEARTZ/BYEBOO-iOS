@@ -116,6 +116,6 @@ final class ByeBooButton: UIButton {
     }
     
     func updateTitle(_ title: String) {
-        self.setTitle(titleText, for: .normal)
+        self.setTitle(title, for: .normal)
     }
 }

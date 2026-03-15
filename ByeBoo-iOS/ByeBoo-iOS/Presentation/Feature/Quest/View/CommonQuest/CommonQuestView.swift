@@ -25,6 +25,7 @@ final class CommonQuestView: BaseView {
             )
             $0.tableHeaderView = headerView
             $0.sectionHeaderTopPadding = 0
+            $0.separatorStyle = .none
         }
     }
     
