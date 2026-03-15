@@ -14,6 +14,7 @@ final class CommonQuestViewController: BaseViewController {
     private let viewModel: CommonQuestViewModel
     
     private var cancellable = Set<AnyCancellable>()
+    private var userName: String?
     
     init(viewModel: CommonQuestViewModel) {
         self.viewModel = viewModel
@@ -38,6 +39,7 @@ final class CommonQuestViewController: BaseViewController {
         super.viewDidLoad()
         
         bind()
+        viewModel.action(.compareUserName)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -71,6 +73,11 @@ final class CommonQuestViewController: BaseViewController {
 extension CommonQuestViewController {
     
     func bind() {
+        bindCommonQuest()
+        bindUserName()
+    }
+    
+    private func bindCommonQuest() {
         viewModel.output.commonQuestPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
@@ -80,6 +87,15 @@ extension CommonQuestViewController {
                 case .failure(let error):
                     ByeBooLogger.error(error)
                 }
+            }
+            .store(in: &cancellable)
+    }
+    
+    private func bindUserName() {
+        viewModel.output.userNamePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] userName in
+                self?.userName = userName
             }
             .store(in: &cancellable)
     }
@@ -134,14 +150,17 @@ extension CommonQuestViewController: UITableViewDelegate {
         guard let formattedWrittenAt else {
             return
         }
+                
+        let nickname = (answer.writer == userName) ? nil : answer.writer
         
         let historyViewController = ViewControllerFactory.shared.makeCommonQuestHistoryViewController()
         historyViewController.configure(
             question: viewModel.question,
             writtenAt: formattedWrittenAt,
             profileIcon: viewModel.getProfileIcon(at: answerIndex),
-            nickname: answer.writer,
+            nickname: nickname,
             content: answer.content,
+            answerID: answer.answerID,
             writerID: answer.writerID
         )
         historyViewController.navigationItem.hidesBackButton = true
