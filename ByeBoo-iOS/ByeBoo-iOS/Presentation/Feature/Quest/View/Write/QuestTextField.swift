@@ -61,7 +61,7 @@ final class QuestTextField: BaseView {
     override func setLayout() {
         self.snp.makeConstraints {
             $0.width.equalTo(327.adjustedW)
-            containerHeightConsraint = $0.height.equalTo(268.adjustedH).constraint
+            containerHeightConsraint = $0.height.greaterThanOrEqualTo(268.adjustedH).constraint
         }
         
         textView.snp.makeConstraints {
@@ -80,7 +80,7 @@ extension QuestTextField: UITextViewDelegate {
             applyTextViewStyle(text: "", color: .grayscale100)
         }
         textView.textColor = .grayscale100
-        questTextViewDelegate?.textViewDidEndEditing()
+        questTextViewDelegate?.textViewDidBeginEditing()
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {

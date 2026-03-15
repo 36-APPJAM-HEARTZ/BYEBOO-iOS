@@ -63,6 +63,7 @@ final class WriteActiveTypeQuestViewController: WriteQuestBaseViewController<Wri
     
     override func setDelegate() {
         rootView.questTextField.questCompleteDelegate = self
+        rootView.questTextField.questTextViewDelegate = self
     }
     
     @objc
@@ -297,6 +298,7 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
         rootView.imgCount = 1
         rootView.updateImageCountLabel(count: 1)
         rootView.imageContainer.changeIconHidden()
+        rootView.textCountLabel.text = "\(answerText.count)/\(rootView.limitCount)"
         self.navigationItem.rightBarButtonItem?.isEnabled = false
         
         if questAnswer.isEmpty {

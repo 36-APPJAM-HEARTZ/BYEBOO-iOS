@@ -181,7 +181,8 @@ extension WriteQuestionTypeQuestView: UpdateUIWhenKeyboardProtocol {
     func updateUIWhenKeyboardUp() {
         bottomContainerView.removeFromSuperview()
         addSubview(bottomContainerView)
-        bottomContainerView.snp.remakeConstraints {            $0.leading.trailing.equalToSuperview()
+        bottomContainerView.snp.remakeConstraints {
+            $0.leading.trailing.equalToSuperview()
             bottomConstraint = $0.bottom.equalToSuperview().constraint
         }
         contentView.snp.makeConstraints {
@@ -200,13 +201,13 @@ extension WriteQuestionTypeQuestView: UpdateUIWhenKeyboardProtocol {
         }
         
         contentViewBottomConstraint?.deactivate()
-        contentView.snp.makeConstraints {
+        contentView.snp.remakeConstraints {
             contentViewBottomConstraint =
             $0.bottom.equalTo(bottomContainerView.snp.bottom).offset(17.adjustedH).constraint
         }
     }
     
     func updateBottomConstraint(_ offset: CGFloat) {
-        bottomConstraint?.update(offset: offset)
+        bottomConstraint?.update(offset: offset - 13.adjustedH)
     }
 }

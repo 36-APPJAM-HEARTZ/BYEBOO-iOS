@@ -299,6 +299,8 @@ extension WriteQuestionTypeQuestViewController {
             $0.applyTextViewStyle(text: answer, color: .grayscale100)
             $0.isPlaceholderActive = false
         }
+        rootView.layoutIfNeeded()
+        _ = rootView.questTextField.updateTextViewHeight()
     }
     
     private func personalQuestComplete() {
@@ -370,6 +372,7 @@ extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
         
         self.answerText = questAnswer
         setQuestTextField(answer: questAnswer)
+        rootView.textCountLabel.text = "\(answerText.count)/\(rootView.limitCount)"
         self.navigationItem.rightBarButtonItem?.isEnabled = false
     }
 }
