@@ -13,16 +13,17 @@ protocol DateNavigatorDelegate: AnyObject {
 
 final class DateNavigator: UITableViewHeaderFooterView {
     
-    weak var delegate: DateNavigatorDelegate?
-    
     private let calendar = Calendar.current
     private let yesterday: Int = -1
-    private let tommorw: Int = 1
+    private let tommorow: Int = 1
     private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "M월 d일"
         return formatter
     }()
+    private let minDate: Date
+    
+    weak var delegate: DateNavigatorDelegate?
     
     private(set) var currentDate: Date = .now
     private let navigatorStackView = UIStackView()
@@ -31,6 +32,13 @@ final class DateNavigator: UITableViewHeaderFooterView {
     private(set) var nextButton = UIButton()
     
     override init(reuseIdentifier: String?) {
+        self.minDate = DateComponents(
+            calendar: calendar,
+            year: 2026,
+            month: 3,
+            day: 6
+        ).date ?? .now
+        
         super.init(reuseIdentifier: reuseIdentifier)
         
         setStyle()
@@ -120,20 +128,20 @@ extension DateNavigator {
     
     @objc
     private func moveYesterday() {
-        currentDate = getDate(by: yesterday) ?? .now
-        dateLabel.text = dateFormatter.string(from: currentDate)
-        updateNextButton()
+        guard !isMinDate else { return }
         
-        // TO-DO : 실제 날짜 형식으로 수정
-        delegate?.dateDidChanged(to: currentDate)
+        moveDay(to: yesterday)
     }
     
     @objc
     private func moveTomorrow() {
-        currentDate = getDate(by: tommorw) ?? .now
+        moveDay(to: tommorow)
+    }
+    
+    private func moveDay(to day: Int) {
+        currentDate = getDate(by: day) ?? .now
         dateLabel.text = dateFormatter.string(from: currentDate)
-        updateNextButton()
-        
+        updateButtons()
         delegate?.dateDidChanged(to: currentDate)
     }
     
@@ -141,13 +149,28 @@ extension DateNavigator {
         calendar.date(byAdding: .day, value: value, to: currentDate)
     }
     
+    private func updateButtons() {
+        updatePreviousButton()
+        updateNextButton()
+    }
+    
+    private func updatePreviousButton() {
+        let previousImage: UIImage = isMinDate ? .previousOff : .previousOn
+        previousButton.setImage(previousImage, for: .normal)
+        nextButton.isEnabled = !isMinDate
+    }
+    
     private func updateNextButton() {
-        let image: UIImage = isToday ? .nextOff : .nextOn
-        nextButton.setImage(image, for: .normal)
+        let nextImage: UIImage = isToday ? .nextOff : .nextOn
+        nextButton.setImage(nextImage, for: .normal)
         nextButton.isEnabled = !isToday
     }
     
     private var isToday: Bool {
         calendar.isDateInToday(currentDate)
+    }
+    
+    private var isMinDate: Bool {
+        calendar.isDate(currentDate, inSameDayAs: minDate)
     }
 }
