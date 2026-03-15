@@ -78,10 +78,7 @@ final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<W
         
         switch questScope {
         case .common:
-            let isEdit = questMode == .edit ? true : false
-            saveQuest(isEdit: isEdit, isCommonQuest: true)
-            ByeBooLogger.debug("common quest 완료")
-            
+            presentConfirmModal()
         case .personal:
             if questMode == .edit {
                 saveQuest(isEdit: true, isCommonQuest: false)
@@ -318,21 +315,41 @@ extension WriteQuestionTypeQuestViewController {
     }
     
     private func commonQuestComplete() {
-        let viewController = ByeBooTabBar()
-        ViewControllerUtils.changeQuestTabWithIndex(index: 1)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
-            let modal = ModalBuilder(
-                modalView: QuestCompleteModal(),
-                action: nil,
-                rootViewController: viewController
-            )
-            modal.present()
+        ViewControllerUtils.changeQuestTabWithIndex(index: 1) {
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                modal.dismiss()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
+                guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                      let window = scene.windows.first,
+                      let tabBar = window.rootViewController as? ByeBooTabBar,
+                      let navigationController = tabBar.viewControllers?[1] as? UINavigationController,
+                      let targetViewController = navigationController.topViewController as? ParentQuestViewController<QuestTabItem>
+                else { return }
+                
+                targetViewController.presentCompleteModal()
             }
         }
+    }
+    
+    private func createModalView() -> ConfirmModalView {
+        let dismissButton: ByeBooButton? = ByeBooButton(titleText: "아니오", type: .outline)
+        let actionButton = ByeBooButton(titleText: "예", type: .enabled)
+        return ConfirmModalView(
+            modalType: .saveQuest,
+            dismissButton: dismissButton,
+            actionButton: actionButton
+        )
+    }
+    
+    private func presentConfirmModal() {
+        let isEdit = questMode == .edit ? true : false
+        let modalView = createModalView()
+        let action: () -> Void = { self.saveQuest(isEdit: isEdit, isCommonQuest: true) }
+        
+        ModalBuilder(
+            modalView: modalView,
+            action: action,
+            rootViewController: self
+        ).present()
     }
 }
 

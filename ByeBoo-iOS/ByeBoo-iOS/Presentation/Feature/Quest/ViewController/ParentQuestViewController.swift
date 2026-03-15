@@ -56,6 +56,19 @@ final class ParentQuestViewController<T: TabItem>: BaseViewController, ToastPres
         tabBar.select(index: index)
     }
     
+    func presentCompleteModal() {
+        let modal = ModalBuilder(
+            modalView: QuestCompleteModal(),
+            action: nil,
+            rootViewController: self
+        )
+        modal.present()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            modal.dismiss()
+        }
+    }
+    
     @objc
     private func handleToast(_ notification: Notification) {
         guard let type = notification.userInfo?["type"] as? CommonQuestArchiveType.Action else { return }

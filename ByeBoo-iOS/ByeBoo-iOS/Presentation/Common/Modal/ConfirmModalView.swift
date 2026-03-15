@@ -12,6 +12,7 @@ enum ConfirmModalType {
     case withdraw
     case block
     case delete
+    case saveQuest
     
     var title: String {
         switch self {
@@ -23,6 +24,8 @@ enum ConfirmModalType {
             "차단을 해제하시겠어요?"
         case .delete:
             "정말 삭제하시겠어요?"
+        case .saveQuest:
+            "작성을 완료하시겠어요?"
         }
     }
     
@@ -34,6 +37,8 @@ enum ConfirmModalType {
             "탈퇴 시 모든 데이터가 삭제됩니다."
         case .delete:
             "삭제한 답변은 다시 복구할 수 없습니다."
+        case .saveQuest:
+            "완료하면 다른 사용자에게 공개돼요."
         }
     }
 }
