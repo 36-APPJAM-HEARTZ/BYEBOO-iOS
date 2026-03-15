@@ -87,7 +87,7 @@ extension QuestAPI: EndPoint {
     var queryParameters: [String : String]? {
         switch self {
         case .postJourney(let journey), .completedQuests(let journey):
-            return ["journey": journey.key]
+            return ["journey": journey.requestKey]
         default:
             return nil
         }

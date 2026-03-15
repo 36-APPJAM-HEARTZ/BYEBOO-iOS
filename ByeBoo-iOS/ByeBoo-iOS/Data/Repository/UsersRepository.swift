@@ -26,7 +26,6 @@ struct DefaultUsersRepository: UsersInterface {
     // MARK: Network
     
     func fetchJourney() async throws -> JourneyEntity {
-        let accessToken = loadAccessToken()
         let result = try await network.request(
             UsersAPI.journey,
             decodingType: UserJourneyResponseDTO.self
@@ -39,7 +38,6 @@ struct DefaultUsersRepository: UsersInterface {
         name: String,
         questStyle: String
     ) async throws -> UserEntity {
-        let accessToken = loadAccessToken()
         let userRequestDTO: UserRequestDTO = .init(
             name: name,
             questStyle: questStyle
@@ -62,7 +60,6 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func fetchCharacterDialogue() async throws -> DialogueEntity {
-        let accessToken = loadAccessToken()
         let result = try await network.request(
             UsersAPI.character,
             decodingType: DialogueResponseDTO.self
@@ -72,7 +69,6 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func fetchQuestStatus() async throws -> UserQuestStatusEntity {
-        let accessToken = loadAccessToken()
         let result = try await network.request(
             UsersAPI.count,
             decodingType: UserQuestStatusResponseDTO.self
@@ -82,7 +78,6 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func startJourney() async throws {
-        let accessToken = loadAccessToken()
         try await network.request(UsersAPI.start)
     }
     
@@ -109,7 +104,6 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func modifyUserNickname(name: String) async throws -> String {
-        let accessToken = loadAccessToken()
         let result = try await network.request(
             UsersAPI.modifyName(
                 requestDTO: UserNameRequestDTO(
@@ -124,11 +118,10 @@ struct DefaultUsersRepository: UsersInterface {
     
     func getLastJourneyType() -> JourneyType {
         let journey: String? = userDefaultsService.load(key: .journey)
-        return JourneyType.keyToEnum(journey ?? "") ?? .recording
+        return JourneyType.responseKeyToEnum(journey ?? "") ?? .recording
     }
     
     func updateNotificationPermission() async throws -> Bool {
-        let accessToken = loadAccessToken()
         let result = try await network.request(
             UsersAPI.updateNotificationPermission,
             decodingType: AlarmEnabledResponseDTO.self
@@ -151,7 +144,6 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func fetchMyCommonQuestAnswers(cursor: Int?) async throws -> CommonQuestMyAnswersEntity {
-        let accessToken = loadAccessToken()
         let result = try await network.request(
             UsersAPI.fetchCommonQuestAnswers(cursor: cursor),
             decodingType: CommonQuestMyAnswersResponseDTO.self
@@ -166,10 +158,6 @@ struct DefaultUsersRepository: UsersInterface {
             }
             return alarmEnabled
         }
-    }
-    
-    private func loadAccessToken() -> String {
-        keychainService.load(key: .accessToken)
     }
 }
 

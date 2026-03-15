@@ -130,6 +130,12 @@ final class ArchiveQuestView: BaseView {
 
 extension ArchiveQuestView {
     func updateUI(_ entity: QuestAnswerEntity) {
+        if entity.AIAnswerExists {
+            self.AIAnswerButton.updateTitle("보리의 답장 보러 가기")
+        } else {
+            self.AIAnswerButton.updateTitle("보리에게 답장 받기")
+        }
+        
         self.headerView.updateUI(
             stepNumber: entity.stepNumber,
             questNumber: entity.questNumber,

@@ -33,8 +33,7 @@ extension JourneyTypeData {
         .init(
             title: self.journey,
             description: nil,
-            style: JourneyType.keyToEnum(self.style),
-            questType: QuestType.keyToEnum(self.style)
+            style: JourneyType.responseKeyToEnum(self.style)
         )
     }
 }
