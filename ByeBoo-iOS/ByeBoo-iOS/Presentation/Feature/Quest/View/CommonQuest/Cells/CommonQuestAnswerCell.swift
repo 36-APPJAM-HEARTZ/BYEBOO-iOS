@@ -104,11 +104,6 @@ extension CommonQuestAnswerCell {
     ) {
         if let profileIcon {
             userIconView.image = profileIcon
-        } else {
-            userIconView.do {
-                $0.backgroundColor = .grayscale600
-                $0.layer.cornerRadius = 10
-            }
         }
         userNicknameLabel.text = answer.writer
         answerContentLabel.text = answer.content
