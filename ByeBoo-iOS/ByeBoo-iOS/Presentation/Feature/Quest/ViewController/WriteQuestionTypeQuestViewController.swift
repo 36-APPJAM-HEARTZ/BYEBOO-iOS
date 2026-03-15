@@ -74,6 +74,7 @@ final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<W
     
     @objc
     override func confirmButtonDidTap() {
+        view.endEditing(true)
         answerText = rootView.questTextField.textView.text
         
         switch questScope {

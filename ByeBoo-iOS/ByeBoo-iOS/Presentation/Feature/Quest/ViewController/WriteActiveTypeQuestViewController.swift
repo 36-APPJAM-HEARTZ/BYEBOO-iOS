@@ -76,6 +76,7 @@ final class WriteActiveTypeQuestViewController: WriteQuestBaseViewController<Wri
     
     @objc
     override func confirmButtonDidTap() {
+        view.endEditing(true)
         if rootView.questTextField.textView.text == rootView.questTextField.placeholder ||
             rootView.questTextField.textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         {
