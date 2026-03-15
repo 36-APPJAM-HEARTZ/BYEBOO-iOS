@@ -48,7 +48,7 @@ final class LoadingView: BaseView {
                 textAlignment: .center,
                 numberOfLines: 2
             )
-            $0.attributedText = "\(nickname)님에게 꼭 맞는\n이별 극복 여정을 찾는 중 ..."
+            $0.attributedText = "\(nickname)님에게 꼭 맞는\n극복 여정을 찾는 중 ..."
                 .makeTitle(
                     rangedText: nickname,
                     font: FontManager.body1Sb16.font,
