@@ -53,7 +53,7 @@ final class WriteQuestTitleView: BaseView {
         
         titleLabel.do {
             $0.applyByeBooFont(
-                style: .head1M24,
+                style: .head2M22,
                 color: .white,
                 textAlignment: .center,
                 numberOfLines: 0
