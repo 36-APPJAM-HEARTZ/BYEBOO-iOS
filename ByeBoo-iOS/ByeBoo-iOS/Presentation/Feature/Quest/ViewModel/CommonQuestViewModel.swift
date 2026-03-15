@@ -92,7 +92,7 @@ extension CommonQuestViewModel: ViewModelType {
 extension CommonQuestViewModel {
     
     private enum ProfileIcon: String, CaseIterable {
-        case sad = "SAD"
+        case sad = "SADNESS"
         case selfUnderstanding = "SELF_UNDERSTANDING"
         case soso = "SO_SO"
         case relieved = "RELIEVED"
