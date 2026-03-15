@@ -10,6 +10,7 @@ import UIKit
 final class BlockedUserListView: BaseView {
     
     private(set) var userTableView = UITableView()
+    private let emptyLabel = UILabel()
     
     override func setStyle() {
         self.do {
@@ -19,10 +20,18 @@ final class BlockedUserListView: BaseView {
             $0.backgroundColor = .grayscale900
             $0.separatorStyle = .none
         }
+        emptyLabel.do {
+            $0.applyByeBooFont(
+                style: .body6R14,
+                text: "차단하신 사용자가 없어요",
+                color: .grayscale400
+            )
+            $0.isHidden = true
+        }
     }
     
     override func setUI() {
-        addSubview(userTableView)
+        addSubviews(userTableView, emptyLabel)
     }
     
     override func setLayout() {
@@ -31,5 +40,15 @@ final class BlockedUserListView: BaseView {
             $0.horizontalEdges.equalToSuperview()
             $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
+        emptyLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(334.5.adjustedH)
+            $0.centerX.equalToSuperview()
+        }
+    }
+}
+
+extension BlockedUserListView {
+    func updateEmptyLabel() {
+        self.emptyLabel.isHidden = false
     }
 }
