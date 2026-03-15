@@ -10,15 +10,12 @@ import UIKit
 
 final class CommonQuestViewModel {
     
+    private let cancellables = Set<AnyCancellable>()
+    private let commonQuestSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>.init()
+    private let fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase
     private let minute: Double = 60
     private let hour: Double = 3600
     private let day: Double = 86400
-    
-    private let cancellables = Set<AnyCancellable>()
-    private let commonQuestSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>.init()
-    private let userNameSubject = PassthroughSubject<String, Never>.init()
-    private let fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase
-    private let getUserNameUseCase: GetUserNameUseCase
     
     private(set) var output: Output
     private var commonQuest: CommonQuestAnswersEntity?
@@ -27,15 +24,10 @@ final class CommonQuestViewModel {
     private var nextCursor: Int? = nil
     private var currentDate: String = DateFormatter.toAPIDateString(from: .now)
     
-    init(
-        fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase,
-        getUserNameUseCase: GetUserNameUseCase
-    ) {
+    init(fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase) {
         self.fetchCommonQuestByDateUseCase = fetchCommonQuestByDateUseCase
-        self.getUserNameUseCase = getUserNameUseCase
         self.output = Output(
-            commonQuestPublisher: commonQuestSubject.eraseToAnyPublisher(),
-            userNamePublisher: userNameSubject.eraseToAnyPublisher()
+            commonQuestPublisher: commonQuestSubject.eraseToAnyPublisher()
         )
     }
     
@@ -73,34 +65,26 @@ extension CommonQuestViewModel: ViewModelType {
         case viewWillAppear
         case moveDateButtonDidTap(selectedDate: String)
         case scrollAnswer
-        case compareUserName
     }
     
     struct Output {
         let commonQuestPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
-        let userNamePublisher: AnyPublisher<String, Never>
     }
     
     func action(_ trigger: Input) {
         switch trigger {
         case .viewWillAppear:
             fetchCommonQuestByDate(date: currentDate)
-            
         case .moveDateButtonDidTap(let selectedDate):
             currentDate = selectedDate
             nextCursor = nil
             hasMorePages = true
             fetchCommonQuestByDate(date: selectedDate)
-            
         case .scrollAnswer:
             guard hasMorePages else {
                 return
             }
             fetchCommonQuestByDate(date: currentDate, cursor: nextCursor)
-            
-        case .compareUserName:
-            let userName = getUserNameUseCase.execute()
-            userNameSubject.send(userName)
         }
     }
 }

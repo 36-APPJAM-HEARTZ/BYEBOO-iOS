@@ -295,8 +295,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             }
             
             return CommonQuestViewModel(
-                fetchCommonQuestByDateUseCase: fetchCommonQuestByDateUseCase,
-                getUserNameUseCase: getUserNameUseCase
+                fetchCommonQuestByDateUseCase: fetchCommonQuestByDateUseCase
             )
         }
         
