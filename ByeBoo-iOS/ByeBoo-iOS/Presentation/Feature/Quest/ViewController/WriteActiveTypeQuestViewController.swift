@@ -62,7 +62,7 @@ final class WriteActiveTypeQuestViewController: WriteQuestBaseViewController<Wri
     }
     
     override func setDelegate() {
-        rootView.questTextField.delegate = self
+        rootView.questTextField.questCompleteDelegate = self
     }
     
     @objc
@@ -304,7 +304,6 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
         }
         else {
             rootView.questTextField.textView.text = questAnswer
-            rootView.questTextField.textCountLabel.text = "(\(questAnswer.count)/\(rootView.questTextField.limitCount))"
             rootView.questTextField.isPlaceholderActive = false
         }
     }
@@ -321,8 +320,21 @@ extension WriteActiveTypeQuestViewController: QuestCompleteProtocol {
     
     func updateButtonWhenWriting(text: String) {
         viewModel.action(.textFieldEditing(answerText: self.answerText, text: text, imgCount: rootView.imgCount))
-        if isKeyboardUsed {
-            scrollCountLabelIfNeeded()
-        }
+    }
+}
+
+extension WriteActiveTypeQuestViewController: WriteQuestTextViewProtocol {
+    func textViewDidBeginEditing() {
+        self.rootView.updateUIWhenKeyboardUp()
+    }
+    
+    func textViewDidEndEditing() {
+        self.rootView.questCountLabelView.textColor = .grayscale300
+        self.rootView.updateUIWhenKeyboardDown()
+    }
+    
+    func textViewDidChange(count: Int) {
+        self.rootView.questCountLabelView.text = "\(count)/\(rootView.limitCount)"
+        applyTextViewGrowth()
     }
 }

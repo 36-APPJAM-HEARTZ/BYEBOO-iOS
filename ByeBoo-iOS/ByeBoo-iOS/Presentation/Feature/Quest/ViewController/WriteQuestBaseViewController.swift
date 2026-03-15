@@ -7,11 +7,26 @@
 
 import UIKit
 
+import SnapKit
+
 protocol WriteQuestBaseProtocol where Self: UIView {
     var scrollView: UIScrollView { get }
-    var questTextView: UITextView { get }
-    var questCountLabelView: UIView { get }
+    var questTextView: QuestTextField { get }
+    var questCountLabelView: UILabel { get }
     var tipTagView: UIView { get }
+    var bottomView: UIView { get }
+}
+
+protocol WriteQuestTextViewProtocol: AnyObject {
+    func textViewDidBeginEditing()
+    func textViewDidEndEditing()
+    func textViewDidChange(count: Int)
+}
+
+protocol UpdateUIWhenKeyboardProtocol: AnyObject {
+    func updateUIWhenKeyboardUp()
+    func updateUIWhenKeyboardDown()
+    func updateBottomConstraint(_ offset: CGFloat)
 }
 
 class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
@@ -22,7 +37,6 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
     private var keyboardFrameInWindow: CGRect = .zero
     private var currentKeyboardOffset: CGFloat = 0
     private var previousTextViewHeight: CGFloat = 0
-    
     
     init(rootView: RootView) {
         self.rootView = rootView
@@ -97,21 +111,37 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
     @objc func confirmButtonDidTap() { }
     
     @objc
-    private func textViewMoveUp(_ notification: NSNotification) {
-        guard let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {
-            return
+    private func keyboardWillUp(_ notification: NSNotification) {
+        guard let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+              let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
+              let curveRaw = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt
+                else { return }
+
+        keyboardFrameInWindow = frame
+        scrollCountLabelIfNeeded()
+        applyKeyboardInset()
+
+        let curve = UIView.AnimationOptions(rawValue: curveRaw << 16)
+        let keyboardHeight = max(0, view.bounds.height - frame.origin.y)
+
+        if let rootView = rootView as? UpdateUIWhenKeyboardProtocol {
+            if keyboardHeight > 0 {
+                rootView.updateUIWhenKeyboardUp()
+                rootView.updateBottomConstraint(-keyboardHeight)
+            }
+            else {
+                rootView.updateUIWhenKeyboardDown()
+            }
+            
         }
-        keyboardFrameInWindow = keyboardFrame.cgRectValue
-        isKeyboardUsed = true
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.applyKeyboardInset()
-            self?.scrollCountLabelIfNeeded()
+        UIView.animate(withDuration: duration, delay: 0, options: curve) {
+            self.view.layoutIfNeeded()
         }
     }
     
+    
     @objc
-    private func textViewMoveDown(_ notification: NSNotification) {
+    private func keyboardWillDown(_ notification: NSNotification) {
         keyboardFrameInWindow = .zero
         currentKeyboardOffset = 0
         UIView.animate(withDuration: 0.3) {
@@ -127,14 +157,46 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
 }
 
 extension WriteQuestBaseViewController {
-    func scrollCountLabelIfNeeded() {
+    func applyTextViewGrowth() {
+        let diff = rootView.questTextView.updateTextViewHeight()
+        
+        guard diff > 0.5 else { return }
+        
+        var offset = rootView.scrollView.contentOffset
+        offset.y += diff
+        let bottomContainerHeight = rootView.bottomView.frame.height
+        let maxOffsetY = rootView.scrollView.contentSize.height
+            - rootView.scrollView.bounds.height
+        + rootView.scrollView.contentInset.bottom
+        + bottomContainerHeight
+        
+        offset.y = min(offset.y, max(0, maxOffsetY))
+        rootView.scrollView.setContentOffset(offset, animated: false)
+    }
+    
+    private func scrollCountLabelIfNeeded() {
         let targetFrameInWindow = rootView.questCountLabelView.convert(rootView.questCountLabelView.bounds, to: nil)
-        guard keyboardOverlap(for: targetFrameInWindow) > 0 else { return }
+        let overlap = keyboardOverlap(for: targetFrameInWindow)
+        guard overlap > 0 else { return }
+
+        let targetFrameInScroll = rootView.questCountLabelView.convert(
+            rootView.questCountLabelView.bounds,
+            to: rootView.scrollView
+        )
         
-        let targetRect = rootView.questCountLabelView.convert(rootView.questCountLabelView.bounds, to: rootView.scrollView)
-            .insetBy(dx: 0, dy: -24.adjustedH)
-        
-        rootView.scrollView.scrollRectToVisible(targetRect, animated: true)
+        let bottomContainerHeight = rootView.bottomView.frame.height
+        let labelBottom = targetFrameInScroll.maxY
+        let visibleHeight = rootView.scrollView.frame.height
+        let padding: CGFloat = 200.adjustedH
+
+        let targetOffsetY = labelBottom - visibleHeight + bottomContainerHeight + padding
+
+        guard targetOffsetY > rootView.scrollView.contentOffset.y else { return }
+
+        rootView.scrollView.setContentOffset(
+            CGPoint(x: 0, y: targetOffsetY),
+            animated: true
+        )
     }
 
     private func keyboardOverlap(for rectInWindow: CGRect) -> CGFloat {
@@ -161,12 +223,12 @@ extension WriteQuestBaseViewController {
     private func registerKeyboardNotificationCenter() {
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(textViewMoveUp),
+            selector: #selector(keyboardWillUp),
             name: UIResponder.keyboardWillShowNotification, object: nil
         )
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(textViewMoveDown),
+            selector: #selector(keyboardWillDown),
             name: UIResponder.keyboardWillHideNotification, object: nil
         )
     }

@@ -12,11 +12,23 @@ import Then
 
 final class WriteQuestionTypeQuestView: BaseView {
     private let questScope: QuestScope
+    private(set) var  limitCount: Int = QuestType.question.textLimit
+    var count: Int = 0
+    
     private(set) var scrollView = UIScrollView()
     private let contentView = UIView()
+    
     private(set) var headerView = WriteQuestTitleView(questNum: 0, title: "")
     private let divider = UIView()
     private(set) var questTextField = QuestTextField(type: .question)
+    private var descriptionStackView = UIStackView()
+    private let descriptionLabel = UILabel()
+    private(set) var textCountLabel = UILabel()
+    private let errorIcon = UIImageView()
+    private let bottomContainerView = UIView()
+    
+    private var bottomConstraint: Constraint?
+    private var contentViewBottomConstraint: Constraint?
     
     init(questScope: QuestScope) {
         self.questScope = questScope
@@ -28,13 +40,16 @@ final class WriteQuestionTypeQuestView: BaseView {
     }
     
     override func setUI() {
-        addSubview(scrollView)
+        addSubviews(scrollView)
         scrollView.addSubview(contentView)
         contentView.addSubviews(
             headerView,
             divider,
-            questTextField
+            questTextField,
+            bottomContainerView
         )
+        bottomContainerView.addSubviews(descriptionStackView, textCountLabel)
+        descriptionStackView.addArrangedSubviews(errorIcon, descriptionLabel)
     }
     
     override func setStyle() {
@@ -42,7 +57,6 @@ final class WriteQuestionTypeQuestView: BaseView {
         
         scrollView.do {
             $0.isScrollEnabled = true
-            $0.keyboardDismissMode = .onDrag
             $0.backgroundColor = .clear
             $0.isUserInteractionEnabled = true
         }
@@ -55,6 +69,31 @@ final class WriteQuestionTypeQuestView: BaseView {
         divider.do {
             $0.backgroundColor = .grayscale800
         }
+        
+        descriptionStackView.do {
+            $0.axis = .horizontal
+            $0.spacing = 3.adjustedW
+        }
+        
+        textCountLabel.applyByeBooFont (
+            style: .cap2R12,
+            text: "\(count)/\(limitCount)",
+            color: .grayscale400
+        )
+        
+        errorIcon.do {
+            $0.image = .error
+            $0.contentMode = .scaleAspectFit
+        }
+        
+        descriptionLabel.applyByeBooFont(
+            style: .cap2R12,
+            text: "10글자 이상 작성해 주세요.",
+            color: .grayscale400,
+            textAlignment: .center
+        )
+        
+        bottomContainerView.backgroundColor = .grayscale900
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -69,8 +108,9 @@ final class WriteQuestionTypeQuestView: BaseView {
         contentView.snp.makeConstraints {
             $0.edges.equalTo(scrollView.contentLayoutGuide)
             $0.width.equalTo(scrollView.frameLayoutGuide)
-            $0.bottom.equalTo(questTextField.snp.bottom).offset(12.adjustedH)
             $0.height.greaterThanOrEqualTo(scrollView.frameLayoutGuide).priority(250)
+            contentViewBottomConstraint =
+            $0.bottom.equalTo(bottomContainerView.snp.bottom).offset(32.adjustedH).constraint
         }
         
         headerView.snp.makeConstraints {
@@ -89,18 +129,37 @@ final class WriteQuestionTypeQuestView: BaseView {
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
             $0.height.greaterThanOrEqualTo(268.adjustedH)
         }
+        
+        bottomContainerView.snp.makeConstraints {
+            $0.top.equalTo(questTextField.snp.bottom).offset(32.adjustedH)
+            $0.leading.trailing.equalToSuperview()
+        }
+        
+        descriptionStackView.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(12.adjustedH)
+            $0.leading.equalToSuperview().inset(24.adjustedW)
+            $0.bottom.equalToSuperview().inset(12.adjustedW)
+        }
+
+        textCountLabel.snp.makeConstraints {
+            $0.centerY.equalTo(descriptionStackView)
+            $0.trailing.equalToSuperview().inset(24.adjustedW)
+        }
     }
 }
 
 extension WriteQuestionTypeQuestView: WriteQuestBaseProtocol {
-    var questTextView: UITextView {
-        questTextField.textView
+    var questTextView: QuestTextField {
+        questTextField
     }
-    var questCountLabelView: UIView {
-        questTextField.textCountLabel
+    var questCountLabelView: UILabel {
+        textCountLabel
     }
     var tipTagView: UIView {
         headerView.tipTag ?? UIView()
+    }
+    var bottomView: UIView {
+        bottomContainerView
     }
 }
 
@@ -115,5 +174,39 @@ extension WriteQuestionTypeQuestView {
             questNum: questNumber,
             title: question
         )
+    }
+}
+
+extension WriteQuestionTypeQuestView: UpdateUIWhenKeyboardProtocol {    
+    func updateUIWhenKeyboardUp() {
+        bottomContainerView.removeFromSuperview()
+        addSubview(bottomContainerView)
+        bottomContainerView.snp.remakeConstraints {            $0.leading.trailing.equalToSuperview()
+            bottomConstraint = $0.bottom.equalToSuperview().constraint
+        }
+        contentView.snp.makeConstraints {
+            contentViewBottomConstraint =
+            $0.bottom.equalTo(questTextField.snp.bottom).offset(12.adjustedH).constraint
+        }
+    }
+    
+    func updateUIWhenKeyboardDown() {
+        bottomContainerView.removeFromSuperview()
+        contentView.addSubview(bottomContainerView)
+        bottomContainerView.snp.remakeConstraints {
+            $0.top.equalTo(questTextField.snp.bottom).offset(32.adjustedH)
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(17.adjustedH)
+        }
+        
+        contentViewBottomConstraint?.deactivate()
+        contentView.snp.makeConstraints {
+            contentViewBottomConstraint =
+            $0.bottom.equalTo(bottomContainerView.snp.bottom).offset(17.adjustedH).constraint
+        }
+    }
+    
+    func updateBottomConstraint(_ offset: CGFloat) {
+        bottomConstraint?.update(offset: offset)
     }
 }
