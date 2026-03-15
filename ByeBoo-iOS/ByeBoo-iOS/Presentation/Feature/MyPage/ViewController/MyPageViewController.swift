@@ -38,6 +38,7 @@ final class MyPageViewController: BaseViewController {
         
         viewModel.action(.viewWillAppear)
         viewModel.action(.checkHasEnterMyPage)
+        checkNotificationAuthorizationOnEnter()
     }
     
     override func viewDidLoad() {
@@ -212,6 +213,24 @@ extension MyPageViewController {
 
 extension MyPageViewController {
     
+    private func checkNotificationAuthorizationOnEnter() {
+        UNUserNotificationCenter.current().getNotificationSettings { [weak self] settings in
+            guard let self else { return }
+            
+            let isAuthorized: Bool
+            switch settings.authorizationStatus {
+            case .authorized, .provisional, .ephemeral:
+                isAuthorized = true
+            default:
+                isAuthorized = false
+            }
+            
+            DispatchQueue.main.async {
+                self.rootView.featuresView.noticeView.noticeSwitch.setOn(isAuthorized, animated: false)
+            }
+        }
+    }
+    
     @objc
     private func checkNoticeAuthorizationWhenBack() {
         guard didOpenSetting else { return }
@@ -285,13 +304,8 @@ extension MyPageViewController {
                 switch settings.authorizationStatus {
                 case .authorized, .provisional, .ephemeral:
                     self.viewModel.action(.notificationSwitchDidTap)
-                case .denied:
-                    self.presentMoveSettingAlert(
-                        isOn: sender.isOn,
-                        status: .denied
-                    )
-                case .notDetermined:
-                    break
+                case .denied, .notDetermined:
+                    self.presentMoveSettingAlert(isOn: sender.isOn, status: .authorized)
                 @unknown default:
                     break
                 }
