@@ -62,6 +62,9 @@ extension BlockedkUserListViewController {
                 switch result {
                 case .success(let blockedList):
                     ByeBooLogger.debug("차단 사용자 조회 성공 \(blockedList)")
+                    if blockedList.isEmpty {
+                        self.rootView.updateEmptyLabel()
+                    }
                     self.rootView.userTableView.reloadData()
                 case .failure(let error):
                     ByeBooLogger.error(error)

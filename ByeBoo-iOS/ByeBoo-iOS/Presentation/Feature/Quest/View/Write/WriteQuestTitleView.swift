@@ -53,7 +53,7 @@ final class WriteQuestTitleView: BaseView {
         
         titleLabel.do {
             $0.applyByeBooFont(
-                style: .head1M24,
+                style: .head2M22,
                 color: .white,
                 textAlignment: .center,
                 numberOfLines: 0
@@ -101,7 +101,7 @@ final class WriteQuestTitleView: BaseView {
 
 extension WriteQuestTitleView {
     func bind(questScope: QuestScope?, questNum: Int, title: String) {
-        self.questNum = questNum
+        questNumLabel.text = "\(questNum)번째 퀘스트"
         self.titleLabel.text = title
         
         if let questScope {

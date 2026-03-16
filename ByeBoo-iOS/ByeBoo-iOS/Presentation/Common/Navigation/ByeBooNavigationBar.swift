@@ -17,6 +17,7 @@ enum NavigationHeaderType {
 enum NavigationBarType: Equatable {
     case back(header: NavigationHeaderType = .clear)
     case backAndMenu(header: NavigationHeaderType = .clear)
+    case backAndEdit(header: NavigationHeaderType = .clear)
     case title(String, header: NavigationHeaderType = .clear)
     case close(header: NavigationHeaderType = .clear)
     case titleAndClose(String, header: NavigationHeaderType = .clear)
@@ -74,6 +75,7 @@ struct ByeBooNavigationBar {
         switch barType {
         case .back(let header),
                 .backAndMenu(let header),
+                .backAndEdit(let header),
                 .close(let header),
                 .none(let header),
                 .title(_, let header),
@@ -144,6 +146,20 @@ struct ByeBooNavigationBar {
                 action: secondAction,
                 padding: 0
             )
+        case .backAndEdit:
+            let backButtonItem = makeBarButtonItem(
+                image: .left.withTintColor(.white),
+                target: topViewController,
+                action: action
+            )
+            navigationItem.leftBarButtonItem = backButtonItem
+            
+            let editButtonItem = makeBarButtonItem(
+                image: .edit,
+                target: topViewController,
+                action: secondAction
+            )
+            navigationItem.rightBarButtonItem = editButtonItem
             
         case .title(let string, _):
             navigationItem.title = string

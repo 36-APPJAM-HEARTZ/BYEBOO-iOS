@@ -55,7 +55,8 @@ struct DataDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: CommonQuestInterface.self) { _ in
             return DefaultCommonQuestRepository(
                 network: networkService,
-                keychainService: keychainService
+                keychainService: keychainService,
+                userDefaultService: userDefaultService
             )
         }
         

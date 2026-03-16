@@ -57,7 +57,15 @@ final class ArchiveQuestViewController: BaseViewController {
                 type: .close(header: .black),
                 action: #selector(close)
             )
-        case .mypage, .questMain, .edit:
+        case .questMain:
+            ByeBooNavigationBar.makeNavigationBar(
+                navigationItem: self.navigationItem,
+                navigationController: self.navigationController,
+                type: .backAndEdit(header: .clear),
+                action: #selector(close),
+                secondAction: #selector(editButtonDidTap)
+            )
+        case .mypage, .edit:
             ByeBooNavigationBar.makeNavigationBar(
                 navigationItem: self.navigationItem,
                 navigationController: self.navigationController,
@@ -162,7 +170,12 @@ extension ArchiveQuestViewController {
         var viewController: ( BaseViewController & EditQuestProtocol )
         viewController = setNavigateViewController(type: rootView.type)
         viewController.questMode = .edit
-        viewController.getExistingQuest(questID: self.viewModel.questID ,questAnswer: entity.answer, image: entity.imageUrl, imageKey: entity.imageKey)
+        viewController.getExistingQuest(
+            questID: self.viewModel.questID ,
+            questAnswer: entity.answer,
+            questNumber: entity.questNumber,   
+            image: entity.imageUrl,
+            imageKey: entity.imageKey)
         viewController.tabBarController?.tabBar.isHidden = true
         self.navigationController?.pushViewController(viewController, animated: false)
     }

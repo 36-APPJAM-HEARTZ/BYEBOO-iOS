@@ -11,13 +11,16 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
     
     private let network: NetworkService
     private let keychainService: KeychainService
+    private let userDefaultsService: UserDefaultService
     
     init(
         network: NetworkService,
-        keychainService: KeychainService
+        keychainService: KeychainService,
+        userDefaultService: UserDefaultService
     ) {
         self.network = network
         self.keychainService = keychainService
+        self.userDefaultsService = userDefaultService
     }
     
     func saveCommonQuest(questID: Int, answer: String) async throws {
@@ -35,6 +38,7 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
         date: String,
         cursor: Int?
     ) async throws -> CommonQuestAnswersEntity {
+        let userName: String = userDefaultsService.load(key: .userName) ?? ""
         let commonQuest = try await network.request(
             CommonQuestAPI.fetchCommonQuest(
                 date: date,
@@ -42,7 +46,7 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
             ),
             decodingType: CommonQuestAnswersResponseDTO.self
         )
-        return commonQuest.toEntity()
+        return commonQuest.toEntity(userName: userName)
     }
     
     func updateCommonQuest(answerID: Int, answer: String) async throws {

@@ -38,6 +38,11 @@ final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<W
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tabBarController?.tabBar.isHidden = true
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -60,7 +65,8 @@ final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<W
     }
     
     override func setDelegate() {
-        rootView.questTextField.delegate = self
+        rootView.questTextField.questCompleteDelegate = self
+        rootView.questTextField.questTextViewDelegate = self
     }
     
     @objc
@@ -74,14 +80,12 @@ final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<W
     
     @objc
     override func confirmButtonDidTap() {
+        view.endEditing(true)
         answerText = rootView.questTextField.textView.text
         
         switch questScope {
         case .common:
-            let isEdit = questMode == .edit ? true : false
-            saveQuest(isEdit: isEdit, isCommonQuest: true)
-            ByeBooLogger.debug("common quest 완료")
-            
+            presentConfirmModal()
         case .personal:
             if questMode == .edit {
                 saveQuest(isEdit: true, isCommonQuest: false)
@@ -299,8 +303,9 @@ extension WriteQuestionTypeQuestViewController {
         rootView.questTextField.do {
             $0.applyTextViewStyle(text: answer, color: .grayscale100)
             $0.isPlaceholderActive = false
-            $0.textCountLabel.text = "(\(answer.count)/\(rootView.questTextField.limitCount))"
         }
+        rootView.layoutIfNeeded()
+        _ = rootView.questTextField.updateTextViewHeight()
     }
     
     private func personalQuestComplete() {
@@ -318,21 +323,41 @@ extension WriteQuestionTypeQuestViewController {
     }
     
     private func commonQuestComplete() {
-        let viewController = ByeBooTabBar()
-        ViewControllerUtils.changeQuestTabWithIndex(index: 1)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
-            let modal = ModalBuilder(
-                modalView: QuestCompleteModal(),
-                action: nil,
-                rootViewController: viewController
-            )
-            modal.present()
+        ViewControllerUtils.changeQuestTabWithIndex(index: 1) {
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                modal.dismiss()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
+                guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                      let window = scene.windows.first,
+                      let tabBar = window.rootViewController as? ByeBooTabBar,
+                      let navigationController = tabBar.viewControllers?[1] as? UINavigationController,
+                      let targetViewController = navigationController.topViewController as? ParentQuestViewController<QuestTabItem>
+                else { return }
+                
+                targetViewController.presentCompleteModal()
             }
         }
+    }
+    
+    private func createModalView() -> ConfirmModalView {
+        let dismissButton: ByeBooButton? = ByeBooButton(titleText: "아니오", type: .outline)
+        let actionButton = ByeBooButton(titleText: "예", type: .enabled)
+        return ConfirmModalView(
+            modalType: .saveQuest,
+            dismissButton: dismissButton,
+            actionButton: actionButton
+        )
+    }
+    
+    private func presentConfirmModal() {
+        let isEdit = questMode == .edit ? true : false
+        let modalView = createModalView()
+        let action: () -> Void = { self.saveQuest(isEdit: isEdit, isCommonQuest: true) }
+        
+        ModalBuilder(
+            modalView: modalView,
+            action: action,
+            rootViewController: self
+        ).present()
     }
 }
 
@@ -340,18 +365,22 @@ extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
     func getExistingQuest(
         questID: Int,
         questAnswer: String?,
+        questNumber: Int?,
         image: String?,
         imageKey: String?
     ) {
         self.questID = questID
         self.viewModel.action(.viewDidLoadWhenEditMode(questID: questID))
         
-        guard let questAnswer = questAnswer else {
+        guard let questAnswer = questAnswer, let questNumber = questNumber else {
             return
         }
         
         self.answerText = questAnswer
+        self.questNumber = questNumber
+        
         setQuestTextField(answer: questAnswer)
+        rootView.textCountLabel.text = "\(answerText.count)/\(rootView.limitCount)"
         self.navigationItem.rightBarButtonItem?.isEnabled = false
     }
 }
@@ -359,8 +388,18 @@ extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
 extension WriteQuestionTypeQuestViewController: QuestCompleteProtocol {
     func updateButtonWhenWriting(text: String) {
         viewModel.action(.textFieldEditing(answerText: self.answerText, text: text))
-        if isKeyboardUsed {
-            scrollCountLabelIfNeeded()
-        }
+    }
+}
+
+
+extension WriteQuestionTypeQuestViewController: WriteQuestTextViewProtocol {
+    func textViewDidEndEditing() {
+        self.rootView.questCountLabelView.textColor = .grayscale300
+        self.rootView.updateUIWhenKeyboardDown()
+    }
+    
+    func textViewDidChange(count: Int) {
+        self.rootView.questCountLabelView.text = "\(count)/\(rootView.limitCount)"
+        applyTextViewGrowth()
     }
 }

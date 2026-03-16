@@ -62,7 +62,8 @@ final class WriteActiveTypeQuestViewController: WriteQuestBaseViewController<Wri
     }
     
     override func setDelegate() {
-        rootView.questTextField.delegate = self
+        rootView.questTextField.questCompleteDelegate = self
+        rootView.questTextField.questTextViewDelegate = self
     }
     
     @objc
@@ -76,6 +77,7 @@ final class WriteActiveTypeQuestViewController: WriteQuestBaseViewController<Wri
     
     @objc
     override func confirmButtonDidTap() {
+        view.endEditing(true)
         if rootView.questTextField.textView.text == rootView.questTextField.placeholder ||
             rootView.questTextField.textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         {
@@ -278,12 +280,22 @@ extension WriteActiveTypeQuestViewController {
 }
 
 extension WriteActiveTypeQuestViewController: EditQuestProtocol {
-    func getExistingQuest(questID: Int, questAnswer: String?, image: String?, imageKey: String?) {
+    func getExistingQuest(
+        questID: Int,
+        questAnswer: String?,
+        questNumber: Int?,
+        image: String?,
+        imageKey: String?)
+    {
         self.questID = questID
         self.viewModel.action(.navigateFromArchiveViewController(questID: questID))
-        guard let questAnswer = questAnswer, let image = image, let imageKey = imageKey else { return }
+        guard let questAnswer = questAnswer,
+              let questNumber = questNumber,
+              let image = image,
+              let imageKey = imageKey else { return }
         self.originalImageKey = imageKey
         self.answerText = questAnswer
+        self.questNumber = questNumber
         rootView.imageContainer.selectedImageView.kf.setImage(with: URL(string: image)) { result in
             switch result {
             case .success(let value):
@@ -296,6 +308,7 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
         rootView.imgCount = 1
         rootView.updateImageCountLabel(count: 1)
         rootView.imageContainer.changeIconHidden()
+        rootView.textCountLabel.text = "\(answerText.count)/\(rootView.limitCount)"
         self.navigationItem.rightBarButtonItem?.isEnabled = false
         
         if questAnswer.isEmpty {
@@ -303,7 +316,7 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
         }
         else {
             rootView.questTextField.textView.text = questAnswer
-            rootView.questTextField.textCountLabel.text = "(\(questAnswer.count)/\(rootView.questTextField.limitCount))"
+            applyTextViewGrowth()
             rootView.questTextField.isPlaceholderActive = false
         }
     }
@@ -320,8 +333,17 @@ extension WriteActiveTypeQuestViewController: QuestCompleteProtocol {
     
     func updateButtonWhenWriting(text: String) {
         viewModel.action(.textFieldEditing(answerText: self.answerText, text: text, imgCount: rootView.imgCount))
-        if isKeyboardUsed {
-            scrollCountLabelIfNeeded()
-        }
+    }
+}
+
+extension WriteActiveTypeQuestViewController: WriteQuestTextViewProtocol {
+    func textViewDidEndEditing() {
+        self.rootView.questCountLabelView.textColor = .grayscale300
+        self.rootView.updateUIWhenKeyboardDown()
+    }
+    
+    func textViewDidChange(count: Int) {
+        self.rootView.questCountLabelView.text = "\(count)/\(rootView.limitCount)"
+        applyTextViewGrowth()
     }
 }
