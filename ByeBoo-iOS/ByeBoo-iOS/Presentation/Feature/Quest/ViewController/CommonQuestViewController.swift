@@ -105,6 +105,7 @@ extension CommonQuestViewController: DateNavigatorDelegate {
         writeCommonQuestViewController.navigationItem.hidesBackButton = true
         writeCommonQuestViewController.questScope = .common
         writeCommonQuestViewController.configureToWrite(questID, nil, QuestType.question, viewModel.question)
+        writeCommonQuestViewController.tabBarController?.tabBar.isHidden = true
         self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)
     }
     
@@ -147,7 +148,7 @@ extension CommonQuestViewController: UITableViewDelegate {
             isMyAnswer: answer.isMyAnswer
         )
         historyViewController.navigationItem.hidesBackButton = true
-        
+        historyViewController.tabBarController?.tabBar.isHidden = true
         self.navigationController?.pushViewController(
             historyViewController,
             animated: false
