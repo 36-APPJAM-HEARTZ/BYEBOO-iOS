@@ -280,12 +280,22 @@ extension WriteActiveTypeQuestViewController {
 }
 
 extension WriteActiveTypeQuestViewController: EditQuestProtocol {
-    func getExistingQuest(questID: Int, questAnswer: String?, image: String?, imageKey: String?) {
+    func getExistingQuest(
+        questID: Int,
+        questAnswer: String?,
+        questNumber: Int?,
+        image: String?,
+        imageKey: String?)
+    {
         self.questID = questID
         self.viewModel.action(.navigateFromArchiveViewController(questID: questID))
-        guard let questAnswer = questAnswer, let image = image, let imageKey = imageKey else { return }
+        guard let questAnswer = questAnswer,
+              let questNumber = questNumber,
+              let image = image,
+              let imageKey = imageKey else { return }
         self.originalImageKey = imageKey
         self.answerText = questAnswer
+        self.questNumber = questNumber
         rootView.imageContainer.selectedImageView.kf.setImage(with: URL(string: image)) { result in
             switch result {
             case .success(let value):
@@ -306,6 +316,7 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
         }
         else {
             rootView.questTextField.textView.text = questAnswer
+            applyTextViewGrowth()
             rootView.questTextField.isPlaceholderActive = false
         }
     }

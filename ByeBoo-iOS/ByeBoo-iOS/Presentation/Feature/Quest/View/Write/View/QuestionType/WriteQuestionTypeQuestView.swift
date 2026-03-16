@@ -133,16 +133,16 @@ final class WriteQuestionTypeQuestView: BaseView {
         bottomContainerView.snp.makeConstraints {
             $0.top.equalTo(questTextField.snp.bottom).offset(32.adjustedH)
             $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(56.adjustedH)
         }
         
         descriptionStackView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(12.adjustedH)
+            $0.bottom.equalToSuperview().inset(13.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedW)
-            $0.bottom.equalToSuperview().inset(12.adjustedW)
         }
 
         textCountLabel.snp.makeConstraints {
-            $0.centerY.equalTo(descriptionStackView)
+            $0.bottom.equalToSuperview().inset(13.adjustedH)
             $0.trailing.equalToSuperview().inset(24.adjustedW)
         }
     }
@@ -183,31 +183,47 @@ extension WriteQuestionTypeQuestView: UpdateUIWhenKeyboardProtocol {
         addSubview(bottomContainerView)
         bottomContainerView.snp.remakeConstraints {
             $0.leading.trailing.equalToSuperview()
+            $0.height.equalTo(42.adjustedH)
             bottomConstraint = $0.bottom.equalToSuperview().constraint
         }
-        contentView.snp.makeConstraints {
-            contentViewBottomConstraint =
-            $0.bottom.equalTo(questTextField.snp.bottom).offset(12.adjustedH).constraint
+        contentView.snp.remakeConstraints {
+            $0.edges.equalTo(scrollView.contentLayoutGuide)
+            $0.width.equalTo(scrollView.frameLayoutGuide)
+            $0.height.greaterThanOrEqualTo(scrollView.frameLayoutGuide).priority(250)
+        }
+        
+        questTextField.snp.remakeConstraints {
+            $0.top.equalTo(divider.snp.bottom).offset(8.adjustedH)
+            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
+            $0.height.greaterThanOrEqualTo(280.adjustedH)
+            $0.bottom.equalToSuperview().inset(17.adjustedH)
         }
     }
     
     func updateUIWhenKeyboardDown() {
         bottomContainerView.removeFromSuperview()
         contentView.addSubview(bottomContainerView)
+        
+        questTextField.snp.remakeConstraints {
+            $0.top.equalTo(divider.snp.bottom).offset(20.adjustedH)
+            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
+            $0.height.greaterThanOrEqualTo(280.adjustedH)
+        }
+        
         bottomContainerView.snp.remakeConstraints {
             $0.top.equalTo(questTextField.snp.bottom).offset(32.adjustedH)
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview().inset(17.adjustedH)
+            $0.height.equalTo(42.adjustedH)
         }
-        
-        contentViewBottomConstraint?.deactivate()
         contentView.snp.remakeConstraints {
-            contentViewBottomConstraint =
-            $0.bottom.equalTo(bottomContainerView.snp.bottom).offset(17.adjustedH).constraint
+            $0.edges.equalTo(scrollView.contentLayoutGuide)
+            $0.width.equalTo(scrollView.frameLayoutGuide)
+            $0.height.greaterThanOrEqualTo(scrollView.frameLayoutGuide).priority(250)
         }
     }
     
     func updateBottomConstraint(_ offset: CGFloat) {
-        bottomConstraint?.update(offset: offset - 13.adjustedH)
+        bottomConstraint?.update(offset: offset)
     }
 }

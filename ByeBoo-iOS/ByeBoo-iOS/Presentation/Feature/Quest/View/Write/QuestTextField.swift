@@ -80,7 +80,6 @@ extension QuestTextField: UITextViewDelegate {
             applyTextViewStyle(text: "", color: .grayscale100)
         }
         textView.textColor = .grayscale100
-        questTextViewDelegate?.textViewDidBeginEditing()
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {

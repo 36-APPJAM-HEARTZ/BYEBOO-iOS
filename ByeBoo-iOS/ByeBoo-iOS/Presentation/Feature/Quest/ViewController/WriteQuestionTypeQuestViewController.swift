@@ -365,17 +365,20 @@ extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
     func getExistingQuest(
         questID: Int,
         questAnswer: String?,
+        questNumber: Int?,
         image: String?,
         imageKey: String?
     ) {
         self.questID = questID
         self.viewModel.action(.viewDidLoadWhenEditMode(questID: questID))
         
-        guard let questAnswer = questAnswer else {
+        guard let questAnswer = questAnswer, let questNumber = questNumber else {
             return
         }
         
         self.answerText = questAnswer
+        self.questNumber = questNumber
+        
         setQuestTextField(answer: questAnswer)
         rootView.textCountLabel.text = "\(answerText.count)/\(rootView.limitCount)"
         self.navigationItem.rightBarButtonItem?.isEnabled = false
@@ -391,7 +394,7 @@ extension WriteQuestionTypeQuestViewController: QuestCompleteProtocol {
 
 extension WriteQuestionTypeQuestViewController: WriteQuestTextViewProtocol {
     func textViewDidBeginEditing() {
-        self.rootView.updateUIWhenKeyboardUp()
+//        self.rootView.updateUIWhenKeyboardUp()
     }
     
     func textViewDidEndEditing() {
