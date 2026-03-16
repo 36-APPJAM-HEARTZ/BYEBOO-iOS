@@ -19,6 +19,17 @@ extension JourneyType {
         }
     }
     
+    var tagTitle: String {
+        switch self {
+        case .recording:
+            "이별"
+        case .active:
+            "행동형"
+        case .reunion:
+            "재회"
+        }
+    }
+    
     var description: String {
         return "\(title) 여정"
     }
