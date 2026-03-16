@@ -18,7 +18,6 @@ protocol WriteQuestBaseProtocol where Self: UIView {
 }
 
 protocol WriteQuestTextViewProtocol: AnyObject {
-    func textViewDidBeginEditing()
     func textViewDidEndEditing()
     func textViewDidChange(count: Int)
 }

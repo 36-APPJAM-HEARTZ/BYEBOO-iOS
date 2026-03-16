@@ -337,10 +337,6 @@ extension WriteActiveTypeQuestViewController: QuestCompleteProtocol {
 }
 
 extension WriteActiveTypeQuestViewController: WriteQuestTextViewProtocol {
-    func textViewDidBeginEditing() {
-        self.rootView.updateUIWhenKeyboardUp()
-    }
-    
     func textViewDidEndEditing() {
         self.rootView.questCountLabelView.textColor = .grayscale300
         self.rootView.updateUIWhenKeyboardDown()
