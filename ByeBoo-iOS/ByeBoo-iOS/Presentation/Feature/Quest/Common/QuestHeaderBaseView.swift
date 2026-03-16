@@ -23,7 +23,7 @@ class QuestHeaderBaseView: BaseView {
         backgroundColor = .grayscale900
         
         titleLabel.applyByeBooFont (
-            style: .head1M24,
+            style: .head2M22,
             color: .grayscale50,
             textAlignment: .left,
             numberOfLines: 0

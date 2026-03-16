@@ -12,6 +12,15 @@ import Then
 
 enum ProgressBarType: Int {
     case first, second
+    
+    var buttonName: String {
+        switch self {
+        case .first:
+            "다음으로"
+        case .second:
+            "완료하기"
+        }
+    }
 }
 
 final class ProgressBarView: BaseView {

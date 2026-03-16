@@ -62,7 +62,8 @@ final class DateNavigator: UITableViewHeaderFooterView {
         dateLabel.applyByeBooFont(
             style: .body2M16,
             text: dateFormatter.string(from: currentDate),
-            color: .grayscale50
+            color: .grayscale50,
+            textAlignment: .center
         )
         nextButton.do {
             $0.setImage(.nextOff, for: .normal)
@@ -92,6 +93,7 @@ final class DateNavigator: UITableViewHeaderFooterView {
             $0.centerY.equalToSuperview()
         }
         dateLabel.snp.makeConstraints {
+            $0.width.equalTo(58.adjustedW)
             $0.centerY.equalToSuperview()
         }
         nextButton.snp.makeConstraints {

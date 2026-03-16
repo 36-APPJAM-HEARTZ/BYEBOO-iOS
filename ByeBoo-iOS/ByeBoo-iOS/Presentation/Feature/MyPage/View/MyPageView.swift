@@ -14,7 +14,7 @@ final class MyPageView: BaseView {
     
     private(set) var scrollView = UIScrollView()
     private let contentView = UIView()
-    private(set) var nameView = OneLineTextBoxView(title: "")
+    private(set) var nameView = OneLineTextBoxView(title: "", titleColor: .grayscale100)
     private(set) var moveButton = UIButton()
     private let divider1 = SectionDividerView()
     private(set) var myRecordView = MyRecordView()
@@ -66,7 +66,7 @@ final class MyPageView: BaseView {
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
         myRecordView.snp.makeConstraints {
-            $0.top.equalTo(divider1.snp.bottom).offset(8.adjustedH)
+            $0.top.equalTo(divider1.snp.bottom)
             $0.horizontalEdges.equalToSuperview()
         }
         worldView.snp.makeConstraints {

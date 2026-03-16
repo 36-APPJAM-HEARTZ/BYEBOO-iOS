@@ -87,6 +87,7 @@ extension InformationBaseView {
             self.informationView = informationView
             self.progressBarType = progressBarType
             self.progressView = ProgressBarView(type: self.progressBarType)
+            self.nextButton.updateTitle(progressBarType.buttonName)
             
             self.setUI()
             self.setStyle()

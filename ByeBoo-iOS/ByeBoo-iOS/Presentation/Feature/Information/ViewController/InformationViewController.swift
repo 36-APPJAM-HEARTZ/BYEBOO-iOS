@@ -79,8 +79,10 @@ extension InformationViewController {
     @objc
     private func nextButtonDidTap() {
         switch informationBaseView.informationView {
-        case is InputNicknameView: saveNickname()
-        case is SelectQuestView: saveQuest()
+        case is InputNicknameView:
+            saveNickname()
+        case is SelectQuestView:
+            saveQuest()
         default: break
         }
     }

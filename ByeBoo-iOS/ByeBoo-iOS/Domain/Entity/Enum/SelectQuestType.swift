@@ -8,8 +8,8 @@
 // 온보딩 시에 퀘스트 방식 선택
 
 enum SelectQuestType: CaseIterable {
-    case reunion
     case recording
+    case reunion
 }
 
 extension SelectQuestType {

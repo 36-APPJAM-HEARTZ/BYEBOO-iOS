@@ -47,7 +47,7 @@ final class CommonQuestHeaderView: BaseView {
     
     override func setLayout() {
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(16.adjustedH)
+            $0.top.equalToSuperview()
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
         subtitleLabel.snp.makeConstraints {
