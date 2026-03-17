@@ -88,7 +88,7 @@ final class WriteActiveTypeQuestView: BaseView {
         
         imgCountLabel.applyByeBooFont(
             style: .body6R14,
-            text: "(\(imgCount)/1)",
+            text: "\(imgCount)/1",
             color: .grayscale400
         )
         
