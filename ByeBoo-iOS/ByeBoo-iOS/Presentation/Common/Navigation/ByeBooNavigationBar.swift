@@ -152,14 +152,14 @@ struct ByeBooNavigationBar {
                 target: topViewController,
                 action: action
             )
-            navigationItem.leftBarButtonItem = backButtonItem
+            navigationItem.leftBarButtonItems = [makeSpacer(), backButtonItem]
             
             let editButtonItem = makeBarButtonItem(
                 image: .edit,
                 target: topViewController,
                 action: secondAction
             )
-            navigationItem.rightBarButtonItem = editButtonItem
+            navigationItem.rightBarButtonItems = [makeSpacer(), editButtonItem]
             
         case .title(let string, _):
             navigationItem.title = string
