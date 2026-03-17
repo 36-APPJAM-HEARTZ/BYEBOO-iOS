@@ -7,9 +7,12 @@
 
 import UIKit
 
+import SnapKit
+
 final class CommonQuestAnswerCell: UITableViewCell {
         
     private var answerID: Int?
+    private var containerBottomConstraint: Constraint?
     
     private let containerView = UIView()
     private let userIconView = UIImageView()
@@ -70,7 +73,7 @@ final class CommonQuestAnswerCell: UITableViewCell {
         containerView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(24.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-            $0.bottom.equalToSuperview()
+            containerBottomConstraint = $0.bottom.equalToSuperview().constraint
         }
         userIconView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16.adjustedH)
@@ -100,7 +103,8 @@ extension CommonQuestAnswerCell {
     func bind(
         profileIcon: UIImage?,
         answer: CommonQuestAnswerEntity,
-        writtenAt: String
+        writtenAt: String,
+        isLast: Bool
     ) {
         if let profileIcon {
             userIconView.image = profileIcon
@@ -110,6 +114,9 @@ extension CommonQuestAnswerCell {
         writtenDateLabel.text = writtenAt
         
         answerID = answer.answerID
+        
+        let inset = isLast ? 24.adjustedH : 0
+        containerBottomConstraint?.update(inset: inset)
     }
     
     func getAnswewrID() -> Int? {

@@ -176,4 +176,8 @@ extension CommonQuestViewModel {
             return DateFormatter.toDisplayDateString(from: writtenAt)
         }
     }
+    
+    func isLast(at index: Int) -> Bool {
+        answersCount == answers.count && index == answers.count - 1
+    }
 }

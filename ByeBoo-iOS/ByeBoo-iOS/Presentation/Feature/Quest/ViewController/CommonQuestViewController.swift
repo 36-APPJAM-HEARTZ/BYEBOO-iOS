@@ -254,13 +254,15 @@ extension CommonQuestViewController: UITableViewDataSource {
         let answer = viewModel.getAnswer(at: indexPath.row - 1)
         let profileIcon = viewModel.getProfileIcon(at: indexPath.row - 1)
         let writtenAt = viewModel.getWrittenAt(at: indexPath.row - 1)
+        let isLast = viewModel.isLast(at: indexPath.row - 1)
         
         if let answer,
            let writtenAt {
             cell.bind(
                 profileIcon: profileIcon,
                 answer: answer,
-                writtenAt: writtenAt
+                writtenAt: writtenAt,
+                isLast: isLast
             )
         }
         
