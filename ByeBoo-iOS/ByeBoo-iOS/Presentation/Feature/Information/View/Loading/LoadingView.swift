@@ -76,7 +76,7 @@ final class LoadingView: BaseView {
     
     func updateNickname(_ newNickname: String) {
         self.nickname = newNickname
-        titleLabel.attributedText = "\(nickname)님에게 꼭 맞는\n이별 극복 여정을 찾는 중 ..."
+        titleLabel.attributedText = "\(nickname)님에게 꼭 맞는\n극복 여정을 찾는 중 ..."
             .makeTitle(rangedText: nickname, font: FontManager.body1Sb16.font)
     }
 }
