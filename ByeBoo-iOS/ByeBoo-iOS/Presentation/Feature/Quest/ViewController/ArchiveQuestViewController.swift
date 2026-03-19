@@ -50,14 +50,7 @@ final class ArchiveQuestViewController: BaseViewController {
         
         guard let entryViewController else { return }
         switch entryViewController {
-        case .writeQuest:
-            ByeBooNavigationBar.makeNavigationBar(
-                navigationItem: self.navigationItem,
-                navigationController: self.navigationController,
-                type: .close(header: .black),
-                action: #selector(close)
-            )
-        case .questMain:
+        case .writeQuest, .questMain:
             ByeBooNavigationBar.makeNavigationBar(
                 navigationItem: self.navigationItem,
                 navigationController: self.navigationController,

@@ -71,7 +71,7 @@ final class ArchiveQuestHeaderView: BaseView {
         
         questTitleLabel.do {
             $0.applyByeBooFont (
-                style: .head1M24,
+                style: .head2M22,
                 color: .grayscale100,
                 numberOfLines: 0
             )

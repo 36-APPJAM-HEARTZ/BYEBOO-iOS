@@ -193,7 +193,7 @@ extension WriteQuestionTypeQuestView: UpdateUIWhenKeyboardProtocol {
         }
         
         questTextField.snp.remakeConstraints {
-            $0.top.equalTo(divider.snp.bottom).offset(8.adjustedH)
+            $0.top.equalTo(divider.snp.bottom).offset(20.adjustedH)
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
             $0.height.greaterThanOrEqualTo(280.adjustedH)
             $0.bottom.equalToSuperview().inset(17.adjustedH)
