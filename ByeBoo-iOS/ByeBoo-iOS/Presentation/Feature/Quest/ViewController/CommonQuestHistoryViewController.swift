@@ -27,7 +27,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
         super.viewWillAppear(animated)
         self.tabBarController?.tabBar.isHidden = true
         
-        Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.CommonJourneyOthersAnswerPageview)
+        Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyOthersAnswerPageview)
     }
     
     override func viewDidLoad() {
