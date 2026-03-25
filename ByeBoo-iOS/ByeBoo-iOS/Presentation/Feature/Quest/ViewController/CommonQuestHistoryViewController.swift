@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Mixpanel
+
 final class CommonQuestHistoryViewController: BaseViewController {
     
     private let rootView = CommonQuestHistoryView()
@@ -24,6 +26,8 @@ final class CommonQuestHistoryViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.tabBarController?.tabBar.isHidden = true
+        
+        Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.CommonJourneyOthersAnswerPageview)
     }
     
     override func viewDidLoad() {

@@ -8,6 +8,8 @@
 import Combine
 import UIKit
 
+import Mixpanel
+
 enum ArchiveViewControllerEntryPoint {
     case mypage
     case questMain
@@ -181,6 +183,8 @@ extension ArchiveQuestViewController {
             questID: questID,
             isAIAnswerExists: viewModel.isAIAnswerExists()
         )
+        
+        Mixpanel.mainInstance().track(event: AIAnswerEvents.Name.AIReplyRequestClick)
         
         navigationController?.pushViewController(viewController, animated: false)
     }

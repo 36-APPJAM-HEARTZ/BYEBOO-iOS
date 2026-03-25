@@ -8,6 +8,8 @@
 import Combine
 import UIKit
 
+import Mixpanel
+
 final class CommonQuestViewController: BaseViewController {
     
     private let rootView = CommonQuestView()
@@ -32,6 +34,8 @@ final class CommonQuestViewController: BaseViewController {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         viewModel.action(.viewWillAppear)
+        
+        Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyPageview)
     }
     
     override func viewDidLoad() {
@@ -106,6 +110,8 @@ extension CommonQuestViewController: DateNavigatorDelegate {
         writeCommonQuestViewController.questScope = .common
         writeCommonQuestViewController.configureToWrite(questID, nil, QuestType.question, viewModel.question)
         self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)
+        
+        Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyWriteClick)
     }
     
     func dateDidChanged(to date: Date) {
