@@ -102,15 +102,21 @@ final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<W
             }
         }
         
-        let property = QuestEvents.QuestWriteFinishProperty(
-            questLength: rootView.questTextField.textView.text.count,
-            questNumber: questNumber,
-            questType: questType.mixpanelKey
-        )
-        Mixpanel.mainInstance().track(
-            event: QuestEvents.Name.questWriteSuccess,
-            properties: property.dictionary
-        )
+        switch questScope {
+        case .common:
+            Mixpanel.mainInstance().track(
+                event: CommonJourneyEvents.Name.commonJourneyWriteSuccess)
+        case .personal:
+            let property = QuestEvents.QuestWriteFinishProperty(
+                questLength: rootView.questTextField.textView.text.count,
+                questNumber: questNumber,
+                questType: questType.mixpanelKey
+            )
+            Mixpanel.mainInstance().track(
+                event: QuestEvents.Name.questWriteSuccess,
+                properties: property.dictionary
+            )
+        }
     }
 }
 
