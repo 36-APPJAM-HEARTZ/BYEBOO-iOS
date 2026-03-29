@@ -71,8 +71,6 @@ extension HomeOnboardingViewController {
                 rootView.revertPressAnimation()
             }
             pressStartTime = nil
-            
-            Mixpanel.mainInstance().track(event: CommonEvents.Name.onboardingComplete)
         default:
             break
         }
