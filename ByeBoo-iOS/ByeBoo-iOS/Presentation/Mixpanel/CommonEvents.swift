@@ -12,9 +12,7 @@ struct CommonEvents {
         static let login = "login"
         static let nicknameComplete = "nickname_complete"
         static let currentEmotionComplete = "current_emotion_complete"
-        static let questTypeComplete = "quest_type_complete"
         static let journeyCardComplete = "journey_card_complete"
-        static let onboardingComplete = "onboarding_complete"
     }
 }
 
