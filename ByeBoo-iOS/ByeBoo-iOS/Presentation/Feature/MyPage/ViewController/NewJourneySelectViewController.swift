@@ -93,15 +93,19 @@ extension NewJourneySelectViewController {
     @objc
     private func journeyDidTap(_ tapRecognizer: UITapGestureRecognizer) {
         guard let journeyView = tapRecognizer.view as? OneLineTextBoxView else { return }
-        ByeBooLogger.debug(journeyView.title)
+        let journeyTitle = journeyView.title
+            .replacingOccurrences(of: "여정", with: "")
+            .trimmingCharacters(in: .whitespaces)
+        let journeyType = JourneyType.titleToEnum(journeyTitle) ?? .recording
+        
+        ByeBooLogger.debug(journeyType.title)
         
         let viewController = ViewControllerFactory.shared.makeQuestStartViewController()
-        viewController.configure(journeyTitle: journeyView.title)
+        viewController.configure(journeyTitle: journeyType.title)
         viewController.modalPresentationStyle = .fullScreen
         viewController.delegate = self
         self.present(viewController, animated: false)
         
-        let journeyType = JourneyType.titleToEnum(journeyView.title) ?? .recording
         let property = QuestEvents.NewJourneyProperty(newJourneyType: journeyType.mixpanelKey)
         Mixpanel.mainInstance().track(
             event: QuestEvents.Name.journeyNewClick,
