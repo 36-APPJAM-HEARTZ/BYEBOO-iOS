@@ -66,7 +66,7 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
             secondAction: #selector(confirmButtonDidTap)
         )
         
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
+        self.navigationItem.rightBarButtonItems?[1].isEnabled = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
