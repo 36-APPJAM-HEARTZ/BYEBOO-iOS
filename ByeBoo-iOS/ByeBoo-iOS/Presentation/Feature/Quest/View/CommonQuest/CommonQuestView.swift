@@ -24,6 +24,12 @@ final class CommonQuestView: BaseView {
                 height: 152.adjustedH
             )
             $0.tableHeaderView = headerView
+            $0.contentInset = UIEdgeInsets(
+                top: 0,
+                left: 0,
+                bottom: 24,
+                right: 0
+            )
             $0.sectionHeaderTopPadding = 0
             $0.separatorStyle = .none
         }
