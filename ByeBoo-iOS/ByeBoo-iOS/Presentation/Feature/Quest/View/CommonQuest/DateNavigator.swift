@@ -35,8 +35,8 @@ final class DateNavigator: UITableViewHeaderFooterView {
         self.minDate = DateComponents(
             calendar: calendar,
             year: 2026,
-            month: 3,
-            day: 6
+            month: 4,
+            day: 1
         ).date ?? .now
         
         super.init(reuseIdentifier: reuseIdentifier)

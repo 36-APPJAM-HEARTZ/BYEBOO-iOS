@@ -183,9 +183,9 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                 guard let self else { return }
                 switch result {
                 case true:
-                    self.navigationItem.rightBarButtonItem?.isEnabled = true
+                    self.navigationItem.rightBarButtonItems?[1].isEnabled = true
                 case false:
-                    self.navigationItem.rightBarButtonItem?.isEnabled = false
+                    self.navigationItem.rightBarButtonItems?[1].isEnabled = false
                 }
             }
             .store(in: &cancellables)
@@ -387,7 +387,7 @@ extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
         
         setQuestTextField(answer: questAnswer)
         rootView.textCountLabel.text = "\(answerText.count)/\(rootView.limitCount)"
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
+        self.navigationItem.rightBarButtonItems?[1].isEnabled = false
     }
 }
 

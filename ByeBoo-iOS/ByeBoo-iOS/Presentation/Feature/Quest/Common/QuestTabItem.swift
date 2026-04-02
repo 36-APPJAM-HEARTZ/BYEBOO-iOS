@@ -24,7 +24,7 @@ enum QuestTabItem: TabItem {
     var image: UIImage {
         switch self {
         case .myJourney:
-            return .myJourney
+            return .myOn
         case .commonJourney:
             return .commonJourney
         }
