@@ -13,8 +13,7 @@ final class CommonQuestMyAnswerCell: UITableViewCell {
     private let questionView = UIView()
     private let questionMarkLabel = UILabel()
     private let questionContentLabel = UILabel()
-    private let answerContentLabel = UILabel()
-    private let writtenDateLabel = UILabel()
+    private(set) var questContentView = QuestContentView()
     
     override init(
         style: UITableViewCell.CellStyle,
@@ -53,23 +52,13 @@ final class CommonQuestMyAnswerCell: UITableViewCell {
             )
             $0.lineBreakStrategy = []
         }
-        answerContentLabel.applyByeBooFont(
-            style: .body3R16,
-            color: .grayscale100,
-            numberOfLines: 2
-        )
-        writtenDateLabel.applyByeBooFont(
-            style: .cap2R12,
-            color: .grayscale400
-        )
     }
     
     private func setUI() {
         contentView.addSubview(containerView)
         containerView.addSubviews(
             questionView,
-            answerContentLabel,
-            writtenDateLabel
+            questContentView
         )
         questionView.addSubviews(
             questionMarkLabel,
@@ -86,25 +75,19 @@ final class CommonQuestMyAnswerCell: UITableViewCell {
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
         questionMarkLabel.snp.makeConstraints {
-            $0.top.equalTo(questionContentLabel.snp.top)
+            $0.top.equalToSuperview()
             $0.leading.equalToSuperview()
             $0.width.equalTo(17.adjustedW)
         }
         questionContentLabel.snp.makeConstraints {
-            $0.verticalEdges.equalToSuperview()
+            $0.top.equalToSuperview()
             $0.leading.equalTo(questionMarkLabel.snp.trailing).offset(4.adjustedW)
             $0.trailing.equalToSuperview()
         }
-        answerContentLabel.snp.makeConstraints {
-            $0.top.equalTo(questionView.snp.bottom).offset(12.adjustedH)
+        questContentView.snp.makeConstraints {
+            $0.top.equalTo(questionContentLabel.snp.bottom).offset(12.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-            $0.height.equalTo(47.adjustedH)
-        }
-        writtenDateLabel.snp.makeConstraints {
-            $0.top.equalTo(answerContentLabel.snp.bottom).offset(20.adjustedH)
-            $0.leading.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(16.adjustedH)
-            $0.height.equalTo(16.adjustedH)
         }
     }
 }
@@ -114,10 +97,18 @@ extension CommonQuestMyAnswerCell {
     func bind(
         question: String,
         content: String,
-        writtenAt: String
+        writtenAt: String,
+        isLiked: Bool,
+        likeCount: Int,
+        commentCount: Int
     ) {
         questionContentLabel.text = question
-        answerContentLabel.text = content
-        writtenDateLabel.text = writtenAt
+        questContentView.configure(
+            content: content,
+            writtenAt: writtenAt,
+            isLiked: isLiked,
+            likeCount: likeCount,
+            commentCount: commentCount
+        )
     }
 }

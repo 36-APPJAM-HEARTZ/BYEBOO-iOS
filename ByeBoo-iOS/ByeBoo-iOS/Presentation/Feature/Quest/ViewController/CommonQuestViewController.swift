@@ -260,6 +260,7 @@ extension CommonQuestViewController: UITableViewDataSource {
         let answer = viewModel.getAnswer(at: indexPath.row - 1)
         let profileIcon = viewModel.getProfileIcon(at: indexPath.row - 1)
         let writtenAt = viewModel.getWrittenAt(at: indexPath.row - 1)
+        cell.questContentView.delegate = self
         
         if let answer,
            let writtenAt {
@@ -279,5 +280,11 @@ extension CommonQuestViewController: UITableViewDataSource {
     ) -> UITableViewCell {
         let cell: NoAnswerCell = tableView.dequeueReusableCell(for: indexPath)
         return cell
+    }
+}
+
+extension CommonQuestViewController: CommonQuestLikeCommentProtocol {
+    func likeButtonDidTap() {
+        // TODO: like button
     }
 }
