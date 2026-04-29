@@ -109,8 +109,8 @@ extension CommonQuestHistoryViewController {
     func configure(
         question: String,
         writtenAt: String,
-        profileIcon: UIImage? = nil,
-        nickname: String? = nil,
+        profileIcon: UIImage,
+        nickname: String,
         content: String,
         answerID: Int? = nil,
         writerID: Int? = nil,
@@ -134,7 +134,10 @@ extension CommonQuestHistoryViewController {
             writtenAt: writtenAt,
             profileIcon: profileIcon,
             nickname: nickname,
-            content: content
+            content: content,
+            isLiked: false,
+            likeCount: 4,
+            commentCount: 5
         )
     }
 }

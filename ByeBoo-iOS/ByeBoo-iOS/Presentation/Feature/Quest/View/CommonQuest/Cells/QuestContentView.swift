@@ -14,7 +14,7 @@ protocol CommonQuestLikeCommentProtocol: AnyObject {
 final class QuestContentView: BaseView {
     
     private let answerContentLabel = UILabel()
-    private let writtenDateLabel = UILabel()
+    private let writtenDateLabel: UILabel? = nil
     
     private let likeCommentStackView = UIStackView()
     private let likeContainerView = UIStackView()
@@ -42,12 +42,15 @@ final class QuestContentView: BaseView {
     override func setUI() {
         self.addSubviews(
             answerContentLabel,
-            writtenDateLabel,
             likeCommentStackView
         )
         likeCommentStackView.addArrangedSubviews(likeContainerView, commentContainerView)
         likeContainerView.addArrangedSubviews(likeButton, likeCountLabel)
         commentContainerView.addArrangedSubviews(commentIcon, commentCountLabel)
+        
+        if let writtenDateLabel {
+            self.addSubview(writtenDateLabel)
+        }
     }
     
     override func setStyle() {
@@ -56,10 +59,12 @@ final class QuestContentView: BaseView {
             color: .grayscale100,
             numberOfLines: 2
         )
-        writtenDateLabel.applyByeBooFont(
-            style: .cap2R12,
-            color: .grayscale400
-        )
+        if let writtenDateLabel {
+            writtenDateLabel.applyByeBooFont(
+                style: .cap2R12,
+                color: .grayscale400
+            )
+        }
         likeCommentStackView.do {
             $0.axis = .horizontal
             $0.spacing = 16.adjustedW
@@ -92,14 +97,17 @@ final class QuestContentView: BaseView {
             $0.horizontalEdges.equalToSuperview()
             $0.height.equalTo(47.adjustedH)
         }
-        writtenDateLabel.snp.makeConstraints {
-            $0.top.equalTo(answerContentLabel.snp.bottom).offset(20.adjustedH)
-            $0.leading.equalToSuperview()
-            $0.height.equalTo(16.adjustedH)
+        if let writtenDateLabel {
+            writtenDateLabel.snp.makeConstraints {
+                $0.top.equalTo(answerContentLabel.snp.bottom).offset(20.adjustedH)
+                $0.leading.equalToSuperview()
+                $0.height.equalTo(16.adjustedH)
+            }
         }
         likeCommentStackView.snp.makeConstraints {
-            $0.centerY.equalTo(writtenDateLabel)
+            $0.top.equalTo(answerContentLabel.snp.bottom).offset(20)
             $0.trailing.equalToSuperview()
+            $0.bottom.equalToSuperview()
         }
         [likeButton, commentIcon].forEach {
             $0.snp.makeConstraints {
@@ -110,14 +118,16 @@ final class QuestContentView: BaseView {
     
     func configure(
         content: String,
-        writtenAt: String,
+        writtenAt: String? = nil,
         isLiked: Bool,
         likeCount: Int,
         commentCount: Int
     ) {
         self.likeCounts = likeCount
         answerContentLabel.text = content
-        writtenDateLabel.text = writtenAt
+        if let writtenDateLabel {
+            writtenDateLabel.text = writtenAt
+        }
         likeButton.isSelected = isLiked
         likeCountLabel.text = String(likeCount)
         commentCountLabel.text = String(commentCount)

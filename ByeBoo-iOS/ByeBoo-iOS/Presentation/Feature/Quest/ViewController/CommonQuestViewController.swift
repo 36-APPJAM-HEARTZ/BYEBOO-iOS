@@ -137,15 +137,14 @@ extension CommonQuestViewController: UITableViewDelegate {
             DateFormatter.toDisplayDateString(from: $0)
         }
         
-        guard let formattedWrittenAt else {
-            return
-        }
+        guard let formattedWrittenAt else { return }
+        guard let profileIcon = viewModel.getProfileIcon(at: answerIndex) else { return }
         
         let historyViewController = ViewControllerFactory.shared.makeCommonQuestHistoryViewController()
         historyViewController.configure(
             question: viewModel.question,
             writtenAt: formattedWrittenAt,
-            profileIcon: viewModel.getProfileIcon(at: answerIndex),
+            profileIcon: profileIcon,
             nickname: answer.writer,
             content: answer.content,
             answerID: answer.answerID,

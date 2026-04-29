@@ -115,6 +115,8 @@ extension CommonQuestMyAnswersViewController: UITableViewDelegate {
         historyViewController.configure(
             question: answer.question,
             writtenAt: answer.writtenAt,
+            profileIcon: .relievedBadge,
+            nickname: "냐냐냐",
             content: answer.content,
             answerID: answer.answerID
         )
@@ -209,6 +211,6 @@ extension CommonQuestMyAnswersViewController: UITableViewDataSource {
 
 extension CommonQuestMyAnswersViewController: CommonQuestLikeCommentProtocol {
     func likeButtonDidTap() {
-        // TODO: like button 
+        // TODO: like button
     }
 }

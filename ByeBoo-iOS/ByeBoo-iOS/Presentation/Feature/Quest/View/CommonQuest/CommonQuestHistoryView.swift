@@ -9,9 +9,6 @@ import UIKit
 
 final class CommonQuestHistoryView: BaseView {
     
-    private var profileIcon: UIImage?
-    private var nickname: String?
-    
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let commonQuestLabel = UILabel()
@@ -22,7 +19,8 @@ final class CommonQuestHistoryView: BaseView {
     private let answerView = UIView()
     private let profileIconImageView = UIImageView()
     private let userNicknameLabel = UILabel()
-    private let answerContentLabel = UILabel()
+//    private let answerContentLabel = UILabel()
+    private let questContentView = QuestContentView()
     
     override func setStyle() {
         commonQuestLabel.applyByeBooFont(
@@ -55,13 +53,6 @@ final class CommonQuestHistoryView: BaseView {
             style: .body6R14,
             color: .grayscale200
         )
-        answerContentLabel.do {
-            $0.applyByeBooFont(
-                style: .body3R16,
-                color: .grayscale100,
-                numberOfLines: 0
-            )
-        }
     }
     
     override func setUI() {
@@ -77,18 +68,10 @@ final class CommonQuestHistoryView: BaseView {
             questionMarkLabel,
             questionContentLabel
         )
-        
-        guard let _ = profileIcon,
-              let _ = nickname
-        else {
-            answerView.addSubview(answerContentLabel)
-            return
-        }
-        
         answerView.addSubviews(
             profileIconImageView,
             userNicknameLabel,
-            answerContentLabel
+            questContentView
         )
     }
     
@@ -131,18 +114,6 @@ final class CommonQuestHistoryView: BaseView {
             $0.horizontalEdges.equalToSuperview()
             $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
-        
-        guard let _ = profileIcon,
-              let _ = nickname
-        else {
-            answerContentLabel.snp.makeConstraints {
-                $0.top.equalToSuperview().inset(16.adjustedH)
-                $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-                $0.bottom.equalToSuperview().inset(16.adjustedH)
-            }
-            return
-        }
-        
         profileIconImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedW)
@@ -153,7 +124,7 @@ final class CommonQuestHistoryView: BaseView {
             $0.centerY.equalTo(profileIconImageView)
             $0.trailing.equalToSuperview().inset(24.adjustedW)
         }
-        answerContentLabel.snp.makeConstraints {
+        questContentView.snp.makeConstraints {
             $0.top.equalTo(profileIconImageView.snp.bottom).offset(12.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(16.adjustedH)
@@ -166,31 +137,24 @@ extension CommonQuestHistoryView {
     func configure(
         question: String,
         writtenAt: String,
-        profileIcon: UIImage?,
-        nickname: String?,
-        content: String
+        profileIcon: UIImage,
+        nickname: String,
+        content: String,
+        isLiked: Bool,
+        likeCount: Int,
+        commentCount: Int
     ) {
         questionContentLabel.text = question
         dateLabel.text = writtenAt
-        answerContentLabel.text = content
+        questContentView.configure(
+            content: content,
+            isLiked: isLiked,
+            likeCount: likeCount,
+            commentCount: commentCount
+        )
+                
+        profileIconImageView.image = profileIcon
+        userNicknameLabel.text = nickname
         
-        answerContentLabel.do {
-            $0.applyByeBooFont(
-                style: .body3R16,
-                text: content,
-                color: .grayscale100,
-                numberOfLines: 0
-            )
-        }
-        
-        if let profileIcon {
-            self.profileIcon = profileIcon
-            profileIconImageView.image = profileIcon
-        }
-        
-        if let nickname {
-            self.nickname = nickname
-            userNicknameLabel.text = nickname
-        }
     }
 }
