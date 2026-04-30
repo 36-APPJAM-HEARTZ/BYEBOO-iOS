@@ -58,6 +58,9 @@ final class HomeViewController: BaseViewController {
         )
         
         if isFirstVisit { isFirstVisit.toggle() }
+        
+        // 추후 API 연동 시 뷰모델 액션을 호출하여 알림 유무를 판단할 예정
+        rootView.headerView.updateNotice(isExist: true)
     }
     
     override func setAddTarget() {
@@ -79,6 +82,7 @@ final class HomeViewController: BaseViewController {
 }
 
 extension HomeViewController {
+    
     @objc
     private func headerDidTap() {
         switch state {

@@ -8,11 +8,11 @@
 import UIKit
 
 final class HomeHeaderView: BaseView {
-
+    
+    private(set) var noticeButton = UIButton()
     private(set) var homeStateView: HomeStateView = HomeStateView(state: .beforeJourneyStart)
     
     private let stackView = UIStackView()
-    private var journeyProgressView: JourneyProgressView? = nil
     private let helperButtonImage = UIImageView()
     let helperButton = UIButton()
     private let helperImageView = UIImageView()
@@ -41,19 +41,25 @@ final class HomeHeaderView: BaseView {
     
     override func setUI() {
         addSubviews(
+            noticeButton,
             stackView,
             helperButton,
             helperImageView
         )
-    
+        
         stackView.addArrangedSubviews(
             homeStateView
         )
     }
     
     override func setLayout() {
-        stackView.snp.makeConstraints {
+        noticeButton.snp.makeConstraints {
             $0.top.equalToSuperview().inset(72.adjustedH)
+            $0.trailing.equalToSuperview().inset(24.adjustedH)
+            $0.size.equalTo(24.adjustedW)
+        }
+        stackView.snp.makeConstraints {
+            $0.top.equalTo(noticeButton.snp.bottom).offset(12.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
         }
         helperButton.snp.makeConstraints {
@@ -154,5 +160,10 @@ extension HomeHeaderView {
     
     func helperDidTap() {
         helperImageView.alpha = 0
+    }
+    
+    func updateNotice(isExist: Bool) {
+        let image: UIImage = isExist ? .existNotice : .emptyNotice
+        noticeButton.setImage(image, for: .normal)
     }
 }
