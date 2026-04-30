@@ -140,7 +140,7 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
                 }
             }
             .store(in: &cancellables)
-  
+        
         Publishers.CombineLatest3(
             viewModel.output.userResult,
             viewModel.output.journeyResult,
@@ -152,14 +152,9 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
                 journey,
                 state in
                 switch (name, journey, state) {
-                case let (name, .success(journey), .success(state)):
+                case let (_, .success(journey), .success(state)):
                     self?.rootView.updateState(state.currentStatus)
                     self?.state = state.currentStatus
-                    self?.rootView.updateProgressView(
-                        name: name,
-                        progress: state.questCount,
-                        journey: journey.title
-                    )
                     self?.journeyType = JourneyType.titleToEnum(journey.title) ?? .recording
                 case let (_, .success(journey), .failure(.notFound)):
                     self?.rootView.updateState(.beforeJourneyStart, journey.title)

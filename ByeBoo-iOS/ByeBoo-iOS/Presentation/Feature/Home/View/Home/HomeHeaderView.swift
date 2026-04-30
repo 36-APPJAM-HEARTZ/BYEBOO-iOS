@@ -79,18 +79,6 @@ final class HomeHeaderView: BaseView {
 }
 
 extension HomeHeaderView {
-    func updateProgress(_ progress: Int) {
-        journeyProgressView?.updateProgress(progress)
-    }
-    
-    func updateName(_ name: String) {
-        journeyProgressView?.updateName(name)
-    }
-    
-    func updateJourney(_ title: String) {
-        journeyProgressView?.updateJourney(title)
-    }
-    
     func updateState(_ state: HomeState, _ journeyTitle: String? = nil) {
         helperImageView.alpha = 0
         homeStateView.updateState(state, journeyTitle)
@@ -99,41 +87,18 @@ extension HomeHeaderView {
             helperButton.alpha = 1
         }
         
-        if state.hasProgress {
-            if journeyProgressView == nil {
-                journeyProgressView = JourneyProgressView()
-            }
-            
-            stackView.subviews.forEach { stackView.removeArrangedSubview($0) }
-            
-            guard let journeyProgressView else { return }
-            
-            stackView.addArrangedSubviews(
-                homeStateView,
-                journeyProgressView
-            )
-            
-            stackView.snp.remakeConstraints {
-                $0.top.equalToSuperview().inset(72.adjustedH)
-                $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-                $0.bottom.equalToSuperview()
-            }
-            helperButton.alpha = 0
-        } else {
-            stackView.subviews.dropFirst().forEach {
-                stackView.removeArrangedSubview($0)
-                $0.removeFromSuperview()
-            }
-            journeyProgressView = nil
-            stackView.snp.remakeConstraints {
-                $0.top.equalToSuperview().inset(72.adjustedH)
-                $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-            }
-            self.snp.makeConstraints {
-                $0.top.equalToSuperview()
-                $0.horizontalEdges.equalToSuperview()
-                $0.bottom.equalTo(helperButton.snp.bottom)
-            }
+        stackView.subviews.dropFirst().forEach {
+            stackView.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
+        stackView.snp.remakeConstraints {
+            $0.top.equalTo(noticeButton.snp.bottom).offset(12.adjustedH)
+            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+        }
+        self.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.horizontalEdges.equalToSuperview()
+            $0.bottom.equalTo(helperButton.snp.bottom)
         }
     }
     
