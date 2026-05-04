@@ -30,8 +30,9 @@ final class QuestContentView: BaseView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setStyle()
+        
         setUI()
+        setStyle()
         setLayout()
     }
     

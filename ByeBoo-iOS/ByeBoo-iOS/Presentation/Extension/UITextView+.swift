@@ -37,4 +37,12 @@ extension UITextView {
         attributedText = NSAttributedString(string: targetText, attributes: attributes)
         typingAttributes = attributes
     }
+    
+    func applyTextViewStyle(style: FontManager, text: String, color: UIColor) {
+        self.applyByeBooFont(
+            style: style,
+            text: text,
+            color: color
+        )
+    }
 }

@@ -309,7 +309,7 @@ extension WriteQuestionTypeQuestViewController {
     
     private func setQuestTextField(answer: String) {
         rootView.questTextField.do {
-            $0.applyTextViewStyle(text: answer, color: .grayscale100)
+            $0.textView.applyTextViewStyle(style: .body3R16 ,text: answer, color: .grayscale100)
             $0.isPlaceholderActive = false
         }
         rootView.layoutIfNeeded()
