@@ -22,6 +22,7 @@ final class HomeViewController: BaseViewController {
     private var isFirstVisit: Bool = true
     private var journeyType: JourneyType = .recording
     private var isAnimating: Bool = false
+    private var isExistNotice: Bool?
     
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -59,13 +60,24 @@ final class HomeViewController: BaseViewController {
         
         if isFirstVisit { isFirstVisit.toggle() }
         
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         // 추후 API 연동 시 뷰모델 액션을 호출하여 알림 유무를 판단할 예정
         rootView.headerView.updateNotice(isExist: true)
+        isExistNotice = true
     }
     
     override func setAddTarget() {
         setGesture()
-        rootView.headerView.helperButton.addTarget(self, action: #selector(helperDidTap), for: .touchUpInside)
+        rootView.headerView.helperButton.addTarget(
+            self,
+            action: #selector(helperDidTap),
+            for: .touchUpInside
+        )
+        rootView.headerView.noticeButton.addTarget(
+            self,
+            action: #selector(noticeButtonDidTap),
+            for: .touchUpInside
+        )
     }
     
     private func setGesture() {
@@ -106,6 +118,17 @@ extension HomeViewController {
         tutorialViewController.navigationItem.hidesBackButton = true
         tutorialViewController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(tutorialViewController, animated: false)
+    }
+    
+    @objc
+    private func noticeButtonDidTap() {
+        guard let isExistNotice else { return }
+        
+        let viewController = ViewControllerFactory.shared.makeNoticesViewController(isExistNotice: isExistNotice)
+        viewController.hidesBottomBarWhenPushed = true
+        
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        self.navigationController?.pushViewController(viewController, animated: false)
     }
     
     @objc
