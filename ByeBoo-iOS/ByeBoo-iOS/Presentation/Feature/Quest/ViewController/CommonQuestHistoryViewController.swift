@@ -26,8 +26,14 @@ final class CommonQuestHistoryViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.tabBarController?.tabBar.isHidden = true
-        
+        addKeyboardObservers()
+
         Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyOthersAnswerPageview)
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        removeKeyboardObservers()
     }
     
     override func viewDidLoad() {
@@ -40,6 +46,12 @@ final class CommonQuestHistoryViewController: BaseViewController {
             action: #selector(back),
             secondAction: #selector(bottomUp)
         )
+    }
+    
+    override func setAddTarget() {
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGestureRecognizer.cancelsTouchesInView = false
+        rootView.scrollView.addGestureRecognizer(tapGestureRecognizer)
     }
 }
 
@@ -150,6 +162,54 @@ extension CommonQuestHistoryViewController: BlockReportProtocol {
                 object: nil,
                 userInfo: ["type": type]
             )
+        }
+    }
+}
+
+extension CommonQuestHistoryViewController {
+    @objc
+    private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+
+    private func addKeyboardObservers() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
+
+    private func removeKeyboardObservers() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+              let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
+        else { return }
+
+        UIView.animate(withDuration: duration) {
+            self.rootView.updateLayout(keyboardHeight: keyboardFrame.height)
+            self.rootView.layoutIfNeeded()
+        }
+    }
+
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        guard let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
+        else { return }
+
+        UIView.animate(withDuration: duration) {
+            self.rootView.updateLayout(keyboardHeight: 0)
+            self.rootView.layoutIfNeeded()
         }
     }
 }

@@ -7,9 +7,13 @@
 
 import UIKit
 
+import SnapKit
+
 final class CommonQuestHistoryView: BaseView {
+
+    private var commentTextViewBottomConstraint: Constraint?
     
-    private let scrollView = UIScrollView()
+    private(set) var scrollView = UIScrollView()
     private let contentView = UIView()
     private let commonQuestLabel = UILabel()
     private let dateLabel = UILabel()
@@ -19,8 +23,9 @@ final class CommonQuestHistoryView: BaseView {
     private let answerView = UIView()
     private let profileIconImageView = UIImageView()
     private let userNicknameLabel = UILabel()
-//    private let answerContentLabel = UILabel()
     private let questContentView = QuestContentView()
+    private let commentListView = UITableView()
+    private let commentTextView = CommentTextView()
     
     override func setStyle() {
         commonQuestLabel.applyByeBooFont(
@@ -56,7 +61,7 @@ final class CommonQuestHistoryView: BaseView {
     }
     
     override func setUI() {
-        addSubview(scrollView)
+        addSubviews(scrollView, commentTextView)
         scrollView.addSubview(contentView)
         contentView.addSubviews(
             commonQuestLabel,
@@ -129,11 +134,23 @@ final class CommonQuestHistoryView: BaseView {
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(16.adjustedH)
         }
+        commentTextView.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview()
+            commentTextViewBottomConstraint = $0.bottom.equalToSuperview().inset(34.adjustedH).constraint
+        }
     }
 }
 
 extension CommonQuestHistoryView {
-    
+
+    func updateLayout(keyboardHeight: CGFloat) {
+        let inset = keyboardHeight > 0 ? keyboardHeight : 34.adjustedH
+        commentTextViewBottomConstraint?.update(inset: inset)
+    }
+}
+
+extension CommonQuestHistoryView {
+
     func configure(
         question: String,
         writtenAt: String,
