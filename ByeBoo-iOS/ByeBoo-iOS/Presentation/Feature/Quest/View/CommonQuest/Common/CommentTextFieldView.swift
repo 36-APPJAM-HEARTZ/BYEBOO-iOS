@@ -107,7 +107,6 @@ extension CommentTextView: UITextViewDelegate {
             isPlaceholderActive = false
             textView.text = ""
         }
-        // 편집 시작 시 항상 paragraph style을 typingAttributes에 적용 → 줄바꿈 line height 보장
         textView.applyTextViewStyle(style: .body6R14, text: textView.text, color: .grayscale100)
         updateTextViewLayoutWhenEditing()
     }
