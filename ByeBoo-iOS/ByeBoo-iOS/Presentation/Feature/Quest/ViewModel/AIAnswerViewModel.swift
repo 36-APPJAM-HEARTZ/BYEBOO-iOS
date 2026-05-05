@@ -20,6 +20,8 @@ final class AIAnswerViewModel {
     private var questID: Int = 1
     private var isAnswerExists: Bool = false
     
+    private var fetchAIAnswerTask: Task<Void, Never>?
+    
     init(fetchAIAnswerUseCase: FetchAIAnswerUseCase) {
         self.fetchAIAnswerUseCase = fetchAIAnswerUseCase
         
@@ -34,6 +36,7 @@ final class AIAnswerViewModel {
 extension AIAnswerViewModel: ViewModelType {
     enum Input {
         case viewDidLoad(questID: Int, isAIAnswerExists: Bool)
+        case viewDidDisappear
     }
     
     struct Output {
@@ -48,13 +51,17 @@ extension AIAnswerViewModel: ViewModelType {
             self.isAnswerExists = isExists
             
             fetchAIAnswer()
+        case .viewDidDisappear:
+            cancelTask()
         }
     }
 }
 
 extension AIAnswerViewModel {
     private func fetchAIAnswer() {
-        Task {
+        fetchAIAnswerTask?.cancel()
+        
+        fetchAIAnswerTask = Task {
             do {
                 AILoadingSubject.send(true)
                 
@@ -73,5 +80,10 @@ extension AIAnswerViewModel {
                 AILoadingSubject.send(false)
             }
         }
+    }
+    
+    private func cancelTask() {
+        fetchAIAnswerTask?.cancel()
+        fetchAIAnswerTask = nil
     }
 }
