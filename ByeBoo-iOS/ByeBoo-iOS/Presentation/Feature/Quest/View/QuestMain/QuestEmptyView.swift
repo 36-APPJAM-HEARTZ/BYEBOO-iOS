@@ -29,6 +29,7 @@ final class QuestEmptyView: BaseView {
             $0.text = "하츠핑님, 수고하셨어요.\n보리가 하고 싶은 말이 있다고 해요!"
             $0.applyByeBooFont(style: .sub3M18, color: .grayscale50)
             $0.numberOfLines = 2
+            $0.textAlignment = .center
         }
     }
     
@@ -39,7 +40,12 @@ final class QuestEmptyView: BaseView {
     
     override func setLayout() {
         stackView.snp.makeConstraints {
-            $0.center.equalToSuperview()
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview().inset(176.adjustedH)
+        }
+        
+        button.snp.makeConstraints {
+            $0.width.equalToSuperview()
         }
     }
 }
