@@ -91,11 +91,7 @@ extension NoticesViewController: UITableViewDataSource {
         else {
             return UITableViewCell()
         }
-        
-        cell.bind(
-            writtenTime: "방금 전",
-            noticeType: LikeCommonQuestNotice(nickname: "")
-        )
+
         return cell
     }
 }

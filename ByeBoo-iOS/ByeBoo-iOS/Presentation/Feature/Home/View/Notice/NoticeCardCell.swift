@@ -13,12 +13,6 @@ final class NoticeCardCell: UITableViewCell {
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
     private let writtenTimeLabel = UILabel()
-    private var writtenTime: String = ""
-    private var noticeType: NoticeDisplayable? {
-        didSet {
-            setStyle()
-        }
-    }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -33,30 +27,21 @@ final class NoticeCardCell: UITableViewCell {
     }
     
     private func setStyle() {
-        guard let noticeType else { return }
-        
         self.do {
             $0.layer.cornerRadius = 12
-            $0.backgroundColor = noticeType.backgroundColor
-        }
-        noticeImageView.do {
-            $0.image = noticeType.iconImage
         }
         titleLabel.applyByeBooFont(
             style: .body1Sb16,
-            text: noticeType.title,
             color: .grayscale200,
             textAlignment: .left
         )
         subtitleLabel.applyByeBooFont(
             style: .body6R14,
-            text: noticeType.subtitle,
             color: .grayscale100,
             textAlignment: .left
         )
         writtenTimeLabel.applyByeBooFont(
             style: .cap2R12,
-            text: writtenTime,
             color: .grayscale400,
             textAlignment: .left
         )
@@ -96,8 +81,17 @@ final class NoticeCardCell: UITableViewCell {
 
 extension NoticeCardCell {
     
-    func bind(writtenTime: String, noticeType: NoticeDisplayable) {
-        self.writtenTime = writtenTime
-        self.noticeType = noticeType
+    func bind(
+        backgroundColor: UIColor,
+        iconImage: UIImage,
+        title: String,
+        subtitle: String,
+        writtenTiem: String
+    ) {
+        self.backgroundColor = backgroundColor
+        noticeImageView.image = iconImage
+        titleLabel.text = title
+        subtitleLabel.text = subtitle
+        writtenTimeLabel.text = writtenTiem
     }
 }
