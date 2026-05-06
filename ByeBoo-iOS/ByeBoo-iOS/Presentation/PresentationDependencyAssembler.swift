@@ -91,9 +91,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: ArchiveQuestViewModel.self) { container in
-            guard let questAnswerUseCase = container.resolve(type: QuestAnswerUseCase.self),
-                  let fetchAIAnswerUseCase = container.resolve(type: FetchAIAnswerUseCase.self)
-            else {
+            guard let questAnswerUseCase = container.resolve(type: QuestAnswerUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -102,7 +100,6 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 questAnswerUseCase: questAnswerUseCase
             )
         }
-        
         
         DIContainer.shared.register(type: HomeViewModel.self) { container in
             guard let characterUseCase = container.resolve(type: FetchCharacterDialogueUseCase.self),
