@@ -79,6 +79,7 @@ extension AIAnswerViewModel {
                 AIResultSubject.send(.failure(error))
                 AILoadingSubject.send(false)
             }
+            fetchAIAnswerTask = nil
         }
     }
     
