@@ -16,6 +16,7 @@ final class QuestCheckViewController: BaseViewController {
     private static let lastStep = 5
     
     private let questsCheckView = ViewAllQuestBaseView(headerView: QuestCheckHeaderView())
+    private let finishEmptyView = QuestEmptyView()
     private let viewModel: ProgressingQuestsViewModel
     var coordinator: QuestCheckCoordinating?
     private var cancellable = Set<AnyCancellable>()
@@ -78,6 +79,10 @@ final class QuestCheckViewController: BaseViewController {
             $0.backgroundColor = .grayscale900
         }
     }
+    
+    override func setAddTarget() {
+        finishEmptyView.button.addTarget(self, action: #selector(goBoriButtonDidTap), for: .touchUpInside)
+    }
 }
 
 extension QuestCheckViewController: ToastPresentable, ToastErrorHandler {
@@ -104,8 +109,9 @@ extension QuestCheckViewController: ToastPresentable, ToastErrorHandler {
                 self?.updateQuestMainUI(name: name, journey: journey, quests: quests)
             case (.success(_), .success(_), .failure(_)):
                 self?.coordinator?.moveQuestStart()
-            case (.success(_), .failure(.notFound), .failure(_)):
-                self?.coordinator?.moveFinishQuest()
+            case let (.success(name), .failure(.notFound), .failure(_)):
+                self?.finishEmptyView.configure(name: name)
+                self?.view = self?.finishEmptyView
             case (_, .failure(let error), _), (_, _, .failure(let error)):
                 self?.handleError(error)
             default:
@@ -205,6 +211,13 @@ extension QuestCheckViewController {
     private func scrollToHeader(at sectionIndex: Int) {
         let collectionView = questsCheckView.questCollectionView
         collectionView.scrollToHeader(at: sectionIndex)
+    }
+}
+
+extension QuestCheckViewController {
+    @objc
+    private func goBoriButtonDidTap() {
+        coordinator?.moveFinishQuest()
     }
 }
 
