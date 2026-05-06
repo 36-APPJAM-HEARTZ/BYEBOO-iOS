@@ -224,6 +224,10 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
         
         return .init(viewModel: viewModel)
     }
+    
+    func makeNoticesViewController(isExistNotice: Bool) -> NoticesViewController {
+        .init(isExistNotice: isExistNotice)
+    }
 }
 
 extension ViewControllerFactory {
