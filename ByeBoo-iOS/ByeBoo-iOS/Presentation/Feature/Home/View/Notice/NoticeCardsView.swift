@@ -18,7 +18,7 @@ final class NoticeCardsView: BaseView {
             $0.contentInset = UIEdgeInsets(
                 top: 0,
                 left: 0,
-                bottom: 24,
+                bottom: 24.adjustedH,
                 right: 0
             )
         }
