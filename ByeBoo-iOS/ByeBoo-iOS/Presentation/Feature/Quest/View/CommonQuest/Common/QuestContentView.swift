@@ -11,10 +11,10 @@ protocol CommonQuestLikeCommentProtocol: AnyObject {
     func likeButtonDidTap()
 }
 
-final class QuestContentView: BaseView {
+final class QuestContentView: UIView {
     
-    private let answerContentLabel = UILabel()
-    private let writtenDateLabel: UILabel? = nil
+    private let answerContentTextView = UITextView()
+    private let writtenDateLabel = UILabel()
     
     private let likeCommentStackView = UIStackView()
     private let likeContainerView = UIStackView()
@@ -28,8 +28,8 @@ final class QuestContentView: BaseView {
     
     private var likeCounts: Int = 0
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init() {
+        super.init(frame: .zero)
         
         setUI()
         setStyle()
@@ -40,31 +40,30 @@ final class QuestContentView: BaseView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func setUI() {
+    private func setUI() {
         self.addSubviews(
-            answerContentLabel,
+            answerContentTextView,
+            writtenDateLabel,
             likeCommentStackView
         )
         likeCommentStackView.addArrangedSubviews(likeContainerView, commentContainerView)
         likeContainerView.addArrangedSubviews(likeButton, likeCountLabel)
         commentContainerView.addArrangedSubviews(commentIcon, commentCountLabel)
-        
-        if let writtenDateLabel {
-            self.addSubview(writtenDateLabel)
-        }
     }
     
-    override func setStyle() {
-        answerContentLabel.applyByeBooFont(
-            style: .body3R16,
-            color: .grayscale100,
-            numberOfLines: 2
-        )
-        if let writtenDateLabel {
-            writtenDateLabel.applyByeBooFont(
-                style: .cap2R12,
-                color: .grayscale400
-            )
+    private func setStyle() {
+        answerContentTextView.do {
+            $0.applyByeBooFont(style: .body3R16, color: .grayscale100)
+            $0.isScrollEnabled = false
+            $0.isEditable = false
+            $0.isSelectable = false
+            $0.isUserInteractionEnabled = false
+            $0.backgroundColor = .clear
+            $0.textContainer.lineBreakMode = .byTruncatingTail
+        }
+        writtenDateLabel.do {
+            $0.applyByeBooFont(style: .cap2R12, color: .grayscale400)
+            $0.isHidden = true
         }
         likeCommentStackView.do {
             $0.axis = .horizontal
@@ -92,21 +91,18 @@ final class QuestContentView: BaseView {
         }
     }
     
-    override func setLayout() {
-        answerContentLabel.snp.makeConstraints {
+    private func setLayout() {
+        answerContentTextView.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.horizontalEdges.equalToSuperview()
-            $0.height.equalTo(47.adjustedH)
         }
-        if let writtenDateLabel {
-            writtenDateLabel.snp.makeConstraints {
-                $0.top.equalTo(answerContentLabel.snp.bottom).offset(20.adjustedH)
-                $0.leading.equalToSuperview()
-                $0.height.equalTo(16.adjustedH)
-            }
+        writtenDateLabel.snp.makeConstraints {
+            $0.top.equalTo(answerContentTextView.snp.bottom).offset(20.adjustedH)
+            $0.leading.equalToSuperview()
+            $0.height.equalTo(16.adjustedH)
         }
         likeCommentStackView.snp.makeConstraints {
-            $0.top.equalTo(answerContentLabel.snp.bottom).offset(20)
+            $0.top.equalTo(answerContentTextView.snp.bottom).offset(20)
             $0.trailing.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
@@ -122,11 +118,16 @@ final class QuestContentView: BaseView {
         writtenAt: String? = nil,
         isLiked: Bool,
         likeCount: Int,
-        commentCount: Int
+        commentCount: Int,
+        showAllText: Bool
     ) {
         self.likeCounts = likeCount
-        answerContentLabel.text = content
-        if let writtenDateLabel {
+        answerContentTextView.do {
+            $0.textContainer.maximumNumberOfLines = showAllText ? 0 : 2
+            $0.applyTextViewStyle(style: .body3R16, text: content, color: .grayscale100)
+        }
+        if let writtenAt {
+            writtenDateLabel.isHidden = false
             writtenDateLabel.text = writtenAt
         }
         likeButton.isSelected = isLiked
