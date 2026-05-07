@@ -24,10 +24,13 @@ final class CommonQuestHistoryView: BaseView {
     private let profileIconImageView = UIImageView()
     private let userNicknameLabel = UILabel()
     private let questContentView = QuestContentView()
-    private let commentListView = UITableView()
+    private(set) var commentListView = SelfSizingTableView()
     private let commentTextView = CommentTextView()
     
     override func setStyle() {
+        scrollView.do {
+            $0.showsVerticalScrollIndicator = false
+        }
         commonQuestLabel.applyByeBooFont(
             style: .body6R14,
             text: "공통퀘스트",
@@ -54,6 +57,9 @@ final class CommonQuestHistoryView: BaseView {
             $0.layer.cornerRadius = 12
             $0.backgroundColor = .white5
         }
+        commentListView.do {
+            $0.isScrollEnabled = false
+        }
         userNicknameLabel.applyByeBooFont(
             style: .body6R14,
             color: .grayscale200
@@ -67,7 +73,8 @@ final class CommonQuestHistoryView: BaseView {
             commonQuestLabel,
             dateLabel,
             questionView,
-            answerView
+            answerView,
+            commentListView
         )
         questionView.addSubviews(
             questionMarkLabel,
@@ -84,7 +91,7 @@ final class CommonQuestHistoryView: BaseView {
         scrollView.snp.makeConstraints {
             $0.top.equalTo(safeAreaLayoutGuide).offset(16.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-            $0.bottom.equalToSuperview().inset(24.adjustedH)
+            $0.bottom.equalTo(commentTextView.snp.top)
         }
         contentView.snp.makeConstraints {
             $0.edges.equalTo(scrollView.contentLayoutGuide)
@@ -117,7 +124,6 @@ final class CommonQuestHistoryView: BaseView {
         answerView.snp.makeConstraints {
             $0.top.equalTo(questionView.snp.bottom).offset(30.adjustedH)
             $0.horizontalEdges.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
         profileIconImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16.adjustedH)
@@ -133,6 +139,11 @@ final class CommonQuestHistoryView: BaseView {
             $0.top.equalTo(profileIconImageView.snp.bottom).offset(12.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(16.adjustedH)
+        }
+        commentListView.snp.makeConstraints {
+            $0.top.equalTo(answerView.snp.bottom).offset(24.adjustedH)
+            $0.horizontalEdges.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
         commentTextView.snp.makeConstraints {
             $0.horizontalEdges.equalToSuperview()
@@ -167,7 +178,8 @@ extension CommonQuestHistoryView {
             content: content,
             isLiked: isLiked,
             likeCount: likeCount,
-            commentCount: commentCount
+            commentCount: commentCount,
+            showAllText: true
         )
                 
         profileIconImageView.image = profileIcon
