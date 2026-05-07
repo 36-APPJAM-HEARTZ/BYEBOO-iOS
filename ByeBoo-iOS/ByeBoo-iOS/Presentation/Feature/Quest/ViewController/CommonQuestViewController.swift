@@ -145,10 +145,10 @@ extension CommonQuestViewController: UITableViewDelegate {
             question: viewModel.question,
             writtenAt: formattedWrittenAt,
             profileIcon: profileIcon,
-            nickname: answer.writer,
+            nickname: answer.writerID,
             content: answer.content,
             answerID: answer.answerID,
-            writerID: answer.writerID,
+            writerID: answer.userID,
             isMyAnswer: answer.isMyAnswer
         )
         historyViewController.navigationItem.hidesBackButton = true
@@ -162,7 +162,7 @@ extension CommonQuestViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForRowAt indexPath: IndexPath
     ) -> CGFloat {
-        indexPath.row == 0 ? UITableView.automaticDimension : 171.adjustedH
+        UITableView.automaticDimension
     }
     
     func tableView(
@@ -260,7 +260,6 @@ extension CommonQuestViewController: UITableViewDataSource {
         let profileIcon = viewModel.getProfileIcon(at: indexPath.row - 1)
         let writtenAt = viewModel.getWrittenAt(at: indexPath.row - 1)
         cell.questContentView.delegate = self
-        
         if let answer,
            let writtenAt {
             cell.bind(

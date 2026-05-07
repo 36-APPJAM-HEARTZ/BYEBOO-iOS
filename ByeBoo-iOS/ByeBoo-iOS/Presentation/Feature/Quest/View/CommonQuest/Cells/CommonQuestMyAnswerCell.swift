@@ -108,7 +108,8 @@ extension CommonQuestMyAnswerCell {
             writtenAt: writtenAt,
             isLiked: isLiked,
             likeCount: likeCount,
-            commentCount: commentCount
+            commentCount: commentCount,
+            showAllText: true
         )
     }
 }

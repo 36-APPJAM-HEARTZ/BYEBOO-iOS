@@ -91,14 +91,16 @@ extension CommonQuestAnswerCell {
         if let profileIcon {
             userIconView.image = profileIcon
         }
-        userNicknameLabel.text = answer.writer
+        userNicknameLabel.text = answer.writerID
         answerID = answer.answerID
         questContentView.configure(
             content: answer.content,
             writtenAt: writtenAt,
             isLiked: false,
             likeCount: 4,
-            commentCount: 3)
+            commentCount: 3,
+            showAllText: false
+        )
     }
     
     func getAnswewrID() -> Int? {
