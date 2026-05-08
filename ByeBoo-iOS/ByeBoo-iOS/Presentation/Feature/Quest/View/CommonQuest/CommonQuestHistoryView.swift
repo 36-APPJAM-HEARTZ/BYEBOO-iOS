@@ -59,6 +59,8 @@ final class CommonQuestHistoryView: BaseView {
         }
         commentListView.do {
             $0.isScrollEnabled = false
+            $0.rowHeight = UITableView.automaticDimension
+            $0.estimatedRowHeight = 100
         }
         userNicknameLabel.applyByeBooFont(
             style: .body6R14,

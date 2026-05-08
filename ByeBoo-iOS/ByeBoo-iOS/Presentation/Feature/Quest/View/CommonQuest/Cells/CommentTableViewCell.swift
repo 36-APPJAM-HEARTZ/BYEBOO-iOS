@@ -7,7 +7,13 @@
 
 import UIKit
 
+protocol CommentProtocol: AnyObject {
+    func moreLabelDidTap(commentID: Int)
+}
+
 final class CommentTableViewCell: UITableViewCell {
+    
+    weak var delegate: CommentProtocol?
     
     private var replyCommentArrow = UIImageView()
     private var replyCommentContainer = UIView()
@@ -22,6 +28,9 @@ final class CommentTableViewCell: UITableViewCell {
     private var replyCountLabel = UILabel()
     
     private var replyCount: Int = 0
+    private var commentID: Int = 0
+    private var content: String = ""
+    private var didSetReplyLayout = false
     
     override init(
         style: UITableViewCell.CellStyle,
@@ -73,6 +82,9 @@ final class CommentTableViewCell: UITableViewCell {
         moreLabel.do {
             $0.applyByeBooFont(style: .body6R14, text: "더보기", color: .grayscale400)
             $0.backgroundColor = .grayscale900
+            $0.isUserInteractionEnabled = true
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(moreLabelDidTap(_:)))
+            $0.addGestureRecognizer(tapRecognizer)
         }
         
         replyCountContainer.do {
@@ -112,7 +124,6 @@ final class CommentTableViewCell: UITableViewCell {
             $0.top.equalTo(profileIcon.snp.bottom).offset(4.adjustedH)
             $0.leading.equalTo(profileIcon.snp.leading).offset(20)
             $0.trailing.equalToSuperview().inset(24.adjustedW)
-            $0.height.lessThanOrEqualTo(105.adjustedH)
             $0.bottom.equalToSuperview().inset(16.adjustedH)
         }
         moreLabel.snp.makeConstraints {
@@ -122,6 +133,9 @@ final class CommentTableViewCell: UITableViewCell {
     }
     
     private func setReplyLayout() {
+        guard !didSetReplyLayout else { return }
+        didSetReplyLayout = true
+
         contentView.addSubviews(replyCommentArrow, replyCountContainer)
         replyCountContainer.addArrangedSubviews(replyCommentIcon, replyCountLabel)
         
@@ -148,33 +162,42 @@ final class CommentTableViewCell: UITableViewCell {
             $0.top.equalTo(profileIcon.snp.bottom).offset(4.adjustedH)
             $0.leading.equalTo(profileIcon.snp.leading).offset(20)
             $0.trailing.equalToSuperview().inset(24.adjustedW)
-            $0.height.lessThanOrEqualTo(105.adjustedH)
         }
     }
 }
 
 extension CommentTableViewCell {
     func configure(
+        commentID: Int,
         replyCount: Int? = nil,
         writer: String,
         profileIcon: UIImage,
         writtenAt: String,
-        content: String
+        content: String,
+        showAllText: Bool
     ) {
-        
         if let _ = replyCount {
             setReplyLayout()
         }
+
+        self.commentID = commentID
         nicknameLabel.text = writer
         self.profileIcon.image = profileIcon
         dateLabel.text = writtenAt
+        self.content = content
         commentTextView.applyTextViewStyle(style: .body6R14, text: content, color: .grayscale100)
-        
+
         layoutIfNeeded()
-        
-        let numberOfLines = commentTextView.numberOfLine()
-        ByeBooLogger.debug("라인수 \(numberOfLines)")
-        applyStyleWhenHideText(numberOfLines)
+
+        if showAllText {
+            commentTextView.textContainer.maximumNumberOfLines = 0
+            commentTextView.textContainer.exclusionPaths = []
+            commentTextView.invalidateIntrinsicContentSize()
+            moreLabel.isHidden = true
+        } else {
+            let numberOfLines = commentTextView.numberOfLine()
+            applyStyleWhenHideText(numberOfLines)
+        }
     }
 }
 
@@ -206,5 +229,10 @@ extension CommentTableViewCell {
         )
         ByeBooLogger.debug("가로 : \(exclusionRect.width), 세로: \(exclusionRect.height)" )
         commentTextView.textContainer.exclusionPaths = [UIBezierPath(rect: exclusionRect)]
+    }
+    
+    @objc
+    private func moreLabelDidTap(_ tapRecognizer: UITapGestureRecognizer) {
+        delegate?.moreLabelDidTap(commentID: commentID)
     }
 }

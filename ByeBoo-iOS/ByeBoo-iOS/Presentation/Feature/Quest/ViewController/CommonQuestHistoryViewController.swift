@@ -9,7 +9,18 @@ import UIKit
 
 import Mixpanel
 
+enum CommentSection: Hashable {
+    case main
+}
+
+struct CommentItem: Hashable {
+    let entity: CommonQuestCommentEntity
+    var showAllText: Bool
+}
+
 final class CommonQuestHistoryViewController: BaseViewController {
+    
+    private var dataSource: UITableViewDiffableDataSource<CommentSection, CommentItem>!
     
     private let rootView = CommonQuestHistoryView()
     private let viewModel = CommonQuestHistoryViewModel()
@@ -48,6 +59,9 @@ final class CommonQuestHistoryViewController: BaseViewController {
             action: #selector(back),
             secondAction: #selector(bottomUp)
         )
+        
+        configureDataSource()
+        applySnapshot()
     }
     
     override func setAddTarget() {
@@ -59,7 +73,6 @@ final class CommonQuestHistoryViewController: BaseViewController {
     override func setDelegate() {
         rootView.commentListView.do {
             $0.delegate = self
-            $0.dataSource = self
             $0.register(CommentTableViewCell.self)
         }
     }
@@ -76,37 +89,40 @@ extension CommonQuestHistoryViewController: UITableViewDelegate {
     
 }
 
-extension CommonQuestHistoryViewController: UITableViewDataSource {
-    func tableView(
-        _ tableView: UITableView,
-        numberOfRowsInSection section: Int)
-    -> Int {
-        ByeBooLogger.debug(viewModel.getCommentsCount())
-        return viewModel.getCommentsCount()
+extension CommonQuestHistoryViewController {
+    private func configureDataSource() {
+        dataSource = UITableViewDiffableDataSource<CommentSection, CommentItem>(
+            tableView: rootView.commentListView
+        ) { tableView, indexPath, item in
+            guard let cell = tableView.dequeueReusableCell(
+                withIdentifier: CommentTableViewCell.identifier,
+                for: indexPath
+            ) as? CommentTableViewCell else { return UITableViewCell() }
+            
+            let entity = item.entity
+            cell.configure(
+                commentID: entity.commentID,
+                replyCount: entity.replyCount,
+                writer: entity.writer,
+                profileIcon: ProfileIcon.image(for: entity.profileIcon) ?? .relievedBadge,
+                writtenAt: entity.writtenAt,
+                content: entity.content,
+                showAllText: item.showAllText
+            )
+            cell.delegate = self
+            return cell
+        }
     }
     
-    func tableView(
-        _ tableView: UITableView,
-        cellForRowAt indexPath: IndexPath
-    ) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: CommentTableViewCell.identifier,
-            for: indexPath) as? CommentTableViewCell else { return UITableViewCell() }
-        
-        let entity = viewModel.commentLists[indexPath.row]
-        ByeBooLogger.debug(entity)
-        cell.configure(
-            replyCount: entity.replyCount,
-            writer: entity.writer,
-            profileIcon: ProfileIcon.image(for: entity.profileIcon) ?? .relievedBadge,
-            writtenAt: entity.writtenAt,
-            content: entity.content
-        )
-        return cell
+    private func applySnapshot() {
+        var snapshot = NSDiffableDataSourceSnapshot<CommentSection, CommentItem>()
+        snapshot.appendSections([.main])
+        let items = viewModel.commentLists.map { CommentItem(entity: $0, showAllText: false) }
+        snapshot.appendItems(items, toSection: .main)
+        dataSource.apply(snapshot, animatingDifferences: false)
     }
-    
-    
 }
+
 extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
     
     func didTapEdit(
@@ -161,6 +177,21 @@ extension CommonQuestHistoryViewController: DeleteCommonQuestDelegate {
     }
 }
 
+extension CommonQuestHistoryViewController: CommentProtocol {
+    func moreLabelDidTap(commentID: Int) {
+        let updatedItems = dataSource.snapshot().itemIdentifiers.map { item -> CommentItem in
+            guard item.entity.commentID == commentID else { return item }
+            return CommentItem(entity: item.entity, showAllText: true)
+        }
+
+        var snapshot = NSDiffableDataSourceSnapshot<CommentSection, CommentItem>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(updatedItems, toSection: .main)
+        dataSource.apply(snapshot, animatingDifferences: false) { [weak self] in
+            self?.rootView.commentListView.performBatchUpdates(nil)
+        }
+    }
+}
 extension CommonQuestHistoryViewController {
     
     func configure(
