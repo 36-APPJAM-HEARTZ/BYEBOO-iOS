@@ -9,6 +9,11 @@ import UIKit
 
 protocol CommentProtocol: AnyObject {
     func moreLabelDidTap(commentID: Int)
+    func replyIconDidTap(commentID: Int)
+}
+
+extension CommentProtocol {
+    func replyIconDidTap(commentID: Int) { }
 }
 
 final class CommentTableViewCell: UITableViewCell {
@@ -31,6 +36,7 @@ final class CommentTableViewCell: UITableViewCell {
     private var commentID: Int = 0
     private var content: String = ""
     private var didSetReplyLayout = false
+    private var didSetCommentLayout = false
     
     override init(
         style: UITableViewCell.CellStyle,
@@ -41,6 +47,7 @@ final class CommentTableViewCell: UITableViewCell {
         setUI()
         setStyle()
         setLayout()
+        setAddTarget()
     }
     
     required init?(coder: NSCoder) {
@@ -54,6 +61,10 @@ final class CommentTableViewCell: UITableViewCell {
     private func setStyle() {
         backgroundColor = .grayscale900
         selectionStyle = .none
+        
+        replyCommentArrow.do {
+            $0.image = .replyArrow
+        }
         
         nicknameLabel.do {
             $0.applyByeBooFont(style: .body5M14, color: .grayscale200)
@@ -83,8 +94,6 @@ final class CommentTableViewCell: UITableViewCell {
             $0.applyByeBooFont(style: .body6R14, text: "더보기", color: .grayscale400)
             $0.backgroundColor = .grayscale900
             $0.isUserInteractionEnabled = true
-            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(moreLabelDidTap(_:)))
-            $0.addGestureRecognizer(tapRecognizer)
         }
         
         replyCountContainer.do {
@@ -93,7 +102,9 @@ final class CommentTableViewCell: UITableViewCell {
         }
         
         replyCommentIcon.do {
-            $0.image = .comment
+            $0.image = .comment.withRenderingMode(.alwaysTemplate)
+            $0.isUserInteractionEnabled = true
+            $0.tintColor = .grayscale100
         }
         
         replyCountLabel.do {
@@ -102,11 +113,6 @@ final class CommentTableViewCell: UITableViewCell {
     }
     
     private func setLayout() {
-        profileIcon.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(16.adjustedH)
-            $0.leading.equalToSuperview()
-            $0.size.equalTo(20.adjustedH)
-        }
         nicknameLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16.adjustedH)
             $0.leading.equalTo(profileIcon.snp.trailing).offset(4.adjustedW)
@@ -120,29 +126,28 @@ final class CommentTableViewCell: UITableViewCell {
             $0.trailing.equalToSuperview()
             $0.size.equalTo(24.adjustedH)
         }
-        commentTextView.snp.makeConstraints {
-            $0.top.equalTo(profileIcon.snp.bottom).offset(4.adjustedH)
-            $0.leading.equalTo(profileIcon.snp.leading).offset(20)
-            $0.trailing.equalToSuperview().inset(24.adjustedW)
-            $0.bottom.equalToSuperview().inset(16.adjustedH)
-        }
         moreLabel.snp.makeConstraints {
             $0.bottom.equalTo(commentTextView.snp.bottom)
             $0.trailing.equalTo(commentTextView.snp.trailing).offset(-20.adjustedW)
         }
     }
-    
-    private func setReplyLayout() {
-        guard !didSetReplyLayout else { return }
-        didSetReplyLayout = true
+    private func setCommentListLayout() {
+        guard !didSetCommentLayout else { return }
+        didSetCommentLayout = true
 
-        contentView.addSubviews(replyCommentArrow, replyCountContainer)
+        contentView.addSubview(replyCountContainer)
         replyCountContainer.addArrangedSubviews(replyCommentIcon, replyCountLabel)
         
-        replyCommentArrow.snp.makeConstraints {
+        profileIcon.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16.adjustedH)
-            $0.leading.equalToSuperview().inset(24.adjustedH)
-            $0.size.equalTo(24.adjustedH)
+            $0.leading.equalToSuperview()
+            $0.size.equalTo(20.adjustedH)
+        }
+        commentTextView.snp.makeConstraints {
+            $0.top.equalTo(profileIcon.snp.bottom).offset(4.adjustedH)
+            $0.leading.equalTo(profileIcon.snp.leading).offset(20)
+            $0.trailing.equalToSuperview().inset(24.adjustedW)
+            $0.bottom.equalToSuperview().inset(44.adjustedH)
         }
         replyCountContainer.snp.makeConstraints {
             $0.top.equalTo(commentTextView.snp.bottom).offset(8.adjustedH)
@@ -153,6 +158,19 @@ final class CommentTableViewCell: UITableViewCell {
         replyCommentIcon.snp.makeConstraints {
             $0.size.equalTo(20.adjustedH)
         }
+    }
+    
+    private func setReplySheetLayout() {
+        guard !didSetReplyLayout else { return }
+        didSetReplyLayout = true
+
+        contentView.addSubviews(replyCommentArrow)
+    
+        replyCommentArrow.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(16.adjustedH)
+            $0.leading.equalToSuperview()
+            $0.size.equalTo(24.adjustedH)
+        }
         profileIcon.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16.adjustedH)
             $0.leading.equalTo(replyCommentArrow.snp.trailing)
@@ -162,7 +180,16 @@ final class CommentTableViewCell: UITableViewCell {
             $0.top.equalTo(profileIcon.snp.bottom).offset(4.adjustedH)
             $0.leading.equalTo(profileIcon.snp.leading).offset(20)
             $0.trailing.equalToSuperview().inset(24.adjustedW)
+            $0.bottom.equalToSuperview().inset(16.adjustedH)
         }
+    }
+    
+    private func setAddTarget() {
+        let moreLabelTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(moreLabelDidTap(_:)))
+        moreLabel.addGestureRecognizer(moreLabelTapRecognizer)
+        
+        let replyTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(replyIconDidTap(_:)))
+        replyCommentIcon.addGestureRecognizer(replyTapRecognizer)
     }
 }
 
@@ -174,10 +201,18 @@ extension CommentTableViewCell {
         profileIcon: UIImage,
         writtenAt: String,
         content: String,
-        showAllText: Bool
+        showAllText: Bool,
+        isReplySheet: Bool
     ) {
         if let _ = replyCount {
-            setReplyLayout()
+            setCommentListLayout()
+        } else {
+            setReplySheetLayout()
+        }
+        
+        if isReplySheet {
+            replyCommentIcon.tintColor = .grayscale600
+            replyCountLabel.textColor = .grayscale600
         }
 
         self.commentID = commentID
@@ -189,9 +224,10 @@ extension CommentTableViewCell {
 
         layoutIfNeeded()
 
+        commentTextView.textContainer.maximumNumberOfLines = 0
+        commentTextView.textContainer.exclusionPaths = []
+        
         if showAllText {
-            commentTextView.textContainer.maximumNumberOfLines = 0
-            commentTextView.textContainer.exclusionPaths = []
             commentTextView.invalidateIntrinsicContentSize()
             moreLabel.isHidden = true
         } else {
@@ -234,5 +270,9 @@ extension CommentTableViewCell {
     @objc
     private func moreLabelDidTap(_ tapRecognizer: UITapGestureRecognizer) {
         delegate?.moreLabelDidTap(commentID: commentID)
+    }
+    
+    @objc private func replyIconDidTap(_ tapRecognizer: UITapGestureRecognizer) {
+        delegate?.replyIconDidTap(commentID: commentID)
     }
 }
