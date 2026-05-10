@@ -63,6 +63,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
     
     override func setDelegate() {
         rootView.commentListView.do {
+            $0.separatorStyle = .none
             $0.register(CommentTableViewCell.self)
         }
     }
