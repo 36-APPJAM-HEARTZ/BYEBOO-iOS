@@ -45,7 +45,7 @@ extension CommonQuestCommentEntity {
     }
     
     static func toReplyListStub() -> [Self] {
-        return (1...5).map {
+        return (6...10).map {
             .init(
                 commentID: $0,
                 replyCount: nil,
