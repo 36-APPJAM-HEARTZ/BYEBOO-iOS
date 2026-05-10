@@ -9,15 +9,6 @@ import UIKit
 
 import Mixpanel
 
-enum CommentSection: Hashable {
-    case main
-}
-
-struct CommentItem: Hashable {
-    let entity: CommonQuestCommentEntity
-    var showAllText: Bool
-}
-
 final class CommonQuestHistoryViewController: BaseViewController {
     
     private var dataSource: UITableViewDiffableDataSource<CommentSection, CommentItem>!
@@ -44,11 +35,6 @@ final class CommonQuestHistoryViewController: BaseViewController {
         Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyOthersAnswerPageview)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        removeKeyboardObservers()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -64,6 +50,11 @@ final class CommonQuestHistoryViewController: BaseViewController {
         applySnapshot()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        removeKeyboardObservers()
+    }
+    
     override func setAddTarget() {
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGestureRecognizer.cancelsTouchesInView = false
@@ -72,7 +63,6 @@ final class CommonQuestHistoryViewController: BaseViewController {
     
     override func setDelegate() {
         rootView.commentListView.do {
-            $0.delegate = self
             $0.register(CommentTableViewCell.self)
         }
     }
@@ -83,10 +73,6 @@ extension CommonQuestHistoryViewController: BackNavigable {
     func back() {
         self.navigationController?.popViewController(animated: false)
     }
-}
-
-extension CommonQuestHistoryViewController: UITableViewDelegate {
-    
 }
 
 extension CommonQuestHistoryViewController {
@@ -107,7 +93,8 @@ extension CommonQuestHistoryViewController {
                 profileIcon: ProfileIcon.image(for: entity.profileIcon) ?? .relievedBadge,
                 writtenAt: entity.writtenAt,
                 content: entity.content,
-                showAllText: item.showAllText
+                showAllText: item.showAllText,
+                isReplySheet: false
             )
             cell.delegate = self
             return cell
@@ -191,7 +178,18 @@ extension CommonQuestHistoryViewController: CommentProtocol {
             self?.rootView.commentListView.performBatchUpdates(nil)
         }
     }
+    
+    func replyIconDidTap(commentID: Int) {
+        let viewController = CommonQuestReplyViewController()
+        if let sheet =  viewController.sheetPresentationController{
+            sheet.detents = [.large()]
+            sheet.prefersGrabberVisible = true
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+        }
+        self.present(viewController, animated: true)
+    }
 }
+
 extension CommonQuestHistoryViewController {
     
     func configure(
@@ -247,42 +245,17 @@ extension CommonQuestHistoryViewController {
     private func dismissKeyboard() {
         view.endEditing(true)
     }
-    
-    private func addKeyboardObservers() {
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillShow),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(keyboardWillHide),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil
-        )
-    }
-    
-    private func removeKeyboardObservers() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    @objc private func keyboardWillShow(_ notification: Notification) {
-        guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
-              let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
-        else { return }
-        
+}
+
+extension CommonQuestHistoryViewController: KeyboardHandleProtocol {
+    func keyboardWillShow(height: CGFloat, duration: Double) {
         UIView.animate(withDuration: duration) {
-            self.rootView.updateLayout(keyboardHeight: keyboardFrame.height)
+            self.rootView.updateLayout(keyboardHeight: height)
             self.rootView.layoutIfNeeded()
         }
     }
-    
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        guard let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
-        else { return }
-        
+
+    func keyboardWillHide(duration: Double) {
         UIView.animate(withDuration: duration) {
             self.rootView.updateLayout(keyboardHeight: 0)
             self.rootView.layoutIfNeeded()
