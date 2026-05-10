@@ -124,16 +124,10 @@ extension CommentTextView: UITextViewDelegate {
 
         let maxHeight = 105.adjustedH
         let fittingHeight = textView.sizeThatFits(CGSize(width: textView.bounds.width, height: .infinity)).height
-        if fittingHeight > maxHeight {
-            if !textView.isScrollEnabled {
-                textView.isScrollEnabled = true
-            }
-        } else {
-            if textView.isScrollEnabled {
-                textView.isScrollEnabled = false
-                textView.contentOffset = .zero
-            }
-        }
+        
+        let shouldScroll = fittingHeight > maxHeight
+        textView.isScrollEnabled = shouldScroll
+        if !shouldScroll { textView.contentOffset = .zero }
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
