@@ -204,7 +204,7 @@ extension CommentTableViewCell {
         showAllText: Bool,
         isReplySheet: Bool
     ) {
-        if let _ = replyCount {
+        if replyCount != nil {
             setCommentListLayout()
         } else {
             setReplySheetLayout()

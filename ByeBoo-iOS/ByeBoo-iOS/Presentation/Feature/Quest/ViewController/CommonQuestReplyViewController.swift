@@ -118,16 +118,9 @@ extension CommonQuestReplyViewController: CommentProtocol {
 }
 
 extension CommonQuestReplyViewController: KeyboardHandleProtocol  {
-    func keyboardWillShow(height: CGFloat, duration: Double) {
+    func keyboardWillShowOrHide(height: CGFloat, duration: Double) {
         UIView.animate(withDuration: duration) {
             self.rootView.updateLayout(keyboardHeight: height)
-            self.rootView.layoutIfNeeded()
-        }
-    }
-
-    func keyboardWillHide(duration: Double) {
-        UIView.animate(withDuration: duration) {
-            self.rootView.updateLayout(keyboardHeight: 0)
             self.rootView.layoutIfNeeded()
         }
     }

@@ -5,9 +5,14 @@
 
 import UIKit
 
-protocol KeyboardHandleProtocol: UIViewController {
-    func keyboardWillShow(height: CGFloat, duration: Double)
-    func keyboardWillHide(duration: Double)
+protocol KeyboardHandleProtocol where Self: UIViewController {
+    func keyboardWillShowOrHide(height: CGFloat, duration: Double)
+}
+
+extension KeyboardHandleProtocol {
+    func keyboardWillShowOrHide(duration: Double) {
+        keyboardWillShowOrHide(height: 0, duration: duration)
+    }
 }
 
 extension KeyboardHandleProtocol {
@@ -20,7 +25,7 @@ extension KeyboardHandleProtocol {
             guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
                   let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
             else { return }
-            self?.keyboardWillShow(height: keyboardFrame.height, duration: duration)
+            self?.keyboardWillShowOrHide(height: keyboardFrame.height, duration: duration)
         }
 
         NotificationCenter.default.addObserver(
@@ -30,7 +35,7 @@ extension KeyboardHandleProtocol {
         ) { [weak self] notification in
             guard let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
             else { return }
-            self?.keyboardWillHide(duration: duration)
+            self?.keyboardWillShowOrHide(duration: duration)
         }
     }
 

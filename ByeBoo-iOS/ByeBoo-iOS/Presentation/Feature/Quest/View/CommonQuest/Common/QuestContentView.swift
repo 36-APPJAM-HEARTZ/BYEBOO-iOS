@@ -11,7 +11,7 @@ protocol CommonQuestLikeCommentProtocol: AnyObject {
     func likeButtonDidTap()
 }
 
-final class QuestContentView: UIView {
+final class QuestContentView: BaseView {
     
     private let answerContentTextView = UITextView()
     private let writtenDateLabel = UILabel()
@@ -28,19 +28,7 @@ final class QuestContentView: UIView {
     
     private var likeCounts: Int = 0
     
-    init() {
-        super.init(frame: .zero)
-        
-        setUI()
-        setStyle()
-        setLayout()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setUI() {
+    override func setUI() {
         self.addSubviews(
             answerContentTextView,
             writtenDateLabel,
@@ -51,7 +39,7 @@ final class QuestContentView: UIView {
         commentContainerView.addArrangedSubviews(commentIcon, commentCountLabel)
     }
     
-    private func setStyle() {
+    override func setStyle() {
         answerContentTextView.do {
             $0.applyByeBooFont(style: .body3R16, color: .grayscale100)
             $0.isScrollEnabled = false
@@ -91,7 +79,7 @@ final class QuestContentView: UIView {
         }
     }
     
-    private func setLayout() {
+    override func setLayout() {
         answerContentTextView.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.horizontalEdges.equalToSuperview()
