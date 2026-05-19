@@ -15,14 +15,14 @@ struct AuthTests {
     private let networkService = MockNetworkService(userAPI: MockUserAPI(isAvailable: true))
     
     @Test("🏁 isOnboardingCompleted가 true일 때 ✅ 자동로그인 success")
-    func isOnboardingCompleted_true__autoLogin_success() async throws {
+    func isRegistered_true__autoLogin_success() async throws {
         // Given
         let authRepository = MockAuthRepository(
             network: networkService,
             userDefaultsService: userDefaultsService,
             keychainService: keychainService
         )
-        let _ = userDefaultsService.save(true, key: .isOnboardingCompleted)
+        let _ = userDefaultsService.save(true, key: .isRegistered)
         let autoLoginUseCase = DefaultAutoLoginUseCase(repository: authRepository)
         
         // When

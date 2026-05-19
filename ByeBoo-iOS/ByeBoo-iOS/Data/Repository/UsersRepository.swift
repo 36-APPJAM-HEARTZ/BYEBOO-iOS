@@ -50,7 +50,7 @@ struct DefaultUsersRepository: UsersInterface {
         )
         let _ = userDefaultsService.save(result.id, key: .userID)
         let _ = userDefaultsService.save(result.name, key: .userName)
-        let _ = userDefaultsService.save(true, key: .isOnboardingCompleted)
+        let _ = userDefaultsService.save(true, key: .isRegistered)
         let _ = userDefaultsService.save(false, key: .hasEnterMyPage)
         let _ = userDefaultsService.save(false, key: .alarmEnabled)
         
