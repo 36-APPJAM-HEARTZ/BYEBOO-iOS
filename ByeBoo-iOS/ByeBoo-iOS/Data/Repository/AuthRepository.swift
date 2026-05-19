@@ -97,12 +97,12 @@ struct DefaultAuthRepository: AuthInterface {
     }
     
     func autoLogin() async throws -> Bool {
-        let isOnboardingCompleted: Bool = userDefaultsService.load(key: .isOnboardingCompleted) ?? false
-        ByeBooLogger.debug("온보딩 여부 \(isOnboardingCompleted)")
+        let isRegistered: Bool = userDefaultsService.load(key: .isRegistered) ?? false
+        ByeBooLogger.debug("온보딩 여부 \(isRegistered)")
         
         if !keychainService.load(key: .accessToken).isEmpty
             && !keychainService.load(key: .refreshToken).isEmpty
-            && isOnboardingCompleted
+            && isRegistered
         {
             ByeBooLogger.debug("정보 있음")
             try await tokenService.reissue()
@@ -136,7 +136,7 @@ struct DefaultAuthRepository: AuthInterface {
         }
         
         clearKeychain()
-        removeUserInfo(excludedKeys: [.isOnboardingCompleted, .isHelperShown, .hasEnterMyPage])
+        removeUserInfo(excludedKeys: [.isRegistered, .isHelperShown, .hasEnterMyPage])
         
         return true
     }
