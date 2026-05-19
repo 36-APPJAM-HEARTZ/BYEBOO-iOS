@@ -16,12 +16,17 @@ struct CommonQuestAnswersResponseDTO: Decodable {
 }
 
 struct CommonQuestAnswerResponseDTO: Decodable {
+//    let likeCount: Int
+//    let commentCount: Int
+//    let isLiked: Bool
     let answerId: Int
+//    let userId: Int
+//    let writerId: String
     let writer: String
+    let writerId: Int
     let profileIcon: String
     let writtenAt: String
     let content: String
-    let writerId: Int
 }
 
 extension CommonQuestAnswersResponseDTO {
@@ -41,13 +46,26 @@ extension CommonQuestAnswersResponseDTO {
 extension CommonQuestAnswerResponseDTO {
     func toEntity(userName: String) -> CommonQuestAnswerEntity {
         .init(
+//            isMyAnswer: userName == writerId ? true : false,
+//            answerID: answerId,
+//            writerID: writerId,
+//            profileIcon: profileIcon,
+//            writtenAt: writtenAt,
+//            content: content,
+//            userID: userId,
+//            likeCount: likeCount,
+//            commentCount: commentCount,
+//            isLiked: isLiked
             isMyAnswer: userName == writer ? true : false,
             answerID: answerId,
-            writer: writer,
+            writerID: writer,
             profileIcon: profileIcon,
             writtenAt: writtenAt,
             content: content,
-            writerID: writerId
+            userID: writerId,
+            likeCount: 3,
+            commentCount: 4,
+            isLiked: false,
         )
     }
 }

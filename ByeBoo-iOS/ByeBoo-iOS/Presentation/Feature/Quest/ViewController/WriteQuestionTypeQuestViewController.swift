@@ -217,6 +217,8 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                             historyVC.configure(
                                 question: questTitle,
                                 writtenAt: writtenAt,
+                                profileIcon: .relievedBadge, // TODO: 서버 수정 후 고치기
+                                nickname: "냐냐냐",
                                 content: self.rootView.questTextField.textView.text
                             )
                         }
@@ -307,7 +309,7 @@ extension WriteQuestionTypeQuestViewController {
     
     private func setQuestTextField(answer: String) {
         rootView.questTextField.do {
-            $0.applyTextViewStyle(text: answer, color: .grayscale100)
+            $0.textView.applyTextViewStyle(style: .body3R16 ,text: answer, color: .grayscale100)
             $0.isPlaceholderActive = false
         }
         rootView.layoutIfNeeded()

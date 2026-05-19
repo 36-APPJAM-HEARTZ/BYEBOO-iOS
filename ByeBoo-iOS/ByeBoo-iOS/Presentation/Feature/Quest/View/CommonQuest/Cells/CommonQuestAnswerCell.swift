@@ -16,8 +16,7 @@ final class CommonQuestAnswerCell: UITableViewCell {
     private let containerView = UIView()
     private let userIconView = UIImageView()
     private let userNicknameLabel = UILabel()
-    private let answerContentLabel = UILabel()
-    private let writtenDateLabel = UILabel()
+    private(set) var questContentView = QuestContentView()
     
     override init(
         style: UITableViewCell.CellStyle,
@@ -47,24 +46,14 @@ final class CommonQuestAnswerCell: UITableViewCell {
             style: .body6R14,
             color: .grayscale200
         )
-        answerContentLabel.applyByeBooFont(
-            style: .body3R16,
-            color: .grayscale100,
-            numberOfLines: 0
-        )
-        writtenDateLabel.applyByeBooFont(
-            style: .body6R14,
-            color: .grayscale400
-        )
     }
     
     private func setUI() {
-        addSubview(containerView)
+        contentView.addSubview(containerView)
         containerView.addSubviews(
             userIconView,
             userNicknameLabel,
-            answerContentLabel,
-            writtenDateLabel
+            questContentView
         )
     }
     
@@ -84,14 +73,9 @@ final class CommonQuestAnswerCell: UITableViewCell {
             $0.leading.equalTo(userIconView.snp.trailing).offset(4.adjustedW)
             $0.centerY.equalTo(userIconView.snp.centerY)
         }
-        answerContentLabel.snp.makeConstraints {
-            $0.top.equalTo(userIconView.snp.bottom).offset(12.adjustedH)
+        questContentView.snp.makeConstraints {
+            $0.top.equalTo(userNicknameLabel.snp.bottom).offset(12.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-            $0.height.equalTo(47.adjustedH)
-        }
-        writtenDateLabel.snp.makeConstraints {
-            $0.top.equalTo(answerContentLabel.snp.bottom).offset(20.adjustedH)
-            $0.leading.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(16.adjustedH)
         }
     }
@@ -107,10 +91,16 @@ extension CommonQuestAnswerCell {
         if let profileIcon {
             userIconView.image = profileIcon
         }
-        userNicknameLabel.text = answer.writer
-        answerContentLabel.text = answer.content
-        writtenDateLabel.text = writtenAt
+        userNicknameLabel.text = answer.writerID
         answerID = answer.answerID
+        questContentView.configure(
+            content: answer.content,
+            writtenAt: writtenAt,
+            isLiked: false,
+            likeCount: 4,
+            commentCount: 3,
+            showAllText: false
+        )
     }
     
     func getAnswewrID() -> Int? {

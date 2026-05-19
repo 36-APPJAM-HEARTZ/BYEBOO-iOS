@@ -137,19 +137,18 @@ extension CommonQuestViewController: UITableViewDelegate {
             DateFormatter.toDisplayDateString(from: $0)
         }
         
-        guard let formattedWrittenAt else {
-            return
-        }
+        guard let formattedWrittenAt else { return }
+        guard let profileIcon = viewModel.getProfileIcon(at: answerIndex) else { return }
         
         let historyViewController = ViewControllerFactory.shared.makeCommonQuestHistoryViewController()
         historyViewController.configure(
             question: viewModel.question,
             writtenAt: formattedWrittenAt,
-            profileIcon: viewModel.getProfileIcon(at: answerIndex),
-            nickname: answer.writer,
+            profileIcon: profileIcon,
+            nickname: answer.writerID,
             content: answer.content,
             answerID: answer.answerID,
-            writerID: answer.writerID,
+            writerID: answer.userID,
             isMyAnswer: answer.isMyAnswer
         )
         historyViewController.navigationItem.hidesBackButton = true
@@ -163,7 +162,7 @@ extension CommonQuestViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForRowAt indexPath: IndexPath
     ) -> CGFloat {
-        indexPath.row == 0 ? UITableView.automaticDimension : 171.adjustedH
+        UITableView.automaticDimension
     }
     
     func tableView(
@@ -260,7 +259,7 @@ extension CommonQuestViewController: UITableViewDataSource {
         let answer = viewModel.getAnswer(at: indexPath.row - 1)
         let profileIcon = viewModel.getProfileIcon(at: indexPath.row - 1)
         let writtenAt = viewModel.getWrittenAt(at: indexPath.row - 1)
-        
+        cell.questContentView.delegate = self
         if let answer,
            let writtenAt {
             cell.bind(
@@ -279,5 +278,11 @@ extension CommonQuestViewController: UITableViewDataSource {
     ) -> UITableViewCell {
         let cell: NoAnswerCell = tableView.dequeueReusableCell(for: indexPath)
         return cell
+    }
+}
+
+extension CommonQuestViewController: CommonQuestLikeCommentProtocol {
+    func likeButtonDidTap() {
+        // TODO: like button
     }
 }

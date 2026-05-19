@@ -7,12 +7,13 @@
 
 import UIKit
 
+import SnapKit
+
 final class CommonQuestHistoryView: BaseView {
+
+    private var commentTextViewBottomConstraint: Constraint?
     
-    private var profileIcon: UIImage?
-    private var nickname: String?
-    
-    private let scrollView = UIScrollView()
+    private(set) var scrollView = UIScrollView()
     private let contentView = UIView()
     private let commonQuestLabel = UILabel()
     private let dateLabel = UILabel()
@@ -22,9 +23,14 @@ final class CommonQuestHistoryView: BaseView {
     private let answerView = UIView()
     private let profileIconImageView = UIImageView()
     private let userNicknameLabel = UILabel()
-    private let answerContentLabel = UILabel()
+    private let questContentView = QuestContentView()
+    private(set) var commentListView = SelfSizingTableView()
+    private let commentTextView = CommentTextView()
     
     override func setStyle() {
+        scrollView.do {
+            $0.showsVerticalScrollIndicator = false
+        }
         commonQuestLabel.applyByeBooFont(
             style: .body6R14,
             text: "공통퀘스트",
@@ -51,44 +57,35 @@ final class CommonQuestHistoryView: BaseView {
             $0.layer.cornerRadius = 12
             $0.backgroundColor = .white5
         }
+        commentListView.do {
+            $0.isScrollEnabled = false
+            $0.rowHeight = UITableView.automaticDimension
+            $0.estimatedRowHeight = 100
+        }
         userNicknameLabel.applyByeBooFont(
             style: .body6R14,
             color: .grayscale200
         )
-        answerContentLabel.do {
-            $0.applyByeBooFont(
-                style: .body3R16,
-                color: .grayscale100,
-                numberOfLines: 0
-            )
-        }
     }
     
     override func setUI() {
-        addSubview(scrollView)
+        addSubviews(scrollView, commentTextView)
         scrollView.addSubview(contentView)
         contentView.addSubviews(
             commonQuestLabel,
             dateLabel,
             questionView,
-            answerView
+            answerView,
+            commentListView
         )
         questionView.addSubviews(
             questionMarkLabel,
             questionContentLabel
         )
-        
-        guard let _ = profileIcon,
-              let _ = nickname
-        else {
-            answerView.addSubview(answerContentLabel)
-            return
-        }
-        
         answerView.addSubviews(
             profileIconImageView,
             userNicknameLabel,
-            answerContentLabel
+            questContentView
         )
     }
     
@@ -96,7 +93,7 @@ final class CommonQuestHistoryView: BaseView {
         scrollView.snp.makeConstraints {
             $0.top.equalTo(safeAreaLayoutGuide).offset(16.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-            $0.bottom.equalToSuperview().inset(24.adjustedH)
+            $0.bottom.equalTo(commentTextView.snp.top)
         }
         contentView.snp.makeConstraints {
             $0.edges.equalTo(scrollView.contentLayoutGuide)
@@ -129,20 +126,7 @@ final class CommonQuestHistoryView: BaseView {
         answerView.snp.makeConstraints {
             $0.top.equalTo(questionView.snp.bottom).offset(30.adjustedH)
             $0.horizontalEdges.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
-        
-        guard let _ = profileIcon,
-              let _ = nickname
-        else {
-            answerContentLabel.snp.makeConstraints {
-                $0.top.equalToSuperview().inset(16.adjustedH)
-                $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-                $0.bottom.equalToSuperview().inset(16.adjustedH)
-            }
-            return
-        }
-        
         profileIconImageView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(16.adjustedH)
             $0.leading.equalToSuperview().inset(24.adjustedW)
@@ -153,44 +137,55 @@ final class CommonQuestHistoryView: BaseView {
             $0.centerY.equalTo(profileIconImageView)
             $0.trailing.equalToSuperview().inset(24.adjustedW)
         }
-        answerContentLabel.snp.makeConstraints {
+        questContentView.snp.makeConstraints {
             $0.top.equalTo(profileIconImageView.snp.bottom).offset(12.adjustedH)
             $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(16.adjustedH)
+        }
+        commentListView.snp.makeConstraints {
+            $0.top.equalTo(answerView.snp.bottom).offset(24.adjustedH)
+            $0.horizontalEdges.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(24.adjustedH)
+        }
+        commentTextView.snp.makeConstraints {
+            $0.horizontalEdges.equalToSuperview()
+            commentTextViewBottomConstraint = $0.bottom.equalToSuperview().inset(34.adjustedH).constraint
         }
     }
 }
 
 extension CommonQuestHistoryView {
-    
+
+    func updateLayout(keyboardHeight: CGFloat) {
+        let inset = keyboardHeight > 0 ? keyboardHeight : 34.adjustedH
+        commentTextViewBottomConstraint?.update(inset: inset)
+    }
+}
+
+extension CommonQuestHistoryView {
+
     func configure(
         question: String,
         writtenAt: String,
-        profileIcon: UIImage?,
-        nickname: String?,
-        content: String
+        profileIcon: UIImage,
+        nickname: String,
+        content: String,
+        isLiked: Bool,
+        likeCount: Int,
+        commentCount: Int
     ) {
         questionContentLabel.text = question
         dateLabel.text = writtenAt
-        answerContentLabel.text = content
+        questContentView.configure(
+            content: content,
+            isLiked: isLiked,
+            likeCount: likeCount,
+            commentCount: commentCount,
+            showAllText: true
+        )
+                
+        profileIconImageView.image = profileIcon
+        userNicknameLabel.text = nickname
         
-        answerContentLabel.do {
-            $0.applyByeBooFont(
-                style: .body3R16,
-                text: content,
-                color: .grayscale100,
-                numberOfLines: 0
-            )
-        }
-        
-        if let profileIcon {
-            self.profileIcon = profileIcon
-            profileIconImageView.image = profileIcon
-        }
-        
-        if let nickname {
-            self.nickname = nickname
-            userNicknameLabel.text = nickname
-        }
     }
 }

@@ -90,27 +90,6 @@ extension CommonQuestViewModel: ViewModelType {
 }
 
 extension CommonQuestViewModel {
-    
-    private enum ProfileIcon: String, CaseIterable {
-        case sad = "SADNESS"
-        case selfUnderstanding = "SELF_UNDERSTANDING"
-        case soso = "SO_SO"
-        case relieved = "RELIEVED"
-        
-        var image: UIImage {
-            switch self {
-            case .sad:
-                return .sadnessBadge
-            case .selfUnderstanding:
-                return .selfUnderstandingBadge
-            case .soso:
-                return .sosoBadge
-            case .relieved:
-                return .relievedBadge
-            }
-        }
-    }
-        
     var question: String {
         commonQuest?.question ?? ""
     }
@@ -141,17 +120,10 @@ extension CommonQuestViewModel {
         }
         return answers[index]
     }
-    
+
     func getProfileIcon(at index: Int) -> UIImage? {
-        guard index >= 0 && index < answers.count else {
-            return nil
-        }
-        
-        let iconString = self.answers[index].profileIcon
-        let profileIcon = ProfileIcon.allCases
-            .first { $0.rawValue == iconString }?
-            .image
-        return profileIcon
+        guard index >= 0 && index < answers.count else { return nil }
+        return ProfileIcon.image(for: answers[index].profileIcon)
     }
     
     func getWrittenAt(at index: Int) -> String? {
