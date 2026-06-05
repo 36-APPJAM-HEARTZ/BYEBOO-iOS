@@ -22,13 +22,15 @@ final class HomeViewModel {
     private var isHelperShownResultSubject = CurrentValueSubject<Bool, Never>(true)
     private var homeStateResultSubject = PassthroughSubject<Result<UserQuestStatusEntity, ByeBooError>, Never>()
     private var journeyResultSubject = PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never>()
-
+    private var notificationResultSubject = PassthroughSubject<Result<NotificationListEntity, ByeBooError>, Never>()
+    
     private let fetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase
     private let fetchQuestStatusUseCase: FetchQuestStatusUseCase
     private let fetchUserJourneyUseCase: FetchUserJourneyUseCase
     private let getUserNameUseCase: GetUserNameUseCase
     private let setHelperUseCase: SetHelperUseCase
     private let getHelperUseCase: GetHelperUseCase
+    private let fetchNotificationListUseCase: FetchNotificationListUseCase
     
     init(
         fetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase,
@@ -36,7 +38,8 @@ final class HomeViewModel {
         fetchUserJourneyUseCase: FetchUserJourneyUseCase,
         getUserNameUseCase: GetUserNameUseCase,
         setHelperUseCase: SetHelperUseCase,
-        getHelperUseCase: GetHelperUseCase
+        getHelperUseCase: GetHelperUseCase,
+        fetchNotificationListUseCase: FetchNotificationListUseCase
     ) {
         self.fetchCharacterDialogueUseCase = fetchCharacterDialogueUseCase
         self.fetchQuestStatusUseCase = fetchQuestStatusUseCase
@@ -44,13 +47,15 @@ final class HomeViewModel {
         self.getUserNameUseCase = getUserNameUseCase
         self.setHelperUseCase = setHelperUseCase
         self.getHelperUseCase = getHelperUseCase
+        self.fetchNotificationListUseCase = fetchNotificationListUseCase
         
         output = Output(
             characterResult: characterResultSubject.eraseToAnyPublisher(),
             userResult: userResultSubject.eraseToAnyPublisher(),
             helperResult: isHelperShownResultSubject.eraseToAnyPublisher(),
             homeStateResult: homeStateResultSubject.eraseToAnyPublisher(),
-            journeyResult: journeyResultSubject.eraseToAnyPublisher()
+            journeyResult: journeyResultSubject.eraseToAnyPublisher(),
+            notificationResult: notificationResultSubject.eraseToAnyPublisher()
         )
     }
 }
@@ -137,7 +142,6 @@ extension HomeViewModel {
     }
     
     private func isHelperShown(state: HomeState) {
-        
         if !getHelperUseCase.execute() && state == .beforeJourneyStart {
             isHelperShownResultSubject.send(false)
         } else {
@@ -147,5 +151,14 @@ extension HomeViewModel {
     
     private func setHelperShown() {
         setHelperUseCase.execute()
+    }
+    
+    private func fetchNotificationList() async {
+        do {
+            let notifications = try await fetchNotificationListUseCase.execute()
+            notificationResultSubject.send(.success(notifications))
+        } catch {
+            notificationResultSubject.send(.failure(error as? ByeBooError ?? ByeBooError.unknownError))
+        }
     }
 }
