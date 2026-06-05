@@ -145,11 +145,14 @@ extension CommonQuestViewController: UITableViewDelegate {
             question: viewModel.question,
             writtenAt: formattedWrittenAt,
             profileIcon: profileIcon,
-            nickname: answer.writerID,
+            nickname: answer.writer,
             content: answer.content,
             answerID: answer.answerID,
-            writerID: answer.userID,
-            isMyAnswer: answer.isMyAnswer
+            writerID: answer.writerID,
+            isMyAnswer: answer.isMyAnswer,
+            isLiked: answer.isLiked,
+            likeCount: answer.likeCount,
+            commentCount: answer.commentCount
         )
         historyViewController.navigationItem.hidesBackButton = true
         self.navigationController?.pushViewController(

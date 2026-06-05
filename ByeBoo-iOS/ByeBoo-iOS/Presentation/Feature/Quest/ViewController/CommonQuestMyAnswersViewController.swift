@@ -116,9 +116,12 @@ extension CommonQuestMyAnswersViewController: UITableViewDelegate {
             question: answer.question,
             writtenAt: answer.writtenAt,
             profileIcon: .relievedBadge,
-            nickname: "냐냐냐",
+            nickname: answer.nickname,
             content: answer.content,
-            answerID: answer.answerID
+            answerID: answer.answerID,
+            isLiked: answer.isLiked,
+            likeCount: answer.likeCount,
+            commentCount: answer.commentCount
         )
         
         self.navigationController?.pushViewController(historyViewController, animated: false)
@@ -201,9 +204,9 @@ extension CommonQuestMyAnswersViewController: UITableViewDataSource {
             question: answer.question,
             content: answer.content,
             writtenAt: answer.writtenAt,
-            isLiked: true,
-            likeCount: 3,
-            commentCount: 3
+            isLiked: answer.isLiked,
+            likeCount: answer.likeCount,
+            commentCount: answer.commentCount
         )
         return cell
     }

@@ -103,7 +103,11 @@ extension CommonQuestMyAnswerViewModel {
             answerID: answer.answerID,
             writtenAt: displayDate,
             content: answer.content,
-            question: answer.question
+            question: answer.question,
+            nickname: answer.nickname,
+            isLiked: answer.isLiked,
+            likeCount: answer.likeCount,
+            commentCount: answer.commentCount
         )
     }
 }

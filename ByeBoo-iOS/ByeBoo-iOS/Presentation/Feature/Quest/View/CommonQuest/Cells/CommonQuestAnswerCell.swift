@@ -91,14 +91,14 @@ extension CommonQuestAnswerCell {
         if let profileIcon {
             userIconView.image = profileIcon
         }
-        userNicknameLabel.text = answer.writerID
+        userNicknameLabel.text = answer.writer
         answerID = answer.answerID
         questContentView.configure(
             content: answer.content,
             writtenAt: writtenAt,
-            isLiked: false,
-            likeCount: 4,
-            commentCount: 3,
+            isLiked: answer.isLiked,
+            likeCount: answer.likeCount,
+            commentCount: answer.likeCount,
             showAllText: false
         )
     }
