@@ -349,5 +349,16 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 deleteBlockedUserUseCase: deleteBlockedUserUseCase
             )
         }
+        
+        DIContainer.shared.register(type: CommonQuestHistoryViewModel.self) { container in
+            guard let fetchCommonQuestDetailUseCase = container.resolve(type: FetchCommonQuestDetailUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return CommonQuestHistoryViewModel(
+                fetchCommonQuestCommentsUseCase: fetchCommonQuestDetailUseCase
+            )
+        }
     }
 }
