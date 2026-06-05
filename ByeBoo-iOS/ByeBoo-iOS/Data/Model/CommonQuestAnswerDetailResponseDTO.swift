@@ -9,8 +9,19 @@ import Foundation
 
 struct CommonQuestAnswerDetailResponseDTO: Decodable {
     let question: String
-    let answer: CommonQuestAnswerResponseDTO
+    let answer: CommonQuestAnswerSimpleResponseDTO
     let comments: [CommonQuestCommentResponseDTO]
+}
+
+struct CommonQuestAnswerSimpleResponseDTO: Decodable {
+    let content: String
+    let writerId: Int
+    let writer: String
+    let profileIcon: String
+    let likeCount: Int
+    let commentCount: Int
+    let isLiked: Bool
+    let writtenAt: String 
 }
 
 struct CommonQuestCommentResponseDTO: Decodable {

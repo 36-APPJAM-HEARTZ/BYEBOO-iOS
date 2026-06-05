@@ -19,22 +19,26 @@ struct CommonQuestMyAnswerResponseDTO: Decodable {
 }
 
 extension CommonQuestMyAnswersResponseDTO {
-    func toEntity() -> CommonQuestMyAnswersEntity {
+    func toEntity(userName: String) -> CommonQuestMyAnswersEntity {
         .init(
             hasNext: hasNext,
             nextCursor: nextCursor,
-            answers: answers.map { $0.toEntity()
+            answers: answers.map { $0.toEntity(userName: userName)
             })
     }
 }
 
 extension CommonQuestMyAnswerResponseDTO {
-    func toEntity() -> CommonQuestMyAnswerEntity {
+    func toEntity(userName: String) -> CommonQuestMyAnswerEntity {
         .init(
             answerID: answerId,
             writtenAt: writtenAt,
             content: content,
-            question: question
+            question: question,
+            nickname: userName,
+            isLiked: false,
+            likeCount: 2,
+            commentCount: 3 // TODO: 서버수정되면 수정하기
         )
     }
 }
