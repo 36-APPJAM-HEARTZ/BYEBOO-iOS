@@ -23,10 +23,11 @@ struct DomainDependencyAssembler: DependencyAssembler {
               let forbiddenWordRepository = DIContainer.shared.resolve(type: ForbiddenWordInterface.self),
               let commonQuestRepository = DIContainer.shared.resolve(type: CommonQuestInterface.self),
               let blocksRepository = DIContainer.shared.resolve(type: BlocksInterface.self),
-              let reportsRepository = DIContainer.shared.resolve(type: ReportsInterface.self) else {
-                ByeBooLogger.error(ByeBooError.DIFailedError)
-                return
-            }
+              let reportsRepository = DIContainer.shared.resolve(type: ReportsInterface.self),
+              let notificationRepository = DIContainer.shared.resolve(type: NotificationInterface.self) else {
+            ByeBooLogger.error(ByeBooError.DIFailedError)
+            return
+        }
         
         DIContainer.shared.register(type: FetchUserJourneyUseCase.self) { _ in
             return DefaultFetchUserJourneyUseCase(repository: userRepository)
@@ -171,7 +172,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: FetchCommonQuestMyAnswersUseCase.self) { _ in
             return DefaultFetchCommonQuestMyAnswersUseCase(repository: userRepository)
         }
-      
+        
         DIContainer.shared.register(type: FetchAIAnswerUseCase.self) { _ in
             return DefaultFetchAIAnswerUseCase(repository: questRepository)
         }
@@ -187,7 +188,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: UpdateCommonQuestUseCase.self) { _ in
             return DefaultUpdateCommonQuestUseCase(repository: commonQuestRepository)
         }
-      
+        
         DIContainer.shared.register(type: BlockUserUseCase.self) { _ in
             return DefaultBlockUserCase(repository: blocksRepository)
         }
@@ -206,6 +207,10 @@ struct DomainDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: DeleteCommonQuestUseCase.self) { _ in
             return DefaultDeleteCommonQuestUseCase(repository: commonQuestRepository)
+        }
+        
+        DIContainer.shared.register(type: FetchNotificationListUseCase.self) { _ in
+            return DefaultFetchNotificationListUseCase(repository: notificationRepository)
         }
     }
 }

@@ -107,7 +107,9 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                   let setHelperUseCase = container.resolve(type: SetHelperUseCase.self),
                   let fetchUserJourneyUseCase = container.resolve(type: FetchUserJourneyUseCase.self),
                   let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
-                  let getHelperUseCase = container.resolve(type: GetHelperUseCase.self) else {
+                  let getHelperUseCase = container.resolve(type: GetHelperUseCase.self),
+                  let fetchNotificationListUseCase = container.resolve(type: FetchNotificationListUseCase.self)
+            else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -118,7 +120,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 fetchUserJourneyUseCase: fetchUserJourneyUseCase,
                 getUserNameUseCase: getUserNameUseCase,
                 setHelperUseCase: setHelperUseCase,
-                getHelperUseCase: getHelperUseCase
+                getHelperUseCase: getHelperUseCase,
+                fetchNotificationListUseCase: fetchNotificationListUseCase
             )
         }
         

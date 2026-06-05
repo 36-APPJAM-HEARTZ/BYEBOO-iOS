@@ -67,6 +67,10 @@ struct DataDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: ReportsInterface.self) { _ in
             return DefaultReportsRepository(networkService: networkService)
         }
+        
+        DIContainer.shared.register(type: NotificationInterface.self) { _ in
+            return DefaultNotificationRepository(networkService: networkService)
+        }
     }
 }
 
