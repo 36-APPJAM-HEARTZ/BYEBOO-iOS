@@ -144,11 +144,12 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func fetchMyCommonQuestAnswers(cursor: Int?) async throws -> CommonQuestMyAnswersEntity {
+        let userName: String = userDefaultsService.load(key: .userName) ?? ""
         let result = try await network.request(
             UsersAPI.fetchCommonQuestAnswers(cursor: cursor),
             decodingType: CommonQuestMyAnswersResponseDTO.self
         )
-        return result.toEntity()
+        return result.toEntity(userName: userName)
     }
     
     var alarmEnabled: Bool {
