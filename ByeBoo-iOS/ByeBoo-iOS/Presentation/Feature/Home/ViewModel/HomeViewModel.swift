@@ -72,17 +72,24 @@ extension HomeViewModel: ViewModelType {
         let helperResult: AnyPublisher<Bool, Never>
         let homeStateResult: AnyPublisher<Result<UserQuestStatusEntity, ByeBooError>, Never>
         let journeyResult: AnyPublisher<Result<JourneyEntity, ByeBooError>, Never>
+        let notificationResult: AnyPublisher<Result<NotificationListEntity, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
         switch trigger {
         case .viewWillAppear:
-            // TODO: 구조적 동시성 반영
-            fetchDialogue()
-            fetchStatus()
-            fetchJourney()
-            
             getUserResult()
+            
+            Task {
+                await withTaskGroup(of: Void.self) { group in
+                    group.addTask { await self.fetchDialogue() }
+                    group.addTask { await self.fetchStatus() }
+                    group.addTask { await self.fetchJourney() }
+                    group.addTask { await self.fetchNotificationList() }
+                    
+                    await group.waitForAll()
+                }
+            }
         case .helperDidTap:
             setHelperShown()
         }
@@ -90,49 +97,43 @@ extension HomeViewModel: ViewModelType {
 }
 
 extension HomeViewModel {
-    private func fetchDialogue() {
-        Task {
-            do {
-                let dialogues = try await fetchCharacterDialogueUseCase.execute()
-                characterResultSubject.send(.success(dialogues))
-            } catch {
-                characterResultSubject.send(
-                    .failure(
-                        error as? ByeBooError ?? ByeBooError.unknownError
-                    )
+    private func fetchDialogue() async {
+        do {
+            let dialogues = try await fetchCharacterDialogueUseCase.execute()
+            characterResultSubject.send(.success(dialogues))
+        } catch {
+            characterResultSubject.send(
+                .failure(
+                    error as? ByeBooError ?? ByeBooError.unknownError
                 )
-            }
+            )
         }
     }
     
-    private func fetchStatus() {
-        Task {
-            do {
-                let status = try await fetchQuestStatusUseCase.execute()
-                homeStateResultSubject.send(.success(status))
-                isHelperShown(state: status.currentStatus)
-                ByeBooLogger.debug("home status: \(status)")
-            } catch {
-                if let error = error as? ByeBooError {
-                    homeStateResultSubject.send(.failure(error))
-                }
-                isHelperShown(state: .beforeJourneyStart)
+    private func fetchStatus() async {
+        do {
+            let status = try await fetchQuestStatusUseCase.execute()
+            homeStateResultSubject.send(.success(status))
+            isHelperShown(state: status.currentStatus)
+            ByeBooLogger.debug("home status: \(status)")
+        } catch {
+            if let error = error as? ByeBooError {
+                homeStateResultSubject.send(.failure(error))
             }
+            isHelperShown(state: .beforeJourneyStart)
         }
     }
     
-    private func fetchJourney() {
-        Task {
-            do {
-                let journey = try await fetchUserJourneyUseCase.execute()
-                journeyResultSubject.send(.success(journey))
-            } catch {
-                journeyResultSubject.send(
-                    .failure(
-                        error as? ByeBooError ?? ByeBooError.unknownError
-                    )
+    private func fetchJourney() async {
+        do {
+            let journey = try await fetchUserJourneyUseCase.execute()
+            journeyResultSubject.send(.success(journey))
+        } catch {
+            journeyResultSubject.send(
+                .failure(
+                    error as? ByeBooError ?? ByeBooError.unknownError
                 )
-            }
+            )
         }
     }
     
