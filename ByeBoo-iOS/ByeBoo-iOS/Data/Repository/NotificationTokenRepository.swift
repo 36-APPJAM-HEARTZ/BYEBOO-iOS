@@ -5,7 +5,7 @@
 //  Created by APPLE on 11/22/25.
 //
 
-struct DefaultNotificationRepository: NotificationInterface {
+struct DefaultNotificationTokenRepository: NotificationTokenInterface {
     
     private let network: NetworkService
     private let userDefaultsService: UserDefaultService
@@ -38,7 +38,7 @@ struct DefaultNotificationRepository: NotificationInterface {
         
         let fcmTokenDTO = createDTO(token: token)
         try await network.request(
-            NotificationAPI.saveToken(dto: fcmTokenDTO)
+            NotificationTokenAPI.saveToken(dto: fcmTokenDTO)
         )
         saveToken(token: token)
     }
@@ -53,7 +53,7 @@ struct DefaultNotificationRepository: NotificationInterface {
         
         let fcmTokenDTO = createDTO(token: token)
         try await network.request(
-            NotificationAPI.updateToken(dto: fcmTokenDTO)
+            NotificationTokenAPI.updateToken(dto: fcmTokenDTO)
         )
         saveToken(token: token)
     }
@@ -66,7 +66,7 @@ struct DefaultNotificationRepository: NotificationInterface {
         let fcmTokenDTO = createDTO(token: token)
         let accessToken = keychainService.load(key: .accessToken)
         try await network.request(
-            NotificationAPI.deleteToken(dto: fcmTokenDTO)
+            NotificationTokenAPI.deleteToken(dto: fcmTokenDTO)
         )
         let _ = userDefaultsService.delete(key: .fcmToken)
     }
@@ -76,7 +76,7 @@ struct DefaultNotificationRepository: NotificationInterface {
     }
 }
 
-final class MockNotificationRepository: NotificationInterface {
+final class MockNotificationTokenRepository: NotificationTokenInterface {
     
     private let userDefaultsService: UserDefaultService
     var sendTokenCalled = false

@@ -9,13 +9,13 @@ import Foundation
 
 import Alamofire
 
-enum NotificationAPI {
+enum NotificationTokenAPI {
     case saveToken(dto: FCMTokenDTO)
     case updateToken(dto: FCMTokenDTO)
     case deleteToken(dto: FCMTokenDTO)
 }
 
-extension NotificationAPI: EndPoint {
+extension NotificationTokenAPI: EndPoint {
         
     var basePath: String {
         return "/api/v1/notification-tokens"

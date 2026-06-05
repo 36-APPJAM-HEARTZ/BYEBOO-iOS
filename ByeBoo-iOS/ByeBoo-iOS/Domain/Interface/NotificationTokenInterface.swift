@@ -5,7 +5,7 @@
 //  Created by APPLE on 11/26/25.
 //
 
-protocol NotificationInterface {
+protocol NotificationTokenInterface {
     func loadToken() -> String?
     func sendToken(token: String) async throws
     func saveToken(token: String)
