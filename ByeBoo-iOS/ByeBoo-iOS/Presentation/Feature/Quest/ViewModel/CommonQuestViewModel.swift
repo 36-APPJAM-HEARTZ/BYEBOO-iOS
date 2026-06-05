@@ -127,25 +127,7 @@ extension CommonQuestViewModel {
     }
     
     func getWrittenAt(at index: Int) -> String? {
-        guard index >= 0 && index < answers.count,
-              let writtenAt = DateFormatter.toDetailDate(from: answers[index].writtenAt)
-        else {
-            return nil
-        }
-        
-        let diffTime = Date().timeIntervalSince(writtenAt)
-        
-        switch diffTime {
-        case ..<minute:
-            return "방금 전"
-        case minute..<hour:
-            let minutes = Int(diffTime / minute)
-            return "\(minutes)분 전"
-        case hour..<day:
-            let hours = Int(diffTime / hour)
-            return "\(hours)시간 전"
-        default:
-            return DateFormatter.toDisplayDateString(from: writtenAt)
-        }
+        guard index >= 0 && index < answers.count else { return nil }
+        return ServerDateFormatter.shared.relativeTimeString(from: answers[index].writtenAt)
     }
 }
