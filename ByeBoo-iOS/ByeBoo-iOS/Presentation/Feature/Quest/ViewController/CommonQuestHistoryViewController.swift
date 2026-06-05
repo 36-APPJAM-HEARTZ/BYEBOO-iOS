@@ -5,6 +5,7 @@
 //  Created by APPLE on 2/24/26.
 //
 
+import Combine
 import UIKit
 
 import Mixpanel
@@ -12,9 +13,19 @@ import Mixpanel
 final class CommonQuestHistoryViewController: BaseViewController {
     
     private var dataSource: UITableViewDiffableDataSource<CommentSection, CommentItem>!
+    private var cancellable = Set<AnyCancellable>()
     
     private let rootView = CommonQuestHistoryView()
-    private let viewModel = CommonQuestHistoryViewModel()
+    private let viewModel: CommonQuestHistoryViewModel
+    
+    init(viewModel: CommonQuestHistoryViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private var answerID: Int?
     private var answer: String?
@@ -32,6 +43,9 @@ final class CommonQuestHistoryViewController: BaseViewController {
         self.tabBarController?.tabBar.isHidden = true
         addKeyboardObservers()
         
+        viewModel.action(.viewWillAppear(answerID: answerID ?? 0))
+        bind()
+        
         Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyOthersAnswerPageview)
     }
     
@@ -47,7 +61,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
         )
         
         configureDataSource()
-        applySnapshot()
+//        applySnapshot()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -92,7 +106,7 @@ extension CommonQuestHistoryViewController {
                 replyCount: entity.replyCount,
                 writer: entity.writer,
                 profileIcon: ProfileIcon.image(for: entity.profileIcon) ?? .relievedBadge,
-                writtenAt: entity.writtenAt,
+                writtenAt: ServerDateFormatter.shared.relativeTimeString(from: entity.writtenAt) ?? "",
                 content: entity.content,
                 showAllText: item.showAllText,
                 isReplySheet: false
@@ -102,10 +116,10 @@ extension CommonQuestHistoryViewController {
         }
     }
     
-    private func applySnapshot() {
+    private func applySnapshot(commentList: [CommonQuestCommentEntity]) {
         var snapshot = NSDiffableDataSourceSnapshot<CommentSection, CommentItem>()
         snapshot.appendSections([.main])
-        let items = viewModel.commentLists.map { CommentItem(entity: $0, showAllText: false) }
+        let items = commentList.map { CommentItem(entity: $0, showAllText: false) }
         snapshot.appendItems(items, toSection: .main)
         dataSource.apply(snapshot, animatingDifferences: false)
     }
@@ -189,6 +203,10 @@ extension CommonQuestHistoryViewController: CommentProtocol {
         }
         self.present(viewController, animated: true)
     }
+    
+    func menuButtonDidTap(commentID: Int) {
+        
+    }
 }
 
 extension CommonQuestHistoryViewController {
@@ -201,7 +219,10 @@ extension CommonQuestHistoryViewController {
         content: String,
         answerID: Int? = nil,
         writerID: Int? = nil,
-        isMyAnswer: Bool? = nil
+        isMyAnswer: Bool? = nil,
+        isLiked: Bool,
+        likeCount: Int,
+        commentCount: Int
     ) {
         self.answerID = answerID
         self.answer = content
@@ -222,9 +243,9 @@ extension CommonQuestHistoryViewController {
             profileIcon: profileIcon,
             nickname: nickname,
             content: content,
-            isLiked: false,
-            likeCount: 4,
-            commentCount: 5
+            isLiked: isLiked,
+            likeCount: likeCount,
+            commentCount: commentCount
         )
     }
 }
@@ -245,6 +266,20 @@ extension CommonQuestHistoryViewController {
     @objc
     private func dismissKeyboard() {
         view.endEditing(true)
+    }
+    
+    private func bind() {
+        viewModel.output.fetchCommonQuestCommentsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let commentList):
+                    self?.applySnapshot(commentList: commentList)
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellable)
     }
 }
 

@@ -64,4 +64,13 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
             CommonQuestAPI.deleteCommonQuest(answerID: answerID)
         )
     }
+    
+    func fetchCommonQuestDetail(answerID: Int) async throws -> [CommonQuestCommentEntity] {
+        let commonQuestDetail = try await network.request(
+            CommonQuestAPI.fetchCommonQuestDetail(asnwerID: answerID),
+            decodingType: CommonQuestAnswerDetailResponseDTO.self
+        )
+        
+        return commonQuestDetail.toEntity()
+    }
 }
