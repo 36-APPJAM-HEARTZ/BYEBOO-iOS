@@ -86,12 +86,12 @@ extension NoticeCardCell {
         iconImage: UIImage,
         title: String,
         subtitle: String,
-        writtenTiem: String
+        writtenTime: String
     ) {
         self.backgroundColor = backgroundColor
         noticeImageView.image = iconImage
         titleLabel.text = title
         subtitleLabel.text = subtitle
-        writtenTimeLabel.text = writtenTiem
+        writtenTimeLabel.text = writtenTime
     }
 }
