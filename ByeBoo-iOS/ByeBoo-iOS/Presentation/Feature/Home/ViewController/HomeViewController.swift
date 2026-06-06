@@ -22,7 +22,6 @@ final class HomeViewController: BaseViewController {
     private var isFirstVisit: Bool = true
     private var journeyType: JourneyType = .recording
     private var isAnimating: Bool = false
-    private var isExistNotice: Bool?
     
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -61,9 +60,6 @@ final class HomeViewController: BaseViewController {
         if isFirstVisit { isFirstVisit.toggle() }
         
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-        // 추후 API 연동 시 뷰모델 액션을 호출하여 알림 유무를 판단할 예정
-        rootView.headerView.updateNotice(isExist: true)
-        isExistNotice = true
     }
     
     override func setAddTarget() {
@@ -121,11 +117,10 @@ extension HomeViewController {
     }
     
     @objc
-    private func noticeButtonDidTap() {
-        guard let isExistNotice else { return }
-        
-        let viewController = ViewControllerFactory.shared.makeNoticesViewController(isExistNotice: isExistNotice)
+    private func noticeButtonDidTap() {        
+        let viewController = ViewControllerFactory.shared.makeNoticesViewController()
         viewController.hidesBottomBarWhenPushed = true
+        viewController.configure(notificationList: viewModel.notifications)
         
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.pushViewController(viewController, animated: false)

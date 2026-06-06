@@ -15,6 +15,7 @@ final class HomeViewModel {
     var dialoguesResult: Result<DialogueEntity, ByeBooError> {
         characterResultSubject.value
     }
+    private(set) var notifications: NotificationListEntity?
     
     private(set) var output: Output
     private var characterResultSubject = CurrentValueSubject<Result<DialogueEntity, ByeBooError>, Never>(.failure(ByeBooError.noData))
@@ -157,6 +158,7 @@ extension HomeViewModel {
     private func fetchNotificationList() async {
         do {
             let notifications = try await fetchNotificationListUseCase.execute()
+            self.notifications = notifications
             notificationResultSubject.send(.success(notifications))
         } catch {
             notificationResultSubject.send(.failure(error as? ByeBooError ?? ByeBooError.unknownError))

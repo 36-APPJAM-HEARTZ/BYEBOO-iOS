@@ -9,11 +9,10 @@ import UIKit
 
 final class NoticesViewController: BaseViewController {
     
-    private let isExistNotice: Bool
     private let rootView = NoticesView()
+    private var notificationList: NotificationListEntity?
     
-    init(isExistNotice: Bool) {
-        self.isExistNotice = isExistNotice
+    init() {
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -35,7 +34,11 @@ final class NoticesViewController: BaseViewController {
             action: #selector(back)
         )
                 
-        rootView.contentView.decideNoticeContent(isExistNotice: isExistNotice)
+        guard let notifications = notificationList?.notifications else {
+            return
+        }
+        
+        rootView.contentView.decideNoticeContent(isExistNotice: !notifications.isEmpty)
     }
     
     override func setAddTarget() {
@@ -66,6 +69,13 @@ extension NoticesViewController {
     
     @objc
     private func readAllButtonDidTap() {}
+}
+
+extension NoticesViewController {
+    
+    func configure(notificationList: NotificationListEntity?) {
+        self.notificationList = notificationList
+    }
 }
 
 extension NoticesViewController: UITableViewDataSource {
