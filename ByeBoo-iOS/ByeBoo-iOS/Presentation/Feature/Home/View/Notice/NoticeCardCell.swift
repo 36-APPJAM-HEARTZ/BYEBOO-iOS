@@ -82,16 +82,25 @@ final class NoticeCardCell: UITableViewCell {
 extension NoticeCardCell {
     
     func bind(
-        backgroundColor: UIColor,
-        iconImage: UIImage,
+        isRead: Bool,
+        notificationType: NotificationType,
         title: String,
         subtitle: String,
         writtenTime: String
     ) {
-        self.backgroundColor = backgroundColor
-        noticeImageView.image = iconImage
+        self.backgroundColor = isRead ? .primary30020 : .white5
+        noticeImageView.image = mapToImage(for: notificationType)
         titleLabel.text = title
         subtitleLabel.text = subtitle
         writtenTimeLabel.text = writtenTime
+    }
+    
+    private func mapToImage(for notificationType: NotificationType) -> UIImage {
+        switch notificationType {
+        case .questOpen:
+            return .myOn
+        case .comment, .like:
+            return .commonJourney
+        }
     }
 }

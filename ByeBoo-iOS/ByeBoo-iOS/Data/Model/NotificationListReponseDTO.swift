@@ -30,7 +30,7 @@ extension NotificationResponseDTO {
     func toEntity() -> NotificationEntity {
         .init(
             notificationID: notificationID,
-            notificationType: notificationType,
+            notificationType: NotificationType.keyToEnum(notificationType),
             title: title,
             content: content,
             isRead: isRead,
