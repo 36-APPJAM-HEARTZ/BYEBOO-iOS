@@ -13,6 +13,7 @@ final class CommonQuestMyAnswerViewModel {
     private let cancellables = Set<AnyCancellable>()
     private let nameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>.init()
     private let answersSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>.init()
+    
     private let getUserNameUseCase: GetUserNameUseCase
     private let fetchCommonQuestMyAnswersUseCase: FetchCommonQuestMyAnswersUseCase
     
