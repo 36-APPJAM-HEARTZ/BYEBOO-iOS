@@ -212,5 +212,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: FetchNotificationListUseCase.self) { _ in
             return DefaultFetchNotificationListUseCase(repository: notificationRepository)
         }
+        
+        DIContainer.shared.register(type: FormatElapsedTimeUseCase.self) { _ in
+            return DefaultFormatElapsedTimeUseCase()
+        }
     }
 }

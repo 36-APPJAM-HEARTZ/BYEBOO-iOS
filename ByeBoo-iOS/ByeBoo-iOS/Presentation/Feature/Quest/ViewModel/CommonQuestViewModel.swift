@@ -13,9 +13,7 @@ final class CommonQuestViewModel {
     private let cancellables = Set<AnyCancellable>()
     private let commonQuestSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>.init()
     private let fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase
-    private let minute: Double = 60
-    private let hour: Double = 3600
-    private let day: Double = 86400
+    private let formatElapsedTimeUseCase: FormatElapsedTimeUseCase
     
     private(set) var output: Output
     private var commonQuest: CommonQuestAnswersEntity?
@@ -24,8 +22,12 @@ final class CommonQuestViewModel {
     private var nextCursor: Int? = nil
     private var currentDate: String = DateFormatter.toAPIDateString(from: .now)
     
-    init(fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase) {
+    init(
+        fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase,
+        formatElapsedTimeUseCase: FormatElapsedTimeUseCase
+    ) {
         self.fetchCommonQuestByDateUseCase = fetchCommonQuestByDateUseCase
+        self.formatElapsedTimeUseCase = formatElapsedTimeUseCase
         self.output = Output(
             commonQuestPublisher: commonQuestSubject.eraseToAnyPublisher()
         )
@@ -127,25 +129,6 @@ extension CommonQuestViewModel {
     }
     
     func getWrittenAt(at index: Int) -> String? {
-        guard index >= 0 && index < answers.count,
-              let writtenAt = DateFormatter.toDetailDate(from: answers[index].writtenAt)
-        else {
-            return nil
-        }
-        
-        let diffTime = Date().timeIntervalSince(writtenAt)
-        
-        switch diffTime {
-        case ..<minute:
-            return "방금 전"
-        case minute..<hour:
-            let minutes = Int(diffTime / minute)
-            return "\(minutes)분 전"
-        case hour..<day:
-            let hours = Int(diffTime / hour)
-            return "\(hours)시간 전"
-        default:
-            return DateFormatter.toDisplayDateString(from: writtenAt)
-        }
+        formatElapsedTimeUseCase.execute(from: answers[index].writtenAt)
     }
 }

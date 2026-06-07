@@ -289,13 +289,15 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: CommonQuestViewModel.self) { container in
-            guard let fetchCommonQuestByDateUseCase = container.resolve(type: FetchCommonQuestByDateUseCase.self) else {
+            guard let fetchCommonQuestByDateUseCase = container.resolve(type: FetchCommonQuestByDateUseCase.self),
+                  let formatElapsedTimeUseCase = container.resolve(type: FormatElapsedTimeUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
             return CommonQuestViewModel(
-                fetchCommonQuestByDateUseCase: fetchCommonQuestByDateUseCase
+                fetchCommonQuestByDateUseCase: fetchCommonQuestByDateUseCase,
+                formatElapsedTimeUseCase: formatElapsedTimeUseCase
             )
         }
         
@@ -351,6 +353,15 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 getBlockedUsersListUseCase: getBlockedUsersListUseCase,
                 deleteBlockedUserUseCase: deleteBlockedUserUseCase
             )
+        }
+        
+        DIContainer.shared.register(type: NotificationsViewModel.self) { container in
+            guard let formatElapsedTimeUseCase = container.resolve(type: FormatElapsedTimeUseCase.self) else  {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return NotificationsViewModel(formatElapsedTimeUseCase: formatElapsedTimeUseCase)
         }
     }
 }
