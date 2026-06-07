@@ -29,6 +29,7 @@ final class NoticeCardCell: UITableViewCell {
     private func setStyle() {
         self.do {
             $0.layer.cornerRadius = 12
+            $0.selectionStyle = .none
         }
         titleLabel.applyByeBooFont(
             style: .body1Sb16,
