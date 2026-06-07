@@ -47,6 +47,9 @@ final class HomeViewController: BaseViewController {
         super.viewWillAppear(animated)
         
         viewModel.action(.viewWillAppear)
+        if isFirstVisit { isFirstVisit.toggle() }
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         
         let property = HomeEvents.HomePageProperty(
             isFirstPageView: isFirstVisit,
@@ -56,10 +59,6 @@ final class HomeViewController: BaseViewController {
             event: HomeEvents.Name.homePageView,
             properties: property.dictionary
         )
-        
-        if isFirstVisit { isFirstVisit.toggle() }
-        
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     override func setAddTarget() {
@@ -147,6 +146,13 @@ extension HomeViewController {
 
 extension HomeViewController: ToastPresentable, ToastErrorHandler {
     private func bind() {
+        bindCharacter()
+        bindHomeState()
+        bindHelper()
+        bindNotifications()
+    }
+    
+    private func bindCharacter() {
         viewModel.output.characterResult
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
@@ -158,7 +164,9 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
                 }
             }
             .store(in: &cancellables)
-        
+    }
+    
+    private func bindHomeState() {
         Publishers.CombineLatest3(
             viewModel.output.userResult,
             viewModel.output.journeyResult,
@@ -188,12 +196,29 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
                 }
             }
             .store(in: &cancellables)
-        
+    }
+    
+    private func bindHelper() {
         viewModel.output.helperResult
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 if !result {
                     self?.rootView.headerView.startHelperAnimation()
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func bindNotifications() {
+        viewModel.output.notificationResult
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let notificationList):
+                    let isAllRead = notificationList.notifications.allSatisfy { $0.isRead }
+                    self?.rootView.headerView.updateNotice(isExist: !isAllRead)
+                case .failure(let error):
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)
