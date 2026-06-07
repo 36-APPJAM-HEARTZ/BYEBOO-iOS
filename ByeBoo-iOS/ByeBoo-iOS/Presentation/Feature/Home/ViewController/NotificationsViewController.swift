@@ -1,5 +1,5 @@
 //
-//  NoticesViewController.swift
+//  NotificationsViewController.swift
 //  ByeBoo-iOS
 //
 //  Created by APPLE on 4/30/26.
@@ -7,12 +7,14 @@
 
 import UIKit
 
-final class NoticesViewController: BaseViewController {
+final class NotificationsViewController: BaseViewController {
     
     private let rootView = NoticesView()
+    private let viewModel: NotificationsViewModel
     private var notificationList: NotificationListEntity?
     
-    init() {
+    init(viewModel: NotificationsViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -33,7 +35,7 @@ final class NoticesViewController: BaseViewController {
             type: .titleAndBack("알림"),
             action: #selector(back)
         )
-                
+        
         guard let notifications = notificationList?.notifications else {
             return
         }
@@ -58,31 +60,30 @@ final class NoticesViewController: BaseViewController {
     }
 }
 
-extension NoticesViewController: BackNavigable {
+extension NotificationsViewController: BackNavigable {
     
     func back() {
         self.navigationController?.popViewController(animated: false)
     }
 }
 
-extension NoticesViewController {
+extension NotificationsViewController {
     
     @objc
     private func readAllButtonDidTap() {}
 }
 
-extension NoticesViewController {
+extension NotificationsViewController {
     
     func configure(notificationList: NotificationListEntity?) {
         self.notificationList = notificationList
     }
 }
 
-extension NoticesViewController: UITableViewDataSource {
+extension NotificationsViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        // 실제로는 알림 개수만큼 설정
-        2
+        notificationList?.notifications.count ?? 0
     }
     
     func tableView(
@@ -97,16 +98,31 @@ extension NoticesViewController: UITableViewDataSource {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: NoticeCardCell.identifier, for: indexPath) as? NoticeCardCell
+        guard
+            let cell = tableView.dequeueReusableCell(
+                withIdentifier: NoticeCardCell.identifier,
+                for: indexPath
+            ) as? NoticeCardCell,
+            let notification = notificationList?.notifications[indexPath.section],
+            let notificationType = notification.notificationType,
+            let writtenTime = viewModel.formatElapsedTime(from: notification.createdAt)
         else {
             return UITableViewCell()
         }
-
+        
+        cell.bind(
+            isRead: notification.isRead,
+            notificationType: notificationType,
+            title: notification.title,
+            subtitle: notification.content,
+            writtenTime: writtenTime
+        )
+        
         return cell
     }
 }
 
-extension NoticesViewController: UITableViewDelegate {
+extension NotificationsViewController: UITableViewDelegate {
     
     func tableView(
         _ tableView: UITableView,

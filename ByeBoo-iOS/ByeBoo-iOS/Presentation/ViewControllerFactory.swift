@@ -233,8 +233,13 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
         return .init(viewModel: viewModel)
     }
     
-    func makeNoticesViewController() -> NoticesViewController {
-        .init()
+    func makeNotificationsViewController() -> NotificationsViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: NotificationsViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        
+        return .init(viewModel: viewModel)
     }
 }
 

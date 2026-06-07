@@ -118,7 +118,7 @@ extension HomeViewController {
     
     @objc
     private func noticeButtonDidTap() {        
-        let viewController = ViewControllerFactory.shared.makeNoticesViewController()
+        let viewController = ViewControllerFactory.shared.makeNotificationsViewController()
         viewController.hidesBottomBarWhenPushed = true
         viewController.configure(notificationList: viewModel.notifications)
         
