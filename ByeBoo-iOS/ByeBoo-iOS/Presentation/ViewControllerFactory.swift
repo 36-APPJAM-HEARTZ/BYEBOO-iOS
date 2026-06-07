@@ -26,6 +26,14 @@ protocol ViewControllerFactoryProtocol {
     func makeWriteActiveTypeQuestViewController() -> WriteActiveTypeQuestViewController
     func makeFinishJourneyViewController() -> FinishJourneyViewController
     func makeCommonQuestBottomSheetViewController() -> CommonQuestBottomSheetViewController
+    func makeCompletedQuestsViewController() -> CompletedQuestsViewController
+    func makeParentQuestViewController() -> ParentQuestViewController<QuestTabItem>
+    func makeCommonQuestViewController() -> CommonQuestViewController
+    func makeCommonQuestHistoryViewController() -> CommonQuestHistoryViewController
+    func makeCommonQuestMyAnswersViewController() -> CommonQuestMyAnswersViewController
+    func makeBlockedUserListViewController() -> BlockedkUserListViewController
+    func makeAIAnswerViewController() -> AIAnswerViewController
+    func makeNotificationsViewController() -> NotificationsViewController
 }
 
 final class ViewControllerFactory: ViewControllerFactoryProtocol {
