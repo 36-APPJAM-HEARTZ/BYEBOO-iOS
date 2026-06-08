@@ -82,15 +82,14 @@ extension HomeViewModel: ViewModelType {
             getUserResult()
             
             Task {
-                await withTaskGroup(of: Void.self) { group in
-                    group.addTask { await self.fetchDialogue() }
-                    group.addTask { await self.fetchStatus() }
-                    group.addTask { await self.fetchJourney() }
-                    group.addTask { await self.fetchNotificationList() }
-                    
-                    await group.waitForAll()
-                }
+                async let dialogue: Void = fetchDialogue()
+                async let status: Void = fetchStatus()
+                async let journey: Void = fetchJourney()
+                async let notificationList: Void = fetchNotificationList()
+                
+                let _ = await (dialogue, status, journey, notificationList)
             }
+            
         case .helperDidTap:
             setHelperShown()
         }
