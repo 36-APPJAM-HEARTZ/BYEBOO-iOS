@@ -16,7 +16,7 @@ struct DefaultNotificationRepository: NotificationInterface {
     func fetchNotifications() async throws -> NotificationListEntity {
         let result = try await networkService.request(
             NotificationAPI.fetchNotificationList,
-            decodingType: NotificationListReponseDTO.self
+            decodingType: NotificationListResponseDTO.self
         )
         return result.toEntity()
     }

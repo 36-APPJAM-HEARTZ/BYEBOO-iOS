@@ -1,11 +1,11 @@
 //
-//  NotificationListReponseDTO.swift
+//  NotificationListResponseDTO.swift
 //  ByeBoo-iOS
 //
 //  Created by 더스틴 on 6/5/26.
 //
 
-struct NotificationListReponseDTO: Decodable {
+struct NotificationListResponseDTO: Decodable {
     let notifications: [NotificationResponseDTO]
 }
 
@@ -19,7 +19,7 @@ struct NotificationResponseDTO: Decodable {
     let landingURL: String
 }
 
-extension NotificationListReponseDTO {
+extension NotificationListResponseDTO {
     func toEntity() -> NotificationListEntity {
         let notifications = notifications.map { $0.toEntity() }
         return .init(notifications: notifications)
