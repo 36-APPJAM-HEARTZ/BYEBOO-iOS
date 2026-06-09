@@ -104,13 +104,7 @@ extension CommonQuestReplyViewController: CommentProtocol {
             targetID: commentID
         )
         
-        if let sheet =  commonQuestBottomSheet.sheetPresentationController{
-            sheet.detents = [.custom { _ in 224.adjustedH }]
-            sheet.prefersGrabberVisible = true
-            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-            sheet.preferredCornerRadius = 8
-        }
-        self.present(commonQuestBottomSheet, animated: true)
+        commonQuestBottomSheet.presentBottomSheet(commonQuestBottomSheet, height: 224.adjustedH)
     }
     
     func moreLabelDidTap(commentID: Int) {

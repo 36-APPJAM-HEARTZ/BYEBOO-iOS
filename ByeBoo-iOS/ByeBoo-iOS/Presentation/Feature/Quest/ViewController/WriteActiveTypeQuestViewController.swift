@@ -92,13 +92,7 @@ final class WriteActiveTypeQuestViewController: WriteQuestBaseViewController<Wri
             ByeBooLogger.debug(questID)
             bottomSheetViewController.bind(questNumber: questID, questType: questType)
             bottomSheetViewController.delegate = self
-            if let sheet =  bottomSheetViewController.sheetPresentationController{
-                sheet.detents = [.custom { _ in 471.adjustedH }]
-                sheet.prefersGrabberVisible = true
-                sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-                sheet.preferredCornerRadius = 8
-            }
-            self.present(bottomSheetViewController, animated: true)
+            bottomSheetViewController.presentBottomSheet(bottomSheetViewController, height: 471.adjustedH)
         }
         
         let property = QuestEvents.QuestWriteFinishProperty(

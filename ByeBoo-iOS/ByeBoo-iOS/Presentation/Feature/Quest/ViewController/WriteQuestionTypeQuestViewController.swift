@@ -92,13 +92,7 @@ final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<W
             } else {
                 bottomSheetViewController.bind(questNumber: questNumber, questType: questType)
                 bottomSheetViewController.delegate = self
-                if let sheet = bottomSheetViewController.sheetPresentationController{
-                    sheet.detents = [.custom { _ in 471.adjustedH }]
-                    sheet.prefersGrabberVisible = true
-                    sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-                    sheet.preferredCornerRadius = 8
-                }
-                self.present(bottomSheetViewController, animated: true)
+                bottomSheetViewController.presentBottomSheet(bottomSheetViewController, height: 471.adjustedH)
             }
         }
         
