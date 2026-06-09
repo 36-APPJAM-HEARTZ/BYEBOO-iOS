@@ -27,16 +27,15 @@ final class CommonQuestHistoryViewController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var isMyAnswer: Bool = false
+    private var answerID: Int = 0
+    private var writerID: Int = 0
     
+    private var isMyAnswer: Bool = false
     private var nickname: String = ""
     private var profileIcon: UIImage?
-    var answerID: Int?
-    private var answer: String?
-    private var question: String?
-    private var writtenAt: String?
-    private var commonQuestArchiveType: CommonQuestArchiveType = .myAnswer
-    private var writerID: Int = 0
+    private var answer: String = ""
+    private var question: String = ""
+    private var writtenAt: String = ""
     private var isLiked: Bool = false
     private var likeCount: Int = 0
     private var commentCount: Int = 0
@@ -50,8 +49,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
         self.tabBarController?.tabBar.isHidden = true
         addKeyboardObservers()
         
-        viewModel.action(.viewWillAppear(answerID: answerID ?? 0))
-        bind()
+        viewModel.action(.viewWillAppear(answerID: answerID))
         
         Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyOthersAnswerPageview)
     }
@@ -66,6 +64,8 @@ final class CommonQuestHistoryViewController: BaseViewController {
             action: #selector(back),
             secondAction: #selector(bottomUp)
         )
+        
+        bind()
         
         configureDataSource()
 //        applySnapshot()
@@ -87,6 +87,15 @@ final class CommonQuestHistoryViewController: BaseViewController {
             $0.separatorStyle = .none
             $0.register(CommentTableViewCell.self)
         }
+    }
+}
+
+extension CommonQuestHistoryViewController {
+    func configure(writerID: Int? = nil, answerID: Int) {
+        if let writerID {
+            self.writerID = writerID
+        }
+        self.answerID = answerID
     }
 }
 
@@ -210,52 +219,6 @@ extension CommonQuestHistoryViewController: CommentProtocol {
     }
 }
 
-extension CommonQuestHistoryViewController {
-    
-    func configure(
-        question: String,
-        writtenAt: String,
-        profileIcon: UIImage,
-        nickname: String,
-        content: String,
-        answerID: Int? = nil,
-        writerID: Int? = nil,
-        isMyAnswer: Bool,
-        isLiked: Bool,
-        likeCount: Int,
-        commentCount: Int
-    ) {
-        self.nickname = nickname
-        self.profileIcon = profileIcon
-        self.answerID = answerID
-        self.answer = content
-        self.question = question
-        self.writtenAt = writtenAt
-        self.isMyAnswer = isMyAnswer
-        
-        commonQuestArchiveType = isMyAnswer ? .myAnswer : .otherAnswer
-        
-        if let writerID {
-            self.writerID = writerID
-        }
-
-        self.isLiked = isLiked
-        self.likeCount = likeCount
-        self.commentCount = commentCount
-
-        rootView.configure(
-            question: question,
-            writtenAt: writtenAt,
-            profileIcon: profileIcon,
-            nickname: nickname,
-            content: content,
-            isLiked: isLiked,
-            likeCount: likeCount,
-            commentCount: commentCount
-        )
-    }
-}
-
 extension CommonQuestHistoryViewController: BlockReportProtocol {
     func completeBlockReport(type: CommonQuestArchiveType.Action) {
         ViewControllerUtils.changeQuestTabWithIndex(index: 1) {
@@ -279,8 +242,9 @@ extension CommonQuestHistoryViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 switch result {
-                case .success(let commentList):
-                    self?.applySnapshot(commentList: commentList)
+                case .success(let entity):
+                    self?.bindData(entity: entity)
+                    self?.applySnapshot(commentList: entity.comments)
                 case .failure(let error):
                     ByeBooLogger.debug(error)
                 }
@@ -288,25 +252,49 @@ extension CommonQuestHistoryViewController {
             .store(in: &cancellable)
     }
     
+    private func bindData(entity: CommonQuestDetailEntity) {
+        let answer = entity.answer
+        self.nickname = answer.writer
+        self.answer = answer.content
+        self.question = entity.question
+        self.isLiked = answer.isLiked
+        self.likeCount = answer.likeCount
+        self.commentCount = answer.commentCount
+        self.isMyAnswer = answer.isMyAnswer
+        
+        rootView.configure(
+            question: entity.question,
+            writtenAt: ServerDateFormatter.shared.relativeTimeString(from: answer.writtenAt) ?? "", //TODO: ViewModel로 수정 
+            profileIcon: ProfileIcon.image(for: answer.profileIcon) ?? .relievedBadge,
+            nickname: answer.writer,
+            content: answer.content,
+            isLiked: answer.isLiked,
+            likeCount: answer.likeCount,
+            commentCount: answer.commentCount
+        )
+    }
+    
     private func commonBottomSheetUp(commentID: Int? = nil, isMyComment: Bool? = nil) {
         let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
-        if isMyAnswer {
-            commonQuestBottomSheet.configureWhenEdit(
-                sheeetType: commonQuestArchiveType,
-                answerID: answerID,
-                answer: answer,
-                question: question,
-                writtenAt: writtenAt
-            )
-        }
         
-        if let commentID, let isMyComment {
+        if let commentID, let isMyComment{
             commonQuestBottomSheet.configure(
                 sheeetType: isMyComment ? .myComment : .otherComment ,
                 targetID: writerID
             )
         } else {
-            commonQuestBottomSheet.configure(sheeetType: commonQuestArchiveType, targetID: writerID)
+            let sheetType: CommonQuestArchiveType = isMyAnswer ? .myAnswer : .otherAnswer
+            commonQuestBottomSheet.configure(sheeetType: sheetType, targetID: writerID)
+            
+            if isMyAnswer {
+                commonQuestBottomSheet.configureWhenEdit(
+                    sheeetType: sheetType,
+                    answerID: answerID,
+                    answer: answer,
+                    question: question,
+                    writtenAt: writtenAt
+                )
+            }
         }
         
         setDelegate(bottomSheet: commonQuestBottomSheet)

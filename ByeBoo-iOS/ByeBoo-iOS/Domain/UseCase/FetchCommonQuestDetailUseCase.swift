@@ -8,7 +8,7 @@
 import Foundation
 
 protocol FetchCommonQuestDetailUseCase {
-    func execute(answerID: Int) async throws -> [CommonQuestCommentEntity]
+    func execute(answerID: Int) async throws -> CommonQuestDetailEntity
 }
 
 struct DefaultFetchCommonQuestDetailUseCase: FetchCommonQuestDetailUseCase {
@@ -19,7 +19,7 @@ struct DefaultFetchCommonQuestDetailUseCase: FetchCommonQuestDetailUseCase {
         self.repository = repository
     }
     
-    func execute(answerID: Int) async throws -> [CommonQuestCommentEntity] {
+    func execute(answerID: Int) async throws -> CommonQuestDetailEntity {
         return try await repository.fetchCommonQuestDetail(answerID: answerID)
     }
 }

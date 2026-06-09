@@ -65,7 +65,7 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
         )
     }
     
-    func fetchCommonQuestDetail(answerID: Int) async throws -> [CommonQuestCommentEntity] {
+    func fetchCommonQuestDetail(answerID: Int) async throws -> CommonQuestDetailEntity {
         let userName: String = userDefaultsService.load(key: .userName) ?? ""
         let commonQuestDetail = try await network.request(
             CommonQuestAPI.fetchCommonQuestDetail(asnwerID: answerID),
