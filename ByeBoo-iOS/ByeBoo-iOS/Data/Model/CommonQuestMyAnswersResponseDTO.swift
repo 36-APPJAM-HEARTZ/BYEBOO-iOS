@@ -16,6 +16,9 @@ struct CommonQuestMyAnswerResponseDTO: Decodable {
     let writtenAt: String
     let content: String
     let question: String
+    let likeCount: Int
+    let commentCount: Int
+    let isLiked: Bool
 }
 
 extension CommonQuestMyAnswersResponseDTO {
@@ -37,8 +40,8 @@ extension CommonQuestMyAnswerResponseDTO {
             question: question,
             nickname: userName,
             isLiked: false,
-            likeCount: 2,
-            commentCount: 3 // TODO: 서버수정되면 수정하기
+            likeCount: likeCount,
+            commentCount: commentCount
         )
     }
 }
