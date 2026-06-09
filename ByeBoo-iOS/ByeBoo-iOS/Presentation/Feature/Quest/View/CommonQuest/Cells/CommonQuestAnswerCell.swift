@@ -98,7 +98,7 @@ extension CommonQuestAnswerCell {
             writtenAt: writtenAt,
             isLiked: answer.isLiked,
             likeCount: answer.likeCount,
-            commentCount: answer.likeCount,
+            commentCount: answer.commentCount,
             showAllText: false
         )
     }
