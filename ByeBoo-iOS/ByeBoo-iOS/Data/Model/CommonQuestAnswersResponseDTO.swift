@@ -28,7 +28,7 @@ struct CommonQuestAnswerResponseDTO: Decodable {
 }
 
 extension CommonQuestAnswersResponseDTO {
-    func toEntity(userName: String) -> CommonQuestAnswersEntity {
+    func toEntity(userID: Int) -> CommonQuestAnswersEntity {
         .init(
             question: question,
             questID: questId,
@@ -36,15 +36,15 @@ extension CommonQuestAnswersResponseDTO {
             isAnswered: isAnswered,
             hasNext: hasNext,
             nextCursor: nil,
-            answers: answers.map { $0.toEntity(userName: userName) }
+            answers: answers.map { $0.toEntity(userID: userID) }
         )
     }
 }
 
 extension CommonQuestAnswerResponseDTO {
-    func toEntity(userName: String) -> CommonQuestAnswerEntity {
+    func toEntity(userID: Int) -> CommonQuestAnswerEntity {
         .init(
-            isMyAnswer: userName == writer ? true : false,
+            isMyAnswer: userID == writerId ? true : false,
             answerID: answerId,
             writerID: writerId,
             writer: writer,

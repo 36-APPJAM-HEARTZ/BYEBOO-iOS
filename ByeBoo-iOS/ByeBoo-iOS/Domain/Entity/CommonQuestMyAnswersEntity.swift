@@ -18,7 +18,6 @@ struct CommonQuestMyAnswerEntity {
     let writtenAt: String
     let content: String
     let question: String
-    let nickname: String
     let isLiked: Bool
     let likeCount: Int
     let commentCount: Int
@@ -32,7 +31,6 @@ extension CommonQuestMyAnswersEntity {
             writtenAt: Date.now.toString(),
             content: "\($0)번째 테스트 답변",
             question: "\($0)번째 질문",
-            nickname: "냔",
             isLiked: false,
             likeCount: 2,
             commentCount: 3
@@ -57,19 +55,19 @@ extension CommonQuestMyAnswerEntity {
         [
             .init(
                 answerID: 1, writtenAt: "2025-01-11", content: "content",
-                question: "question", nickname: "가을", isLiked: false, likeCount: 1, commentCount: 2
+                question: "question", isLiked: false, likeCount: 1, commentCount: 2
             ),
             .init(
                 answerID: 2, writtenAt: "2025-01-12", content: "content",
-                question: "question", nickname: "원영", isLiked: false, likeCount: 1, commentCount: 2
+                question: "question", isLiked: false, likeCount: 1, commentCount: 2
             ),
             .init(
                 answerID: 3, writtenAt: "2025-01-13", content: "content",
-                question: "question", nickname: "리즈", isLiked: false, likeCount: 1, commentCount: 2
+                question: "question", isLiked: false, likeCount: 1, commentCount: 2
             ),
             .init(
                 answerID: 4, writtenAt: "2025-01-14", content: "content",
-                question: "question", nickname: "유진", isLiked: false, likeCount: 1, commentCount: 2
+                question: "question", isLiked: false, likeCount: 1, commentCount: 2
             )
         ]
     }

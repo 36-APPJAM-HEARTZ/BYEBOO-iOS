@@ -38,7 +38,7 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
         date: String,
         cursor: Int?
     ) async throws -> CommonQuestAnswersEntity {
-        let userName: String = userDefaultsService.load(key: .userName) ?? ""
+        let userID: Int = userDefaultsService.load(key: .userID) ?? 0
         let commonQuest = try await network.request(
             CommonQuestAPI.fetchCommonQuest(
                 date: date,
@@ -46,7 +46,7 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
             ),
             decodingType: CommonQuestAnswersResponseDTO.self
         )
-        return commonQuest.toEntity(userName: userName)
+        return commonQuest.toEntity(userID: userID)
     }
     
     func updateCommonQuest(answerID: Int, answer: String) async throws {
@@ -66,12 +66,12 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
     }
     
     func fetchCommonQuestDetail(answerID: Int) async throws -> CommonQuestDetailEntity {
-        let userName: String = userDefaultsService.load(key: .userName) ?? ""
+        let userID: Int = userDefaultsService.load(key: .userID) ?? 0
         let commonQuestDetail = try await network.request(
             CommonQuestAPI.fetchCommonQuestDetail(asnwerID: answerID),
             decodingType: CommonQuestAnswerDetailResponseDTO.self
         )
         
-        return commonQuestDetail.toEntity(userName: userName)
+        return commonQuestDetail.toEntity(userID: userID)
     }
 }

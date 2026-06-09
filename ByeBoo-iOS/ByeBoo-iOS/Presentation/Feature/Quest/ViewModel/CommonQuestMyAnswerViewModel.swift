@@ -104,7 +104,6 @@ extension CommonQuestMyAnswerViewModel {
             writtenAt: displayDate,
             content: answer.content,
             question: answer.question,
-            nickname: answer.nickname,
             isLiked: answer.isLiked,
             likeCount: answer.likeCount,
             commentCount: answer.commentCount

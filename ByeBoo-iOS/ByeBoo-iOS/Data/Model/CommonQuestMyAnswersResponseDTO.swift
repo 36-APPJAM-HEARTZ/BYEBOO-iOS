@@ -26,20 +26,19 @@ extension CommonQuestMyAnswersResponseDTO {
         .init(
             hasNext: hasNext,
             nextCursor: nextCursor,
-            answers: answers.map { $0.toEntity(userName: userName)
-            })
+            answers: answers.map { $0.toEntity()}
+        )
     }
 }
 
 extension CommonQuestMyAnswerResponseDTO {
-    func toEntity(userName: String) -> CommonQuestMyAnswerEntity {
+    func toEntity() -> CommonQuestMyAnswerEntity {
         .init(
             answerID: answerId,
             writtenAt: writtenAt,
             content: content,
             question: question,
-            nickname: userName,
-            isLiked: false,
+            isLiked: isLiked,
             likeCount: likeCount,
             commentCount: commentCount
         )
