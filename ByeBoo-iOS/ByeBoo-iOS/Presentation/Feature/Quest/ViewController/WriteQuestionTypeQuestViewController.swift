@@ -92,7 +92,7 @@ final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<W
             } else {
                 bottomSheetViewController.bind(questNumber: questNumber, questType: questType)
                 bottomSheetViewController.delegate = self
-                bottomSheetViewController.presentBottomSheet(bottomSheetViewController, height: 471.adjustedH)
+                presentBottomSheet(bottomSheetViewController, height: 471.adjustedH)
             }
         }
         

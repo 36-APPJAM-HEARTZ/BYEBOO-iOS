@@ -104,7 +104,7 @@ extension CommonQuestReplyViewController: CommentProtocol {
             targetID: commentID
         )
         
-        commonQuestBottomSheet.presentBottomSheet(commonQuestBottomSheet, height: 224.adjustedH)
+        presentBottomSheet(commonQuestBottomSheet, height: 224.adjustedH)
     }
     
     func moreLabelDidTap(commentID: Int) {

@@ -92,7 +92,7 @@ final class WriteActiveTypeQuestViewController: WriteQuestBaseViewController<Wri
             ByeBooLogger.debug(questID)
             bottomSheetViewController.bind(questNumber: questID, questType: questType)
             bottomSheetViewController.delegate = self
-            bottomSheetViewController.presentBottomSheet(bottomSheetViewController, height: 471.adjustedH)
+            presentBottomSheet(bottomSheetViewController, height: 471.adjustedH)
         }
         
         let property = QuestEvents.QuestWriteFinishProperty(

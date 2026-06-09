@@ -291,7 +291,7 @@ extension CommonQuestHistoryViewController {
         }
         
         setDelegate(bottomSheet: commonQuestBottomSheet)
-        commonQuestBottomSheet.presentBottomSheet(commonQuestBottomSheet, height: 224.adjustedH)
+        presentBottomSheet(commonQuestBottomSheet, height: 224.adjustedH)
     }
 }
 
