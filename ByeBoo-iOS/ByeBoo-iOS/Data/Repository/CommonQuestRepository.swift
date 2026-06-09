@@ -66,11 +66,12 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
     }
     
     func fetchCommonQuestDetail(answerID: Int) async throws -> [CommonQuestCommentEntity] {
+        let userName: String = userDefaultsService.load(key: .userName) ?? ""
         let commonQuestDetail = try await network.request(
             CommonQuestAPI.fetchCommonQuestDetail(asnwerID: answerID),
             decodingType: CommonQuestAnswerDetailResponseDTO.self
         )
         
-        return commonQuestDetail.toEntity()
+        return commonQuestDetail.toEntity(userName: userName)
     }
 }

@@ -32,16 +32,17 @@ struct CommonQuestAnswerReplyResponseDTO: Decodable {
 }
 
 extension CommonQuestAnswerRepliesResponseDTO {
-    func toEntity() -> [CommonQuestCommentEntity] {
+    func toEntity(userName: String) -> [CommonQuestCommentEntity] {
         replies.map {
-            $0.toEntity()
+            $0.toEntity(userName: userName)
         }
     }
 }
 
 extension CommonQuestAnswerReplyResponseDTO {
-    func toEntity() -> CommonQuestCommentEntity {
+    func toEntity(userName: String) -> CommonQuestCommentEntity {
         .init(
+            isMyComment: userName == writer ? true : false,
             commentID: commentId,
             replyCount: nil,
             writerID: writerId,

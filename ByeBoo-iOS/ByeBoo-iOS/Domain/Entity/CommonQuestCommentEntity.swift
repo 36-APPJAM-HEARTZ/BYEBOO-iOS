@@ -8,6 +8,7 @@
 import Foundation
 
 struct CommonQuestCommentEntity: Hashable {
+    let isMyComment: Bool
     let commentID: Int
     let replyCount: Int?
     let writerID: Int
@@ -21,6 +22,7 @@ extension CommonQuestCommentEntity {
     static func toCommentListStub() -> [Self] {
         return (1...5).map {
             .init(
+                isMyComment: false,
                 commentID: $0,
                 replyCount: $0 - 1,
                 writerID: 2,
@@ -34,6 +36,7 @@ extension CommonQuestCommentEntity {
     
     static func toCommentStub() -> Self {
         .init(
+            isMyComment: false,
             commentID: 1,
             replyCount: 2,
             writerID: 2,
@@ -47,6 +50,7 @@ extension CommonQuestCommentEntity {
     static func toReplyListStub() -> [Self] {
         return (6...10).map {
             .init(
+                isMyComment: false,
                 commentID: $0,
                 replyCount: nil,
                 writerID: 2,
@@ -61,6 +65,7 @@ extension CommonQuestCommentEntity {
     
     static func toReplyStub() -> Self {
         .init(
+            isMyComment: false,
             commentID: 1,
             replyCount: nil,
             writerID: 2,

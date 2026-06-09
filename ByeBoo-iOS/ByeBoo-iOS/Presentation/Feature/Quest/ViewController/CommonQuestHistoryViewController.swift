@@ -27,12 +27,19 @@ final class CommonQuestHistoryViewController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var answerID: Int?
+    private var isMyAnswer: Bool = false
+    
+    private var nickname: String = ""
+    private var profileIcon: UIImage?
+    var answerID: Int?
     private var answer: String?
     private var question: String?
     private var writtenAt: String?
-    private var commonQuestArchiveType: CommonQuestArchiveType = .mine
+    private var commonQuestArchiveType: CommonQuestArchiveType = .myAnswer
     private var writerID: Int = 0
+    private var isLiked: Bool = false
+    private var likeCount: Int = 0
+    private var commentCount: Int = 0
     
     override func loadView() {
         view = rootView
@@ -102,6 +109,7 @@ extension CommonQuestHistoryViewController {
             
             let entity = item.entity
             cell.configure(
+                isMyComment: entity.isMyComment,
                 commentID: entity.commentID,
                 replyCount: entity.replyCount,
                 writer: entity.writer,
@@ -137,31 +145,24 @@ extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
         writeCommonQuestViewController.navigationItem.hidesBackButton = true
         writeCommonQuestViewController.questScope = .common
         writeCommonQuestViewController.configureToEdit(
-            nil, .question, question, answerID, answer, writtenAt
+            questNumber: nil,
+            questType: .question,
+            questionTitle: question,
+            answerID: answerID,
+            answer: answer,
+            writtenAt: writtenAt,
+            nickname: nickname,
+            profileIcon: profileIcon ?? .relievedBadge,
+            isLiked: isLiked,
+            likeCount: likeCount,
+            commentCount: commentCount
         )
         self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)
     }
     
     @objc
     private func bottomUp() {
-        let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
-        commonQuestBottomSheet.configure(sheeetType: commonQuestArchiveType, writerID: writerID)
-        commonQuestBottomSheet.configure(
-            sheeetType: commonQuestArchiveType,
-            answerID: answerID,
-            answer: answer,
-            question: question,
-            writtenAt: writtenAt
-        )
-        setDelegate(bottomSheet: commonQuestBottomSheet)
-        
-        if let sheet =  commonQuestBottomSheet.sheetPresentationController{
-            sheet.detents = [.custom { _ in 224.adjustedH }]
-            sheet.prefersGrabberVisible = true
-            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-            sheet.preferredCornerRadius = 8
-        }
-        self.present(commonQuestBottomSheet, animated: true)
+        commonBottomSheetUp()
     }
     
     private func setDelegate(bottomSheet: CommonQuestBottomSheetViewController) {
@@ -204,8 +205,8 @@ extension CommonQuestHistoryViewController: CommentProtocol {
         self.present(viewController, animated: true)
     }
     
-    func menuButtonDidTap(commentID: Int) {
-        
+    func menuButtonDidTap(commentID: Int, isMyComment: Bool) {
+        commonBottomSheetUp(commentID: commentID, isMyComment: isMyComment)
     }
 }
 
@@ -219,24 +220,29 @@ extension CommonQuestHistoryViewController {
         content: String,
         answerID: Int? = nil,
         writerID: Int? = nil,
-        isMyAnswer: Bool? = nil,
+        isMyAnswer: Bool,
         isLiked: Bool,
         likeCount: Int,
         commentCount: Int
     ) {
+        self.nickname = nickname
+        self.profileIcon = profileIcon
         self.answerID = answerID
         self.answer = content
         self.question = question
         self.writtenAt = writtenAt
+        self.isMyAnswer = isMyAnswer
         
-        if let isMyAnswer {
-            commonQuestArchiveType = isMyAnswer ? .mine : .other
-        }
+        commonQuestArchiveType = isMyAnswer ? .myAnswer : .otherAnswer
         
         if let writerID {
             self.writerID = writerID
         }
-        
+
+        self.isLiked = isLiked
+        self.likeCount = likeCount
+        self.commentCount = commentCount
+
         rootView.configure(
             question: question,
             writtenAt: writtenAt,
@@ -280,6 +286,38 @@ extension CommonQuestHistoryViewController {
                 }
             }
             .store(in: &cancellable)
+    }
+    
+    private func commonBottomSheetUp(commentID: Int? = nil, isMyComment: Bool? = nil) {
+        let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
+        if isMyAnswer {
+            commonQuestBottomSheet.configureWhenEdit(
+                sheeetType: commonQuestArchiveType,
+                answerID: answerID,
+                answer: answer,
+                question: question,
+                writtenAt: writtenAt
+            )
+        }
+        
+        if let commentID, let isMyComment {
+            commonQuestBottomSheet.configure(
+                sheeetType: isMyComment ? .myComment : .otherComment ,
+                targetID: writerID
+            )
+        } else {
+            commonQuestBottomSheet.configure(sheeetType: commonQuestArchiveType, targetID: writerID)
+        }
+        
+        setDelegate(bottomSheet: commonQuestBottomSheet)
+        
+        if let sheet =  commonQuestBottomSheet.sheetPresentationController{
+            sheet.detents = [.custom { _ in 224.adjustedH }]
+            sheet.prefersGrabberVisible = true
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+            sheet.preferredCornerRadius = 8
+        }
+        self.present(commonQuestBottomSheet, animated: true)
     }
 }
 
