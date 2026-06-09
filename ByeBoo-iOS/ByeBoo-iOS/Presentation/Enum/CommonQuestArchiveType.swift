@@ -39,8 +39,8 @@ enum CommonQuestArchiveType {
             ]
         case .otherComment:
             return [
-                Item(title: "차단하기", icon: .edit, color: .white, action: .edit),
-                Item(title: "신고하기", icon: .trash, color: .error300, action: .delete)
+                Item(title: "차단하기", icon: .block, color: .white, action: .edit),
+                Item(title: "신고하기", icon: .report, color: .error300, action: .delete)
             ]
         }
     }

@@ -254,6 +254,7 @@ extension CommonQuestHistoryViewController {
         self.likeCount = answer.likeCount
         self.commentCount = answer.commentCount
         self.isMyAnswer = answer.isMyAnswer
+        self.writtenAt = answer.writtenAt
         
         rootView.configure(
             question: entity.question,
@@ -273,7 +274,7 @@ extension CommonQuestHistoryViewController {
         if let commentID, let isMyComment{
             commonQuestBottomSheet.configure(
                 sheeetType: isMyComment ? .myComment : .otherComment ,
-                targetID: writerID
+                targetID: commentID
             )
         } else {
             let sheetType: CommonQuestArchiveType = isMyAnswer ? .myAnswer : .otherAnswer
