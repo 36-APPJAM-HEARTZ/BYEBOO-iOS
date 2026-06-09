@@ -22,11 +22,11 @@ struct CommonQuestMyAnswerResponseDTO: Decodable {
 }
 
 extension CommonQuestMyAnswersResponseDTO {
-    func toEntity(userName: String) -> CommonQuestMyAnswersEntity {
+    func toEntity(userID: Int) -> CommonQuestMyAnswersEntity {
         .init(
             hasNext: hasNext,
             nextCursor: nextCursor,
-            answers: answers.map { $0.toEntity()}
+            answers: answers.map { $0.toEntity() }
         )
     }
 }
