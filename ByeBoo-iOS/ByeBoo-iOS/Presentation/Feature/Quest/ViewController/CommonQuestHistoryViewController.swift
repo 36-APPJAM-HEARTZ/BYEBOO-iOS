@@ -91,10 +91,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
 }
 
 extension CommonQuestHistoryViewController {
-    func configure(writerID: Int? = nil, answerID: Int) {
-        if let writerID {
-            self.writerID = writerID
-        }
+    func configure(answerID: Int) {
         self.answerID = answerID
     }
 }
@@ -249,6 +246,7 @@ extension CommonQuestHistoryViewController {
     
     private func bindData(entity: CommonQuestDetailEntity) {
         let answer = entity.answer
+        self.writerID = answer.writerID
         self.nickname = answer.writer
         self.answer = answer.content
         self.question = entity.question

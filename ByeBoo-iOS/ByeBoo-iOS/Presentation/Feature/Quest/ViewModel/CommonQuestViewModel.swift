@@ -121,6 +121,13 @@ extension CommonQuestViewModel {
         return answers[index]
     }
     
+    func getAnswerID(at index: Int) -> Int? {
+        guard index >= 0 && index < answers.count else {
+            return nil
+        }
+        return answers[index].answerID
+    }
+    
     func getProfileIcon(at index: Int) -> UIImage? {
         guard index >= 0 && index < answers.count else { return nil }
         return ProfileIcon.image(for: answers[index].profileIcon)
@@ -130,20 +137,4 @@ extension CommonQuestViewModel {
         guard index >= 0 && index < answers.count else { return nil }
         return ServerDateFormatter.shared.relativeTimeString(from: answers[index].writtenAt)
     }
-}
-
-extension CommonQuestViewModel {
-    struct CommonQuestID {
-        let answerID: Int
-        let writerID: Int
-    }
-    
-    func getCommonQuestID(at index: Int) -> CommonQuestID? {
-        guard index >= 0 && index < answers.count else {
-            return nil
-        }
-        let answer = answers[index]
-        return CommonQuestID(answerID: answer.answerID, writerID: answer.writerID)
-    }
-    
 }

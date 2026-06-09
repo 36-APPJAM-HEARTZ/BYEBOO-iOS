@@ -129,12 +129,12 @@ extension CommonQuestViewController: UITableViewDelegate {
         }
         
         let answerIndex = indexPath.row - 1
-        guard let answer = viewModel.getCommonQuestID(at: answerIndex) else {
+        guard let answerID = viewModel.getAnswerID(at: answerIndex) else {
             return
         }
         
         let historyViewController = ViewControllerFactory.shared.makeCommonQuestHistoryViewController()
-        historyViewController.configure(writerID: answer.writerID, answerID: answer.answerID)
+        historyViewController.configure(answerID: answerID)
         historyViewController.navigationItem.hidesBackButton = true
         self.navigationController?.pushViewController(
             historyViewController,
