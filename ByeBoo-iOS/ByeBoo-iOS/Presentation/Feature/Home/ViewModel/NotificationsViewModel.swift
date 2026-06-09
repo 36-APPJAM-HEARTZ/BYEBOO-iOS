@@ -14,10 +14,6 @@ final class NotificationsViewModel {
     }
     
     func formatElapsedTime(from timeString: String) -> String? {
-        guard let formattedTime = formatElapsedTimeUseCase.execute(from: timeString) else {
-            return nil
-        }
-        
-        return formattedTime
+        formatElapsedTimeUseCase.execute(from: timeString)
     }
 }

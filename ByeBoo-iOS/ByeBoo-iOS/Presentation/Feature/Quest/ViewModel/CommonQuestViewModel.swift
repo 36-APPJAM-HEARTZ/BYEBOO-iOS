@@ -129,6 +129,7 @@ extension CommonQuestViewModel {
     }
     
     func getWrittenAt(at index: Int) -> String? {
-        formatElapsedTimeUseCase.execute(from: answers[index].writtenAt)
+        guard index >= 0 && index < answers.count else { return nil }
+        return formatElapsedTimeUseCase.execute(from: answers[index].writtenAt)
     }
 }

@@ -36,11 +36,8 @@ final class NotificationsViewController: BaseViewController {
             action: #selector(back)
         )
         
-        guard let notifications = notificationList?.notifications else {
-            return
-        }
-        
-        rootView.contentView.decideNoticeContent(isExistNotice: !notifications.isEmpty)
+        let isExistNotice = notificationList.map { !$0.notifications.isEmpty } ?? false
+        rootView.contentView.decideNoticeContent(isExistNotice: isExistNotice)
     }
     
     override func setAddTarget() {

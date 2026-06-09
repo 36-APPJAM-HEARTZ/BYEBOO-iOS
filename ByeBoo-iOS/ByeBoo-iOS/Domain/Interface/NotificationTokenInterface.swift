@@ -1,5 +1,5 @@
 //
-//  NotificationInterface.swift
+//  NotificationTokenInterface.swift
 //  ByeBoo-iOS
 //
 //  Created by APPLE on 11/26/25.
