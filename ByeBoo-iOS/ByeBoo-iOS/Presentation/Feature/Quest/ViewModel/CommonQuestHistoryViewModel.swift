@@ -23,7 +23,7 @@ final class CommonQuestHistoryViewModel {
         self.fetchCommonQuestCommentsUseCase = fetchCommonQuestCommentsUseCase
         
         output = Output(
-            fetchCommonQuestCommentsPublisher: fetchCommentListSubject.eraseToAnyPublisher()
+            fetchCommonQuestDetailPublisher: fetchCommentListSubject.eraseToAnyPublisher()
         )
     }
 }
@@ -34,7 +34,7 @@ extension CommonQuestHistoryViewModel: ViewModelType {
     }
     
     struct Output {
-        let fetchCommonQuestCommentsPublisher: AnyPublisher<Result<CommonQuestDetailEntity, ByeBooError>, Never>
+        let fetchCommonQuestDetailPublisher: AnyPublisher<Result<CommonQuestDetailEntity, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {

@@ -230,7 +230,7 @@ extension CommonQuestHistoryViewController {
     }
     
     private func bind() {
-        viewModel.output.fetchCommonQuestCommentsPublisher
+        viewModel.output.fetchCommonQuestDetailPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 switch result {
