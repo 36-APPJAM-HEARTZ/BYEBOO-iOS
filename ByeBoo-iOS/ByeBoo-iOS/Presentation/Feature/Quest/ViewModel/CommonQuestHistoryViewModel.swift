@@ -15,7 +15,7 @@ final class CommonQuestHistoryViewModel {
     
     private let fetchCommonQuestCommentsUseCase: FetchCommonQuestDetailUseCase
     
-    private let fetchCommentListSubject: PassthroughSubject<Result<[CommonQuestCommentEntity], ByeBooError>, Never> = .init()
+    private let fetchCommentListSubject: PassthroughSubject<Result<CommonQuestDetailEntity, ByeBooError>, Never> = .init()
     
     init(
         fetchCommonQuestCommentsUseCase: FetchCommonQuestDetailUseCase
@@ -34,7 +34,7 @@ extension CommonQuestHistoryViewModel: ViewModelType {
     }
     
     struct Output {
-        let fetchCommonQuestCommentsPublisher: AnyPublisher<Result<[CommonQuestCommentEntity], ByeBooError>, Never>
+        let fetchCommonQuestCommentsPublisher: AnyPublisher<Result<CommonQuestDetailEntity, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
@@ -49,9 +49,9 @@ extension CommonQuestHistoryViewModel {
     private func fetchCommonQuestComments(answerID: Int) {
         Task {
             do {
-                let commentsList = try await fetchCommonQuestCommentsUseCase.execute(answerID: answerID)
-                ByeBooLogger.debug("댓글 list \(commentsList)")
-                fetchCommentListSubject.send(.success(commentsList))
+                let entity = try await fetchCommonQuestCommentsUseCase.execute(answerID: answerID)
+                ByeBooLogger.debug("entity \(entity)")
+                fetchCommentListSubject.send(.success(entity))
             } catch {
                 guard let error = error as? ByeBooError else {
                     return

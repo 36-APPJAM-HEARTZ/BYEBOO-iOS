@@ -214,13 +214,7 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                         let previousVC = viewControllers[viewControllers.count - 2]
                         
                         if let historyVC = previousVC as? CommonQuestHistoryViewController {
-                            historyVC.configure(
-                                question: questTitle,
-                                writtenAt: writtenAt,
-                                profileIcon: .relievedBadge, // TODO: 서버 수정 후 고치기
-                                nickname: "냐냐냐",
-                                content: self.rootView.questTextField.textView.text
-                            )
+                            historyVC.configure(answerID: answerID)
                         }
                     }
                     
@@ -268,12 +262,12 @@ extension WriteQuestionTypeQuestViewController {
     }
     
     func configureToEdit(
-        _ questNumber: Int?,
-        _ questType: QuestType,
-        _ questionTitle: String?,
-        _ answerID: Int?,
-        _ answer: String,
-        _ writtenAt: String
+        questNumber: Int?,
+        questType: QuestType,
+        questionTitle: String?,
+        answerID: Int?,
+        answer: String,
+        writtenAt: String
     ) {
         guard let answerID else { return }
         

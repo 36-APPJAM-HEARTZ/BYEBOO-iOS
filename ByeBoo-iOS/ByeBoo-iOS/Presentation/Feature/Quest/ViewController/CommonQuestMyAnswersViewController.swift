@@ -112,17 +112,7 @@ extension CommonQuestMyAnswersViewController: UITableViewDelegate {
         
         let historyViewController = ViewControllerFactory.shared.makeCommonQuestHistoryViewController()
         historyViewController.navigationItem.hidesBackButton = true
-        historyViewController.configure(
-            question: answer.question,
-            writtenAt: answer.writtenAt,
-            profileIcon: .relievedBadge,
-            nickname: answer.nickname,
-            content: answer.content,
-            answerID: answer.answerID,
-            isLiked: answer.isLiked,
-            likeCount: answer.likeCount,
-            commentCount: answer.commentCount
-        )
+        historyViewController.configure(answerID: answer.answerID)
         
         self.navigationController?.pushViewController(historyViewController, animated: false)
     }

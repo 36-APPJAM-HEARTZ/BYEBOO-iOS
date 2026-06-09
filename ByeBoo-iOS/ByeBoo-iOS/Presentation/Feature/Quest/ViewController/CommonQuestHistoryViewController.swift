@@ -159,12 +159,7 @@ extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
             questionTitle: question,
             answerID: answerID,
             answer: answer,
-            writtenAt: writtenAt,
-            nickname: nickname,
-            profileIcon: profileIcon ?? .relievedBadge,
-            isLiked: isLiked,
-            likeCount: likeCount,
-            commentCount: commentCount
+            writtenAt: writtenAt
         )
         self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)
     }
@@ -264,7 +259,7 @@ extension CommonQuestHistoryViewController {
         
         rootView.configure(
             question: entity.question,
-            writtenAt: ServerDateFormatter.shared.relativeTimeString(from: answer.writtenAt) ?? "", //TODO: ViewModel로 수정 
+            writtenAt: ServerDateFormatter.shared.relativeTimeString(from: answer.writtenAt) ?? "", //TODO: ViewModel로 수정
             profileIcon: ProfileIcon.image(for: answer.profileIcon) ?? .relievedBadge,
             nickname: answer.writer,
             content: answer.content,
