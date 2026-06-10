@@ -376,13 +376,15 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
                                                                         
         DIContainer.shared.register(type: CommonQuestHistoryViewModel.self) { container in
-            guard let fetchCommonQuestDetailUseCase = container.resolve(type: FetchCommonQuestDetailUseCase.self) else {
+            guard let fetchCommonQuestDetailUseCase = container.resolve(type: FetchCommonQuestDetailUseCase.self),
+                let postCommonQuestLikeUseCase = container.resolve(type: PostCommonQuestLikeUseCase.self) else  {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
                                                                              
             return CommonQuestHistoryViewModel(
-                fetchCommonQuestCommentsUseCase: fetchCommonQuestDetailUseCase
+                fetchCommonQuestCommentsUseCase: fetchCommonQuestDetailUseCase,
+                postCommonQuestLikeUseCase: postCommonQuestLikeUseCase
             )
         }
     }

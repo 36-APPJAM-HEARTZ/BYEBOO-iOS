@@ -10,20 +10,25 @@ import Foundation
 
 final class CommonQuestHistoryViewModel {
     private let fetchCommonQuestCommentsUseCase: FetchCommonQuestDetailUseCase
+    private let postCommonQuestLikeUseCase: PostCommonQuestLikeUseCase
     
     private let fetchCommentListSubject: PassthroughSubject<Result<CommonQuestDetailEntity, ByeBooError>, Never> = .init()
+    private let likeCountSubject = PassthroughSubject<Result<(answerID: Int, likeCount: Int), ByeBooError>, Never>.init()
     
     private var entity: CommonQuestDetailEntity? = nil
     private var cancellables = Set<AnyCancellable>()
     private(set) var output: Output
     
     init(
-        fetchCommonQuestCommentsUseCase: FetchCommonQuestDetailUseCase
+        fetchCommonQuestCommentsUseCase: FetchCommonQuestDetailUseCase,
+        postCommonQuestLikeUseCase: PostCommonQuestLikeUseCase
     ) {
         self.fetchCommonQuestCommentsUseCase = fetchCommonQuestCommentsUseCase
+        self.postCommonQuestLikeUseCase = postCommonQuestLikeUseCase
         
         output = Output(
-            fetchCommonQuestDetailPublisher: fetchCommentListSubject.eraseToAnyPublisher()
+            fetchCommonQuestDetailPublisher: fetchCommentListSubject.eraseToAnyPublisher(),
+            commonQuestLikeCountPublisher: likeCountSubject.eraseToAnyPublisher()
         )
     }
 }
@@ -31,16 +36,20 @@ final class CommonQuestHistoryViewModel {
 extension CommonQuestHistoryViewModel: ViewModelType {
     enum Input {
         case viewWillAppear(answerID: Int)
+        case likeButtonDidTap(answerID: Int)
     }
     
     struct Output {
         let fetchCommonQuestDetailPublisher: AnyPublisher<Result<CommonQuestDetailEntity, ByeBooError>, Never>
+        let commonQuestLikeCountPublisher: AnyPublisher<Result<(answerID: Int, likeCount: Int), ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
         switch trigger {
         case .viewWillAppear(let answerID):
             fetchCommonQuestComments(answerID: answerID)
+        case .likeButtonDidTap(let answerID):
+            postCommonQuestLike(answerID: answerID)
         }
     }
 }
@@ -69,6 +78,17 @@ extension CommonQuestHistoryViewModel {
                 fetchCommentListSubject.send(.success(entity))
             } catch(let error as ByeBooError) {
                 fetchCommentListSubject.send(.failure(error))
+            }
+        }
+    }
+    
+    private func postCommonQuestLike(answerID: Int) {
+        Task {
+            do {
+                let likeCount = try await postCommonQuestLikeUseCase.execute(answerID: answerID)
+                likeCountSubject.send(.success((answerID: answerID, likeCount: likeCount)))
+            } catch (let error as ByeBooError) {
+                likeCountSubject.send(.failure(error))
             }
         }
     }

@@ -23,7 +23,7 @@ final class CommonQuestHistoryView: BaseView {
     private let answerView = UIView()
     private let profileIconImageView = UIImageView()
     private let userNicknameLabel = UILabel()
-    private let questContentView = QuestContentView()
+    private(set) var questContentView = QuestContentView()
     private(set) var commentListView = SelfSizingTableView()
     private let commentTextView = CommentTextView()
     

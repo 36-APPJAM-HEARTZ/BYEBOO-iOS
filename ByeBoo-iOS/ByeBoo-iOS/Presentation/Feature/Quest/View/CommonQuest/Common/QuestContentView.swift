@@ -133,7 +133,6 @@ final class QuestContentView: BaseView {
     @objc
     private func likeButtonDidTap() {
         likeButton.isSelected.toggle()
-//        likeCountLabel.text = String(likeCounts)
         delegate?.likeButtonDidTap(answerID: self.answerID)
     }
 }
