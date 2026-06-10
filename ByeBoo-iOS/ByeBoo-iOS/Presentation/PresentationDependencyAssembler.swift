@@ -290,6 +290,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: CommonQuestViewModel.self) { container in
             guard let fetchCommonQuestByDateUseCase = container.resolve(type: FetchCommonQuestByDateUseCase.self),
+                  let postCommonQuestLikeUseCase = container.resolve(type: PostCommonQuestLikeUseCase.self) else {
                   let formatElapsedTimeUseCase = container.resolve(type: FormatElapsedTimeUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -298,6 +299,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             return CommonQuestViewModel(
                 fetchCommonQuestByDateUseCase: fetchCommonQuestByDateUseCase,
                 formatElapsedTimeUseCase: formatElapsedTimeUseCase
+                postCommonQuestLikeUseCase: postCommonQuestLikeUseCase
             )
         }
         
