@@ -52,8 +52,8 @@ final class CommonQuestViewModel {
                 }
                 
                 commonQuestSubject.send(.success(()))
-            } catch {
-                commonQuestSubject.send(.failure(error as! ByeBooError))
+            } catch(let error as ByeBooError) {
+                commonQuestSubject.send(.failure(error))
             }
         }
     }
@@ -113,39 +113,28 @@ extension CommonQuestViewModel {
     var isUserAnswered: Bool {
         commonQuest?.isAnswered ?? false
     }
-    
+
     func getAnswer(at index: Int) -> CommonQuestAnswerEntity? {
         guard index >= 0 && index < answers.count else {
             return nil
         }
         return answers[index]
     }
-
+    
+    func getAnswerID(at index: Int) -> Int? {
+        guard index >= 0 && index < answers.count else {
+            return nil
+        }
+        return answers[index].answerID
+    }
+    
     func getProfileIcon(at index: Int) -> UIImage? {
         guard index >= 0 && index < answers.count else { return nil }
         return ProfileIcon.image(for: answers[index].profileIcon)
     }
     
     func getWrittenAt(at index: Int) -> String? {
-        guard index >= 0 && index < answers.count,
-              let writtenAt = DateFormatter.toDetailDate(from: answers[index].writtenAt)
-        else {
-            return nil
-        }
-        
-        let diffTime = Date().timeIntervalSince(writtenAt)
-        
-        switch diffTime {
-        case ..<minute:
-            return "방금 전"
-        case minute..<hour:
-            let minutes = Int(diffTime / minute)
-            return "\(minutes)분 전"
-        case hour..<day:
-            let hours = Int(diffTime / hour)
-            return "\(hours)시간 전"
-        default:
-            return DateFormatter.toDisplayDateString(from: writtenAt)
-        }
+        guard index >= 0 && index < answers.count else { return nil }
+        return ServerDateFormatter.shared.relativeTimeString(from: answers[index].writtenAt)
     }
 }

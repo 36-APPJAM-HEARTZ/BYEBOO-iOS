@@ -51,11 +51,8 @@ extension LookBackJourneyViewModel {
             do {
                 let journeys = try await useCase.execute()
                 lookBackJourneySubject.send(.success(journeys))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
-                ByeBooLogger.error(error as ByeBooError)
+            } catch(let error as ByeBooError) {
+                ByeBooLogger.error(error)
                 lookBackJourneySubject.send(.failure(error))
             }
         }

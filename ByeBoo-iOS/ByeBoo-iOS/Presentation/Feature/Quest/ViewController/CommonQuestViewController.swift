@@ -129,28 +129,12 @@ extension CommonQuestViewController: UITableViewDelegate {
         }
         
         let answerIndex = indexPath.row - 1
-        guard let answer = viewModel.getAnswer(at: answerIndex) else {
+        guard let answerID = viewModel.getAnswerID(at: answerIndex) else {
             return
         }
         
-        let formattedWrittenAt = DateFormatter.toDetailDate(from: answer.writtenAt).map {
-            DateFormatter.toDisplayDateString(from: $0)
-        }
-        
-        guard let formattedWrittenAt else { return }
-        guard let profileIcon = viewModel.getProfileIcon(at: answerIndex) else { return }
-        
         let historyViewController = ViewControllerFactory.shared.makeCommonQuestHistoryViewController()
-        historyViewController.configure(
-            question: viewModel.question,
-            writtenAt: formattedWrittenAt,
-            profileIcon: profileIcon,
-            nickname: answer.writerID,
-            content: answer.content,
-            answerID: answer.answerID,
-            writerID: answer.userID,
-            isMyAnswer: answer.isMyAnswer
-        )
+        historyViewController.configure(answerID: answerID)
         historyViewController.navigationItem.hidesBackButton = true
         self.navigationController?.pushViewController(
             historyViewController,

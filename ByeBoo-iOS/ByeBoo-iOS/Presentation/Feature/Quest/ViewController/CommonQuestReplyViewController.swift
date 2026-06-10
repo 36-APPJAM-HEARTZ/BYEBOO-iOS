@@ -62,6 +62,7 @@ extension CommonQuestReplyViewController {
             
             let entity = item.entity
             cell.configure(
+                isMyComment: entity.isMyComment,
                 commentID: entity.commentID,
                 replyCount: entity.replyCount,
                 writer: entity.writer,
@@ -95,6 +96,17 @@ extension CommonQuestReplyViewController {
 }
 
 extension CommonQuestReplyViewController: CommentProtocol {
+    func menuButtonDidTap(commentID: Int, isMyComment: Bool) {
+        let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
+        
+        commonQuestBottomSheet.configure(
+            sheeetType: isMyComment ? .myComment : .otherComment ,
+            targetID: commentID
+        )
+        
+        presentBottomSheet(commonQuestBottomSheet, height: 224.adjustedH)
+    }
+    
     func moreLabelDidTap(commentID: Int) {
         let currentSnapshot = dataSource.snapshot()
 

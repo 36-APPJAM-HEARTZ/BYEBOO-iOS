@@ -30,7 +30,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     private let yesAnswer = "예"
     private let noAnswer = "아니오"
     
-    private var rootView = CommonQuestBottomSheetView(sheetType: .other)
+    private var rootView = CommonQuestBottomSheetView(sheetType: .otherAnswer)
     private let viewModel: CommonQuestBottomSheetViewModel
     private var writerID: Int = 0
     private var cancellables = Set<AnyCancellable>()
@@ -77,7 +77,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
 
 extension CommonQuestBottomSheetViewController {
     
-    func configure(
+    func configureWhenEdit(
         sheeetType: CommonQuestArchiveType,
         answerID: Int? = nil,
         answer: String? = nil,
@@ -92,9 +92,9 @@ extension CommonQuestBottomSheetViewController {
     }
     
     
-    func configure(sheeetType: CommonQuestArchiveType, writerID: Int) {
+    func configure(sheeetType: CommonQuestArchiveType, targetID: Int) {
         self.sheetType = sheeetType
-        self.writerID = writerID
+        self.writerID = targetID
         if let sheetType {
             rootView = CommonQuestBottomSheetView(sheetType: sheetType)
         }

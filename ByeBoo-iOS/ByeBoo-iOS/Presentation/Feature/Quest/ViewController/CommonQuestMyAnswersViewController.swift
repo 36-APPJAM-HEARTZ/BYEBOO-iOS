@@ -112,14 +112,7 @@ extension CommonQuestMyAnswersViewController: UITableViewDelegate {
         
         let historyViewController = ViewControllerFactory.shared.makeCommonQuestHistoryViewController()
         historyViewController.navigationItem.hidesBackButton = true
-        historyViewController.configure(
-            question: answer.question,
-            writtenAt: answer.writtenAt,
-            profileIcon: .relievedBadge,
-            nickname: "냐냐냐",
-            content: answer.content,
-            answerID: answer.answerID
-        )
+        historyViewController.configure(answerID: answer.answerID)
         
         self.navigationController?.pushViewController(historyViewController, animated: false)
     }
@@ -201,9 +194,9 @@ extension CommonQuestMyAnswersViewController: UITableViewDataSource {
             question: answer.question,
             content: answer.content,
             writtenAt: answer.writtenAt,
-            isLiked: true,
-            likeCount: 3,
-            commentCount: 3
+            isLiked: answer.isLiked,
+            likeCount: answer.likeCount,
+            commentCount: answer.commentCount
         )
         return cell
     }

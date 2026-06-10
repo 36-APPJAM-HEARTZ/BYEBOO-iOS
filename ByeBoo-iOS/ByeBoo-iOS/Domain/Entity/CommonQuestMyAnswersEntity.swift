@@ -18,6 +18,9 @@ struct CommonQuestMyAnswerEntity {
     let writtenAt: String
     let content: String
     let question: String
+    let isLiked: Bool
+    let likeCount: Int
+    let commentCount: Int
 }
 
 extension CommonQuestMyAnswersEntity {
@@ -27,7 +30,10 @@ extension CommonQuestMyAnswersEntity {
             answerID: $0,
             writtenAt: Date.now.toString(),
             content: "\($0)번째 테스트 답변",
-            question: "\($0)번째 질문"
+            question: "\($0)번째 질문",
+            isLiked: false,
+            likeCount: 2,
+            commentCount: 3
         )
     }
     
@@ -47,10 +53,22 @@ extension CommonQuestMyAnswerEntity {
     
     static func stubs() -> [Self] {
         [
-            .init(answerID: 1, writtenAt: "2025-01-11", content: "content", question: "question"),
-            .init(answerID: 2, writtenAt: "2025-01-12", content: "content", question: "question"),
-            .init(answerID: 3, writtenAt: "2025-01-13", content: "content", question: "question"),
-            .init(answerID: 4, writtenAt: "2025-01-14", content: "content", question: "question")
+            .init(
+                answerID: 1, writtenAt: "2025-01-11", content: "content",
+                question: "question", isLiked: false, likeCount: 1, commentCount: 2
+            ),
+            .init(
+                answerID: 2, writtenAt: "2025-01-12", content: "content",
+                question: "question", isLiked: false, likeCount: 1, commentCount: 2
+            ),
+            .init(
+                answerID: 3, writtenAt: "2025-01-13", content: "content",
+                question: "question", isLiked: false, likeCount: 1, commentCount: 2
+            ),
+            .init(
+                answerID: 4, writtenAt: "2025-01-14", content: "content",
+                question: "question", isLiked: false, likeCount: 1, commentCount: 2
+            )
         ]
     }
 }
