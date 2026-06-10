@@ -9,13 +9,13 @@ import Combine
 import Foundation
 
 final class CommonQuestHistoryViewModel {
-    private var cancellables = Set<AnyCancellable>()
-    
-    private(set) var output: Output
-    
     private let fetchCommonQuestCommentsUseCase: FetchCommonQuestDetailUseCase
     
     private let fetchCommentListSubject: PassthroughSubject<Result<CommonQuestDetailEntity, ByeBooError>, Never> = .init()
+    
+    private var entity: CommonQuestDetailEntity? = nil
+    private var cancellables = Set<AnyCancellable>()
+    private(set) var output: Output
     
     init(
         fetchCommonQuestCommentsUseCase: FetchCommonQuestDetailUseCase
@@ -46,16 +46,28 @@ extension CommonQuestHistoryViewModel: ViewModelType {
 }
 
 extension CommonQuestHistoryViewModel {
+    var question: String {
+        return entity?.question ?? ""
+    }
+    
+    var detailEntity: CommonQuestAnswerDetailEntity? {
+        return entity?.answer
+    }
+    
+    var commentList: [CommonQuestCommentEntity]? {
+        return entity?.comments
+    }
+}
+
+extension CommonQuestHistoryViewModel {
     private func fetchCommonQuestComments(answerID: Int) {
         Task {
             do {
-                let entity = try await fetchCommonQuestCommentsUseCase.execute(answerID: answerID)
+                entity = try await fetchCommonQuestCommentsUseCase.execute(answerID: answerID)
+                guard let entity else { return }
                 ByeBooLogger.debug("entity \(entity)")
                 fetchCommentListSubject.send(.success(entity))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
+            } catch(let error as ByeBooError) {
                 fetchCommentListSubject.send(.failure(error))
             }
         }

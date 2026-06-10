@@ -30,16 +30,6 @@ final class CommonQuestHistoryViewController: BaseViewController {
     private var answerID: Int = 0
     private var writerID: Int = 0
     
-    private var isMyAnswer: Bool = false
-    private var nickname: String = ""
-    private var profileIcon: UIImage?
-    private var answer: String = ""
-    private var question: String = ""
-    private var writtenAt: String = ""
-    private var isLiked: Bool = false
-    private var likeCount: Int = 0
-    private var commentCount: Int = 0
-    
     override func loadView() {
         view = rootView
     }
@@ -68,7 +58,6 @@ final class CommonQuestHistoryViewController: BaseViewController {
         bind()
         
         configureDataSource()
-//        applySnapshot()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -247,14 +236,6 @@ extension CommonQuestHistoryViewController {
     private func bindData(entity: CommonQuestDetailEntity) {
         let answer = entity.answer
         self.writerID = answer.writerID
-        self.nickname = answer.writer
-        self.answer = answer.content
-        self.question = entity.question
-        self.isLiked = answer.isLiked
-        self.likeCount = answer.likeCount
-        self.commentCount = answer.commentCount
-        self.isMyAnswer = answer.isMyAnswer
-        self.writtenAt = answer.writtenAt
         
         rootView.configure(
             question: entity.question,
@@ -277,16 +258,19 @@ extension CommonQuestHistoryViewController {
                 targetID: commentID
             )
         } else {
-            let sheetType: CommonQuestArchiveType = isMyAnswer ? .myAnswer : .otherAnswer
+            let entity = viewModel.detailEntity
+            guard let entity else { return }
+            
+            let sheetType: CommonQuestArchiveType = entity.isMyAnswer ? .myAnswer : .otherAnswer
             commonQuestBottomSheet.configure(sheeetType: sheetType, targetID: writerID)
             
-            if isMyAnswer {
+            if entity.isMyAnswer {
                 commonQuestBottomSheet.configureWhenEdit(
                     sheeetType: sheetType,
                     answerID: answerID,
-                    answer: answer,
-                    question: question,
-                    writtenAt: writtenAt
+                    answer: entity.content,
+                    question: viewModel.question,
+                    writtenAt: entity.writtenAt
                 )
             }
         }
