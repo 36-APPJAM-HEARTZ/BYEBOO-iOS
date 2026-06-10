@@ -12,7 +12,10 @@ final class CommonQuestViewModel {
     
     private let cancellables = Set<AnyCancellable>()
     private let commonQuestSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>.init()
+    private let likeCountSubject = PassthroughSubject<Result<(answerID: Int, likeCount: Int), ByeBooError>, Never>.init()
+    
     private let fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase
+    private let postCommonQuestLikeUseCase: PostCommonQuestLikeUseCase
     private let formatElapsedTimeUseCase: FormatElapsedTimeUseCase
     
     private(set) var output: Output
@@ -24,12 +27,15 @@ final class CommonQuestViewModel {
     
     init(
         fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase,
+        postCommonQuestLikeUseCase: PostCommonQuestLikeUseCase
         formatElapsedTimeUseCase: FormatElapsedTimeUseCase
     ) {
         self.fetchCommonQuestByDateUseCase = fetchCommonQuestByDateUseCase
+        self.postCommonQuestLikeUseCase = postCommonQuestLikeUseCase
         self.formatElapsedTimeUseCase = formatElapsedTimeUseCase
         self.output = Output(
-            commonQuestPublisher: commonQuestSubject.eraseToAnyPublisher()
+            commonQuestPublisher: commonQuestSubject.eraseToAnyPublisher(),
+            commonQuestLikeCountPublisher: likeCountSubject.eraseToAnyPublisher()
         )
     }
     
@@ -59,6 +65,17 @@ final class CommonQuestViewModel {
             }
         }
     }
+    
+    private func postCommonQuestLike(answerID: Int) {
+        Task {
+            do {
+                let likeCount = try await postCommonQuestLikeUseCase.execute(answerID: answerID)
+                likeCountSubject.send(.success((answerID: answerID, likeCount: likeCount)))
+            } catch (let error as ByeBooError) {
+                likeCountSubject.send(.failure(error))
+            }
+        }
+    }
 }
 
 extension CommonQuestViewModel: ViewModelType {
@@ -67,10 +84,12 @@ extension CommonQuestViewModel: ViewModelType {
         case viewWillAppear
         case moveDateButtonDidTap(selectedDate: String)
         case scrollAnswer
+        case likeButtonDidTap(answerID: Int)
     }
     
     struct Output {
         let commonQuestPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
+        let commonQuestLikeCountPublisher: AnyPublisher<Result<(answerID: Int, likeCount: Int), ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
@@ -87,6 +106,8 @@ extension CommonQuestViewModel: ViewModelType {
                 return
             }
             fetchCommonQuestByDate(date: currentDate, cursor: nextCursor)
+        case .likeButtonDidTap(let answerID):
+            postCommonQuestLike(answerID: answerID)
         }
     }
 }
@@ -128,6 +149,10 @@ extension CommonQuestViewModel {
             return nil
         }
         return answers[index].answerID
+    }
+
+    func indexOfAnswer(answerID: Int) -> Int? {
+        answers.firstIndex { $0.answerID == answerID }
     }
     
     func getProfileIcon(at index: Int) -> UIImage? {
