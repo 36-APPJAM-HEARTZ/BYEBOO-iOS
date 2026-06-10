@@ -52,8 +52,8 @@ final class CommonQuestViewModel {
                 }
                 
                 commonQuestSubject.send(.success(()))
-            } catch {
-                commonQuestSubject.send(.failure(error as! ByeBooError))
+            } catch(let error as ByeBooError) {
+                commonQuestSubject.send(.failure(error))
             }
         }
     }

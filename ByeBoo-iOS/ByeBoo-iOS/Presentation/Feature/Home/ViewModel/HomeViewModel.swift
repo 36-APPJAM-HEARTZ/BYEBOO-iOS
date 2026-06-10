@@ -90,12 +90,8 @@ extension HomeViewModel {
             do {
                 let dialogues = try await fetchCharacterDialogueUseCase.execute()
                 characterResultSubject.send(.success(dialogues))
-            } catch {
-                characterResultSubject.send(
-                    .failure(
-                        error as? ByeBooError ?? ByeBooError.unknownError
-                    )
-                )
+            } catch(let error as ByeBooError) {
+                characterResultSubject.send(.failure(error))
             }
         }
     }
@@ -121,12 +117,8 @@ extension HomeViewModel {
             do {
                 let journey = try await fetchUserJourneyUseCase.execute()
                 journeyResultSubject.send(.success(journey))
-            } catch {
-                journeyResultSubject.send(
-                    .failure(
-                        error as? ByeBooError ?? ByeBooError.unknownError
-                    )
-                )
+            } catch(let error as ByeBooError) {
+                journeyResultSubject.send(.failure(error))
             }
         }
     }

@@ -53,8 +53,8 @@ final class CommonQuestMyAnswerViewModel {
                 answers.append(contentsOf: result.answers)
                 
                 answersSubject.send(.success(()))
-            } catch {
-                answersSubject.send(.failure(error as! ByeBooError))
+            } catch(let error as ByeBooError) {
+                answersSubject.send(.failure(error))
             }
         }
     }
