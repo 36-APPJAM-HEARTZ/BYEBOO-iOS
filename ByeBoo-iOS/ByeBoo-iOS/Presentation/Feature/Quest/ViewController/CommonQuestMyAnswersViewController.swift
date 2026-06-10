@@ -69,6 +69,7 @@ extension CommonQuestMyAnswersViewController {
     private func bind() {
         bindName()
         bindCommonQuestAnswers()
+        bindLikeCount()
     }
     
     private func bindName() {
@@ -97,6 +98,33 @@ extension CommonQuestMyAnswersViewController {
                 }
             }
             .store(in: &cancellable)
+    }
+    
+    private func bindLikeCount() {
+        viewModel.output.commonQuestLikeCountPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let result):
+                    self?.updateLikeCount(answerID: result.answerID, likeCount: result.likeCount)
+                case .failure(let error):
+                    ByeBooLogger.error(error)
+                }
+            }
+            .store(in: &cancellable)
+    }
+    
+    private func updateLikeCount(answerID: Int, likeCount: Int) {
+        guard let answerIndex = viewModel.indexOfAnswer(answerID: answerID) else {
+            return
+        }
+
+        let indexPath = IndexPath(row: 0, section: answerIndex)
+        guard let cell = rootView.answersTableView.cellForRow(at: indexPath) as? CommonQuestMyAnswerCell else {
+            return
+        }
+
+        cell.questContentView.updateUI(likeCount: likeCount)
     }
 }
 
@@ -204,7 +232,7 @@ extension CommonQuestMyAnswersViewController: UITableViewDataSource {
 }
 
 extension CommonQuestMyAnswersViewController: CommonQuestLikeCommentProtocol {
-    func likeButtonDidTap() {
-        // TODO: like button
+    func likeButtonDidTap(answerID: Int) {
+        viewModel.action(.likeButtonDidTap(answerID: answerID))
     }
 }
