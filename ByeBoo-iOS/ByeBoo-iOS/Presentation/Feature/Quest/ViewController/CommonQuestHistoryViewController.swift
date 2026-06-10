@@ -238,6 +238,7 @@ extension CommonQuestHistoryViewController {
         self.writerID = answer.writerID
         
         rootView.configure(
+            answerID: answerID,
             question: entity.question,
             writtenAt: ServerDateFormatter.shared.relativeTimeString(from: answer.writtenAt) ?? "", //TODO: ViewModel로 수정
             profileIcon: ProfileIcon.image(for: answer.profileIcon) ?? .relievedBadge,

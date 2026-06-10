@@ -191,6 +191,7 @@ extension CommonQuestMyAnswersViewController: UITableViewDataSource {
         let cell: CommonQuestMyAnswerCell = tableView.dequeueReusableCell(for: indexPath)
         cell.questContentView.delegate = self
         cell.bind(
+            answerID: answer.answerID,
             question: answer.question,
             content: answer.content,
             writtenAt: answer.writtenAt,

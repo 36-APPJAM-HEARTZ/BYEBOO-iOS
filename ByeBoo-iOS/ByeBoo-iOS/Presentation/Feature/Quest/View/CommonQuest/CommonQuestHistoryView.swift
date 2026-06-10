@@ -165,6 +165,7 @@ extension CommonQuestHistoryView {
 extension CommonQuestHistoryView {
 
     func configure(
+        answerID: Int,
         question: String,
         writtenAt: String,
         profileIcon: UIImage,
@@ -177,6 +178,7 @@ extension CommonQuestHistoryView {
         questionContentLabel.text = question
         dateLabel.text = writtenAt
         questContentView.configure(
+            answerID: answerID,
             content: content,
             isLiked: isLiked,
             likeCount: likeCount,

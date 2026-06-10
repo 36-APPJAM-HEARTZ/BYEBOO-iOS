@@ -95,6 +95,7 @@ final class CommonQuestMyAnswerCell: UITableViewCell {
 extension CommonQuestMyAnswerCell {
     
     func bind(
+        answerID: Int,
         question: String,
         content: String,
         writtenAt: String,
@@ -104,6 +105,7 @@ extension CommonQuestMyAnswerCell {
     ) {
         questionContentLabel.text = question
         questContentView.configure(
+            answerID: answerID,
             content: content,
             writtenAt: writtenAt,
             isLiked: isLiked,
