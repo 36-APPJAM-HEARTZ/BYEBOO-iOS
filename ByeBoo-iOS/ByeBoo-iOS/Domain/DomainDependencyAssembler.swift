@@ -216,5 +216,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: FormatElapsedTimeUseCase.self) { _ in
             return DefaultFormatElapsedTimeUseCase()
         }
+        
+        DIContainer.shared.register(type: ReadNotificationUseCase.self) { _ in
+            return DefaultReadNotificationUseCase(repository: notificationRepository)
+        }
     }
 }

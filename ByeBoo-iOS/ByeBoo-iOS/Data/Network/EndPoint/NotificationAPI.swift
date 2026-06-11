@@ -11,6 +11,7 @@ import Alamofire
 
 enum NotificationAPI {
     case fetchNotificationList
+    case readNotification(notificationID: Int)
 }
 
 extension NotificationAPI: EndPoint {
@@ -23,6 +24,8 @@ extension NotificationAPI: EndPoint {
         switch self {
         case .fetchNotificationList:
             ""
+        case .readNotification(let notificationID):
+            "/\(notificationID)/read"
         }
     }
     
@@ -30,12 +33,14 @@ extension NotificationAPI: EndPoint {
         switch self {
         case .fetchNotificationList:
                 .get
+        case .readNotification:
+                .patch
         }
     }
     
     var headers: HeaderType {
         switch self {
-        case .fetchNotificationList:
+        case .fetchNotificationList, .readNotification:
                 .withAuth
         }
     }
@@ -44,19 +49,21 @@ extension NotificationAPI: EndPoint {
         switch self {
         case .fetchNotificationList:
             JSONEncoding.default
+        case .readNotification:
+            URLEncoding.default
         }
     }
     
     var queryParameters: [String : String]? {
         switch self {
-        case .fetchNotificationList:
+        case .fetchNotificationList, .readNotification:
             nil
         }
     }
     
     var bodyParameters: Parameters? {
         switch self {
-        case .fetchNotificationList:
+        case .fetchNotificationList, .readNotification:
             nil
         }
     }

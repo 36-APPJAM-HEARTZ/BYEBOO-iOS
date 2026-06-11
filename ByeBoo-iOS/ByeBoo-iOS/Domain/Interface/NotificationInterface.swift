@@ -7,4 +7,5 @@
 
 protocol NotificationInterface {
     func fetchNotifications() async throws -> NotificationListEntity
+    func readNotification(for notificationID: Int) async throws
 }
