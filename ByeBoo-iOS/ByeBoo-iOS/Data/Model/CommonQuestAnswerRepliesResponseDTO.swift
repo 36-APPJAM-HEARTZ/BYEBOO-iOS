@@ -10,7 +10,7 @@ import Foundation
 struct CommonQuestAnswerRepliesResponseDTO: Decodable {
     let totalCount: Int
     let comment: CommonQuestAnswerCommentResponseDTO
-    let replies: [CommonQuestAnswerReplyResponseDTO]
+    let replies: [CommonQuestAnswerCommentResponseDTO]
 }
 
 struct CommonQuestAnswerCommentResponseDTO: Decodable {
@@ -22,27 +22,19 @@ struct CommonQuestAnswerCommentResponseDTO: Decodable {
     let writerId: Int
 }
 
-struct CommonQuestAnswerReplyResponseDTO: Decodable {
-    let content: String
-    let writer: String
-    let createdAt: String
-    let profileIcon: String
-    let commentId: Int
-    let writerId: Int
-}
-
 extension CommonQuestAnswerRepliesResponseDTO {
-    func toEntity(userName: String) -> [CommonQuestCommentEntity] {
-        replies.map {
-            $0.toEntity(userName: userName)
-        }
+    func toEntity(userID: Int) -> CommonQuestReplyListEntity {
+        .init(
+            totalCount: totalCount,
+            replies: replies.map { $0.toEntity(userID: userID) }
+        )
     }
 }
 
-extension CommonQuestAnswerReplyResponseDTO {
-    func toEntity(userName: String) -> CommonQuestCommentEntity {
+extension CommonQuestAnswerCommentResponseDTO {
+    func toEntity(userID: Int) -> CommonQuestCommentEntity {
         .init(
-            isMyComment: userName == writer ? true : false,
+            isMyComment: userID == writerId ? true : false,
             commentID: commentId,
             replyCount: nil,
             writerID: writerId,
