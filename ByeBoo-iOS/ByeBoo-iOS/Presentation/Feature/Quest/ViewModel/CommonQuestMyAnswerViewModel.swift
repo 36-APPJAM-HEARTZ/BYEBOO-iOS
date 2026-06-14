@@ -13,7 +13,7 @@ final class CommonQuestMyAnswerViewModel {
     private let cancellables = Set<AnyCancellable>()
     private let nameSubject = PassthroughSubject<Result<String, ByeBooError>, Never>.init()
     private let answersSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>.init()
-    private let likeCountSubject = PassthroughSubject<Result<(answerID: Int, likeCount: Int), ByeBooError>, Never>.init()
+    private let likeCountSubject = PassthroughSubject<Result<(answerID: Int, entity: CommonQuestLikeEntity), ByeBooError>, Never>.init()
     
     private let getUserNameUseCase: GetUserNameUseCase
     private let fetchCommonQuestMyAnswersUseCase: FetchCommonQuestMyAnswersUseCase
@@ -25,6 +25,8 @@ final class CommonQuestMyAnswerViewModel {
     private var answers: [CommonQuestMyAnswerEntity] = []
     private(set) var hasMorePages = true
     private var nextCursor: Int? = nil
+    
+    private var likeTasks: [Int: Task<Void, Never>] = [:]
     
     init(
         getUserNameUseCase: GetUserNameUseCase,
@@ -68,13 +70,21 @@ final class CommonQuestMyAnswerViewModel {
     }
     
     private func postCommonQuestLike(answerID: Int) {
-        Task {
+        likeTasks[answerID]?.cancel()
+
+        likeTasks[answerID] = Task {
             do {
-                let likeCount = try await postCommonQuestLikeUseCase.execute(answerID: answerID)
-                likeCountSubject.send(.success((answerID: answerID, likeCount: likeCount)))
-            } catch (let error as ByeBooError) {
+                let entity = try await postCommonQuestLikeUseCase.execute(answerID: answerID)
+                guard !Task.isCancelled else { return }
+                likeCountSubject.send(.success((answerID: answerID, entity)))
+            } catch {
+                guard let error = error as? ByeBooError else {
+                    return
+                }
+                guard !Task.isCancelled else { return }
                 likeCountSubject.send(.failure(error))
             }
+            likeTasks[answerID] = nil
         }
     }
 }
@@ -90,7 +100,7 @@ extension CommonQuestMyAnswerViewModel: ViewModelType {
     struct Output {
         let namePublisher: AnyPublisher<Result<String, ByeBooError>, Never>
         let answersPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
-        let commonQuestLikeCountPublisher: AnyPublisher<Result<(answerID: Int, likeCount: Int), ByeBooError>, Never>
+        let commonQuestLikeCountPublisher: AnyPublisher<Result<(answerID: Int, entity: CommonQuestLikeEntity), ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {

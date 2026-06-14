@@ -126,13 +126,13 @@ final class QuestContentView: BaseView {
         commentCountLabel.text = String(commentCount)
     }
     
-    func updateUI(likeCount: Int) {
+    func updateUI(likeCount: Int, isLiked: Bool) {
         likeCountLabel.text = String(likeCount)
+        likeButton.isSelected = isLiked
     }
     
     @objc
     private func likeButtonDidTap() {
-        likeButton.isSelected.toggle()
         delegate?.likeButtonDidTap(answerID: self.answerID)
     }
 }

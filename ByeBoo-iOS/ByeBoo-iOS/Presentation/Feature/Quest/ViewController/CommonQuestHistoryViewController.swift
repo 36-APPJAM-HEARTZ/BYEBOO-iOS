@@ -238,7 +238,8 @@ extension CommonQuestHistoryViewController {
             .sink { [weak self] result in
                 switch result {
                 case .success(let result):
-                    self?.rootView.questContentView.updateUI(likeCount: result.likeCount)
+                    let entity = result.entity
+                    self?.rootView.questContentView.updateUI(likeCount: entity.likeCount, isLiked: entity.isLiked)
                 case .failure(let error):
                     ByeBooLogger.error(error)
                 }

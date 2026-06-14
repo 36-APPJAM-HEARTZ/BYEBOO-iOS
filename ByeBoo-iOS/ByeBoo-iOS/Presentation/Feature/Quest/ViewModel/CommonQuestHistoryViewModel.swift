@@ -13,10 +13,11 @@ final class CommonQuestHistoryViewModel {
     private let postCommonQuestLikeUseCase: PostCommonQuestLikeUseCase
     
     private let fetchCommentListSubject: PassthroughSubject<Result<CommonQuestDetailEntity, ByeBooError>, Never> = .init()
-    private let likeCountSubject = PassthroughSubject<Result<(answerID: Int, likeCount: Int), ByeBooError>, Never>.init()
+    private let likeCountSubject = PassthroughSubject<Result<(answerID: Int, entity: CommonQuestLikeEntity), ByeBooError>, Never>.init()
     
     private var entity: CommonQuestDetailEntity? = nil
     private var cancellables = Set<AnyCancellable>()
+    private var likeTasks: [Int: Task<Void, Never>] = [:]
     private(set) var output: Output
     
     init(
@@ -41,7 +42,7 @@ extension CommonQuestHistoryViewModel: ViewModelType {
     
     struct Output {
         let fetchCommonQuestDetailPublisher: AnyPublisher<Result<CommonQuestDetailEntity, ByeBooError>, Never>
-        let commonQuestLikeCountPublisher: AnyPublisher<Result<(answerID: Int, likeCount: Int), ByeBooError>, Never>
+        let commonQuestLikeCountPublisher: AnyPublisher<Result<(answerID: Int, entity: CommonQuestLikeEntity), ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
@@ -83,13 +84,21 @@ extension CommonQuestHistoryViewModel {
     }
     
     private func postCommonQuestLike(answerID: Int) {
-        Task {
+        likeTasks[answerID]?.cancel()
+
+        likeTasks[answerID] = Task {
             do {
-                let likeCount = try await postCommonQuestLikeUseCase.execute(answerID: answerID)
-                likeCountSubject.send(.success((answerID: answerID, likeCount: likeCount)))
-            } catch (let error as ByeBooError) {
+                let entity = try await postCommonQuestLikeUseCase.execute(answerID: answerID)
+                guard !Task.isCancelled else { return }
+                likeCountSubject.send(.success((answerID, entity)))
+            } catch {
+                guard let error = error as? ByeBooError else {
+                    return
+                }
+                guard !Task.isCancelled else { return }
                 likeCountSubject.send(.failure(error))
             }
+            likeTasks[answerID] = nil
         }
     }
 }

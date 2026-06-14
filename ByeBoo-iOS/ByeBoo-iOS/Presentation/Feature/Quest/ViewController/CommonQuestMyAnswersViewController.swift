@@ -106,7 +106,12 @@ extension CommonQuestMyAnswersViewController {
             .sink { [weak self] result in
                 switch result {
                 case .success(let result):
-                    self?.updateLikeCount(answerID: result.answerID, likeCount: result.likeCount)
+                    let entity = result.entity
+                    self?.updateLikeCount(
+                        answerID: result.answerID,
+                        likeCount: entity.likeCount,
+                        isLiked: entity.isLiked
+                    )
                 case .failure(let error):
                     ByeBooLogger.error(error)
                 }
@@ -114,7 +119,7 @@ extension CommonQuestMyAnswersViewController {
             .store(in: &cancellable)
     }
     
-    private func updateLikeCount(answerID: Int, likeCount: Int) {
+    private func updateLikeCount(answerID: Int, likeCount: Int, isLiked: Bool) {
         guard let answerIndex = viewModel.indexOfAnswer(answerID: answerID) else {
             return
         }
@@ -124,7 +129,7 @@ extension CommonQuestMyAnswersViewController {
             return
         }
 
-        cell.questContentView.updateUI(likeCount: likeCount)
+        cell.questContentView.updateUI(likeCount: likeCount, isLiked: isLiked)
     }
 }
 

@@ -8,7 +8,7 @@
 import Foundation
 
 protocol PostCommonQuestLikeUseCase {
-    func execute(answerID: Int) async throws -> Int
+    func execute(answerID: Int) async throws -> CommonQuestLikeEntity
 }
 
 struct DefaultPostCommonQuestLikeUseCase: PostCommonQuestLikeUseCase {
@@ -18,7 +18,7 @@ struct DefaultPostCommonQuestLikeUseCase: PostCommonQuestLikeUseCase {
         self.repository = repository
     }
     
-    func execute(answerID: Int) async throws  -> Int {
+    func execute(answerID: Int) async throws  -> CommonQuestLikeEntity {
         return try await repository.postCommonQuestLikes(answerID: answerID)
     }
 }

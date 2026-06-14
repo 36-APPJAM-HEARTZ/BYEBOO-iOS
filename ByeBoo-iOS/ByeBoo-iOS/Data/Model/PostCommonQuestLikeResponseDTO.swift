@@ -11,3 +11,9 @@ struct PostCommonQuestLikeResponseDTO: Decodable {
     let likeCount: Int
     let isLiked: Bool
 }
+
+extension PostCommonQuestLikeResponseDTO {
+    func toEntity() -> CommonQuestLikeEntity {
+        .init(isLiked: isLiked, likeCount: likeCount)
+    }
+}
