@@ -39,7 +39,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
         self.tabBarController?.tabBar.isHidden = true
         addKeyboardObservers()
         
-        viewModel.action(.viewWillAppear(answerID: answerID))
+        viewModel.action(.fetchQuestDetail(answerID: answerID))
         
         Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyOthersAnswerPageview)
     }
@@ -76,7 +76,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
             $0.separatorStyle = .none
             $0.register(CommentTableViewCell.self)
         }
-        rootView.questContentView.delegate = self
+        rootView.commentTextView.delegate = self
     }
 }
 
@@ -87,7 +87,6 @@ extension CommonQuestHistoryViewController {
 }
 
 extension CommonQuestHistoryViewController: BackNavigable {
-    
     func back() {
         self.navigationController?.popViewController(animated: false)
     }
@@ -213,6 +212,12 @@ extension CommonQuestHistoryViewController: BlockReportProtocol {
     }
 }
 
+extension CommonQuestHistoryViewController: CommonQuestCommentProtcol {
+    func postComment(content: String) {
+        viewModel.action(.postComment(answerID: answerID, content: content))
+    }
+}
+
 extension CommonQuestHistoryViewController {
     @objc
     private func dismissKeyboard() {
@@ -242,6 +247,18 @@ extension CommonQuestHistoryViewController {
                     self?.rootView.questContentView.updateUI(likeCount: entity.likeCount, isLiked: entity.isLiked)
                 case .failure(let error):
                     ByeBooLogger.error(error)
+                }
+            }
+            .store(in: &cancellable)
+        
+        viewModel.output.postCommentPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success:
+                    ByeBooLogger.debug("댓글 입력 성공")
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
                 }
             }
             .store(in: &cancellable)

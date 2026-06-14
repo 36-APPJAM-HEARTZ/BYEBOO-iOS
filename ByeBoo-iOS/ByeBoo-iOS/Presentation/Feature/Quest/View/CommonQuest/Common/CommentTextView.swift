@@ -1,5 +1,5 @@
 //
-//  CommentTextFieldView.swift
+//  CommentTextView.swift
 //  ByeBoo-iOS
 //
 //  Created by 이나연 on 5/4/26.
@@ -7,7 +7,14 @@
 
 import UIKit
 
+protocol CommonQuestCommentProtcol: AnyObject {
+    func postComment(content: String)
+}
+
 final class CommentTextView: BaseView {
+    
+    weak var delegate: CommonQuestCommentProtcol?
+    
     private let topBorderLine = UIView()
     private let textFieldContainer = UIView()
     private let textView = UITextView()
@@ -69,6 +76,7 @@ final class CommentTextView: BaseView {
         
         confirmButton.do {
             $0.applyByeBooFont(style: .body2M16, text: "완료", color: .grayscale600)
+            $0.addTarget(self, action: #selector(confirmButtonDidTap), for: .touchUpInside)
         }
     }
     
@@ -137,6 +145,14 @@ extension CommentTextView: UITextViewDelegate {
 }
 
 extension CommentTextView {
+    @objc
+    private func confirmButtonDidTap() {
+        delegate?.postComment(content: textView.text)
+        endEditing(true)
+    }
+}
+
+extension CommentTextView {
     private func updateTextViewLayoutWhenEditing() {
         textView.textContainer.maximumNumberOfLines = 0
         textView.textContainer.lineBreakMode = .byWordWrapping
@@ -160,6 +176,7 @@ extension CommentTextView {
         }
 
         countConfirmContainer.snp.makeConstraints {
+            $0.leading.equalToSuperview()
             $0.trailing.equalToSuperview().inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(8.adjustedH)
             $0.height.equalTo(40.adjustedH)

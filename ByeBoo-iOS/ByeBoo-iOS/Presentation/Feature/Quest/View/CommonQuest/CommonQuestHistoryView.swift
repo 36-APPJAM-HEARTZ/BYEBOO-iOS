@@ -25,7 +25,7 @@ final class CommonQuestHistoryView: BaseView {
     private let userNicknameLabel = UILabel()
     private(set) var questContentView = QuestContentView()
     private(set) var commentListView = SelfSizingTableView()
-    private let commentTextView = CommentTextView()
+    private(set) var commentTextView = CommentTextView()
     
     override func setStyle() {
         scrollView.do {
