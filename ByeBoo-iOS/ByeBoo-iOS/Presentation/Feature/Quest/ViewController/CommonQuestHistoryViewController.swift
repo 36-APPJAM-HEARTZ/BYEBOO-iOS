@@ -186,7 +186,21 @@ extension CommonQuestHistoryViewController: CommentProtocol {
     }
     
     func replyIconDidTap(commentID: Int) {
-        let viewController = CommonQuestReplyViewController()
+        let viewController = ViewControllerFactory.shared.makeCommonQuestReplyViewController()
+        let entity = viewModel.getComment(commentID: commentID)
+        guard let entity else { return }
+        viewController.configure(entity: entity, commentID: commentID)
+
+        viewController.onReplyCountChanged = { [weak self] commentID, newCount in
+            guard let self else { return }
+            let item = dataSource.snapshot().itemIdentifiers.first { $0.entity.commentID == commentID }
+            guard let item,
+                  let indexPath = dataSource.indexPath(for: item),
+                  let cell = rootView.commentListView.cellForRow(at: indexPath) as? CommentTableViewCell
+            else { return }
+            cell.updateReplyCount(replyCount: newCount)
+        }
+
         if let sheet =  viewController.sheetPresentationController{
             sheet.detents = [.large()]
             sheet.prefersGrabberVisible = true
