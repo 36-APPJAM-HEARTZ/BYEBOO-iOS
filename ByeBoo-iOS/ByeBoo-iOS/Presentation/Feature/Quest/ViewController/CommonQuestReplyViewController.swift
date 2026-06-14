@@ -7,12 +7,30 @@
 
 import UIKit
 
+import Combine
+
 final class CommonQuestReplyViewController: BaseViewController {
     
     private let rootView = CommonQuestReplyView()
-    private let viewModel = CommonQuestReplyViewModel()
+    private let viewModel: CommonQuestReplyViewModel
     
+    private var commentEntity: CommonQuestCommentEntity? = nil
+    private var commentID: Int = 0
+
+    var onReplyCountChanged: ((Int, Int) -> Void)?
+
     private var dataSource: UITableViewDiffableDataSource<ReplySection, CommentItem>!
+    private var cancellable = Set<AnyCancellable>()
+    
+    
+    init(viewModel: CommonQuestReplyViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = rootView
@@ -22,13 +40,15 @@ final class CommonQuestReplyViewController: BaseViewController {
         super.viewWillAppear(animated)
         self.tabBarController?.tabBar.isHidden = true
         addKeyboardObservers()
+        
+        viewModel.action(.fetchReplyList(commentID: commentID))
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureDataSource()
-        applySnapshot()
+        bind()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -46,6 +66,48 @@ final class CommonQuestReplyViewController: BaseViewController {
             $0.register(CommentTableViewCell.self, forCellReuseIdentifier: "comment")
             $0.register(CommentTableViewCell.self, forCellReuseIdentifier: "reply")
         }
+        rootView.commentTextView.delegate = self
+    }
+}
+
+extension CommonQuestReplyViewController {
+    func configure(
+        entity: CommonQuestCommentEntity,
+        commentID: Int
+    ) {
+        self.commentEntity = entity
+        self.commentID = commentID
+    }
+    
+    private func bind() {
+        viewModel.output.fetchReplyListPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let replyList):
+                    if let cell = self?.rootView.commentListView.cellForRow(at: IndexPath(row: 0, section: 0)) as? CommentTableViewCell {
+                        cell.updateReplyCount(replyCount: replyList.totalCount)
+                    }
+                    self?.applySnapshot(entity: replyList.replies)
+                    self?.onReplyCountChanged?(self?.commentID ?? 0, replyList.totalCount)
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellable)
+        
+        viewModel.output.postReplyPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success:
+                    ByeBooLogger.debug("답글 입력 성공")
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellable)
+        
     }
 }
 
@@ -67,7 +129,7 @@ extension CommonQuestReplyViewController {
                 replyCount: entity.replyCount,
                 writer: entity.writer,
                 profileIcon: ProfileIcon.image(for: entity.profileIcon) ?? .relievedBadge,
-                writtenAt: entity.writtenAt,
+                writtenAt: ServerDateFormatter.shared.relativeTimeString(from: entity.writtenAt) ?? "",
                 content: entity.content,
                 showAllText: item.showAllText,
                 isReplySheet: true
@@ -77,13 +139,15 @@ extension CommonQuestReplyViewController {
         }
     }
     
-    private func applySnapshot() {
+    private func applySnapshot(entity: [CommonQuestCommentEntity]) {
         var snapshot = NSDiffableDataSourceSnapshot<ReplySection, CommentItem>()
         snapshot.appendSections([.comment, .replies])
-        let commentItem = CommentItem(entity: viewModel.getCommentContent(), showAllText: false)
+        
+        guard let commentEntity else { return }
+        let commentItem = CommentItem(entity: commentEntity, showAllText: false)
         snapshot.appendItems([commentItem], toSection: .comment)
         
-        let replyItems = viewModel.getReplyList().map { CommentItem(entity: $0, showAllText: false) }
+        let replyItems = entity.map { CommentItem(entity: $0, showAllText: false) }
         snapshot.appendItems(replyItems, toSection: .replies)
         
         dataSource.apply(snapshot, animatingDifferences: false)
@@ -126,6 +190,12 @@ extension CommonQuestReplyViewController: CommentProtocol {
         dataSource.apply(snapshot, animatingDifferences: false) { [weak self] in
             self?.rootView.commentListView.performBatchUpdates(nil)
         }
+    }
+}
+
+extension CommonQuestReplyViewController: CommonQuestCommentProtcol {
+    func postComment(content: String) {
+        viewModel.action(.postReply(commentID: commentID, content: content))
     }
 }
 
