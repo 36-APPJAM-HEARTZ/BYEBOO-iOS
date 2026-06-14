@@ -149,6 +149,7 @@ extension CommentTextView {
     private func confirmButtonDidTap() {
         delegate?.postComment(content: textView.text)
         endEditing(true)
+        textView.text = ""
     }
 }
 
