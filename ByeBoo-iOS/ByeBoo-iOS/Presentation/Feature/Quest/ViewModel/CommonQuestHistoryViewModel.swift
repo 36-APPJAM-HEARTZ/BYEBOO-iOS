@@ -78,6 +78,10 @@ extension CommonQuestHistoryViewModel {
     var commentList: [CommonQuestCommentEntity]? {
         return entity?.comments
     }
+    
+    func getComment(commentID: Int) -> CommonQuestCommentEntity? {
+        entity?.comments.first { $0.commentID == commentID }
+    }
 }
 
 extension CommonQuestHistoryViewModel {
