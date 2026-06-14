@@ -391,5 +391,18 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 postCommonQuestLikeUseCase: postCommonQuestLikeUseCase
             )
         }
+        
+        DIContainer.shared.register(type: CommonQuestReplyViewModel.self) { container in
+            guard let fetchReplyUseCase = container.resolve(type: FetchCommonQuestRepliesUseCase.self),
+                  let postReplyUseCase = container.resolve(type: PostCommonQuestReplyUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return CommonQuestReplyViewModel(
+                fetchRepliesUseCase: fetchReplyUseCase,
+                postReplyUseCase: postReplyUseCase
+            )
+        }
     }
 }

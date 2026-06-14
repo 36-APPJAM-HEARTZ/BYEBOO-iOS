@@ -72,7 +72,10 @@ struct DataDependencyAssembler: DependencyAssembler {
             return DefaultNotificationRepository(networkService: networkService)
         }
         DIContainer.shared.register(type: CommentInterface.self) { _ in
-            return DefaultCommentRepository(network: networkService)
+            return DefaultCommentRepository(
+                network: networkService,
+                userDefaultService: userDefaultService
+            )
         }
     }
 }
