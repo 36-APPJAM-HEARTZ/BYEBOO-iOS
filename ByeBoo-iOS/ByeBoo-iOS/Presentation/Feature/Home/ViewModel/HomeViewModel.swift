@@ -23,7 +23,7 @@ final class HomeViewModel {
     private var isHelperShownResultSubject = CurrentValueSubject<Bool, Never>(true)
     private var homeStateResultSubject = PassthroughSubject<Result<UserQuestStatusEntity, ByeBooError>, Never>()
     private var journeyResultSubject = PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never>()
-    private var notificationResultSubject = PassthroughSubject<Result<NotificationListEntity, ByeBooError>, Never>()
+    
     
     private let fetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase
     private let fetchQuestStatusUseCase: FetchQuestStatusUseCase
@@ -31,7 +31,6 @@ final class HomeViewModel {
     private let getUserNameUseCase: GetUserNameUseCase
     private let setHelperUseCase: SetHelperUseCase
     private let getHelperUseCase: GetHelperUseCase
-    private let fetchNotificationListUseCase: FetchNotificationListUseCase
     
     init(
         fetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase,
@@ -39,8 +38,7 @@ final class HomeViewModel {
         fetchUserJourneyUseCase: FetchUserJourneyUseCase,
         getUserNameUseCase: GetUserNameUseCase,
         setHelperUseCase: SetHelperUseCase,
-        getHelperUseCase: GetHelperUseCase,
-        fetchNotificationListUseCase: FetchNotificationListUseCase
+        getHelperUseCase: GetHelperUseCase
     ) {
         self.fetchCharacterDialogueUseCase = fetchCharacterDialogueUseCase
         self.fetchQuestStatusUseCase = fetchQuestStatusUseCase
@@ -48,15 +46,13 @@ final class HomeViewModel {
         self.getUserNameUseCase = getUserNameUseCase
         self.setHelperUseCase = setHelperUseCase
         self.getHelperUseCase = getHelperUseCase
-        self.fetchNotificationListUseCase = fetchNotificationListUseCase
         
         output = Output(
             characterResult: characterResultSubject.eraseToAnyPublisher(),
             userResult: userResultSubject.eraseToAnyPublisher(),
             helperResult: isHelperShownResultSubject.eraseToAnyPublisher(),
             homeStateResult: homeStateResultSubject.eraseToAnyPublisher(),
-            journeyResult: journeyResultSubject.eraseToAnyPublisher(),
-            notificationResult: notificationResultSubject.eraseToAnyPublisher()
+            journeyResult: journeyResultSubject.eraseToAnyPublisher()
         )
     }
 }
@@ -73,7 +69,6 @@ extension HomeViewModel: ViewModelType {
         let helperResult: AnyPublisher<Bool, Never>
         let homeStateResult: AnyPublisher<Result<UserQuestStatusEntity, ByeBooError>, Never>
         let journeyResult: AnyPublisher<Result<JourneyEntity, ByeBooError>, Never>
-        let notificationResult: AnyPublisher<Result<NotificationListEntity, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
@@ -85,9 +80,8 @@ extension HomeViewModel: ViewModelType {
                 async let dialogue: Void = fetchDialogue()
                 async let status: Void = fetchStatus()
                 async let journey: Void = fetchJourney()
-                async let notificationList: Void = fetchNotificationList()
                 
-                let _ = await (dialogue, status, journey, notificationList)
+                let _ = await (dialogue, status, journey)
             }
             
         case .helperDidTap:
@@ -152,15 +146,5 @@ extension HomeViewModel {
     
     private func setHelperShown() {
         setHelperUseCase.execute()
-    }
-    
-    private func fetchNotificationList() async {
-        do {
-            let notifications = try await fetchNotificationListUseCase.execute()
-            self.notifications = notifications
-            notificationResultSubject.send(.success(notifications))
-        } catch {
-            notificationResultSubject.send(.failure(error as? ByeBooError ?? ByeBooError.unknownError))
-        }
     }
 }

@@ -5,13 +5,14 @@
 //  Created by APPLE on 4/30/26.
 //
 
+import Combine
 import UIKit
 
 final class NotificationsViewController: BaseViewController {
     
     private let rootView = NoticesView()
     private let viewModel: NotificationsViewModel
-    private var notificationList: NotificationListEntity?
+    private var cancellables = Set<AnyCancellable>()
     
     init(viewModel: NotificationsViewModel) {
         self.viewModel = viewModel
@@ -26,6 +27,12 @@ final class NotificationsViewController: BaseViewController {
         view = rootView
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        viewModel.action(.viewWillAppear)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -35,12 +42,8 @@ final class NotificationsViewController: BaseViewController {
             type: .titleAndBack("알림"),
             action: #selector(back)
         )
-        
-        guard let notifications = notificationList?.notifications else {
-            return
-        }
-        
-        rootView.contentView.decideNoticeContent(isExistNotice: !notifications.isEmpty)
+                
+        bind()
     }
     
     override func setAddTarget() {
@@ -75,15 +78,26 @@ extension NotificationsViewController {
 
 extension NotificationsViewController {
     
-    func configure(notificationList: NotificationListEntity?) {
-        self.notificationList = notificationList
+    func bind() {
+        viewModel.output.notificationListResult
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let notificationList):
+                    self?.rootView.contentView.decideNoticeContent(isExistNotice: !notificationList.notifications.isEmpty)
+                    self?.rootView.contentView.noticeCardsView.cardTableView.reloadData()
+                case .failure(let error):
+                    ByeBooLogger.error(error)
+                }
+            }
+            .store(in: &cancellables)
     }
 }
 
 extension NotificationsViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        notificationList?.notifications.count ?? 0
+        viewModel.notificationList?.notifications.count ?? 0
     }
     
     func tableView(
@@ -103,9 +117,8 @@ extension NotificationsViewController: UITableViewDataSource {
                 withIdentifier: NoticeCardCell.identifier,
                 for: indexPath
             ) as? NoticeCardCell,
-            let notification = notificationList?.notifications[indexPath.section],
-            let notificationType = notification.notificationType,
-            let writtenTime = viewModel.formatElapsedTime(from: notification.createdAt)
+            let notification = viewModel.notificationList?.notifications[indexPath.section],
+            let notificationType = notification.notificationType
         else {
             return UITableViewCell()
         }
@@ -115,7 +128,7 @@ extension NotificationsViewController: UITableViewDataSource {
             notificationType: notificationType,
             title: notification.title,
             subtitle: notification.content,
-            writtenTime: writtenTime
+            writtenTime: ""
         )
         
         return cell
@@ -123,6 +136,13 @@ extension NotificationsViewController: UITableViewDataSource {
 }
 
 extension NotificationsViewController: UITableViewDelegate {
+    
+    func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
+        viewModel.move(from: self, at: indexPath.section)
+    }
     
     func tableView(
         _ tableView: UITableView,
