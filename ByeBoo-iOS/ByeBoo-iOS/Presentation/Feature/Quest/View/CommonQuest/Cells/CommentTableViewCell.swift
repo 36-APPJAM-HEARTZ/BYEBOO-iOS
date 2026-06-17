@@ -10,6 +10,7 @@ import UIKit
 protocol CommentProtocol: AnyObject {
     func moreLabelDidTap(commentID: Int)
     func replyIconDidTap(commentID: Int)
+    func menuButtonDidTap(commentID: Int, isMyComment: Bool)
 }
 
 extension CommentProtocol {
@@ -25,7 +26,7 @@ final class CommentTableViewCell: UITableViewCell {
     private let profileIcon = UIImageView(image: .relievedBadge)
     private let nicknameLabel = UILabel()
     private let dateLabel = UILabel()
-    private let menuButton = UIImageView()
+    private let menuButton = UIButton()
     private let commentTextView = UITextView()
     private var moreLabel = UILabel()
     private var replyCountContainer = UIStackView()
@@ -37,6 +38,8 @@ final class CommentTableViewCell: UITableViewCell {
     private var content: String = ""
     private var didSetReplyLayout = false
     private var didSetCommentLayout = false
+    
+    private var isMyComment: Bool = false
     
     override init(
         style: UITableViewCell.CellStyle,
@@ -75,7 +78,7 @@ final class CommentTableViewCell: UITableViewCell {
         }
         
         menuButton.do {
-            $0.image = .menu
+            $0.setImage(.menu, for: .normal)
         }
         
         commentTextView.do {
@@ -131,6 +134,7 @@ final class CommentTableViewCell: UITableViewCell {
             $0.trailing.equalTo(commentTextView.snp.trailing).offset(-20.adjustedW)
         }
     }
+    
     private func setCommentListLayout() {
         guard !didSetCommentLayout else { return }
         didSetCommentLayout = true
@@ -190,11 +194,14 @@ final class CommentTableViewCell: UITableViewCell {
         
         let replyTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(replyIconDidTap(_:)))
         replyCommentIcon.addGestureRecognizer(replyTapRecognizer)
+        
+        menuButton.addTarget(self, action: #selector(menuButtonDidTap), for: .touchUpInside)
     }
 }
 
 extension CommentTableViewCell {
     func configure(
+        isMyComment: Bool,
         commentID: Int,
         replyCount: Int? = nil,
         writer: String,
@@ -214,7 +221,8 @@ extension CommentTableViewCell {
             replyCommentIcon.tintColor = .grayscale600
             replyCountLabel.textColor = .grayscale600
         }
-
+        
+        self.isMyComment = isMyComment
         self.commentID = commentID
         nicknameLabel.text = writer
         self.profileIcon.image = profileIcon
@@ -272,7 +280,13 @@ extension CommentTableViewCell {
         delegate?.moreLabelDidTap(commentID: commentID)
     }
     
-    @objc private func replyIconDidTap(_ tapRecognizer: UITapGestureRecognizer) {
+    @objc
+    private func replyIconDidTap(_ tapRecognizer: UITapGestureRecognizer) {
         delegate?.replyIconDidTap(commentID: commentID)
+    }
+    
+    @objc
+    private func menuButtonDidTap() {
+        delegate?.menuButtonDidTap(commentID: commentID, isMyComment: isMyComment)
     }
 }

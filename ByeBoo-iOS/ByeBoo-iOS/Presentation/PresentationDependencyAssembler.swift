@@ -353,6 +353,17 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             )
         }
         
+        DIContainer.shared.register(type: CommonQuestHistoryViewModel.self) { container in
+            guard let fetchCommonQuestDetailUseCase = container.resolve(type: FetchCommonQuestDetailUseCase.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+            
+            return CommonQuestHistoryViewModel(
+                fetchCommonQuestCommentsUseCase: fetchCommonQuestDetailUseCase
+            )
+        }
+        
         DIContainer.shared.register(type: NotificationsViewModel.self) { container in
             guard let fetchNotificationListUseCase = container.resolve(type: FetchNotificationListUseCase.self),
                   let formatElapsedTimeUseCase = container.resolve(type: FormatElapsedTimeUseCase.self),

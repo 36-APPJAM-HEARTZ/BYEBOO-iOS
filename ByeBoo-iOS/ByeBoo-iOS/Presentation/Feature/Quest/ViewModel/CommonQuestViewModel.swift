@@ -54,8 +54,8 @@ final class CommonQuestViewModel {
                 }
                 
                 commonQuestSubject.send(.success(()))
-            } catch {
-                commonQuestSubject.send(.failure(error as! ByeBooError))
+            } catch(let error as ByeBooError) {
+                commonQuestSubject.send(.failure(error))
             }
         }
     }
@@ -115,20 +115,28 @@ extension CommonQuestViewModel {
     var isUserAnswered: Bool {
         commonQuest?.isAnswered ?? false
     }
-    
+
     func getAnswer(at index: Int) -> CommonQuestAnswerEntity? {
         guard index >= 0 && index < answers.count else {
             return nil
         }
         return answers[index]
     }
-
+    
+    func getAnswerID(at index: Int) -> Int? {
+        guard index >= 0 && index < answers.count else {
+            return nil
+        }
+        return answers[index].answerID
+    }
+    
     func getProfileIcon(at index: Int) -> UIImage? {
         guard index >= 0 && index < answers.count else { return nil }
         return ProfileIcon.image(for: answers[index].profileIcon)
     }
     
     func getWrittenAt(at index: Int) -> String? {
-        formatElapsedTimeUseCase.execute(from: answers[index].writtenAt)
+        guard index >= 0 && index < answers.count else { return nil }
+        return ServerDateFormatter.shared.relativeTimeString(from: answers[index].writtenAt)
     }
 }

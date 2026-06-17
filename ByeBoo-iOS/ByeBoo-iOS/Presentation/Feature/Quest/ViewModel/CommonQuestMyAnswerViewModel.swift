@@ -54,8 +54,8 @@ final class CommonQuestMyAnswerViewModel {
                 answers.append(contentsOf: result.answers)
                 
                 answersSubject.send(.success(()))
-            } catch {
-                answersSubject.send(.failure(error as! ByeBooError))
+            } catch(let error as ByeBooError) {
+                answersSubject.send(.failure(error))
             }
         }
     }
@@ -104,7 +104,10 @@ extension CommonQuestMyAnswerViewModel {
             answerID: answer.answerID,
             writtenAt: displayDate,
             content: answer.content,
-            question: answer.question
+            question: answer.question,
+            isLiked: answer.isLiked,
+            likeCount: answer.likeCount,
+            commentCount: answer.commentCount
         )
     }
 }

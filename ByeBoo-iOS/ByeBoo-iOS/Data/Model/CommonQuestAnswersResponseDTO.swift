@@ -16,21 +16,19 @@ struct CommonQuestAnswersResponseDTO: Decodable {
 }
 
 struct CommonQuestAnswerResponseDTO: Decodable {
-//    let likeCount: Int
-//    let commentCount: Int
-//    let isLiked: Bool
+    let likeCount: Int
+    let commentCount: Int
+    let isLiked: Bool
     let answerId: Int
-//    let userId: Int
-//    let writerId: String
-    let writer: String
     let writerId: Int
+    let writer: String
     let profileIcon: String
     let writtenAt: String
     let content: String
 }
 
 extension CommonQuestAnswersResponseDTO {
-    func toEntity(userName: String) -> CommonQuestAnswersEntity {
+    func toEntity(userID: Int) -> CommonQuestAnswersEntity {
         .init(
             question: question,
             questID: questId,
@@ -38,34 +36,24 @@ extension CommonQuestAnswersResponseDTO {
             isAnswered: isAnswered,
             hasNext: hasNext,
             nextCursor: nil,
-            answers: answers.map { $0.toEntity(userName: userName) }
+            answers: answers.map { $0.toEntity(userID: userID) }
         )
     }
 }
 
 extension CommonQuestAnswerResponseDTO {
-    func toEntity(userName: String) -> CommonQuestAnswerEntity {
+    func toEntity(userID: Int) -> CommonQuestAnswerEntity {
         .init(
-//            isMyAnswer: userName == writerId ? true : false,
-//            answerID: answerId,
-//            writerID: writerId,
-//            profileIcon: profileIcon,
-//            writtenAt: writtenAt,
-//            content: content,
-//            userID: userId,
-//            likeCount: likeCount,
-//            commentCount: commentCount,
-//            isLiked: isLiked
-            isMyAnswer: userName == writer ? true : false,
+            isMyAnswer: userID == writerId ? true : false,
             answerID: answerId,
-            writerID: writer,
+            writerID: writerId,
+            writer: writer,
             profileIcon: profileIcon,
             writtenAt: writtenAt,
             content: content,
-            userID: writerId,
-            likeCount: 3,
-            commentCount: 4,
-            isLiked: false,
+            likeCount: likeCount,
+            commentCount: commentCount,
+            isLiked: isLiked
         )
     }
 }
