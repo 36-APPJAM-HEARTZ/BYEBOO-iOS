@@ -107,8 +107,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                   let setHelperUseCase = container.resolve(type: SetHelperUseCase.self),
                   let fetchUserJourneyUseCase = container.resolve(type: FetchUserJourneyUseCase.self),
                   let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
-                  let getHelperUseCase = container.resolve(type: GetHelperUseCase.self),
-                  let fetchNotificationListUseCase = container.resolve(type: FetchNotificationListUseCase.self)
+                  let getHelperUseCase = container.resolve(type: GetHelperUseCase.self)
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -120,8 +119,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 fetchUserJourneyUseCase: fetchUserJourneyUseCase,
                 getUserNameUseCase: getUserNameUseCase,
                 setHelperUseCase: setHelperUseCase,
-                getHelperUseCase: getHelperUseCase,
-                fetchNotificationListUseCase: fetchNotificationListUseCase
+                getHelperUseCase: getHelperUseCase
             )
         }
         
@@ -356,13 +354,15 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: NotificationsViewModel.self) { container in
-            guard let formatElapsedTimeUseCase = container.resolve(type: FormatElapsedTimeUseCase.self),
+            guard let fetchNotificationListUseCase = container.resolve(type: FetchNotificationListUseCase.self),
+                  let formatElapsedTimeUseCase = container.resolve(type: FormatElapsedTimeUseCase.self),
                   let readNotificationUseCase = container.resolve(type: ReadNotificationUseCase.self) else  {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
             return NotificationsViewModel(
+                fetchNotificationListUseCase: fetchNotificationListUseCase,
                 formatElapsedTimeUseCase: formatElapsedTimeUseCase,
                 readNotificationUseCase: readNotificationUseCase
             )

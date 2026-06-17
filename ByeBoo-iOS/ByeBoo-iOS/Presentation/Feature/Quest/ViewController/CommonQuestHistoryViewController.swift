@@ -14,7 +14,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
     private var dataSource: UITableViewDiffableDataSource<CommentSection, CommentItem>!
     
     private let rootView = CommonQuestHistoryView()
-    private let viewModel = CommonQuestHistoryViewModel()
+    private let viewModel: CommonQuestHistoryViewModel
     
     private var answerID: Int?
     private var answer: String?
@@ -22,6 +22,15 @@ final class CommonQuestHistoryViewController: BaseViewController {
     private var writtenAt: String?
     private var commonQuestArchiveType: CommonQuestArchiveType = .mine
     private var writerID: Int = 0
+    
+    init(viewModel: CommonQuestHistoryViewModel) {
+        self.viewModel = viewModel
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = rootView

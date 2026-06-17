@@ -195,7 +195,11 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
     }
     
     func makeCommonQuestHistoryViewController() -> CommonQuestHistoryViewController {
-        .init()
+        guard let viewModel = DIContainer.shared.resolve(type: CommonQuestHistoryViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        return .init(viewModel: viewModel)
     }
     
     func makeCommonQuestMyAnswersViewController() -> CommonQuestMyAnswersViewController {
