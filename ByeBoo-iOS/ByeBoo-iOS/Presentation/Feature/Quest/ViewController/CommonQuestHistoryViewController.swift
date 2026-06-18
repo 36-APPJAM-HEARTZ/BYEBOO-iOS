@@ -30,15 +30,6 @@ final class CommonQuestHistoryViewController: BaseViewController {
     private var answerID: Int = 0
     private var writerID: Int = 0
     
-    init(viewModel: CommonQuestHistoryViewModel) {
-        self.viewModel = viewModel
-        super.init()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     override func loadView() {
         view = rootView
     }
