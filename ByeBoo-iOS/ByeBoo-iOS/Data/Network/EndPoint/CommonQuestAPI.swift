@@ -12,7 +12,7 @@ import Alamofire
 enum CommonQuestAPI {
     case postCommonQuest(questID: Int, dto: SaveCommonQuestRequestDTO)
     case fetchCommonQuest(date: String, cursor: Int?)
-    case fetchCommonQuestDetail(asnwerID: Int)
+    case fetchCommonQuestDetail(answerID: Int)
     case updateCommonQuest(answerID: Int, dto: UpdateCommonQuestRequestDTO)
     case deleteCommonQuest(answerID: Int)
 }
