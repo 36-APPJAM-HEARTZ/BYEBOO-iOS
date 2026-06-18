@@ -11,7 +11,7 @@ final class ParentQuestViewController<T: TabItem>: BaseViewController, ToastPres
     
     private let tabBar: TopTabBar
     private let containerView = UIView()
-    private let controllers: [UIViewController]
+    private(set) var controllers: [UIViewController]
     private var currentViewController: UIViewController?
     
     init(items: T.AllCases) {
