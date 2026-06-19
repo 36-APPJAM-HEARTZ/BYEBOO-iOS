@@ -108,7 +108,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                   let fetchUserJourneyUseCase = container.resolve(type: FetchUserJourneyUseCase.self),
                   let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
                   let getHelperUseCase = container.resolve(type: GetHelperUseCase.self),
-                  let fetchNotificationListUseCase = container.resolve(type: FetchNotificationListUseCase.self)
+                  let fetchHasUnreadNotificationUseCase = container.resolve(type: FetchHasUnreadNotificationUseCase.self)
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -121,7 +121,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 getUserNameUseCase: getUserNameUseCase,
                 setHelperUseCase: setHelperUseCase,
                 getHelperUseCase: getHelperUseCase,
-                fetchNotificationListUseCase: fetchNotificationListUseCase
+                fetchHasUnreadNotificationUseCase: fetchHasUnreadNotificationUseCase
             )
         }
         
@@ -356,12 +356,12 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: NotificationsViewModel.self) { container in
-            guard let formatElapsedTimeUseCase = container.resolve(type: FormatElapsedTimeUseCase.self) else  {
+            guard let fetchNotificationListUseCase = container.resolve(type: FetchNotificationListUseCase.self) else  {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
-            return NotificationsViewModel(formatElapsedTimeUseCase: formatElapsedTimeUseCase)
+            return NotificationsViewModel(fetchNotificationListUseCase: fetchNotificationListUseCase)
         }
     }
 }
