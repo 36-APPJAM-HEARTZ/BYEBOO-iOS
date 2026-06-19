@@ -356,12 +356,16 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: NotificationsViewModel.self) { container in
-            guard let fetchNotificationListUseCase = container.resolve(type: FetchNotificationListUseCase.self) else  {
+            guard let fetchNotificationListUseCase = container.resolve(type: FetchNotificationListUseCase.self),
+                  let formatElapsedTimeUseCase = container.resolve(type: FormatElapsedTimeUseCase.self) else  {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
-            return NotificationsViewModel(fetchNotificationListUseCase: fetchNotificationListUseCase)
+            return NotificationsViewModel(
+                fetchNotificationListUseCase: fetchNotificationListUseCase,
+                formatElapsedTimeUseCase: formatElapsedTimeUseCase
+            )
         }
     }
 }
