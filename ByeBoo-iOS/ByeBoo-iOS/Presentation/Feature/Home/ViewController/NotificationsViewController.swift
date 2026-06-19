@@ -5,13 +5,14 @@
 //  Created by APPLE on 4/30/26.
 //
 
+import Combine
 import UIKit
 
 final class NotificationsViewController: BaseViewController {
     
     private let rootView = NoticesView()
     private let viewModel: NotificationsViewModel
-    private var notificationList: NotificationListEntity?
+    private var cancellables = Set<AnyCancellable>()
     
     init(viewModel: NotificationsViewModel) {
         self.viewModel = viewModel
@@ -26,6 +27,11 @@ final class NotificationsViewController: BaseViewController {
         view = rootView
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.action(.viewWillAppear)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,11 +42,7 @@ final class NotificationsViewController: BaseViewController {
             action: #selector(back)
         )
         
-        guard let notifications = notificationList?.notifications else {
-            return
-        }
-        
-        rootView.contentView.decideNoticeContent(isExistNotice: !notifications.isEmpty)
+        bind()
     }
     
     override func setAddTarget() {
@@ -67,23 +69,34 @@ extension NotificationsViewController: BackNavigable {
     }
 }
 
+extension NotificationsViewController: ToastPresentable, ToastErrorHandler {
+    
+    func bind() {
+        viewModel.output.notificationList
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let notificationList):
+                    self?.rootView.contentView.decideNoticeContent(isExistNotice: !notificationList.notifications.isEmpty)
+                    self?.rootView.contentView.noticeCardsView.cardTableView.reloadData()
+                case .failure(let error):
+                    self?.handleError(error)
+                }
+            }
+            .store(in: &cancellables)
+    }
+}
+
 extension NotificationsViewController {
     
     @objc
     private func readAllButtonDidTap() {}
 }
 
-extension NotificationsViewController {
-    
-    func configure(notificationList: NotificationListEntity?) {
-        self.notificationList = notificationList
-    }
-}
-
 extension NotificationsViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        notificationList?.notifications.count ?? 0
+        viewModel.notificatinosCount
     }
     
     func tableView(
@@ -103,7 +116,7 @@ extension NotificationsViewController: UITableViewDataSource {
                 withIdentifier: NoticeCardCell.identifier,
                 for: indexPath
             ) as? NoticeCardCell,
-            let notification = notificationList?.notifications[indexPath.section],
+            let notification = viewModel.getNotification(at: indexPath.section),
             let notificationType = notification.notificationType,
             let writtenTime = viewModel.formatElapsedTime(from: notification.createdAt)
         else {
