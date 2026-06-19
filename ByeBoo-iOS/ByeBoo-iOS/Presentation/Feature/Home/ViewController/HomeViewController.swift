@@ -116,10 +116,9 @@ extension HomeViewController {
     }
     
     @objc
-    private func noticeButtonDidTap() {        
+    private func noticeButtonDidTap() {
         let viewController = ViewControllerFactory.shared.makeNotificationsViewController()
         viewController.hidesBottomBarWhenPushed = true
-        viewController.configure(notificationList: viewModel.notifications)
         
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.pushViewController(viewController, animated: false)
@@ -149,7 +148,7 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
         bindCharacter()
         bindHomeState()
         bindHelper()
-        bindNotifications()
+        bindHasNotification()
     }
     
     private func bindCharacter() {
@@ -209,14 +208,13 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
             .store(in: &cancellables)
     }
     
-    private func bindNotifications() {
-        viewModel.output.notificationResult
+    private func bindHasNotification() {
+        viewModel.output.hasNotifcationResult
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 switch result {
-                case .success(let notificationList):
-                    let isAllRead = notificationList.notifications.allSatisfy { $0.isRead }
-                    self?.rootView.headerView.updateNotice(isExist: !isAllRead)
+                case .success(let entity):
+                    self?.rootView.headerView.updateNotice(isExist: entity.hasUnread)
                 case .failure(let error):
                     self?.handleError(error)
                 }
