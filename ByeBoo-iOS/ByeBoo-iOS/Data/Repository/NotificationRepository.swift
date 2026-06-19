@@ -20,4 +20,12 @@ struct DefaultNotificationRepository: NotificationInterface {
         )
         return result.toEntity()
     }
+    
+    func fetchHasUnreadNotification() async throws -> HasUnreadNotificationEntity {
+        let result = try await networkService.request(
+            NotificationAPI.fetchUnreadNotification,
+            decodingType: HasUnreadNotificationResponseDTO.self
+        )
+        return result.toEntity()
+    }
 }
