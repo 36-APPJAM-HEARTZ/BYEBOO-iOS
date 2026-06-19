@@ -12,7 +12,7 @@ struct DeepLinkParser {
     private static let scheme = "myapp"
     private static let idIndex = 1
     
-    static func parse(from urlString: String) -> DeepLinkDestination? {
+    static func parse(from urlString: String) -> DeepLinkCoordinator? {
         guard let url = validateURL(from: urlString),
               let host = validateHost(from: url),
               let id = extractID(from: url)
@@ -54,12 +54,12 @@ private extension DeepLinkParser {
         return Int(url.pathComponents[idIndex])
     }
     
-    static func destination(for host: DeepLinkHost, id: Int) -> DeepLinkDestination {
+    static func destination(for host: DeepLinkHost, id: Int) -> DeepLinkCoordinator {
         switch host {
         case .quest:
-            QuestDeepLinkDestination(questNumber: id)
+            QuestDeepLinkCoordinator(questNumber: id)
         case .commonQuest:
-            CommonQuestAnswerDeepLinkDestination(answerID: id)
+            CommonQuestAnswerDeepLinkCoordinator(answerID: id)
         }
     }
 }

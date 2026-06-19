@@ -1,5 +1,5 @@
 //
-//  CommonQuestDeepLinkDestination.swift
+//  CommonQuestAnswerDeepLinkCoordinator.swift
 //  ByeBoo-iOS
 //
 //  Created by 더스틴 on 6/18/26.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct CommonQuestAnswerDeepLinkDestination: DeepLinkDestination {
+struct CommonQuestAnswerDeepLinkCoordinator: DeepLinkCoordinator {
     let answerID: Int
     
     func navigate(from window: UIWindow) {
@@ -24,7 +24,7 @@ struct CommonQuestAnswerDeepLinkDestination: DeepLinkDestination {
     }
 }
 
-private extension CommonQuestAnswerDeepLinkDestination {
+private extension CommonQuestAnswerDeepLinkCoordinator {
     
     func pushToHistory(from tabBarController: ByeBooTabBar) {
         tabBarController.selectedIndex = 1

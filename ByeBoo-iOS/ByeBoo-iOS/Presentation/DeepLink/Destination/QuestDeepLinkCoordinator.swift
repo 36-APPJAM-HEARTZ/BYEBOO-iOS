@@ -1,5 +1,5 @@
 //
-//  QuestDeepLinkDestination.swift
+//  QuestDeepLinkCoordinator.swift
 //  ByeBoo-iOS
 //
 //  Created by 더스틴 on 6/18/26.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct QuestDeepLinkDestination: DeepLinkDestination {
+struct QuestDeepLinkCoordinator: DeepLinkCoordinator {
     private let questIndex = 1
     let questNumber: Int
     
@@ -42,7 +42,7 @@ struct QuestDeepLinkDestination: DeepLinkDestination {
     }
 }
 
-private extension QuestDeepLinkDestination {
+private extension QuestDeepLinkCoordinator {
     
     func findNavigationController(from tabBarController: ByeBooTabBar) -> UINavigationController? {
         tabBarController.viewControllers?[1] as? UINavigationController
