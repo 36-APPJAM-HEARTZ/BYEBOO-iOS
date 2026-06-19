@@ -29,7 +29,7 @@ private extension CommonQuestAnswerDeepLinkCoordinator {
     func pushToHistory(from tabBarController: ByeBooTabBar) {
         tabBarController.selectedIndex = 1
         
-        guard let navigationController = tabBarController.viewControllers?[1] as? UINavigationController else {
+        guard let navigationController = findNavigationController(from: tabBarController) else {
             return
         }
         
@@ -37,5 +37,9 @@ private extension CommonQuestAnswerDeepLinkCoordinator {
         historyViewController.configure(answerID: answerID)
         
         navigationController.pushViewController(historyViewController, animated: true)
+    }
+    
+    func findNavigationController(from tabBarController: ByeBooTabBar) -> UINavigationController? {
+        tabBarController.viewControllers?[1] as? UINavigationController
     }
 }
