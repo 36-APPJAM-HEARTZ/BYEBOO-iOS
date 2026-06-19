@@ -24,7 +24,6 @@ final class HomeViewModel {
     private var homeStateResultSubject = PassthroughSubject<Result<UserQuestStatusEntity, ByeBooError>, Never>()
     private var journeyResultSubject = PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never>()
     
-    
     private let fetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase
     private let fetchQuestStatusUseCase: FetchQuestStatusUseCase
     private let fetchUserJourneyUseCase: FetchUserJourneyUseCase
