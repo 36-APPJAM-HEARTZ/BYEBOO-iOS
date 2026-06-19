@@ -43,8 +43,8 @@ final class NotificationsViewModel: ViewModelType {
             fetchNotificationList()
         case .dequeueCell(let rawTime):
             formatElapsedTime(from: rawTime)
-        case .notificationDidTap(let notificationID):
-            readNotification(for: notificationID)
+        case .notificationDidTap(let index):
+            readNotification(at: index)
         }
     }
 }
@@ -54,7 +54,7 @@ extension NotificationsViewModel {
     enum Input {
         case viewWillAppear
         case dequeueCell(rawTime: String)
-        case notificationDidTap(notificationID: Int)
+        case notificationDidTap(at: Int)
     }
     
     struct Output {
@@ -90,7 +90,11 @@ extension NotificationsViewModel {
         formatElapsedTimeSubject.send(.success(formattedTime))
     }
     
-    func readNotification(for notificationID: Int) {
+    func readNotification(at index: Int) {
+        guard let notificationID = notificationList?.notifications[index].notificationID else {
+            return
+        }
+        
         Task {
             do {
                 try await readNotificationUseCase.execute(for: notificationID)
@@ -110,9 +114,12 @@ extension NotificationsViewModel {
         else {
             return
         }
-        
-        let coordinator = DeepLinkCoordinator(rootViewController: rootViewController)
-        coordinator.navigate(to: destination)
+
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+            
+            destination.navigate(from: window)
+        }
     }
     
     private func getLandingURL(at index: Int) -> String? {

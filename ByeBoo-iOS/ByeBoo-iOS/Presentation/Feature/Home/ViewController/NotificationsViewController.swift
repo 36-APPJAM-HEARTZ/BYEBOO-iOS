@@ -141,6 +141,7 @@ extension NotificationsViewController: UITableViewDelegate {
         _ tableView: UITableView,
         didSelectRowAt indexPath: IndexPath
     ) {
+        viewModel.action(.notificationDidTap(at: indexPath.section))
         viewModel.move(from: self, at: indexPath.section)
     }
     
