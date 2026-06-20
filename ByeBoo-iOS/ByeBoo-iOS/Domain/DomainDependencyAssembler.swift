@@ -220,5 +220,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: FetchHasUnreadNotificationUseCase.self) { _ in
             return DefaultFetchHasUnreadNotificationUseCase(repository: notificationRepository)
         }
+      
+        DIContainer.shared.register(type: FetchCommonQuestDetailUseCase.self) { _ in
+            return DefaultFetchCommonQuestDetailUseCase(repository: commonQuestRepository)
+        }
     }
 }

@@ -12,4 +12,5 @@ protocol CommonQuestInterface {
     func fetchCommonQuest(date: String, cursor: Int?) async throws -> CommonQuestAnswersEntity
     func updateCommonQuest(answerID: Int, answer: String) async throws
     func deleteCommonQuest(answerID: Int) async throws
+    func fetchCommonQuestDetail(answerID: Int) async throws -> CommonQuestDetailEntity
 }

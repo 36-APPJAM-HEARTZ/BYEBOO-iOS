@@ -58,8 +58,8 @@ final class InformationViewModel {
                     questStyle: questStyle.key
                 )
                 getUserName()
-            } catch {
-                userInformationSubject.send(.failure(error as! ByeBooError))
+            } catch(let error as ByeBooError) {
+                userInformationSubject.send(.failure(error))
             }
         }
     }
