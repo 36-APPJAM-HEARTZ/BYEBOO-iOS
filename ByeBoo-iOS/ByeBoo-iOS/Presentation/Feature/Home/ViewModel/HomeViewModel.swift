@@ -22,13 +22,15 @@ final class HomeViewModel {
     private var isHelperShownResultSubject = CurrentValueSubject<Bool, Never>(true)
     private var homeStateResultSubject = PassthroughSubject<Result<UserQuestStatusEntity, ByeBooError>, Never>()
     private var journeyResultSubject = PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never>()
-
+    private var hasNotificationResultSubject = PassthroughSubject<Result<HasUnreadNotificationEntity, ByeBooError>,Never>()
+    
     private let fetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase
     private let fetchQuestStatusUseCase: FetchQuestStatusUseCase
     private let fetchUserJourneyUseCase: FetchUserJourneyUseCase
     private let getUserNameUseCase: GetUserNameUseCase
     private let setHelperUseCase: SetHelperUseCase
     private let getHelperUseCase: GetHelperUseCase
+    private let fetchHasUnreadNotificationUseCase: FetchHasUnreadNotificationUseCase
     
     init(
         fetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase,
@@ -36,7 +38,8 @@ final class HomeViewModel {
         fetchUserJourneyUseCase: FetchUserJourneyUseCase,
         getUserNameUseCase: GetUserNameUseCase,
         setHelperUseCase: SetHelperUseCase,
-        getHelperUseCase: GetHelperUseCase
+        getHelperUseCase: GetHelperUseCase,
+        fetchHasUnreadNotificationUseCase: FetchHasUnreadNotificationUseCase
     ) {
         self.fetchCharacterDialogueUseCase = fetchCharacterDialogueUseCase
         self.fetchQuestStatusUseCase = fetchQuestStatusUseCase
@@ -44,13 +47,15 @@ final class HomeViewModel {
         self.getUserNameUseCase = getUserNameUseCase
         self.setHelperUseCase = setHelperUseCase
         self.getHelperUseCase = getHelperUseCase
+        self.fetchHasUnreadNotificationUseCase = fetchHasUnreadNotificationUseCase
         
         output = Output(
             characterResult: characterResultSubject.eraseToAnyPublisher(),
             userResult: userResultSubject.eraseToAnyPublisher(),
             helperResult: isHelperShownResultSubject.eraseToAnyPublisher(),
             homeStateResult: homeStateResultSubject.eraseToAnyPublisher(),
-            journeyResult: journeyResultSubject.eraseToAnyPublisher()
+            journeyResult: journeyResultSubject.eraseToAnyPublisher(),
+            hasNotifcationResult: hasNotificationResultSubject.eraseToAnyPublisher()
         )
     }
 }
@@ -67,17 +72,23 @@ extension HomeViewModel: ViewModelType {
         let helperResult: AnyPublisher<Bool, Never>
         let homeStateResult: AnyPublisher<Result<UserQuestStatusEntity, ByeBooError>, Never>
         let journeyResult: AnyPublisher<Result<JourneyEntity, ByeBooError>, Never>
+        let hasNotifcationResult: AnyPublisher<Result<HasUnreadNotificationEntity, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
         switch trigger {
         case .viewWillAppear:
-            // TODO: 구조적 동시성 반영
-            fetchDialogue()
-            fetchStatus()
-            fetchJourney()
-            
             getUserResult()
+            
+            Task {
+                async let dialogue: Void = fetchDialogue()
+                async let status: Void = fetchStatus()
+                async let journey: Void = fetchJourney()
+                async let hasNotification: Void = fetchHasUnreadNotification()
+                
+                let _ = await (dialogue, status, journey)
+            }
+            
         case .helperDidTap:
             setHelperShown()
         }
@@ -85,41 +96,43 @@ extension HomeViewModel: ViewModelType {
 }
 
 extension HomeViewModel {
-    private func fetchDialogue() {
-        Task {
-            do {
-                let dialogues = try await fetchCharacterDialogueUseCase.execute()
-                characterResultSubject.send(.success(dialogues))
-            } catch(let error as ByeBooError) {
-                characterResultSubject.send(.failure(error))
-            }
+    private func fetchDialogue() async {
+        do {
+            let dialogues = try await fetchCharacterDialogueUseCase.execute()
+            characterResultSubject.send(.success(dialogues))
+        } catch {
+            characterResultSubject.send(
+                .failure(
+                    error as? ByeBooError ?? ByeBooError.unknownError
+                )
+            )
         }
     }
     
-    private func fetchStatus() {
-        Task {
-            do {
-                let status = try await fetchQuestStatusUseCase.execute()
-                homeStateResultSubject.send(.success(status))
-                isHelperShown(state: status.currentStatus)
-                ByeBooLogger.debug("home status: \(status)")
-            } catch {
-                if let error = error as? ByeBooError {
-                    homeStateResultSubject.send(.failure(error))
-                }
-                isHelperShown(state: .beforeJourneyStart)
+    private func fetchStatus() async {
+        do {
+            let status = try await fetchQuestStatusUseCase.execute()
+            homeStateResultSubject.send(.success(status))
+            isHelperShown(state: status.currentStatus)
+            ByeBooLogger.debug("home status: \(status)")
+        } catch {
+            if let error = error as? ByeBooError {
+                homeStateResultSubject.send(.failure(error))
             }
+            isHelperShown(state: .beforeJourneyStart)
         }
     }
     
-    private func fetchJourney() {
-        Task {
-            do {
-                let journey = try await fetchUserJourneyUseCase.execute()
-                journeyResultSubject.send(.success(journey))
-            } catch(let error as ByeBooError) {
-                journeyResultSubject.send(.failure(error))
-            }
+    private func fetchJourney() async {
+        do {
+            let journey = try await fetchUserJourneyUseCase.execute()
+            journeyResultSubject.send(.success(journey))
+        } catch {
+            journeyResultSubject.send(
+                .failure(
+                    error as? ByeBooError ?? ByeBooError.unknownError
+                )
+            )
         }
     }
     
@@ -129,7 +142,6 @@ extension HomeViewModel {
     }
     
     private func isHelperShown(state: HomeState) {
-        
         if !getHelperUseCase.execute() && state == .beforeJourneyStart {
             isHelperShownResultSubject.send(false)
         } else {
@@ -139,5 +151,18 @@ extension HomeViewModel {
     
     private func setHelperShown() {
         setHelperUseCase.execute()
+    }
+    
+    private func fetchHasUnreadNotification() async {
+        do {
+            let result = try await fetchHasUnreadNotificationUseCase.execute()
+            hasNotificationResultSubject.send(.success(result))
+        } catch {
+            hasNotificationResultSubject.send(
+                .failure(
+                    error as? ByeBooError ?? ByeBooError.unknownError
+                )
+            )
+        }
     }
 }

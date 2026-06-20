@@ -13,9 +13,7 @@ final class CommonQuestViewModel {
     private let cancellables = Set<AnyCancellable>()
     private let commonQuestSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>.init()
     private let fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase
-    private let minute: Double = 60
-    private let hour: Double = 3600
-    private let day: Double = 86400
+    private let formatElapsedTimeUseCase: FormatElapsedTimeUseCase
     
     private(set) var output: Output
     private var commonQuest: CommonQuestAnswersEntity?
@@ -24,8 +22,12 @@ final class CommonQuestViewModel {
     private var nextCursor: Int? = nil
     private var currentDate: String = DateFormatter.toAPIDateString(from: .now)
     
-    init(fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase) {
+    init(
+        fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase,
+        formatElapsedTimeUseCase: FormatElapsedTimeUseCase
+    ) {
         self.fetchCommonQuestByDateUseCase = fetchCommonQuestByDateUseCase
+        self.formatElapsedTimeUseCase = formatElapsedTimeUseCase
         self.output = Output(
             commonQuestPublisher: commonQuestSubject.eraseToAnyPublisher()
         )

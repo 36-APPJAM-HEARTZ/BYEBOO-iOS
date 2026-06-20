@@ -26,6 +26,14 @@ protocol ViewControllerFactoryProtocol {
     func makeWriteActiveTypeQuestViewController() -> WriteActiveTypeQuestViewController
     func makeFinishJourneyViewController() -> FinishJourneyViewController
     func makeCommonQuestBottomSheetViewController() -> CommonQuestBottomSheetViewController
+    func makeCompletedQuestsViewController() -> CompletedQuestsViewController
+    func makeParentQuestViewController() -> ParentQuestViewController<QuestTabItem>
+    func makeCommonQuestViewController() -> CommonQuestViewController
+    func makeCommonQuestHistoryViewController() -> CommonQuestHistoryViewController
+    func makeCommonQuestMyAnswersViewController() -> CommonQuestMyAnswersViewController
+    func makeBlockedUserListViewController() -> BlockedkUserListViewController
+    func makeAIAnswerViewController() -> AIAnswerViewController
+    func makeNotificationsViewController() -> NotificationsViewController
 }
 
 final class ViewControllerFactory: ViewControllerFactoryProtocol {
@@ -229,8 +237,13 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
         return .init(viewModel: viewModel)
     }
     
-    func makeNoticesViewController(isExistNotice: Bool) -> NoticesViewController {
-        .init(isExistNotice: isExistNotice)
+    func makeNotificationsViewController() -> NotificationsViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: NotificationsViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        
+        return .init(viewModel: viewModel)
     }
 }
 

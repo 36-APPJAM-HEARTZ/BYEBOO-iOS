@@ -29,6 +29,7 @@ final class NoticeCardCell: UITableViewCell {
     private func setStyle() {
         self.do {
             $0.layer.cornerRadius = 12
+            $0.selectionStyle = .none
         }
         titleLabel.applyByeBooFont(
             style: .body1Sb16,
@@ -82,16 +83,25 @@ final class NoticeCardCell: UITableViewCell {
 extension NoticeCardCell {
     
     func bind(
-        backgroundColor: UIColor,
-        iconImage: UIImage,
+        isRead: Bool,
+        notificationType: NotificationType,
         title: String,
         subtitle: String,
-        writtenTiem: String
+        writtenTime: String
     ) {
-        self.backgroundColor = backgroundColor
-        noticeImageView.image = iconImage
+        self.backgroundColor = isRead ? .primary30020 : .white5
+        noticeImageView.image = mapToImage(for: notificationType)
         titleLabel.text = title
         subtitleLabel.text = subtitle
-        writtenTimeLabel.text = writtenTiem
+        writtenTimeLabel.text = writtenTime
+    }
+    
+    private func mapToImage(for notificationType: NotificationType) -> UIImage {
+        switch notificationType {
+        case .questOpen:
+            return .myOn
+        case .comment, .like:
+            return .commonJourney
+        }
     }
 }

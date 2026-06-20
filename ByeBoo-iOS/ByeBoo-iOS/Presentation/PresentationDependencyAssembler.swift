@@ -107,7 +107,9 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                   let setHelperUseCase = container.resolve(type: SetHelperUseCase.self),
                   let fetchUserJourneyUseCase = container.resolve(type: FetchUserJourneyUseCase.self),
                   let getUserNameUseCase = container.resolve(type: GetUserNameUseCase.self),
-                  let getHelperUseCase = container.resolve(type: GetHelperUseCase.self) else {
+                  let getHelperUseCase = container.resolve(type: GetHelperUseCase.self),
+                  let fetchHasUnreadNotificationUseCase = container.resolve(type: FetchHasUnreadNotificationUseCase.self)
+            else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -118,7 +120,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 fetchUserJourneyUseCase: fetchUserJourneyUseCase,
                 getUserNameUseCase: getUserNameUseCase,
                 setHelperUseCase: setHelperUseCase,
-                getHelperUseCase: getHelperUseCase
+                getHelperUseCase: getHelperUseCase,
+                fetchHasUnreadNotificationUseCase: fetchHasUnreadNotificationUseCase
             )
         }
         
@@ -286,13 +289,15 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: CommonQuestViewModel.self) { container in
-            guard let fetchCommonQuestByDateUseCase = container.resolve(type: FetchCommonQuestByDateUseCase.self) else {
+            guard let fetchCommonQuestByDateUseCase = container.resolve(type: FetchCommonQuestByDateUseCase.self),
+                  let formatElapsedTimeUseCase = container.resolve(type: FormatElapsedTimeUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
             return CommonQuestViewModel(
-                fetchCommonQuestByDateUseCase: fetchCommonQuestByDateUseCase
+                fetchCommonQuestByDateUseCase: fetchCommonQuestByDateUseCase,
+                formatElapsedTimeUseCase: formatElapsedTimeUseCase
             )
         }
         
@@ -350,12 +355,25 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             )
         }
         
+        DIContainer.shared.register(type: NotificationsViewModel.self) { container in
+            guard let fetchNotificationListUseCase = container.resolve(type: FetchNotificationListUseCase.self),
+                  let formatElapsedTimeUseCase = container.resolve(type: FormatElapsedTimeUseCase.self) else  {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
+                                                                        
+            return NotificationsViewModel(
+                fetchNotificationListUseCase: fetchNotificationListUseCase,
+                formatElapsedTimeUseCase: formatElapsedTimeUseCase
+            )
+        }
+                                                                        
         DIContainer.shared.register(type: CommonQuestHistoryViewModel.self) { container in
             guard let fetchCommonQuestDetailUseCase = container.resolve(type: FetchCommonQuestDetailUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
-            
+                                                                             
             return CommonQuestHistoryViewModel(
                 fetchCommonQuestCommentsUseCase: fetchCommonQuestDetailUseCase
             )

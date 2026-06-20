@@ -1,115 +1,31 @@
 //
-//  NotificationRepositoru.swift
+//  NotificationRepository.swift
 //  ByeBoo-iOS
 //
-//  Created by APPLE on 11/22/25.
+//  Created by 더스틴 on 6/5/26.
 //
 
 struct DefaultNotificationRepository: NotificationInterface {
     
-    private let network: NetworkService
-    private let userDefaultsService: UserDefaultService
-    private let keychainService: KeychainService
+    private let networkService: NetworkService
     
-    init(
-        network: NetworkService,
-        userDefaultsService: UserDefaultService,
-        keychainService: KeychainService
-    ) {
-        self.network = network
-        self.userDefaultsService = userDefaultsService
-        self.keychainService = keychainService
+    init(networkService: NetworkService) {
+        self.networkService = networkService
     }
     
-    func loadToken() -> String? {
-        guard let token: String = userDefaultsService.load(key: .fcmToken) else {
-            return nil
-        }
-        return token
-    }
-    
-    func sendToken(token: String) async throws {
-        let accessToken = keychainService.load(key: .accessToken)
-        
-        guard !accessToken.isEmpty else {
-            saveToken(token: token)
-            return
-        }
-        
-        let fcmTokenDTO = createDTO(token: token)
-        try await network.request(
-            NotificationAPI.saveToken(dto: fcmTokenDTO)
+    func fetchNotifications() async throws -> NotificationListEntity {
+        let result = try await networkService.request(
+            NotificationAPI.fetchNotificationList,
+            decodingType: NotificationListResponseDTO.self
         )
-        saveToken(token: token)
+        return result.toEntity()
     }
     
-    func updateToken(token: String) async throws {
-        let accessToken = keychainService.load(key: .accessToken)
-        
-        guard !accessToken.isEmpty else {
-            saveToken(token: token)
-            return
-        }
-        
-        let fcmTokenDTO = createDTO(token: token)
-        try await network.request(
-            NotificationAPI.updateToken(dto: fcmTokenDTO)
+    func fetchHasUnreadNotification() async throws -> HasUnreadNotificationEntity {
+        let result = try await networkService.request(
+            NotificationAPI.fetchUnreadNotification,
+            decodingType: HasUnreadNotificationResponseDTO.self
         )
-        saveToken(token: token)
-    }
-    
-    func saveToken(token: String) {
-        let _ = userDefaultsService.save(token, key: .fcmToken)
-    }
-    
-    func deleteToken(token: String) async throws {
-        let fcmTokenDTO = createDTO(token: token)
-        let accessToken = keychainService.load(key: .accessToken)
-        try await network.request(
-            NotificationAPI.deleteToken(dto: fcmTokenDTO)
-        )
-        let _ = userDefaultsService.delete(key: .fcmToken)
-    }
-    
-    private func createDTO(token: String) -> FCMTokenDTO {
-        .init(token: token)
-    }
-}
-
-final class MockNotificationRepository: NotificationInterface {
-    
-    private let userDefaultsService: UserDefaultService
-    var sendTokenCalled = false
-    var updateTokenCalled = false
-    var deleteTokenCalled = false
-    
-    init(userDefaultsService: UserDefaultService) {
-        self.userDefaultsService = userDefaultsService
-    }
-    
-    func loadToken() -> String? {
-        guard let token: String = userDefaultsService.load(key: .fcmToken) else {
-            return nil
-        }
-        return token
-    }
-    
-    func sendToken(token: String) {
-        sendTokenCalled = true
-        saveToken(token: token)
-    }
-    
-    func saveToken(token: String) {
-        let _ = userDefaultsService.save(token, key: .fcmToken)
-    }
-    
-    func updateToken(token: String) {
-        updateTokenCalled = true
-        let _ = userDefaultsService.save(token, key: .fcmToken)
-    }
-    
-    func deleteToken(token: String) {
-        deleteTokenCalled = true
-        let _ = userDefaultsService.delete(key: .fcmToken)
+        return result.toEntity()
     }
 }

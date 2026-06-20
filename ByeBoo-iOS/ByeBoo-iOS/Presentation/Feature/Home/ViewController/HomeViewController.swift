@@ -22,7 +22,6 @@ final class HomeViewController: BaseViewController {
     private var isFirstVisit: Bool = true
     private var journeyType: JourneyType = .recording
     private var isAnimating: Bool = false
-    private var isExistNotice: Bool?
     
     init(viewModel: HomeViewModel) {
         self.viewModel = viewModel
@@ -48,6 +47,9 @@ final class HomeViewController: BaseViewController {
         super.viewWillAppear(animated)
         
         viewModel.action(.viewWillAppear)
+        if isFirstVisit { isFirstVisit.toggle() }
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         
         let property = HomeEvents.HomePageProperty(
             isFirstPageView: isFirstVisit,
@@ -57,13 +59,6 @@ final class HomeViewController: BaseViewController {
             event: HomeEvents.Name.homePageView,
             properties: property.dictionary
         )
-        
-        if isFirstVisit { isFirstVisit.toggle() }
-        
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
-        // 추후 API 연동 시 뷰모델 액션을 호출하여 알림 유무를 판단할 예정
-        rootView.headerView.updateNotice(isExist: true)
-        isExistNotice = true
     }
     
     override func setAddTarget() {
@@ -122,9 +117,7 @@ extension HomeViewController {
     
     @objc
     private func noticeButtonDidTap() {
-        guard let isExistNotice else { return }
-        
-        let viewController = ViewControllerFactory.shared.makeNoticesViewController(isExistNotice: isExistNotice)
+        let viewController = ViewControllerFactory.shared.makeNotificationsViewController()
         viewController.hidesBottomBarWhenPushed = true
         
         self.navigationController?.setNavigationBarHidden(false, animated: false)
@@ -152,6 +145,13 @@ extension HomeViewController {
 
 extension HomeViewController: ToastPresentable, ToastErrorHandler {
     private func bind() {
+        bindCharacter()
+        bindHomeState()
+        bindHelper()
+        bindHasNotification()
+    }
+    
+    private func bindCharacter() {
         viewModel.output.characterResult
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
@@ -163,7 +163,9 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
                 }
             }
             .store(in: &cancellables)
-        
+    }
+    
+    private func bindHomeState() {
         Publishers.CombineLatest3(
             viewModel.output.userResult,
             viewModel.output.journeyResult,
@@ -193,12 +195,28 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
                 }
             }
             .store(in: &cancellables)
-        
+    }
+    
+    private func bindHelper() {
         viewModel.output.helperResult
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 if !result {
                     self?.rootView.headerView.startHelperAnimation()
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func bindHasNotification() {
+        viewModel.output.hasNotifcationResult
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let entity):
+                    self?.rootView.headerView.updateNotice(isExist: entity.hasUnread)
+                case .failure(let error):
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)

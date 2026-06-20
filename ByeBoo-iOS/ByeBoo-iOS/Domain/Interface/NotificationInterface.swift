@@ -2,13 +2,10 @@
 //  NotificationInterface.swift
 //  ByeBoo-iOS
 //
-//  Created by APPLE on 11/26/25.
+//  Created by 더스틴 on 6/5/26.
 //
 
 protocol NotificationInterface {
-    func loadToken() -> String?
-    func sendToken(token: String) async throws
-    func saveToken(token: String)
-    func updateToken(token: String) async throws
-    func deleteToken(token: String) async throws
+    func fetchNotifications() async throws -> NotificationListEntity
+    func fetchHasUnreadNotification() async throws -> HasUnreadNotificationEntity
 }

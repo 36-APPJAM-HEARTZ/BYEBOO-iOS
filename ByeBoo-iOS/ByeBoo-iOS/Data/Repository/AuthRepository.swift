@@ -89,7 +89,7 @@ struct DefaultAuthRepository: AuthInterface {
             let fcmToken = try await Messaging.messaging().token()
             let fcmTokenDTO = FCMTokenDTO(token: fcmToken)
             try await network.request(
-                NotificationAPI.saveToken(dto: fcmTokenDTO)
+                NotificationTokenAPI.saveToken(dto: fcmTokenDTO)
             )
         } catch (let error) {
             ByeBooLogger.error(error)
@@ -127,7 +127,7 @@ struct DefaultAuthRepository: AuthInterface {
                 return false
             }
             try await network.request(
-                NotificationAPI.deleteToken(dto: .init(token: fcmToken))
+                NotificationTokenAPI.deleteToken(dto: .init(token: fcmToken))
             )
         }
         catch (let error) {
