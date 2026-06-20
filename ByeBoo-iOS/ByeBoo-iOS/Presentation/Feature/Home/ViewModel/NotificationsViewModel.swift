@@ -6,6 +6,7 @@
 //
 
 import Combine
+import UIKit
 
 final class NotificationsViewModel {
     
@@ -15,17 +16,19 @@ final class NotificationsViewModel {
     private let fetchNotificationListUseCase: FetchNotificationListUseCase
     private let formatElapsedTimeUseCase: FormatElapsedTimeUseCase
     private let readNotificationUseCase: ReadNotificationUseCase
-    private(set) var notificationList: NotificationListEntity?
     
     private(set) var output: Output
     private var notificationListSubject = PassthroughSubject<Result<NotificationListEntity, ByeBooError>, Never>()
+    private var readNotificationSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>()
     
     init(
         fetchNotificationListUseCase: FetchNotificationListUseCase,
-        formatElapsedTimeUseCase: FormatElapsedTimeUseCase
+        formatElapsedTimeUseCase: FormatElapsedTimeUseCase,
+        readNotificationUseCase: ReadNotificationUseCase
     ) {
         self.fetchNotificationListUseCase = fetchNotificationListUseCase
         self.formatElapsedTimeUseCase = formatElapsedTimeUseCase
+        self.readNotificationUseCase = readNotificationUseCase
         self.output = .init(notificationList: notificationListSubject.eraseToAnyPublisher())
     }
 }
@@ -33,6 +36,7 @@ final class NotificationsViewModel {
 extension NotificationsViewModel: ViewModelType {
     enum Input {
         case viewWillAppear
+        case notificationDidTap(at: Int)
     }
     
     struct Output {
@@ -43,43 +47,9 @@ extension NotificationsViewModel: ViewModelType {
         switch trigger {
         case .viewWillAppear:
             fetchNotificationList()
+        case .notificationDidTap(let index):
+            readNotification(at: index)
         }
-    }
-    
-    func readNotification(at index: Int) {
-        guard let notificationID = notificationList?.notifications[index].notificationID else {
-            return
-        }
-        
-        Task {
-            do {
-                try await readNotificationUseCase.execute(for: notificationID)
-                readNotificationSubject.send(.success(()))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
-                readNotificationSubject.send(.failure(error))
-            }
-        }
-    }
-    
-    func move(from rootViewController: UIViewController, at index: Int) {
-        guard let landingURL = getLandingURL(at: index),
-              let destination = DeepLinkParser.parse(from: landingURL)
-        else {
-            return
-        }
-
-        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
-            
-            destination.navigate(from: window)
-        }
-    }
-    
-    private func getLandingURL(at index: Int) -> String? {
-        notificationList?.notifications[index].landingURL
     }
 }
 
@@ -103,6 +73,24 @@ extension NotificationsViewModel {
     func formatElapsedTime(from timeString: String) -> String? {
         formatElapsedTimeUseCase.execute(from: timeString)
     }
+    
+    func readNotification(at index: Int) {
+        guard let notificationID = notifications?[index].notificationID else {
+            return
+        }
+        
+        Task {
+            do {
+                try await readNotificationUseCase.execute(for: notificationID)
+                readNotificationSubject.send(.success(()))
+            } catch {
+                guard let error = error as? ByeBooError else {
+                    return
+                }
+                readNotificationSubject.send(.failure(error))
+            }
+        }
+    }
 }
 
 extension NotificationsViewModel {
@@ -113,5 +101,23 @@ extension NotificationsViewModel {
     
     func getNotification(at index: Int) -> NotificationEntity? {
         notifications?[index]
+    }
+    
+    func move(from rootViewController: UIViewController, at index: Int) {
+        guard let landingURL = getLandingURL(at: index),
+              let destination = DeepLinkParser.parse(from: landingURL)
+        else {
+            return
+        }
+        
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+            
+            destination.navigate(from: window)
+        }
+    }
+    
+    private func getLandingURL(at index: Int) -> String? {
+        notifications?[index].landingURL
     }
 }
