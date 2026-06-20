@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DeepLinkParser {
+enum DeepLinkParser {
     
     private static let scheme = "myapp"
     private static let idIndex = 1
@@ -20,7 +20,7 @@ struct DeepLinkParser {
             return nil
         }
         
-        return destination(for: host, id: id)
+        return host.destination(id: id)
     }
 }
 
@@ -52,14 +52,5 @@ private extension DeepLinkParser {
         }
         
         return Int(url.pathComponents[idIndex])
-    }
-    
-    static func destination(for host: DeepLinkHost, id: Int) -> DeepLinkCoordinator {
-        switch host {
-        case .quest:
-            QuestDeepLinkCoordinator(questNumber: id)
-        case .commonQuest:
-            CommonQuestAnswerDeepLinkCoordinator(answerID: id)
-        }
     }
 }
