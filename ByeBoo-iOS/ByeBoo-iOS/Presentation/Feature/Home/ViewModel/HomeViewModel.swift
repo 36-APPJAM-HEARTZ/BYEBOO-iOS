@@ -15,7 +15,6 @@ final class HomeViewModel {
     var dialoguesResult: Result<DialogueEntity, ByeBooError> {
         characterResultSubject.value
     }
-    private(set) var notifications: NotificationListEntity?
     
     private(set) var output: Output
     private var characterResultSubject = CurrentValueSubject<Result<DialogueEntity, ByeBooError>, Never>(.failure(ByeBooError.noData))
@@ -23,6 +22,7 @@ final class HomeViewModel {
     private var isHelperShownResultSubject = CurrentValueSubject<Bool, Never>(true)
     private var homeStateResultSubject = PassthroughSubject<Result<UserQuestStatusEntity, ByeBooError>, Never>()
     private var journeyResultSubject = PassthroughSubject<Result<JourneyEntity, ByeBooError>, Never>()
+    private var hasNotificationResultSubject = PassthroughSubject<Result<HasUnreadNotificationEntity, ByeBooError>,Never>()
     
     private let fetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase
     private let fetchQuestStatusUseCase: FetchQuestStatusUseCase
@@ -30,6 +30,7 @@ final class HomeViewModel {
     private let getUserNameUseCase: GetUserNameUseCase
     private let setHelperUseCase: SetHelperUseCase
     private let getHelperUseCase: GetHelperUseCase
+    private let fetchHasUnreadNotificationUseCase: FetchHasUnreadNotificationUseCase
     
     init(
         fetchCharacterDialogueUseCase: FetchCharacterDialogueUseCase,
@@ -37,7 +38,8 @@ final class HomeViewModel {
         fetchUserJourneyUseCase: FetchUserJourneyUseCase,
         getUserNameUseCase: GetUserNameUseCase,
         setHelperUseCase: SetHelperUseCase,
-        getHelperUseCase: GetHelperUseCase
+        getHelperUseCase: GetHelperUseCase,
+        fetchHasUnreadNotificationUseCase: FetchHasUnreadNotificationUseCase
     ) {
         self.fetchCharacterDialogueUseCase = fetchCharacterDialogueUseCase
         self.fetchQuestStatusUseCase = fetchQuestStatusUseCase
@@ -45,13 +47,15 @@ final class HomeViewModel {
         self.getUserNameUseCase = getUserNameUseCase
         self.setHelperUseCase = setHelperUseCase
         self.getHelperUseCase = getHelperUseCase
+        self.fetchHasUnreadNotificationUseCase = fetchHasUnreadNotificationUseCase
         
         output = Output(
             characterResult: characterResultSubject.eraseToAnyPublisher(),
             userResult: userResultSubject.eraseToAnyPublisher(),
             helperResult: isHelperShownResultSubject.eraseToAnyPublisher(),
             homeStateResult: homeStateResultSubject.eraseToAnyPublisher(),
-            journeyResult: journeyResultSubject.eraseToAnyPublisher()
+            journeyResult: journeyResultSubject.eraseToAnyPublisher(),
+            hasNotifcationResult: hasNotificationResultSubject.eraseToAnyPublisher()
         )
     }
 }
@@ -68,6 +72,7 @@ extension HomeViewModel: ViewModelType {
         let helperResult: AnyPublisher<Bool, Never>
         let homeStateResult: AnyPublisher<Result<UserQuestStatusEntity, ByeBooError>, Never>
         let journeyResult: AnyPublisher<Result<JourneyEntity, ByeBooError>, Never>
+        let hasNotifcationResult: AnyPublisher<Result<HasUnreadNotificationEntity, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
@@ -79,6 +84,7 @@ extension HomeViewModel: ViewModelType {
                 async let dialogue: Void = fetchDialogue()
                 async let status: Void = fetchStatus()
                 async let journey: Void = fetchJourney()
+                async let hasNotification: Void = fetchHasUnreadNotification()
                 
                 let _ = await (dialogue, status, journey)
             }
@@ -145,5 +151,18 @@ extension HomeViewModel {
     
     private func setHelperShown() {
         setHelperUseCase.execute()
+    }
+    
+    private func fetchHasUnreadNotification() async {
+        do {
+            let result = try await fetchHasUnreadNotificationUseCase.execute()
+            hasNotificationResultSubject.send(.success(result))
+        } catch {
+            hasNotificationResultSubject.send(
+                .failure(
+                    error as? ByeBooError ?? ByeBooError.unknownError
+                )
+            )
+        }
     }
 }

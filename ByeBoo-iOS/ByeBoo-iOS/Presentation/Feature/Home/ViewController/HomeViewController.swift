@@ -116,7 +116,7 @@ extension HomeViewController {
     }
     
     @objc
-    private func noticeButtonDidTap() {        
+    private func noticeButtonDidTap() {
         let viewController = ViewControllerFactory.shared.makeNotificationsViewController()
         viewController.hidesBottomBarWhenPushed = true
         
@@ -148,6 +148,7 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
         bindCharacter()
         bindHomeState()
         bindHelper()
+        bindHasNotification()
     }
     
     private func bindCharacter() {
@@ -202,6 +203,20 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
             .sink { [weak self] result in
                 if !result {
                     self?.rootView.headerView.startHelperAnimation()
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func bindHasNotification() {
+        viewModel.output.hasNotifcationResult
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let entity):
+                    self?.rootView.headerView.updateNotice(isExist: entity.hasUnread)
+                case .failure(let error):
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)

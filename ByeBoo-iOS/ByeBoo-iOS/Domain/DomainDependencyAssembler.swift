@@ -208,6 +208,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: DeleteCommonQuestUseCase.self) { _ in
             return DefaultDeleteCommonQuestUseCase(repository: commonQuestRepository)
         }
+        
         DIContainer.shared.register(type: FetchCommonQuestDetailUseCase.self) { _ in
             return DefaultFetchCommonQuestDetailUseCase(repository: commonQuestRepository)
         }
@@ -222,6 +223,14 @@ struct DomainDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: ReadNotificationUseCase.self) { _ in
             return DefaultReadNotificationUseCase(repository: notificationRepository)
+        }
+        
+        DIContainer.shared.register(type: FetchHasUnreadNotificationUseCase.self) { _ in
+            return DefaultFetchHasUnreadNotificationUseCase(repository: notificationRepository)
+        }
+      
+        DIContainer.shared.register(type: FetchCommonQuestDetailUseCase.self) { _ in
+            return DefaultFetchCommonQuestDetailUseCase(repository: commonQuestRepository)
         }
     }
 }

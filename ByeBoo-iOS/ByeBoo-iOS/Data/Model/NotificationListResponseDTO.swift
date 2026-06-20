@@ -10,13 +10,13 @@ struct NotificationListResponseDTO: Decodable {
 }
 
 struct NotificationResponseDTO: Decodable {
-    let notificationID: Int
-    let notificationType: String
-    let title: String
+    let notificationId: Int
     let content: String
+    let title: String
     let isRead: Bool
     let createdAt: String
-    let landingURL: String
+    let landingUrl: String
+    let notificationType: String
 }
 
 extension NotificationListResponseDTO {
@@ -29,13 +29,13 @@ extension NotificationListResponseDTO {
 extension NotificationResponseDTO {
     func toEntity() -> NotificationEntity {
         .init(
-            notificationID: notificationID,
+            notificationID: notificationId,
             notificationType: NotificationType.keyToEnum(notificationType),
             title: title,
             content: content,
             isRead: isRead,
             createdAt: createdAt,
-            landingURL: landingURL
+            landingURL: landingUrl
         )
     }
 }

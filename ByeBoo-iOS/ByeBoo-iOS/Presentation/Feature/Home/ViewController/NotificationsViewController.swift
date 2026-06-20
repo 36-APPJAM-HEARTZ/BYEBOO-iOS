@@ -29,7 +29,6 @@ final class NotificationsViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         viewModel.action(.viewWillAppear)
     }
     
@@ -42,7 +41,7 @@ final class NotificationsViewController: BaseViewController {
             type: .titleAndBack("알림"),
             action: #selector(back)
         )
-                
+        
         bind()
     }
     
@@ -70,16 +69,10 @@ extension NotificationsViewController: BackNavigable {
     }
 }
 
-extension NotificationsViewController {
-    
-    @objc
-    private func readAllButtonDidTap() {}
-}
-
-extension NotificationsViewController {
+extension NotificationsViewController: ToastPresentable, ToastErrorHandler {
     
     func bind() {
-        viewModel.output.notificationListResult
+        viewModel.output.notificationList
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 switch result {
@@ -87,17 +80,23 @@ extension NotificationsViewController {
                     self?.rootView.contentView.decideNoticeContent(isExistNotice: !notificationList.notifications.isEmpty)
                     self?.rootView.contentView.noticeCardsView.cardTableView.reloadData()
                 case .failure(let error):
-                    ByeBooLogger.error(error)
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)
     }
 }
 
+extension NotificationsViewController {
+    
+    @objc
+    private func readAllButtonDidTap() {}
+}
+
 extension NotificationsViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        viewModel.notificationList?.notifications.count ?? 0
+        viewModel.notificatinosCount
     }
     
     func tableView(
@@ -117,8 +116,9 @@ extension NotificationsViewController: UITableViewDataSource {
                 withIdentifier: NoticeCardCell.identifier,
                 for: indexPath
             ) as? NoticeCardCell,
-            let notification = viewModel.notificationList?.notifications[indexPath.section],
-            let notificationType = notification.notificationType
+            let notification = viewModel.getNotification(at: indexPath.section),
+            let notificationType = notification.notificationType,
+            let writtenTime = viewModel.formatElapsedTime(from: notification.createdAt)
         else {
             return UITableViewCell()
         }
