@@ -47,10 +47,13 @@ private extension DeepLinkParser {
     }
     
     static func extractID(from url: URL) -> Int? {
-        guard url.pathComponents.indices.contains(idIndex) else {
+        let pathComponents = url.pathComponents
+        guard pathComponents.count == 2,
+              let id = Int(pathComponents[idIndex])
+        else {
             return nil
         }
         
-        return Int(url.pathComponents[idIndex])
+        return id
     }
 }
