@@ -381,20 +381,5 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                 fetchCommonQuestCommentsUseCase: fetchCommonQuestDetailUseCase
             )
         }
-        
-        DIContainer.shared.register(type: NotificationsViewModel.self) { container in
-            guard let fetchNotificationListUseCase = container.resolve(type: FetchNotificationListUseCase.self),
-                  let formatElapsedTimeUseCase = container.resolve(type: FormatElapsedTimeUseCase.self),
-                  let readNotificationUseCase = container.resolve(type: ReadNotificationUseCase.self) else  {
-                ByeBooLogger.error(ByeBooError.DIFailedError)
-                return
-            }
-            
-            return NotificationsViewModel(
-                fetchNotificationListUseCase: fetchNotificationListUseCase,
-                formatElapsedTimeUseCase: formatElapsedTimeUseCase,
-                readNotificationUseCase: readNotificationUseCase
-            )
-        }
     }
 }
