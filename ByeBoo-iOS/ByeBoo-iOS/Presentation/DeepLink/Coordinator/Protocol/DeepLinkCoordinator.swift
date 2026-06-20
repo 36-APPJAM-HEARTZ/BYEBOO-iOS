@@ -14,6 +14,12 @@ protocol DeepLinkCoordinator {
 
 extension DeepLinkCoordinator {
     func findNavigationController(from tabBarController: ByeBooTabBar, index: Int) -> UINavigationController? {
-        tabBarController.viewControllers?[index] as? UINavigationController
+        guard let controllers = tabBarController.viewControllers,
+              controllers.indices.contains(index)
+        else {
+            return nil
+        }
+        
+        return tabBarController.viewControllers?[index] as? UINavigationController
     }
 }
