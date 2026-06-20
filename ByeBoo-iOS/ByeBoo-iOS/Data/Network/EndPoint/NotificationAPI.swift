@@ -43,8 +43,7 @@ extension NotificationAPI: EndPoint {
     
     var headers: HeaderType {
         switch self {
-        case .fetchNotificationList, .fetchUnreadNotification:
-        case .fetchNotificationList, .readNotification:
+        case .fetchNotificationList, .fetchUnreadNotification, .readNotification:
                 .withAuth
         }
     }
@@ -60,16 +59,14 @@ extension NotificationAPI: EndPoint {
     
     var queryParameters: [String : String]? {
         switch self {
-        case .fetchNotificationList, .fetchUnreadNotification:
-        case .fetchNotificationList, .readNotification:
+        case .fetchNotificationList, .fetchUnreadNotification, .readNotification:
             nil
         }
     }
     
     var bodyParameters: Parameters? {
         switch self {
-        case .fetchNotificationList ,.fetchUnreadNotification:
-        case .fetchNotificationList, .readNotification:
+        case .fetchNotificationList, .fetchUnreadNotification, .readNotification:
             nil
         }
     }
