@@ -71,8 +71,8 @@ extension NotificationsViewController: BackNavigable {
 
 extension NotificationsViewController: ToastPresentable, ToastErrorHandler {
     
-    func bind() {
-        viewModel.output.notificationList
+    private func bind() {
+        viewModel.output.notificationListResult
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 switch result {
@@ -142,7 +142,7 @@ extension NotificationsViewController: UITableViewDelegate {
         didSelectRowAt indexPath: IndexPath
     ) {
         viewModel.action(.notificationDidTap(at: indexPath.section))
-        viewModel.move(from: self, at: indexPath.section)
+        viewModel.handleNotification(at: indexPath.section)
     }
     
     func tableView(

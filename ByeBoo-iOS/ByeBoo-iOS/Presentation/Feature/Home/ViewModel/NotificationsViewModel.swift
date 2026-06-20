@@ -19,7 +19,6 @@ final class NotificationsViewModel {
     
     private(set) var output: Output
     private var notificationListSubject = PassthroughSubject<Result<NotificationListEntity, ByeBooError>, Never>()
-    private var readNotificationSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>()
     
     init(
         fetchNotificationListUseCase: FetchNotificationListUseCase,
@@ -29,7 +28,7 @@ final class NotificationsViewModel {
         self.fetchNotificationListUseCase = fetchNotificationListUseCase
         self.formatElapsedTimeUseCase = formatElapsedTimeUseCase
         self.readNotificationUseCase = readNotificationUseCase
-        self.output = .init(notificationList: notificationListSubject.eraseToAnyPublisher())
+        self.output = .init(notificationListResult: notificationListSubject.eraseToAnyPublisher())
     }
 }
 
@@ -40,7 +39,7 @@ extension NotificationsViewModel: ViewModelType {
     }
     
     struct Output {
-        let notificationList: AnyPublisher<Result<NotificationListEntity, ByeBooError>, Never>
+        let notificationListResult: AnyPublisher<Result<NotificationListEntity, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
@@ -59,8 +58,8 @@ extension NotificationsViewModel {
         Task {
             do {
                 let notificationList = try await fetchNotificationListUseCase.execute()
-                self.notifications = notificationList.notifications
-                notificationListSubject.send(.success(notificationList))
+                self.notifications = NotificationListEntity.stub().notifications
+                notificationListSubject.send(.success(NotificationListEntity.stub()))
             } catch {
                 guard let error = error as? ByeBooError else {
                     return
@@ -81,13 +80,9 @@ extension NotificationsViewModel {
         
         Task {
             do {
-                try await readNotificationUseCase.execute(for: notificationID)
-                readNotificationSubject.send(.success(()))
+                let _ = try await readNotificationUseCase.execute(for: notificationID)
             } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
-                readNotificationSubject.send(.failure(error))
+                ByeBooLogger.error(error)
             }
         }
     }
@@ -103,7 +98,7 @@ extension NotificationsViewModel {
         notifications?[index]
     }
     
-    func move(from rootViewController: UIViewController, at index: Int) {
+    func handleNotification(at index: Int) {
         guard let landingURL = getLandingURL(at: index),
               let destination = DeepLinkParser.parse(from: landingURL)
         else {
