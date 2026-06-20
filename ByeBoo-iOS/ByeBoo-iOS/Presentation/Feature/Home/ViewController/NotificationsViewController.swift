@@ -128,7 +128,7 @@ extension NotificationsViewController: UITableViewDataSource {
             notificationType: notificationType,
             title: notification.title,
             subtitle: notification.content,
-            writtenTime: ""
+            writtenTime: writtenTime
         )
         
         return cell
