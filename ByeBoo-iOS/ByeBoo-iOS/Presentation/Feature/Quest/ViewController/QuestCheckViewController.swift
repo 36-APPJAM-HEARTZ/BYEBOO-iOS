@@ -23,7 +23,7 @@ final class QuestCheckViewController: BaseViewController {
     
     private var journeyType: JourneyType = .recording
     private var isFirst: Bool = true
-    var pendingQuestNumber: Int?
+    private var pendingQuestNumber: Int?
     
     init(viewModel: ProgressingQuestsViewModel) {
         self.viewModel = viewModel
@@ -163,6 +163,15 @@ extension QuestCheckViewController: ToastPresentable, ToastErrorHandler {
 
 extension QuestCheckViewController {
     
+    func presentCurrentQuestModal(questNumber: Int) {
+        let quest = viewModel.findQuest(questNumber: questNumber)
+        coordinator?.presentQuestModal(quest: quest)
+    }
+    
+    func setPendingQuestNumber(_ questNumber: Int) {
+        self.pendingQuestNumber = questNumber
+    }
+
     private func updateQuestMainUI(
         name: String,
         journey: JourneyEntity,
@@ -220,14 +229,10 @@ extension QuestCheckViewController {
 }
 
 extension QuestCheckViewController {
+    
     @objc
     private func goBoriButtonDidTap() {
         coordinator?.moveFinishQuest()
-    }
-    
-    func presentCurrentQuestModal(questNumber: Int) {
-        let quest = viewModel.findQuest(questNumber: questNumber)
-        coordinator?.presentQuestModal(quest: quest)
     }
 }
 
