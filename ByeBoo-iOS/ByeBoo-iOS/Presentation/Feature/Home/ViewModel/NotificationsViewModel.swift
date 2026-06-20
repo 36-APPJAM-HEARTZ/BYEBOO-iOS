@@ -57,9 +57,9 @@ extension NotificationsViewModel {
     func fetchNotificationList() {
         Task {
             do {
-                let notificationList = try await fetchNotificationListUseCase.execute()
-                self.notifications = notificationList.notifications
-                notificationListSubject.send(.success(notificationList))
+                //let notificationList = try await fetchNotificationListUseCase.execute()
+                self.notifications = NotificationListEntity.stub().notifications
+                notificationListSubject.send(.success(NotificationListEntity.stub()))
             } catch {
                 guard let error = error as? ByeBooError else {
                     return
@@ -97,7 +97,13 @@ extension NotificationsViewModel {
     }
     
     func getNotification(at index: Int) -> NotificationEntity? {
-        notifications?[index]
+        guard let notifications,
+              notifications.indices.contains(index)
+        else {
+            return nil
+        }
+        
+        return notifications[index]
     }
     
     func handleNotification(at index: Int) {
@@ -115,6 +121,7 @@ extension NotificationsViewModel {
     }
     
     private func getLandingURL(at index: Int) -> String? {
-        notifications?[index].landingURL
+        let notification = getNotification(at: index)
+        return notification?.landingURL
     }
 }
