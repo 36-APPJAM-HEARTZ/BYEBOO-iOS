@@ -74,13 +74,15 @@ extension NotificationsViewModel {
     }
     
     func readNotification(at index: Int) {
-        guard let notificationID = notifications?[index].notificationID else {
+        guard let notification = notifications?[index],
+              !notification.isRead
+        else {
             return
         }
         
         Task {
             do {
-                let _ = try await readNotificationUseCase.execute(for: notificationID)
+                let _ = try await readNotificationUseCase.execute(for: notification.notificationID)
             } catch {
                 ByeBooLogger.error(error)
             }
