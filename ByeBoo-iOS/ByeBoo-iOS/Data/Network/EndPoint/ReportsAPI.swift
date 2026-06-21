@@ -10,18 +10,18 @@ import Foundation
 import Alamofire
 
 enum ReportsAPI {
-    case postReport(answerID: Int)
+    case postReport(dto: ReportRequestDTO)
 }
 
 extension ReportsAPI: EndPoint {
     var basePath: String {
-        return "/api/v1/reports"
+        return "/api/v2/reports"
     }
     
     var path: String {
         switch self {
-        case .postReport(let answerID):
-            return "/common-quests/\(answerID)"
+        case .postReport:
+            return ""
         }
     }
     
@@ -33,7 +33,6 @@ extension ReportsAPI: EndPoint {
     }
     
     var headers: HeaderType {
-        let keychainService = DefaultKeychainService()
         return .withAuth
     }
     
@@ -49,8 +48,9 @@ extension ReportsAPI: EndPoint {
     }
     
     var bodyParameters: Alamofire.Parameters? {
-        nil
+        switch self {
+        case .postReport(let dto):
+            return try? dto.toDictionary()
+        }
     }
-    
-    
 }

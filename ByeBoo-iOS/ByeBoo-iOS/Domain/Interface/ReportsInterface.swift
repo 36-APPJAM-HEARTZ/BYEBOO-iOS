@@ -6,5 +6,5 @@
 //
 
 protocol ReportsInterface {
-    func reportCommonQuest(answerID: Int) async throws
+    func reportCommonQuest(targetID: Int, targetType: CommonQuestTargetType) async throws
 }

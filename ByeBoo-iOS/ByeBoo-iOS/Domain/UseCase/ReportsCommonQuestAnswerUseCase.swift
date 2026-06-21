@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ReportsCommonQuestAnswerUseCase {
-    func execute(answerID: Int) async throws
+    func execute(targetID: Int, targetType: CommonQuestTargetType) async throws
 }
 
 struct DefaultReportsCommonQuestAnswerUseCase: ReportsCommonQuestAnswerUseCase {
@@ -21,7 +21,7 @@ struct DefaultReportsCommonQuestAnswerUseCase: ReportsCommonQuestAnswerUseCase {
         self.repository = repository
     }
     
-    func execute(answerID: Int) async throws {
-        let _ = try await repository.reportCommonQuest(answerID: answerID)
+    func execute(targetID: Int, targetType: CommonQuestTargetType) async throws {
+        let _ = try await repository.reportCommonQuest(targetID: targetID, targetType: targetType)
     }
 }
