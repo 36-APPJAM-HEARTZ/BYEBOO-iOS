@@ -149,7 +149,9 @@ extension CommentTextView {
     private func confirmButtonDidTap() {
         delegate?.postComment(content: textView.text)
         endEditing(true)
-        textView.text = ""
+        textView.text = placeholder
+        isPlaceholderActive = true
+        textView.textColor = .grayscale600
     }
 }
 
