@@ -319,11 +319,10 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: CommonQuestBottomSheetViewModel.self) { container in
-            guard let blockUserUseCase = container.resolve(
-                type: BlockUserUseCase.self
-            ),
+            guard let blockUserUseCase = container.resolve(type: BlockUserUseCase.self),
                   let reportQuestAnswerUseCase = container.resolve(type: ReportsCommonQuestAnswerUseCase.self),
-                  let deleteCommonQuestUseCase = container.resolve(type: DeleteCommonQuestUseCase.self)
+                  let deleteCommonQuestUseCase = container.resolve(type: DeleteCommonQuestUseCase.self),
+                  let deleteCommentReplyUseCase = container.resolve(type: DeleteCommentReplyUseCase.self)
             else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -332,7 +331,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
             return CommonQuestBottomSheetViewModel(
                 blockUserUseCase: blockUserUseCase,
                 reportCommonQuestUseCase: reportQuestAnswerUseCase,
-                deleteCommonQuestUseCase: deleteCommonQuestUseCase
+                deleteCommonQuestUseCase: deleteCommonQuestUseCase,
+                deleteCommentReplyUseCase: deleteCommentReplyUseCase
             )
         }
         

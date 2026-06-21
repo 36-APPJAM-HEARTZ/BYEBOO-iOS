@@ -242,6 +242,12 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: FetchCommonQuestRepliesUseCase.self) { _ in
             return DefaultFetchCommonQuestRepliesUseCase(repository: commentRepository)
         }
+        DIContainer.shared.register(type: DeleteCommentReplyUseCase.self) { _ in
+            return DefaultDeleteCommentReplyUseCase(repository: commentRepository)
+        }
+        DIContainer.shared.register(type: EditCommentReplyUseCase.self) { _ in
+            return DefaultEditCommentReplyUseCase(repository: commentRepository)
+        }
         
         DIContainer.shared.register(type: ReadAllNotificationsUseCase.self) { _ in
             return DefaultReadAllNotificationsUseCase(repository: notificationRepository)
