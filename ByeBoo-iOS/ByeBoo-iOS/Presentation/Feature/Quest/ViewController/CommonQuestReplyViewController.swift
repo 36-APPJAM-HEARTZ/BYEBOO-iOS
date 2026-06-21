@@ -15,12 +15,13 @@ final class CommonQuestReplyViewController: BaseViewController {
     
     private var commentEntity: CommonQuestCommentEntity? = nil
     private var commentID: Int = 0
-
+    
     var onReplyCountChanged: ((Int, Int) -> Void)?
-
+    
     private var dataSource: UITableViewDiffableDataSource<ReplySection, CommentItem>!
     private var cancellable = Set<AnyCancellable>()
     
+    var onDismiss: (() -> Void)?
     
     init(viewModel: CommonQuestReplyViewModel) {
         self.viewModel = viewModel
@@ -42,7 +43,7 @@ final class CommonQuestReplyViewController: BaseViewController {
         
         viewModel.action(.fetchReplyList(commentID: commentID))
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -152,6 +153,18 @@ extension CommonQuestReplyViewController {
         dataSource.apply(snapshot, animatingDifferences: false)
     }
     
+    private func commonBottomSheetUp(commentID: Int, isMyComment: Bool) {
+        let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
+        
+        commonQuestBottomSheet.configure(
+            sheetType: isMyComment ? .myComment : .otherComment ,
+            targetID: commentID
+        )
+        
+        setDelegate(bottomSheet: commonQuestBottomSheet)
+        presentBottomSheet(commonQuestBottomSheet, height: 224.adjustedH)
+    }
+    
     @objc
     private func backButtonDidTap() {
         self.dismiss(animated: true)
@@ -160,19 +173,12 @@ extension CommonQuestReplyViewController {
 
 extension CommonQuestReplyViewController: CommentProtocol {
     func menuButtonDidTap(commentID: Int, isMyComment: Bool) {
-        let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
-        
-        commonQuestBottomSheet.configure(
-            sheeetType: isMyComment ? .myComment : .otherComment ,
-            targetID: commentID
-        )
-        
-        presentBottomSheet(commonQuestBottomSheet, height: 224.adjustedH)
+        commonBottomSheetUp(commentID: commentID, isMyComment: isMyComment)
     }
     
     func moreLabelDidTap(commentID: Int) {
         let currentSnapshot = dataSource.snapshot()
-
+        
         let commentItems = currentSnapshot.itemIdentifiers(inSection: .comment).map { item -> CommentItem in
             guard item.entity.commentID == commentID else { return item }
             return CommentItem(entity: item.entity, showAllText: true)
@@ -181,7 +187,7 @@ extension CommonQuestReplyViewController: CommentProtocol {
             guard item.entity.commentID == commentID else { return item }
             return CommentItem(entity: item.entity, showAllText: true)
         }
-
+        
         var snapshot = NSDiffableDataSourceSnapshot<ReplySection, CommentItem>()
         snapshot.appendSections([.comment, .replies])
         snapshot.appendItems(commentItems, toSection: .comment)
@@ -192,9 +198,69 @@ extension CommonQuestReplyViewController: CommentProtocol {
     }
 }
 
+extension CommonQuestReplyViewController: CommonQuestBottomSheetDelegate {
+    
+    func didTapEdit(
+        answerID: Int,
+        answer: String,
+        question: String,
+        writtenAt: String
+    ) {
+        let writeCommonQuestViewController = ViewControllerFactory.shared.makeWriteQuestionTypeQuestViewController()
+        writeCommonQuestViewController.navigationItem.hidesBackButton = true
+        writeCommonQuestViewController.questScope = .common
+        writeCommonQuestViewController.configureToEdit(
+            questNumber: nil,
+            questType: .question,
+            questionTitle: question,
+            answerID: answerID,
+            answer: answer,
+            writtenAt: writtenAt
+        )
+        self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)
+    }
+    
+    @objc
+    private func bottomUp() {
+        guard let commentEntity else { return }
+        commonBottomSheetUp(commentID: commentID, isMyComment: commentEntity.isMyComment)
+    }
+    
+    private func setDelegate(bottomSheet: CommonQuestBottomSheetViewController) {
+        bottomSheet.do {
+            $0.bottomDelegate = self
+            $0.deleteDelegate = self
+            $0.blockDelegate = self
+        }
+    }
+}
+
 extension CommonQuestReplyViewController: CommonQuestCommentProtcol {
     func postComment(content: String) {
         viewModel.action(.postReply(commentID: commentID, content: content))
+    }
+}
+
+extension CommonQuestReplyViewController: DeleteCommonQuestDelegate {
+    func completeDeleteCommonQuest(deletedID: Int) {
+        if deletedID == self.commentID {
+            dismiss(animated: true)
+            onDismiss?()
+        } else {
+            viewModel.action(.fetchReplyList(commentID: commentID))
+        }
+    }
+}
+
+extension CommonQuestReplyViewController: BlockReportProtocol {
+    func completeBlockReport(type: CommonQuestArchiveType.Action) {
+        ViewControllerUtils.changeQuestTabWithIndex(index: 1) {
+            NotificationCenter.default.post(
+                name: .showToastMessage,
+                object: nil,
+                userInfo: ["type": type]
+            )
+        }
     }
 }
 

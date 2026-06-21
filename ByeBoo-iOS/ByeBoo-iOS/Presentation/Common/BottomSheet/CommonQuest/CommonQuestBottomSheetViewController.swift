@@ -22,7 +22,7 @@ protocol BlockReportProtocol: AnyObject {
 }
 
 protocol DeleteCommonQuestDelegate: AnyObject {
-    func completeDeleteCommonQuest()
+    func completeDeleteCommonQuest(deletedID: Int)
 }
 
 final class CommonQuestBottomSheetViewController: BaseViewController {
@@ -34,7 +34,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     private let viewModel: CommonQuestBottomSheetViewModel
     private var writerID: Int = 0
     private var cancellables = Set<AnyCancellable>()
-    private(set) var answerID: Int?
+    private(set) var targetID: Int?
     private(set) var answer: String?
     private(set) var question: String?
     private(set) var writtenAt: String?
@@ -63,7 +63,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
         super.viewDidLoad()
         bind()
     }
-    
+
     override func setAddTarget() {
         rootView.dismissButton.addTarget(self, action: #selector(dismissButtonDidTap), for: .touchUpInside)
         rootView.itemList.enumerated().forEach { index, item in
@@ -85,19 +85,17 @@ extension CommonQuestBottomSheetViewController {
         writtenAt: String? = nil
     ) {
         self.sheetType = sheeetType
-        self.answerID = answerID
+        self.targetID = answerID
         self.answer = answer
         self.question = question
         self.writtenAt = writtenAt
     }
     
     
-    func configure(sheeetType: CommonQuestArchiveType, targetID: Int) {
-        self.sheetType = sheeetType
-        self.writerID = targetID
-        if let sheetType {
-            rootView = CommonQuestBottomSheetView(sheetType: sheetType)
-        }
+    func configure(sheetType: CommonQuestArchiveType, targetID: Int) {
+        self.sheetType = sheetType
+        self.targetID = targetID
+        rootView = CommonQuestBottomSheetView(sheetType: sheetType)
     }
     
     @objc
@@ -112,26 +110,35 @@ extension CommonQuestBottomSheetViewController {
         
         switch action {
         case .edit:
-            guard let answerID, let answer, let question, let writtenAt
+            guard let targetID, let answer, let question, let writtenAt
             else {
                 return
             }
             
             dismiss(animated: false) { [weak self] in
                 self?.bottomDelegate?.didTapEdit(
-                    answerID: answerID,
+                    answerID: targetID,
                     answer: answer,
                     question: question,
                     writtenAt: writtenAt
                 )
             }
         case .delete:
-            guard let answerID else { return }
-            presentDeleteQuestModal(answerID: answerID)
+            guard let targetID else { return }
+            if sheetType == .myAnswer || sheetType == .otherAnswer {
+                presentDeleteQuestModal(answerID: targetID, targetType: .COMMON_QUEST)
+            } else {
+                presentDeleteQuestModal(answerID: targetID, targetType: .COMMENT)
+            }
         case .block:
             viewModel.action(.block(userID: writerID))
         case .report:
-            viewModel.action(.report(answerID: answerID ?? 0))
+            guard let targetID else { return }
+            if sheetType == .myAnswer || sheetType == .otherAnswer {
+                viewModel.action(.report(targetID: targetID, targetType: .COMMON_QUEST))
+            } else {
+                viewModel.action(.report(targetID: targetID, targetType: .COMMENT))
+            }
         default:
             return
         }
@@ -139,12 +146,14 @@ extension CommonQuestBottomSheetViewController {
     
     @objc
     private func dismissButtonDidTap() {
-        presentingViewController?.dismiss(animated: true)
+        presentingViewController?.dismiss(animated: true) {
+            ByeBooLogger.debug("dismiss completion 실행")
+        }
     }
     
-    private func presentDeleteQuestModal(answerID: Int) {
+    private func presentDeleteQuestModal(answerID: Int, targetType: CommonQuestTargetType) {
         let modalView = createModalView()
-        let action: () -> Void = { self.viewModel.action(.delete(answerID: answerID)) }
+        let action: () -> Void = { self.viewModel.action(.delete(targetID: answerID, targetType: targetType)) }
         
         ModalBuilder(
             modalView: modalView,
@@ -202,11 +211,11 @@ extension CommonQuestBottomSheetViewController {
                 switch result {
                 case .success():
                     ByeBooLogger.debug("삭제 성공")
-                    
                     guard let self else { return }
-                    
-                    self.dismiss(animated: false) { [weak self] in
-                        self?.deleteDelegate?.completeDeleteCommonQuest()
+                    let deleteDelegate = self.deleteDelegate
+                    let deletedID = self.targetID ?? 0
+                    self.dismiss(animated: false) {
+                        deleteDelegate?.completeDeleteCommonQuest(deletedID: deletedID)
                     }
                 case .failure(let error):
                     ByeBooLogger.debug(error)

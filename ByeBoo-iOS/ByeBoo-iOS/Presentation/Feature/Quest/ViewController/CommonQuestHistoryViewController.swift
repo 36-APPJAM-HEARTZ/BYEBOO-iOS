@@ -165,8 +165,9 @@ extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
 }
 
 extension CommonQuestHistoryViewController: DeleteCommonQuestDelegate {
-    func completeDeleteCommonQuest() {
-        self.navigationController?.popViewController(animated: false)
+    func completeDeleteCommonQuest(deletedID: Int) {
+        ByeBooLogger.debug("댓글 삭제 완료")
+        viewModel.action(.fetchQuestDetail(answerID: answerID))
     }
 }
 
@@ -199,6 +200,11 @@ extension CommonQuestHistoryViewController: CommentProtocol {
                   let cell = rootView.commentListView.cellForRow(at: indexPath) as? CommentTableViewCell
             else { return }
             cell.updateReplyCount(replyCount: newCount)
+        }
+        
+        viewController.onDismiss = { [weak self] in
+            guard let self else { return }
+            viewModel.action(.fetchQuestDetail(answerID: answerID))
         }
 
         if let sheet =  viewController.sheetPresentationController{
@@ -299,30 +305,42 @@ extension CommonQuestHistoryViewController {
         let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
         
         if let commentID, let isMyComment{
-            commonQuestBottomSheet.configure(
-                sheeetType: isMyComment ? .myComment : .otherComment ,
-                targetID: commentID
-            )
+            configureWhenComment(commentID: commentID, isMyComment: isMyComment, sheet: commonQuestBottomSheet)
         } else {
-            let entity = viewModel.detailEntity
-            guard let entity else { return }
-            
-            let sheetType: CommonQuestArchiveType = entity.isMyAnswer ? .myAnswer : .otherAnswer
-            commonQuestBottomSheet.configure(sheeetType: sheetType, targetID: writerID)
-            
-            if entity.isMyAnswer {
-                commonQuestBottomSheet.configureWhenEdit(
-                    sheeetType: sheetType,
-                    answerID: answerID,
-                    answer: entity.content,
-                    question: viewModel.question,
-                    writtenAt: entity.writtenAt
-                )
-            }
+            configureWhenCommonQuest(sheet: commonQuestBottomSheet)
         }
         
         setDelegate(bottomSheet: commonQuestBottomSheet)
         presentBottomSheet(commonQuestBottomSheet, height: 224.adjustedH)
+    }
+    
+    private func configureWhenComment(
+        commentID: Int,
+        isMyComment: Bool,
+        sheet: CommonQuestBottomSheetViewController
+    ) {
+        sheet.configure(
+            sheetType: isMyComment ? .myComment : .otherComment ,
+            targetID: commentID
+        )
+    }
+    
+    private func configureWhenCommonQuest(sheet: CommonQuestBottomSheetViewController) {
+        let entity = viewModel.detailEntity
+        guard let entity else { return }
+        
+        let sheetType: CommonQuestArchiveType = entity.isMyAnswer ? .myAnswer : .otherAnswer
+        sheet.configure(sheetType: sheetType, targetID: answerID)
+        
+        if entity.isMyAnswer {
+            sheet.configureWhenEdit(
+                sheeetType: sheetType,
+                answerID: answerID,
+                answer: entity.content,
+                question: viewModel.question,
+                writtenAt: entity.writtenAt
+            )
+        }
     }
 }
 
