@@ -158,7 +158,8 @@ extension CommonQuestReplyViewController {
         
         commonQuestBottomSheet.configure(
             sheetType: isMyComment ? .myComment : .otherComment ,
-            targetID: commentID
+            targetID: commentID,
+            writerID: commentEntity?.writerID ?? 0
         )
         
         setDelegate(bottomSheet: commonQuestBottomSheet)

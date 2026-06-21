@@ -321,7 +321,8 @@ extension CommonQuestHistoryViewController {
     ) {
         sheet.configure(
             sheetType: isMyComment ? .myComment : .otherComment ,
-            targetID: commentID
+            targetID: commentID,
+            writerID: writerID
         )
     }
     
@@ -330,7 +331,11 @@ extension CommonQuestHistoryViewController {
         guard let entity else { return }
         
         let sheetType: CommonQuestArchiveType = entity.isMyAnswer ? .myAnswer : .otherAnswer
-        sheet.configure(sheetType: sheetType, targetID: answerID)
+        sheet.configure(
+            sheetType: sheetType,
+            targetID: answerID,
+            writerID: writerID
+        )
         
         if entity.isMyAnswer {
             sheet.configureWhenEdit(

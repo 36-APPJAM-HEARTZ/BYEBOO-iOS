@@ -92,9 +92,10 @@ extension CommonQuestBottomSheetViewController {
     }
     
     
-    func configure(sheetType: CommonQuestArchiveType, targetID: Int) {
+    func configure(sheetType: CommonQuestArchiveType, targetID: Int, writerID: Int) {
         self.sheetType = sheetType
         self.targetID = targetID
+        self.writerID = writerID
         rootView = CommonQuestBottomSheetView(sheetType: sheetType)
     }
     
@@ -146,9 +147,7 @@ extension CommonQuestBottomSheetViewController {
     
     @objc
     private func dismissButtonDidTap() {
-        presentingViewController?.dismiss(animated: true) {
-            ByeBooLogger.debug("dismiss completion 실행")
-        }
+        presentingViewController?.dismiss(animated: true)
     }
     
     private func presentDeleteQuestModal(answerID: Int, targetType: CommonQuestTargetType) {
