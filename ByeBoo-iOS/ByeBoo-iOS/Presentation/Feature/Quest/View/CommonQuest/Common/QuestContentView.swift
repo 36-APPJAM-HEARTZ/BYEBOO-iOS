@@ -8,7 +8,7 @@
 import UIKit
 
 protocol CommonQuestLikeProtocol: AnyObject {
-    func likeButtonDidTap()
+    func likeButtonDidTap(answerID: Int)
 }
 
 final class QuestContentView: BaseView {

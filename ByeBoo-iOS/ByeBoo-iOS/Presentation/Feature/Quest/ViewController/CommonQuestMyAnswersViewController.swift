@@ -236,7 +236,7 @@ extension CommonQuestMyAnswersViewController: UITableViewDataSource {
     }
 }
 
-extension CommonQuestMyAnswersViewController: CommonQuestLikeCommentProtocol {
+extension CommonQuestMyAnswersViewController: CommonQuestLikeProtocol {
     func likeButtonDidTap(answerID: Int) {
         viewModel.action(.likeButtonDidTap(answerID: answerID))
     }

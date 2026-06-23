@@ -23,7 +23,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
               let forbiddenWordRepository = DIContainer.shared.resolve(type: ForbiddenWordInterface.self),
               let commonQuestRepository = DIContainer.shared.resolve(type: CommonQuestInterface.self),
               let blocksRepository = DIContainer.shared.resolve(type: BlocksInterface.self),
-              let notificationRepository = DIContainer.shared.resolve(type: NotificationInterface.self) else {
+              let notificationRepository = DIContainer.shared.resolve(type: NotificationInterface.self),
               let reportsRepository = DIContainer.shared.resolve(type: ReportsInterface.self),
               let commentRepository = DIContainer.shared.resolve(type: CommentInterface.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)

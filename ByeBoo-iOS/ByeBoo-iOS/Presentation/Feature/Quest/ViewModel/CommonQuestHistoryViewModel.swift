@@ -27,17 +27,18 @@ final class CommonQuestHistoryViewModel {
     init(
         fetchCommonQuestCommentsUseCase: FetchCommonQuestDetailUseCase,
         postCommentUseCase: PostCommonQuestCommentUseCase,
-        patchCommentUseCase: EditCommentReplyUseCase
+        patchCommentUseCase: EditCommentReplyUseCase,
         postCommonQuestLikeUseCase: PostCommonQuestLikeUseCase
     ) {
         self.fetchCommonQuestCommentsUseCase = fetchCommonQuestCommentsUseCase
         self.postCommentUseCase = postCommentUseCase
         self.postCommonQuestLikeUseCase = postCommonQuestLikeUseCase
+        self.patchCommentUseCase = patchCommentUseCase
         
         output = Output(
             fetchCommonQuestDetailPublisher: fetchQuestDetailSubject.eraseToAnyPublisher(),
             postCommentPublisher: postCommentSubject.eraseToAnyPublisher(),
-            patchCommentPublisher: patchCommentSubject.eraseToAnyPublisher()
+            patchCommentPublisher: patchCommentSubject.eraseToAnyPublisher(),
             commonQuestLikeCountPublisher: likeCountSubject.eraseToAnyPublisher()
         )
     }

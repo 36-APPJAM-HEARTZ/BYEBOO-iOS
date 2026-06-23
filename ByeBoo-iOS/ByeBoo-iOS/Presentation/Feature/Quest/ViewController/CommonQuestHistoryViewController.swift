@@ -371,7 +371,7 @@ extension CommonQuestHistoryViewController: KeyboardHandleProtocol {
     }
 }
 
-extension CommonQuestHistoryViewController: CommonQuestLikeCommentProtocol {
+extension CommonQuestHistoryViewController: CommonQuestLikeProtocol {
     func likeButtonDidTap(answerID: Int) {
         viewModel.action(.likeButtonDidTap(answerID: answerID))
     }
