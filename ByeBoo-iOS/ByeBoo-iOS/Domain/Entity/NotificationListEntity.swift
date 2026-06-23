@@ -81,3 +81,17 @@ extension NotificationListEntity {
         )
     }
 }
+
+extension NotificationEntity {
+    func toRead() -> Self {
+        .init(
+            notificationID: notificationID,
+            notificationType: notificationType,
+            title: title,
+            content: content,
+            isRead: true,
+            createdAt: createdAt,
+            landingURL: landingURL
+        )
+    }
+}
