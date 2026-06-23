@@ -294,6 +294,18 @@ extension CommonQuestHistoryViewController {
                 }
             }
             .store(in: &cancellable)
+        
+        viewModel.output.patchCommentPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success:
+                    ByeBooLogger.debug("댓글 수정 성공")
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellable)
     }
     
     private func bindData(entity: CommonQuestDetailEntity) {

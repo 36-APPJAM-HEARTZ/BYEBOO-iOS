@@ -110,6 +110,18 @@ extension CommonQuestReplyViewController {
             }
             .store(in: &cancellable)
         
+        viewModel.output.patchReplyPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success:
+                    ByeBooLogger.debug("답글 수정 성공")
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellable)
+        
     }
 }
 
