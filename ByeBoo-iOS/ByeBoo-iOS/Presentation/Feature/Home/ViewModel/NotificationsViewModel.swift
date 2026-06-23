@@ -74,19 +74,21 @@ extension NotificationsViewModel {
     }
     
     func readNotification(at index: Int) {
-        guard let notification = notifications?[index],
-              !notification.isRead
-        else {
+        guard let notification = notifications?[index] else {
             return
         }
         
-        Task {
-            do {
-                let _ = try await readNotificationUseCase.execute(for: notification.notificationID)
-            } catch {
-                ByeBooLogger.error(error)
+        if !notification.isRead {
+            Task {
+                do {
+                    let _ = try await readNotificationUseCase.execute(for: notification.notificationID)
+                } catch {
+                    ByeBooLogger.error(error)
+                }
             }
         }
+        
+        handleNotification(at: index)
     }
 }
 
@@ -106,7 +108,7 @@ extension NotificationsViewModel {
         return notifications[index]
     }
     
-    func handleNotification(at index: Int) {
+    private func handleNotification(at index: Int) {
         guard let landingURL = getLandingURL(at: index),
               let destination = DeepLinkParser.parse(from: landingURL)
         else {

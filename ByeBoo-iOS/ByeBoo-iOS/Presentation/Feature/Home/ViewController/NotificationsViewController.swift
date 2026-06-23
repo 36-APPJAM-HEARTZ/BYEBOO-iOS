@@ -142,7 +142,6 @@ extension NotificationsViewController: UITableViewDelegate {
         didSelectRowAt indexPath: IndexPath
     ) {
         viewModel.action(.notificationDidTap(at: indexPath.section))
-        viewModel.handleNotification(at: indexPath.section)
     }
     
     func tableView(
