@@ -38,4 +38,13 @@ struct DefaultCommentRepository: CommentInterface {
         )
         return result.toEntity(userID: userID)
     }
+    
+    func patchComment(content: String, targetID: Int) async throws {
+        let patchCommentRequestDTO: CommonQuestReplyRequestDTO = .init(content: content)
+        let _ = try await network.request(CommentAPI.patchComment(commentID: targetID, dto: patchCommentRequestDTO))
+    }
+    
+    func deleteComment(commentID: Int) async throws {
+        let _ = try await network.request(CommentAPI.deleteComment(commentID: commentID))
+    }
 }

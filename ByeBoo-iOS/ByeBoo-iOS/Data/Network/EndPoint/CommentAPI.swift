@@ -13,6 +13,8 @@ enum CommentAPI {
     case postComment(dto: CommonQuestCommentRequestDTO)
     case postReply(commentID: Int, dto: CommonQuestReplyRequestDTO)
     case fetchReplies(commentID: Int)
+    case patchComment(commentID: Int, dto: CommonQuestReplyRequestDTO)
+    case deleteComment(commentID: Int)
 }
 
 extension CommentAPI: EndPoint {
@@ -24,6 +26,8 @@ extension CommentAPI: EndPoint {
         switch self {
         case .postComment:
             return ""
+        case .patchComment(let commentID, _), .deleteComment(let commentID):
+            return "/\(commentID)"
         case .postReply(let commentID, _), .fetchReplies(let commentID):
             return "/\(commentID)/replies"
         }
@@ -35,21 +39,25 @@ extension CommentAPI: EndPoint {
             return .post
         case .fetchReplies:
             return .get
+        case .patchComment:
+            return .patch
+        case .deleteComment:
+            return .delete
         }
     }
     
     var headers: HeaderType {
         switch self {
-        case .postComment, .postReply, .fetchReplies:
+        case .postComment, .postReply, .fetchReplies, .patchComment, .deleteComment:
             return .withAuth
         }
     }
     
     var parameterEncoding: any Alamofire.ParameterEncoding {
         switch self {
-        case .postComment, .postReply:
+        case .postComment, .postReply, .patchComment:
             return JSONEncoding.default
-        case .fetchReplies:
+        case .fetchReplies, .deleteComment:
             return URLEncoding.default
         }
     }
@@ -64,7 +72,9 @@ extension CommentAPI: EndPoint {
             return try? dto.toDictionary()
         case .postReply(_, let dto):
             return try? dto.toDictionary()
-        case .fetchReplies:
+        case .patchComment(_, let dto):
+            return try? dto.toDictionary()
+        case .fetchReplies, .deleteComment:
             return nil
         }
     }
