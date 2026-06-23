@@ -343,35 +343,28 @@ extension CommonQuestHistoryViewController {
         isMyComment: Bool,
         sheet: CommonQuestBottomSheetViewController
     ) {
-        let content = viewModel.getComment(commentID: commentID)?.content
-        sheet.configureWhenComment(
+        guard let comment = viewModel.getComment(commentID: commentID) else { return }
+        sheet.configure(
             sheetType: isMyComment ? .myComment : .otherComment ,
             targetID: commentID,
-            writerID: writerID,
-            content: content
+            writerID: comment.writerID,
+            content: comment.content
         )
     }
-    
+
     private func configureWhenCommonQuest(sheet: CommonQuestBottomSheetViewController) {
         let entity = viewModel.detailEntity
         guard let entity else { return }
-        
+
         let sheetType: CommonQuestArchiveType = entity.isMyAnswer ? .myAnswer : .otherAnswer
-        sheet.configureWhenComment(
+        sheet.configure(
             sheetType: sheetType,
             targetID: answerID,
-            writerID: writerID
+            writerID: writerID,
+            answer: entity.isMyAnswer ? entity.content : nil,
+            question: entity.isMyAnswer ? viewModel.question : nil,
+            writtenAt: entity.isMyAnswer ? entity.writtenAt : nil
         )
-        
-        if entity.isMyAnswer {
-            sheet.configureWhenQuestEdit(
-                sheeetType: sheetType,
-                answerID: answerID,
-                answer: entity.content,
-                question: viewModel.question,
-                writtenAt: entity.writtenAt
-            )
-        }
     }
 }
 

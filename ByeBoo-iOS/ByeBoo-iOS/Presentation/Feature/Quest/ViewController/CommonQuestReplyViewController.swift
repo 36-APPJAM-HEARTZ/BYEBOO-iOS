@@ -169,13 +169,13 @@ extension CommonQuestReplyViewController {
     
     private func commonBottomSheetUp(commentID: Int, isMyComment: Bool) {
         let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
-        let content = viewModel.getComment(commentID: commentID)?.content
         
-        commonQuestBottomSheet.configureWhenComment(
+        guard let comment = viewModel.getComment(commentID: commentID) else { return }
+        commonQuestBottomSheet.configure(
             sheetType: isMyComment ? .myComment : .otherComment ,
             targetID: commentID,
-            writerID: commentEntity?.writerID ?? 0,
-            content: content
+            writerID: comment.writerID,
+            content: comment.content
         )
         
         setDelegate(bottomSheet: commonQuestBottomSheet)
@@ -185,6 +185,7 @@ extension CommonQuestReplyViewController {
     @objc
     private func backButtonDidTap() {
         self.dismiss(animated: true)
+        onDismiss?()
     }
 }
 
