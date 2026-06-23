@@ -15,7 +15,11 @@ enum CommonQuestArchiveType {
     case otherComment
     
     enum Action {
-        case edit, delete, report, block
+        case questEdit
+        case commentEdit
+        case delete
+        case report
+        case block
     }
     
     struct Item {
@@ -27,9 +31,14 @@ enum CommonQuestArchiveType {
     
     var items: [Item] {
         switch self {
-        case .myAnswer, .myComment:
+        case .myAnswer:
             return [
-                Item(title: "수정하기", icon: .edit, color: .white, action: .edit),
+                Item(title: "수정하기", icon: .edit, color: .white, action: .questEdit),
+                Item(title: "삭제하기", icon: .trash, color: .error300, action: .delete)
+            ]
+        case .myComment:
+            return [
+                Item(title: "수정하기", icon: .edit, color: .white, action: .commentEdit),
                 Item(title: "삭제하기", icon: .trash, color: .error300, action: .delete)
             ]
         case .otherAnswer:
