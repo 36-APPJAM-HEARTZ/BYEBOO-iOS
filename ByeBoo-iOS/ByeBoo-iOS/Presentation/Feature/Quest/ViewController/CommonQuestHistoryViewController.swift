@@ -77,6 +77,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
             $0.separatorStyle = .none
             $0.register(CommentTableViewCell.self)
         }
+        rootView.questContentView.delegate = self
         rootView.commentTextView.delegate = self
     }
 }
