@@ -11,6 +11,10 @@ struct CommonQuestAnswerDeepLinkCoordinator: QuestDeepLinkCoordinator {
     
     let answerID: Int
     
+    init(answerID: Int) {
+        self.answerID = answerID
+    }
+    
     func navigate(from window: UIWindow) {
         let tabBarController = ViewControllerFactory.shared.makeByeBooTabBar()
         tabBarController.selectedIndex = questViewIndex

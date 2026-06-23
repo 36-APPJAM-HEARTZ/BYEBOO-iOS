@@ -11,6 +11,10 @@ struct MyJourneyDeepLinkCoordinator: QuestDeepLinkCoordinator {
     
     let questNumber: Int
     
+    init(questNumber: Int) {
+        self.questNumber = questNumber
+    }
+    
     func navigate(from window: UIWindow) {
         let tabBarController = ViewControllerFactory.shared.makeByeBooTabBar()
         tabBarController.selectedIndex = questViewIndex

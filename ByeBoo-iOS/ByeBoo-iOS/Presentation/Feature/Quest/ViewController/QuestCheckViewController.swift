@@ -163,11 +163,6 @@ extension QuestCheckViewController: ToastPresentable, ToastErrorHandler {
 
 extension QuestCheckViewController {
     
-    func presentCurrentQuestModal(questNumber: Int) {
-        let quest = viewModel.findQuest(questNumber: questNumber)
-        coordinator?.presentQuestModal(quest: quest)
-    }
-    
     func setPendingQuestNumber(_ questNumber: Int) {
         self.pendingQuestNumber = questNumber
     }
@@ -225,6 +220,11 @@ extension QuestCheckViewController {
     private func scrollToHeader(at sectionIndex: Int) {
         let collectionView = questsCheckView.questCollectionView
         collectionView.scrollToHeader(at: sectionIndex)
+    }
+    
+    private func presentCurrentQuestModal(questNumber: Int) {
+        let quest = viewModel.findQuest(questNumber: questNumber)
+        coordinator?.presentQuestModal(quest: quest)
     }
 }
 
