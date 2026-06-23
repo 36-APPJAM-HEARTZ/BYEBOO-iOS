@@ -222,8 +222,8 @@ extension CommonQuestBottomSheetViewController {
                     ByeBooLogger.debug("삭제 성공")
                     guard let self else { return }
                     let deleteDelegate = self.deleteDelegate
-                    let deletedID = self.targetID ?? 0
                     self.dismiss(animated: false) {
+                        guard let deletedID = self.targetID else { return }
                         deleteDelegate?.completeDeleteCommonQuest(deletedID: deletedID)
                     }
                 case .failure(let error):
