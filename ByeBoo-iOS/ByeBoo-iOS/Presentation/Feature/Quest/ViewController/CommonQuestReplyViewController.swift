@@ -15,6 +15,7 @@ final class CommonQuestReplyViewController: BaseViewController {
     
     private var commentEntity: CommonQuestCommentEntity? = nil
     private var commentID: Int = 0
+    private var editingCommentID: Int?
     
     var onReplyCountChanged: ((Int, Int) -> Void)?
     
@@ -77,6 +78,7 @@ extension CommonQuestReplyViewController {
     ) {
         self.commentEntity = entity
         self.commentID = commentID
+        viewModel.setComment(entity)
     }
     
     private func bind() {
@@ -155,11 +157,13 @@ extension CommonQuestReplyViewController {
     
     private func commonBottomSheetUp(commentID: Int, isMyComment: Bool) {
         let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
+        let content = viewModel.getComment(commentID: commentID)?.content
         
-        commonQuestBottomSheet.configure(
+        commonQuestBottomSheet.configureWhenComment(
             sheetType: isMyComment ? .myComment : .otherComment ,
             targetID: commentID,
-            writerID: commentEntity?.writerID ?? 0
+            writerID: commentEntity?.writerID ?? 0,
+            content: content
         )
         
         setDelegate(bottomSheet: commonQuestBottomSheet)
@@ -199,9 +203,8 @@ extension CommonQuestReplyViewController: CommentProtocol {
     }
 }
 
-extension CommonQuestReplyViewController: CommonQuestBottomSheetDelegate {
-    
-    func didTapEdit(
+extension CommonQuestReplyViewController: EditCommonQuestProtocol {
+    func didTapCommonQuestEdit(
         answerID: Int,
         answer: String,
         question: String,
@@ -221,6 +224,12 @@ extension CommonQuestReplyViewController: CommonQuestBottomSheetDelegate {
         self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)
     }
     
+    func didTapCommentEdit(commentID: Int, content: String) {
+        editingCommentID = commentID
+        rootView.commentTextView.configureWhenEdit(content: content)
+        rootView.commentTextView.textView.becomeFirstResponder()
+    }
+    
     @objc
     private func bottomUp() {
         guard let commentEntity else { return }
@@ -229,7 +238,7 @@ extension CommonQuestReplyViewController: CommonQuestBottomSheetDelegate {
     
     private func setDelegate(bottomSheet: CommonQuestBottomSheetViewController) {
         bottomSheet.do {
-            $0.bottomDelegate = self
+            $0.editDelegate = self
             $0.deleteDelegate = self
             $0.blockDelegate = self
         }
@@ -239,6 +248,11 @@ extension CommonQuestReplyViewController: CommonQuestBottomSheetDelegate {
 extension CommonQuestReplyViewController: CommonQuestCommentProtcol {
     func postComment(content: String) {
         viewModel.action(.postReply(commentID: commentID, content: content))
+    }
+    
+    func editComment(content: String) {
+        guard let editingCommentID else { return }
+        viewModel.action(.editReply(commentID: commentID, editingCommentID: editingCommentID, content: content))
     }
 }
 
