@@ -28,7 +28,7 @@ final class CommonQuestViewModel {
     
     init(
         fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase,
-        postCommonQuestLikeUseCase: PostCommonQuestLikeUseCase
+        postCommonQuestLikeUseCase: PostCommonQuestLikeUseCase,
         formatElapsedTimeUseCase: FormatElapsedTimeUseCase
     ) {
         self.fetchCommonQuestByDateUseCase = fetchCommonQuestByDateUseCase
