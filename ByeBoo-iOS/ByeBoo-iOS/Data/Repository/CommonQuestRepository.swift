@@ -74,4 +74,12 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
         
         return commonQuestDetail.toEntity(userID: userID)
     }
+    
+    func postCommonQuestLikes(answerID: Int) async throws -> CommonQuestLikeEntity {
+        let response = try await network.request(
+            CommonQuestAPI.postCommonQuestLike(answerID: answerID),
+            decodingType: PostCommonQuestLikeResponseDTO.self
+        )
+        return response.toEntity()
+    }
 }

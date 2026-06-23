@@ -23,7 +23,7 @@ final class CommonQuestHistoryView: BaseView {
     private let answerView = UIView()
     private let profileIconImageView = UIImageView()
     private let userNicknameLabel = UILabel()
-    private let questContentView = QuestContentView()
+    private(set) var questContentView = QuestContentView()
     private(set) var commentListView = SelfSizingTableView()
     private let commentTextView = CommentTextView()
     
@@ -165,6 +165,7 @@ extension CommonQuestHistoryView {
 extension CommonQuestHistoryView {
 
     func configure(
+        answerID: Int,
         question: String,
         writtenAt: String,
         profileIcon: UIImage,
@@ -177,6 +178,7 @@ extension CommonQuestHistoryView {
         questionContentLabel.text = question
         dateLabel.text = writtenAt
         questContentView.configure(
+            answerID: answerID,
             content: content,
             isLiked: isLiked,
             likeCount: likeCount,

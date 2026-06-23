@@ -76,6 +76,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
             $0.separatorStyle = .none
             $0.register(CommentTableViewCell.self)
         }
+        rootView.questContentView.delegate = self
     }
 }
 
@@ -231,6 +232,19 @@ extension CommonQuestHistoryViewController {
                 }
             }
             .store(in: &cancellable)
+        
+        viewModel.output.commonQuestLikeCountPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let result):
+                    let entity = result.entity
+                    self?.rootView.questContentView.updateUI(likeCount: entity.likeCount, isLiked: entity.isLiked)
+                case .failure(let error):
+                    ByeBooLogger.error(error)
+                }
+            }
+            .store(in: &cancellable)
     }
     
     private func bindData(entity: CommonQuestDetailEntity) {
@@ -238,6 +252,7 @@ extension CommonQuestHistoryViewController {
         self.writerID = answer.writerID
         
         rootView.configure(
+            answerID: answerID,
             question: entity.question,
             writtenAt: ServerDateFormatter.shared.relativeTimeString(from: answer.writtenAt) ?? "", //TODO: ViewModel로 수정
             profileIcon: ProfileIcon.image(for: answer.profileIcon) ?? .relievedBadge,
@@ -286,5 +301,11 @@ extension CommonQuestHistoryViewController: KeyboardHandleProtocol {
             self.rootView.updateLayout(keyboardHeight: height)
             self.rootView.layoutIfNeeded()
         }
+    }
+}
+
+extension CommonQuestHistoryViewController: CommonQuestLikeCommentProtocol {
+    func likeButtonDidTap(answerID: Int) {
+        viewModel.action(.likeButtonDidTap(answerID: answerID))
     }
 }

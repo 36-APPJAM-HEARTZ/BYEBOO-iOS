@@ -10,9 +10,12 @@ import UIKit
 
 final class CommonQuestViewModel {
     
-    private let cancellables = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
     private let commonQuestSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>.init()
+    private let likeCountSubject = PassthroughSubject<Result<(answerID: Int, entity: CommonQuestLikeEntity), ByeBooError>, Never>.init()
+    
     private let fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase
+    private let postCommonQuestLikeUseCase: PostCommonQuestLikeUseCase
     private let formatElapsedTimeUseCase: FormatElapsedTimeUseCase
     
     private(set) var output: Output
@@ -21,15 +24,19 @@ final class CommonQuestViewModel {
     private(set) var hasMorePages = true
     private var nextCursor: Int? = nil
     private var currentDate: String = DateFormatter.toAPIDateString(from: .now)
+    private var likeTasks: [Int: Task<Void, Never>] = [:]
     
     init(
         fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase,
+        postCommonQuestLikeUseCase: PostCommonQuestLikeUseCase,
         formatElapsedTimeUseCase: FormatElapsedTimeUseCase
     ) {
         self.fetchCommonQuestByDateUseCase = fetchCommonQuestByDateUseCase
+        self.postCommonQuestLikeUseCase = postCommonQuestLikeUseCase
         self.formatElapsedTimeUseCase = formatElapsedTimeUseCase
         self.output = Output(
-            commonQuestPublisher: commonQuestSubject.eraseToAnyPublisher()
+            commonQuestPublisher: commonQuestSubject.eraseToAnyPublisher(),
+            commonQuestLikeCountPublisher: likeCountSubject.eraseToAnyPublisher()
         )
     }
     
@@ -59,6 +66,27 @@ final class CommonQuestViewModel {
             }
         }
     }
+    
+    private func postCommonQuestLike(answerID: Int) {
+        likeTasks[answerID]?.cancel()
+
+        likeTasks[answerID] = Task {
+            do {
+                let entity = try await postCommonQuestLikeUseCase.execute(answerID: answerID)
+                try Task.checkCancellation()
+                likeCountSubject.send(.success((answerID: answerID, entity)))
+            } catch is CancellationError {
+                ByeBooLogger.debug("Task 취소됨")
+            } catch {
+                guard let error = error as? ByeBooError else {
+                    return
+                }
+                guard !Task.isCancelled else { return }
+                likeCountSubject.send(.failure(error))
+            }
+            likeTasks[answerID] = nil
+        }
+    }
 }
 
 extension CommonQuestViewModel: ViewModelType {
@@ -67,10 +95,12 @@ extension CommonQuestViewModel: ViewModelType {
         case viewWillAppear
         case moveDateButtonDidTap(selectedDate: String)
         case scrollAnswer
+        case likeButtonDidTap(answerID: Int)
     }
     
     struct Output {
         let commonQuestPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
+        let commonQuestLikeCountPublisher: AnyPublisher<Result<(answerID: Int, entity: CommonQuestLikeEntity), ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
@@ -87,6 +117,8 @@ extension CommonQuestViewModel: ViewModelType {
                 return
             }
             fetchCommonQuestByDate(date: currentDate, cursor: nextCursor)
+        case .likeButtonDidTap(let answerID):
+            postCommonQuestLike(answerID: answerID)
         }
     }
 }
@@ -128,6 +160,10 @@ extension CommonQuestViewModel {
             return nil
         }
         return answers[index].answerID
+    }
+
+    func indexOfAnswer(answerID: Int) -> Int? {
+        answers.firstIndex { $0.answerID == answerID }
     }
     
     func getProfileIcon(at index: Int) -> UIImage? {

@@ -94,6 +94,7 @@ extension CommonQuestAnswerCell {
         userNicknameLabel.text = answer.writer
         answerID = answer.answerID
         questContentView.configure(
+            answerID: answer.answerID,
             content: answer.content,
             writtenAt: writtenAt,
             isLiked: answer.isLiked,

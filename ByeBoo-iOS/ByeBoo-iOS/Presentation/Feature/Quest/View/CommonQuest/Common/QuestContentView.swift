@@ -8,7 +8,7 @@
 import UIKit
 
 protocol CommonQuestLikeCommentProtocol: AnyObject {
-    func likeButtonDidTap()
+    func likeButtonDidTap(answerID: Int)
 }
 
 final class QuestContentView: BaseView {
@@ -26,6 +26,7 @@ final class QuestContentView: BaseView {
     
     weak var delegate: CommonQuestLikeCommentProtocol?
     
+    private var answerID: Int = 0
     private var likeCounts: Int = 0
     
     override func setUI() {
@@ -102,6 +103,7 @@ final class QuestContentView: BaseView {
     }
     
     func configure(
+        answerID: Int,
         content: String,
         writtenAt: String? = nil,
         isLiked: Bool,
@@ -109,6 +111,7 @@ final class QuestContentView: BaseView {
         commentCount: Int,
         showAllText: Bool
     ) {
+        self.answerID = answerID
         self.likeCounts = likeCount
         answerContentTextView.do {
             $0.textContainer.maximumNumberOfLines = showAllText ? 0 : 2
@@ -123,11 +126,13 @@ final class QuestContentView: BaseView {
         commentCountLabel.text = String(commentCount)
     }
     
+    func updateUI(likeCount: Int, isLiked: Bool) {
+        likeCountLabel.text = String(likeCount)
+        likeButton.isSelected = isLiked
+    }
+    
     @objc
     private func likeButtonDidTap() {
-        likeButton.isSelected.toggle()
-        likeCounts += likeButton.isSelected ? 1 : -1
-        likeCountLabel.text = String(likeCounts)
-        delegate?.likeButtonDidTap()
+        delegate?.likeButtonDidTap(answerID: self.answerID)
     }
 }

@@ -213,6 +213,10 @@ struct DomainDependencyAssembler: DependencyAssembler {
             return DefaultFetchCommonQuestDetailUseCase(repository: commonQuestRepository)
         }
         
+        DIContainer.shared.register(type: PostCommonQuestLikeUseCase.self) { _ in
+             return DefaultPostCommonQuestLikeUseCase(repository: commonQuestRepository)
+        }
+        
         DIContainer.shared.register(type: FetchNotificationListUseCase.self) { _ in
             return DefaultFetchNotificationListUseCase(repository: notificationRepository)
         }
