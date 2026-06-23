@@ -16,19 +16,26 @@ final class NotificationsViewModel {
     private let fetchNotificationListUseCase: FetchNotificationListUseCase
     private let formatElapsedTimeUseCase: FormatElapsedTimeUseCase
     private let readNotificationUseCase: ReadNotificationUseCase
+    private let readAllNotificationsUseCase: ReadAllNotificationsUseCase
     
     private(set) var output: Output
     private var notificationListSubject = PassthroughSubject<Result<NotificationListEntity, ByeBooError>, Never>()
+    private var readAllNotificationsSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>()
     
     init(
         fetchNotificationListUseCase: FetchNotificationListUseCase,
         formatElapsedTimeUseCase: FormatElapsedTimeUseCase,
-        readNotificationUseCase: ReadNotificationUseCase
+        readNotificationUseCase: ReadNotificationUseCase,
+        readAllNotificationsUseCase: ReadAllNotificationsUseCase
     ) {
         self.fetchNotificationListUseCase = fetchNotificationListUseCase
         self.formatElapsedTimeUseCase = formatElapsedTimeUseCase
         self.readNotificationUseCase = readNotificationUseCase
-        self.output = .init(notificationListResult: notificationListSubject.eraseToAnyPublisher())
+        self.readAllNotificationsUseCase = readAllNotificationsUseCase
+        self.output = .init(
+            notificationListResult: notificationListSubject.eraseToAnyPublisher(),
+            readAllNotificationsResult: readAllNotificationsSubject.eraseToAnyPublisher()
+        )
     }
 }
 
@@ -36,10 +43,12 @@ extension NotificationsViewModel: ViewModelType {
     enum Input {
         case viewWillAppear
         case notificationDidTap(at: Int)
+        case readAllNotificationsDidTap
     }
     
     struct Output {
         let notificationListResult: AnyPublisher<Result<NotificationListEntity, ByeBooError>, Never>
+        let readAllNotificationsResult: AnyPublisher<Result<Void, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
@@ -48,6 +57,8 @@ extension NotificationsViewModel: ViewModelType {
             fetchNotificationList()
         case .notificationDidTap(let index):
             readNotification(at: index)
+        case .readAllNotificationsDidTap:
+            readAllNotifications()
         }
     }
 }
@@ -89,6 +100,27 @@ extension NotificationsViewModel {
         }
         
         handleNotification(at: index)
+    }
+    
+    func readAllNotifications() {
+        guard let isAllRead = notifications?.allSatisfy({ $0.isRead }),
+              !isAllRead
+        else {
+            return
+        }
+        
+        Task {
+            do {
+                let _ = try await readAllNotificationsUseCase.execute()
+                self.notifications = notifications?.map { $0.toRead() }
+                readAllNotificationsSubject.send(.success(()))
+            } catch {
+                guard let error = error as? ByeBooError else {
+                    return
+                }
+                readAllNotificationsSubject.send(.failure(error))
+            }
+        }
     }
 }
 
