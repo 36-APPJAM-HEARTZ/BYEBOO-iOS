@@ -29,6 +29,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
     
     private var answerID: Int = 0
     private var writerID: Int = 0
+    private var editingCommentID: Int?
     
     override func loadView() {
         view = rootView
@@ -128,9 +129,8 @@ extension CommonQuestHistoryViewController {
     }
 }
 
-extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
-    
-    func didTapEdit(
+extension CommonQuestHistoryViewController: EditCommonQuestProtocol {
+    func didTapCommonQuestEdit(
         answerID: Int,
         answer: String,
         question: String,
@@ -150,6 +150,12 @@ extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
         self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)
     }
     
+    func didTapCommentEdit(commentID: Int, content: String) {
+        editingCommentID = commentID
+        rootView.commentTextView.configureWhenEdit(content: content)
+        rootView.commentTextView.textView.becomeFirstResponder()
+    }
+    
     @objc
     private func bottomUp() {
         commonBottomSheetUp()
@@ -157,7 +163,7 @@ extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
     
     private func setDelegate(bottomSheet: CommonQuestBottomSheetViewController) {
         bottomSheet.do {
-            $0.bottomDelegate = self
+            $0.editDelegate = self
             $0.deleteDelegate = self
             $0.blockDelegate = self
         }
@@ -235,6 +241,11 @@ extension CommonQuestHistoryViewController: BlockReportProtocol {
 extension CommonQuestHistoryViewController: CommonQuestCommentProtcol {
     func postComment(content: String) {
         viewModel.action(.postComment(answerID: answerID, content: content))
+    }
+    
+    func editComment(content: String) {
+        guard let editingCommentID else { return }
+        viewModel.action(.patchComment(answerID: answerID, commentID: editingCommentID , content: content))
     }
 }
 
@@ -319,10 +330,12 @@ extension CommonQuestHistoryViewController {
         isMyComment: Bool,
         sheet: CommonQuestBottomSheetViewController
     ) {
-        sheet.configure(
+        let content = viewModel.getComment(commentID: commentID)?.content
+        sheet.configureWhenComment(
             sheetType: isMyComment ? .myComment : .otherComment ,
             targetID: commentID,
-            writerID: writerID
+            writerID: writerID,
+            content: content
         )
     }
     
@@ -331,14 +344,14 @@ extension CommonQuestHistoryViewController {
         guard let entity else { return }
         
         let sheetType: CommonQuestArchiveType = entity.isMyAnswer ? .myAnswer : .otherAnswer
-        sheet.configure(
+        sheet.configureWhenComment(
             sheetType: sheetType,
             targetID: answerID,
             writerID: writerID
         )
         
         if entity.isMyAnswer {
-            sheet.configureWhenEdit(
+            sheet.configureWhenQuestEdit(
                 sheeetType: sheetType,
                 answerID: answerID,
                 answer: entity.content,

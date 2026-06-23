@@ -37,6 +37,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     private var cancellables = Set<AnyCancellable>()
     private(set) var targetID: Int?
     private(set) var answer: String?
+    private(set) var content: String?
     private(set) var question: String?
     private(set) var writtenAt: String?
     
@@ -93,10 +94,16 @@ extension CommonQuestBottomSheetViewController {
     }
     
     
-    func configure(sheetType: CommonQuestArchiveType, targetID: Int, writerID: Int) {
+    func configureWhenComment(
+        sheetType: CommonQuestArchiveType,
+        targetID: Int,
+        writerID: Int,
+        content: String? = nil
+    ) {
         self.sheetType = sheetType
         self.targetID = targetID
         self.writerID = writerID
+        self.content = content
         rootView = CommonQuestBottomSheetView(sheetType: sheetType)
     }
     
@@ -111,19 +118,21 @@ extension CommonQuestBottomSheetViewController {
         action = sheetType.items[index].action
         
         switch action {
-        case .edit:
-            guard let targetID, let answer, let question, let writtenAt
-            else {
-                return
-            }
+        case .questEdit:
+            guard let targetID, let answer, let question, let writtenAt else { return }
             
             dismiss(animated: false) { [weak self] in
-                self?.bottomDelegate?.didTapEdit(
+                self?.editDelegate?.didTapCommonQuestEdit(
                     answerID: targetID,
                     answer: answer,
                     question: question,
                     writtenAt: writtenAt
                 )
+            }
+        case .commentEdit:
+            guard let targetID, let content else { return }
+            dismiss(animated: false) { [weak self] in
+                self?.editDelegate?.didTapCommentEdit(commentID: targetID, content: content)
             }
         case .delete:
             guard let targetID else { return }

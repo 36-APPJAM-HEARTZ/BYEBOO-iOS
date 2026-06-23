@@ -12,10 +12,12 @@ final class CommonQuestHistoryViewModel {
     private let fetchCommonQuestCommentsUseCase: FetchCommonQuestDetailUseCase
     private let postCommonQuestLikeUseCase: PostCommonQuestLikeUseCase
     private let postCommentUseCase: PostCommonQuestCommentUseCase
+    private let patchCommentUseCase: EditCommentReplyUseCase
     
     private let likeCountSubject = PassthroughSubject<Result<(answerID: Int, entity: CommonQuestLikeEntity), ByeBooError>, Never>.init()
     private let fetchQuestDetailSubject: PassthroughSubject<Result<CommonQuestDetailEntity, ByeBooError>, Never> = .init()
     private let postCommentSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
+    private let patchCommentSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     
     private var entity: CommonQuestDetailEntity? = nil
     private var cancellables = Set<AnyCancellable>()
@@ -24,7 +26,8 @@ final class CommonQuestHistoryViewModel {
     
     init(
         fetchCommonQuestCommentsUseCase: FetchCommonQuestDetailUseCase,
-        postCommentUseCase: PostCommonQuestCommentUseCase
+        postCommentUseCase: PostCommonQuestCommentUseCase,
+        patchCommentUseCase: EditCommentReplyUseCase
         postCommonQuestLikeUseCase: PostCommonQuestLikeUseCase
     ) {
         self.fetchCommonQuestCommentsUseCase = fetchCommonQuestCommentsUseCase
@@ -33,7 +36,8 @@ final class CommonQuestHistoryViewModel {
         
         output = Output(
             fetchCommonQuestDetailPublisher: fetchQuestDetailSubject.eraseToAnyPublisher(),
-            postCommentPublisher: postCommentSubject.eraseToAnyPublisher()
+            postCommentPublisher: postCommentSubject.eraseToAnyPublisher(),
+            patchCommentPublisher: patchCommentSubject.eraseToAnyPublisher()
             commonQuestLikeCountPublisher: likeCountSubject.eraseToAnyPublisher()
         )
     }
@@ -44,11 +48,13 @@ extension CommonQuestHistoryViewModel: ViewModelType {
         case fetchQuestDetail(answerID: Int)
         case postComment(answerID: Int, content: String)
         case likeButtonDidTap(answerID: Int)
+        case patchComment(answerID: Int, commentID: Int, content: String)
     }
     
     struct Output {
         let fetchCommonQuestDetailPublisher: AnyPublisher<Result<CommonQuestDetailEntity, ByeBooError>, Never>
         let postCommentPublisher: AnyPublisher<Result<Void, ByeBooError>,Never>
+        let patchCommentPublisher: AnyPublisher<Result<Void, ByeBooError>,Never>
         let commonQuestLikeCountPublisher: AnyPublisher<Result<(answerID: Int, entity: CommonQuestLikeEntity), ByeBooError>, Never>
     }
     
@@ -62,6 +68,8 @@ extension CommonQuestHistoryViewModel: ViewModelType {
             postComment(answerID: answerID, content: content)
         case .likeButtonDidTap(let answerID):
             postCommonQuestLike(answerID: answerID)
+        case .patchComment(let answerID, let commentID, let content):
+            patchComment(answerID: answerID, commentID: commentID , content: content)
         }
     }
 }
@@ -128,6 +136,19 @@ extension CommonQuestHistoryViewModel {
                 likeCountSubject.send(.failure(error))
             }
             likeTasks[answerID] = nil
+        }
+    }
+    
+    private func patchComment(answerID: Int, commentID: Int, content: String) {
+        Task {
+            do {
+                _ = try await patchCommentUseCase.execute(content: content, targetID: commentID)
+                ByeBooLogger.debug("content: \(content)")
+                await fetchCommonQuestComments(answerID: answerID)
+                patchCommentSubject.send(.success(()))
+            }  catch(let error as ByeBooError) {
+                patchCommentSubject.send(.failure(error))
+            }
         }
     }
 }
