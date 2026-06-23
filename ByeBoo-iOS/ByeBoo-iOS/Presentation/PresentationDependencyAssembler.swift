@@ -379,7 +379,8 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                                                                         
         DIContainer.shared.register(type: CommonQuestHistoryViewModel.self) { container in
             guard let fetchCommonQuestDetailUseCase = container.resolve(type: FetchCommonQuestDetailUseCase.self),
-                let postCommentUsecase = container.resolve(type: PostCommonQuestCommentUseCase.self) else  {
+                  let postCommentUseCase = container.resolve(type: PostCommonQuestCommentUseCase.self),
+                  let patchCommentUseCase = container.resolve(type: EditCommentReplyUseCase.self) else  {
                 let postCommonQuestLikeUseCase = container.resolve(type: PostCommonQuestLikeUseCase.self) else  {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
@@ -387,21 +388,25 @@ struct PresentationDependencyAssembler: DependencyAssembler {
                                                                              
             return CommonQuestHistoryViewModel(
                 fetchCommonQuestCommentsUseCase: fetchCommonQuestDetailUseCase,
-                postCommentUseCase: postCommentUsecase
+                postCommentUseCase: postCommentUseCase,
+                patchCommentUseCase: patchCommentUseCase
+                
                 postCommonQuestLikeUseCase: postCommonQuestLikeUseCase
             )
         }
         
         DIContainer.shared.register(type: CommonQuestReplyViewModel.self) { container in
             guard let fetchReplyUseCase = container.resolve(type: FetchCommonQuestRepliesUseCase.self),
-                  let postReplyUseCase = container.resolve(type: PostCommonQuestReplyUseCase.self) else {
+                  let postReplyUseCase = container.resolve(type: PostCommonQuestReplyUseCase.self),
+                  let patchReplyUseCase = container.resolve(type: EditCommentReplyUseCase.self ) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
             
             return CommonQuestReplyViewModel(
                 fetchRepliesUseCase: fetchReplyUseCase,
-                postReplyUseCase: postReplyUseCase
+                postReplyUseCase: postReplyUseCase,
+                patchReplyUseCase: patchReplyUseCase
             )
         }
     }
