@@ -87,7 +87,7 @@ final class ProgressingQuestsViewModel {
             questOpenTime: questsEntity?.questOpenTime,
             currentTime: questsEntity?.currentTime
         )
-
+        
         timeCancellabels?.cancel()
         timeCancellabels = Timer.publish(every: 1.0, on: .main, in: .common)
             .autoconnect()
@@ -95,7 +95,7 @@ final class ProgressingQuestsViewModel {
                 guard let self = self else {
                     return
                 }
-
+                
                 if remainingSeconds > 0 {
                     remainingSeconds -= 1
                     let time = self.formatRemainingTime(seconds: remainingSeconds)
@@ -177,6 +177,16 @@ extension ProgressingQuestsViewModel {
             return .upComing(initialTime)
         }
         return .ongoing
+    }
+    
+    func findQuest(questNumber: Int) -> QuestEntity? {
+        for (sectionIndex, step) in steps.enumerated() {
+            if let itemIndex = step.quests.firstIndex(where: { $0.questNumber == questNumber }) {
+                return getQuest(section: sectionIndex, item: itemIndex)
+            }
+        }
+        
+        return nil
     }
 }
 

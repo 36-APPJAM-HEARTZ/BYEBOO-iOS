@@ -6,6 +6,7 @@
 //
 
 import Combine
+import UIKit
 
 final class NotificationsViewModel {
     
@@ -14,33 +15,39 @@ final class NotificationsViewModel {
     
     private let fetchNotificationListUseCase: FetchNotificationListUseCase
     private let formatElapsedTimeUseCase: FormatElapsedTimeUseCase
+    private let readNotificationUseCase: ReadNotificationUseCase
     
     private(set) var output: Output
     private var notificationListSubject = PassthroughSubject<Result<NotificationListEntity, ByeBooError>, Never>()
     
     init(
         fetchNotificationListUseCase: FetchNotificationListUseCase,
-        formatElapsedTimeUseCase: FormatElapsedTimeUseCase
+        formatElapsedTimeUseCase: FormatElapsedTimeUseCase,
+        readNotificationUseCase: ReadNotificationUseCase
     ) {
         self.fetchNotificationListUseCase = fetchNotificationListUseCase
         self.formatElapsedTimeUseCase = formatElapsedTimeUseCase
-        self.output = .init(notificationList: notificationListSubject.eraseToAnyPublisher())
+        self.readNotificationUseCase = readNotificationUseCase
+        self.output = .init(notificationListResult: notificationListSubject.eraseToAnyPublisher())
     }
 }
 
 extension NotificationsViewModel: ViewModelType {
     enum Input {
         case viewWillAppear
+        case notificationDidTap(at: Int)
     }
     
     struct Output {
-        let notificationList: AnyPublisher<Result<NotificationListEntity, ByeBooError>, Never>
+        let notificationListResult: AnyPublisher<Result<NotificationListEntity, ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
         switch trigger {
         case .viewWillAppear:
             fetchNotificationList()
+        case .notificationDidTap(let index):
+            readNotification(at: index)
         }
     }
 }
@@ -65,6 +72,24 @@ extension NotificationsViewModel {
     func formatElapsedTime(from timeString: String) -> String? {
         formatElapsedTimeUseCase.execute(from: timeString)
     }
+    
+    func readNotification(at index: Int) {
+        guard let notification = notifications?[index] else {
+            return
+        }
+        
+        if !notification.isRead {
+            Task {
+                do {
+                    let _ = try await readNotificationUseCase.execute(for: notification.notificationID)
+                } catch {
+                    ByeBooLogger.error(error)
+                }
+            }
+        }
+        
+        handleNotification(at: index)
+    }
 }
 
 extension NotificationsViewModel {
@@ -74,6 +99,31 @@ extension NotificationsViewModel {
     }
     
     func getNotification(at index: Int) -> NotificationEntity? {
-        notifications?[index]
+        guard let notifications,
+              notifications.indices.contains(index)
+        else {
+            return nil
+        }
+        
+        return notifications[index]
+    }
+    
+    private func handleNotification(at index: Int) {
+        guard let landingURL = getLandingURL(at: index),
+              let destination = DeepLinkParser.parse(from: landingURL)
+        else {
+            return
+        }
+        
+        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+           let window = windowScene.windows.first(where: { $0.isKeyWindow }) {
+            
+            destination.navigate(from: window)
+        }
+    }
+    
+    private func getLandingURL(at index: Int) -> String? {
+        let notification = getNotification(at: index)
+        return notification?.landingURL
     }
 }

@@ -89,7 +89,7 @@ extension NoticeCardCell {
         subtitle: String,
         writtenTime: String
     ) {
-        self.backgroundColor = isRead ? .primary30020 : .white5
+        self.backgroundColor = isRead ? .white5 : .primary30020
         noticeImageView.image = mapToImage(for: notificationType)
         titleLabel.text = title
         subtitleLabel.text = subtitle

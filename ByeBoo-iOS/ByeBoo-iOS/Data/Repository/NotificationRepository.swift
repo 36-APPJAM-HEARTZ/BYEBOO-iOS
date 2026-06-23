@@ -28,4 +28,8 @@ struct DefaultNotificationRepository: NotificationInterface {
         )
         return result.toEntity()
     }
+    
+    func readNotification(for notificationID: Int) async throws {
+        try await networkService.request(NotificationAPI.readNotification(notificationID: notificationID))
+    }
 }

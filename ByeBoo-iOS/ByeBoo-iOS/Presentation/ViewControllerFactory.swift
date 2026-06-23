@@ -34,6 +34,7 @@ protocol ViewControllerFactoryProtocol {
     func makeBlockedUserListViewController() -> BlockedkUserListViewController
     func makeAIAnswerViewController() -> AIAnswerViewController
     func makeNotificationsViewController() -> NotificationsViewController
+    func makeByeBooTabBar() -> ByeBooTabBar
 }
 
 final class ViewControllerFactory: ViewControllerFactoryProtocol {
@@ -199,7 +200,7 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
             DIErrorHandle()
             fatalError()
         }
-        return CommonQuestHistoryViewController(viewModel: viewModel)
+        return .init(viewModel: viewModel)
     }
     
     func makeCommonQuestMyAnswersViewController() -> CommonQuestMyAnswersViewController {
@@ -244,6 +245,10 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
         }
         
         return .init(viewModel: viewModel)
+    }
+    
+    func makeByeBooTabBar() -> ByeBooTabBar {
+        .init()
     }
 }
 

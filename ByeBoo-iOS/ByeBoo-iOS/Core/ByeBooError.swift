@@ -28,6 +28,7 @@ enum ByeBooError: Error, LocalizedError, Equatable {
     case fileNotFound
     case nicknameViolation
     case questViolation
+    case dateFormatError
     
     var errorDescription: String? {
         switch self {
@@ -71,6 +72,8 @@ enum ByeBooError: Error, LocalizedError, Equatable {
             return "비속어나 부적절한 단어가 포함된 닉네임"
         case .questViolation:
             return "비속어나 부적절한 단어가 포함된 답변"
+        case .dateFormatError:
+            return "날짜 문자열 형식이 올바르지 않음"
         }
     }
 }

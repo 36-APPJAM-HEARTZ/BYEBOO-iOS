@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIDesignRequiresCompatibility</key>
+    <key>UIDesignRequiresCompatibility</key>
 	<true/>
 	<key>BASE_URL</key>
 	<string>$(BASE_URL)</string>
@@ -14,6 +14,16 @@
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>kakao$(KAKAO_NATIVE_APP_KEY)</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.heartz.ByeBoo-iOS</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>myapp</string>
 			</array>
 		</dict>
 	</array>

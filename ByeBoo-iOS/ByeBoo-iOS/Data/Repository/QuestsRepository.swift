@@ -250,7 +250,6 @@ final class MockQuestsRepository: QuestsInterface {
     }
     
     func fetchAIAnswer(questID: Int) async throws -> AIAnswerEntity {
-//        throw ByeBooError.unknownError
         .stub()
     }
     

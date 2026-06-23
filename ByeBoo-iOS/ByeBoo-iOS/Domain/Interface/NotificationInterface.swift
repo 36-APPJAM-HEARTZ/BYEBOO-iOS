@@ -8,4 +8,5 @@
 protocol NotificationInterface {
     func fetchNotifications() async throws -> NotificationListEntity
     func fetchHasUnreadNotification() async throws -> HasUnreadNotificationEntity
+    func readNotification(for notificationID: Int) async throws
 }
