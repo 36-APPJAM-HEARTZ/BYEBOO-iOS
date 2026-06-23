@@ -57,9 +57,9 @@ extension NotificationsViewModel {
     func fetchNotificationList() {
         Task {
             do {
-                //let notificationList = try await fetchNotificationListUseCase.execute()
-                self.notifications = NotificationListEntity.stub().notifications
-                notificationListSubject.send(.success(NotificationListEntity.stub()))
+                let notificationList = try await fetchNotificationListUseCase.execute()
+                self.notifications = notificationList.notifications
+                notificationListSubject.send(.success(notificationList))
             } catch {
                 guard let error = error as? ByeBooError else {
                     return
