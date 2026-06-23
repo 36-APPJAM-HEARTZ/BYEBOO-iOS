@@ -8,13 +8,14 @@
 import Combine
 import UIKit
 
-protocol CommonQuestBottomSheetDelegate: AnyObject {
-    func didTapEdit(
+protocol EditCommonQuestProtocol: AnyObject {
+    func didTapCommonQuestEdit(
         answerID: Int,
         answer: String,
         question: String,
         writtenAt: String
     )
+    func didTapCommentEdit(commentID: Int, content: String)
 }
 
 protocol BlockReportProtocol: AnyObject {
@@ -43,7 +44,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     var action: CommonQuestArchiveType.Action?
     
     weak var blockDelegate: BlockReportProtocol?
-    weak var bottomDelegate: CommonQuestBottomSheetDelegate?
+    weak var editDelegate: EditCommonQuestProtocol?
     weak var deleteDelegate: DeleteCommonQuestDelegate?
     
     init(viewModel: CommonQuestBottomSheetViewModel) {
@@ -77,7 +78,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
 
 extension CommonQuestBottomSheetViewController {
     
-    func configureWhenEdit(
+    func configureWhenQuestEdit(
         sheeetType: CommonQuestArchiveType,
         answerID: Int? = nil,
         answer: String? = nil,
