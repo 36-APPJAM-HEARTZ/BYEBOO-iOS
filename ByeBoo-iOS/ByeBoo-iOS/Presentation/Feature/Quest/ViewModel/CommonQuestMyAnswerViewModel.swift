@@ -71,12 +71,14 @@ final class CommonQuestMyAnswerViewModel {
     
     private func postCommonQuestLike(answerID: Int) {
         likeTasks[answerID]?.cancel()
-
+        
         likeTasks[answerID] = Task {
             do {
                 let entity = try await postCommonQuestLikeUseCase.execute(answerID: answerID)
-                guard !Task.isCancelled else { return }
+                try Task.checkCancellation()
                 likeCountSubject.send(.success((answerID: answerID, entity)))
+            } catch is CancellationError {
+                ByeBooLogger.debug("Task 취소됨")
             } catch {
                 guard let error = error as? ByeBooError else {
                     return
