@@ -9,6 +9,7 @@ import UIKit
 
 protocol CommonQuestCommentProtcol: AnyObject {
     func postComment(content: String)
+    func editComment(content: String)
 }
 
 final class CommentTextView: BaseView {
@@ -17,13 +18,14 @@ final class CommentTextView: BaseView {
     
     private let topBorderLine = UIView()
     private let textFieldContainer = UIView()
-    private let textView = UITextView()
+    private(set) var textView = UITextView()
     private let countConfirmContainer = UIView()
     private let textCountLabel = UILabel()
     private let confirmButton = UIButton()
     
     private let placeholder: String = "댓글로 위로를 남겨보세요."
     private var isPlaceholderActive: Bool = true
+    private var isEditing: Bool = false
     private let textCountLimit: Int = 500
     
     override init(frame: CGRect) {
@@ -145,12 +147,23 @@ extension CommentTextView: UITextViewDelegate {
 }
 
 extension CommentTextView {
+    func configureWhenEdit(content: String) {
+        textView.text = content
+        isPlaceholderActive = false
+        isEditing = true
+    }
+    
     @objc
     private func confirmButtonDidTap() {
-        delegate?.postComment(content: textView.text)
+        if isEditing {
+            delegate?.editComment(content: textView.text)
+        } else {
+            delegate?.postComment(content: textView.text)
+        }
         endEditing(true)
         textView.text = placeholder
         isPlaceholderActive = true
+        isEditing = false
         textView.textColor = .grayscale600
     }
 }
