@@ -19,6 +19,6 @@ struct DefaultPostCommonQuestCommentUseCase: PostCommonQuestCommentUseCase {
     }
     
     func execute(content: String, targetID: Int) async throws {
-        try await repository.postComment(content: content, targetID: targetID)
+        try await repository.postComment(content: content, answerID: targetID)
     }
 }

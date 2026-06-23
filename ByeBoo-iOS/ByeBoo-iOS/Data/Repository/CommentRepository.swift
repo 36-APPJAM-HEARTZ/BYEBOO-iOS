@@ -20,8 +20,8 @@ struct DefaultCommentRepository: CommentInterface {
         self.userDefaultServcie = userDefaultService
     }
     
-    func postComment(content: String, targetID: Int) async throws {
-        let postCommentRequestDTO: CommonQuestCommentRequestDTO = .init(content: content, targetId: targetID)
+    func postComment(content: String, answerID: Int) async throws {
+        let postCommentRequestDTO: CommonQuestCommentRequestDTO = .init(content: content, targetId: answerID)
         let _ = try await network.request(CommentAPI.postComment(dto: postCommentRequestDTO))
     }
     
@@ -39,9 +39,9 @@ struct DefaultCommentRepository: CommentInterface {
         return result.toEntity(userID: userID)
     }
     
-    func patchComment(content: String, targetID: Int) async throws {
+    func patchComment(content: String, commentID: Int) async throws {
         let patchCommentRequestDTO: CommonQuestReplyRequestDTO = .init(content: content)
-        let _ = try await network.request(CommentAPI.patchComment(commentID: targetID, dto: patchCommentRequestDTO))
+        let _ = try await network.request(CommentAPI.patchComment(commentID: commentID, dto: patchCommentRequestDTO))
     }
     
     func deleteComment(commentID: Int) async throws {

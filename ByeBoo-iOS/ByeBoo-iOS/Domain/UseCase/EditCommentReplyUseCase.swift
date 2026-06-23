@@ -20,6 +20,6 @@ struct DefaultEditCommentReplyUseCase: EditCommentReplyUseCase {
     }
     
     func execute(content: String, targetID: Int) async throws {
-        try await repository.patchComment(content: content, targetID: targetID)
+        try await repository.patchComment(content: content, commentID: targetID)
     }
 }
