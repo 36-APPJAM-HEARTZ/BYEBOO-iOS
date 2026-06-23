@@ -79,31 +79,23 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
 
 extension CommonQuestBottomSheetViewController {
     
-    func configureWhenQuestEdit(
-        sheeetType: CommonQuestArchiveType,
-        answerID: Int? = nil,
+    func configure(
+        sheetType: CommonQuestArchiveType,
+        targetID: Int,
+        writerID: Int = 0,
+        content: String? = nil,
         answer: String? = nil,
         question: String? = nil,
         writtenAt: String? = nil
-    ) {
-        self.sheetType = sheeetType
-        self.targetID = answerID
-        self.answer = answer
-        self.question = question
-        self.writtenAt = writtenAt
-    }
-    
-    
-    func configureWhenComment(
-        sheetType: CommonQuestArchiveType,
-        targetID: Int,
-        writerID: Int,
-        content: String? = nil
     ) {
         self.sheetType = sheetType
         self.targetID = targetID
         self.writerID = writerID
         self.content = content
+        self.answer = answer
+        self.question = question
+        self.writtenAt = writtenAt
+
         rootView = CommonQuestBottomSheetView(sheetType: sheetType)
     }
     
