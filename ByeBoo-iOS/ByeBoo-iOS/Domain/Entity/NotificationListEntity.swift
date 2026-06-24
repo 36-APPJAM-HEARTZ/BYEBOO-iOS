@@ -83,7 +83,7 @@ extension NotificationListEntity {
 }
 
 extension NotificationEntity {
-    func toRead() -> Self {
+    func markAsRead() -> Self {
         .init(
             notificationID: notificationID,
             notificationType: notificationType,

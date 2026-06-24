@@ -112,7 +112,7 @@ extension NotificationsViewModel {
         Task {
             do {
                 let _ = try await readAllNotificationsUseCase.execute()
-                self.notifications = notifications?.map { $0.toRead() }
+                self.notifications = notifications?.map { $0.markAsRead() }
                 readAllNotificationsSubject.send(.success(()))
             } catch {
                 guard let error = error as? ByeBooError else {
