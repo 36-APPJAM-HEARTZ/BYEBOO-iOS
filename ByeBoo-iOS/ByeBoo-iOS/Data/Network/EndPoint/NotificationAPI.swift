@@ -13,6 +13,7 @@ enum NotificationAPI {
     case fetchNotificationList
     case fetchUnreadNotification
     case readNotification(notificationID: Int)
+    case readAllNotifications
 }
 
 extension NotificationAPI: EndPoint {
@@ -29,6 +30,8 @@ extension NotificationAPI: EndPoint {
             "/unread/status"
         case .readNotification(let notificationID):
             "/\(notificationID)/read"
+        case .readAllNotifications:
+            "/read-all"
         }
     }
     
@@ -36,14 +39,14 @@ extension NotificationAPI: EndPoint {
         switch self {
         case .fetchNotificationList, .fetchUnreadNotification:
                 .get
-        case .readNotification:
+        case .readNotification, .readAllNotifications:
                 .patch
         }
     }
     
     var headers: HeaderType {
         switch self {
-        case .fetchNotificationList, .fetchUnreadNotification, .readNotification:
+        case .fetchNotificationList, .fetchUnreadNotification, .readNotification, .readAllNotifications:
                 .withAuth
         }
     }
@@ -52,21 +55,21 @@ extension NotificationAPI: EndPoint {
         switch self {
         case .fetchNotificationList, .fetchUnreadNotification:
             JSONEncoding.default
-        case .readNotification:
+        case .readNotification, .readAllNotifications:
             URLEncoding.default
         }
     }
     
     var queryParameters: [String : String]? {
         switch self {
-        case .fetchNotificationList, .fetchUnreadNotification, .readNotification:
+        case .fetchNotificationList, .fetchUnreadNotification, .readNotification, .readAllNotifications:
             nil
         }
     }
     
     var bodyParameters: Parameters? {
         switch self {
-        case .fetchNotificationList, .fetchUnreadNotification, .readNotification:
+        case .fetchNotificationList, .fetchUnreadNotification, .readNotification, .readAllNotifications:
             nil
         }
     }

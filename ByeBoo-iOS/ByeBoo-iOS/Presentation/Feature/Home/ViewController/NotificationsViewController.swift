@@ -72,6 +72,11 @@ extension NotificationsViewController: BackNavigable {
 extension NotificationsViewController: ToastPresentable, ToastErrorHandler {
     
     private func bind() {
+        bindNotificationList()
+        bindAllNotificationsRead()
+    }
+    
+    private func bindNotificationList() {
         viewModel.output.notificationListResult
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
@@ -85,12 +90,28 @@ extension NotificationsViewController: ToastPresentable, ToastErrorHandler {
             }
             .store(in: &cancellables)
     }
+    
+    private func bindAllNotificationsRead() {
+        viewModel.output.readAllNotificationsResult
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success:
+                    self?.rootView.contentView.noticeCardsView.cardTableView.reloadData()
+                case .failure(let error):
+                    self?.handleError(error)
+                }
+            }
+            .store(in: &cancellables)
+    }
 }
 
 extension NotificationsViewController {
     
     @objc
-    private func readAllButtonDidTap() {}
+    private func readAllButtonDidTap() {
+        viewModel.action(.readAllNotificationsDidTap)
+    }
 }
 
 extension NotificationsViewController: UITableViewDataSource {

@@ -32,4 +32,8 @@ struct DefaultNotificationRepository: NotificationInterface {
     func readNotification(for notificationID: Int) async throws {
         try await networkService.request(NotificationAPI.readNotification(notificationID: notificationID))
     }
+    
+    func readAllNotifications() async throws {
+        try await networkService.request(NotificationAPI.readAllNotifications)
+    }
 }
