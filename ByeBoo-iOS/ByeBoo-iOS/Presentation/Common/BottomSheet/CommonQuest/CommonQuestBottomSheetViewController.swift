@@ -130,9 +130,9 @@ extension CommonQuestBottomSheetViewController {
             var targetType: CommonQuestTargetType? = nil
             switch sheetType {
             case .myAnswer, .otherAnswer:
-                targetType = .COMMON_QUEST
+                targetType = .commonQuest
             case .myComment, .otherComment:
-                targetType = .COMMENT
+                targetType = .comment
             }
             
             guard let targetID, let targetType else { return }
@@ -143,9 +143,9 @@ extension CommonQuestBottomSheetViewController {
             var targetType: CommonQuestTargetType? = nil
             switch sheetType {
             case .myAnswer, .otherAnswer:
-                targetType = .COMMON_QUEST
+                targetType = .commonQuest
             case .myComment, .otherComment:
-                targetType = .COMMENT
+                targetType = .comment
             }
             
             guard let targetID, let targetType else { return }

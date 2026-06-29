@@ -61,7 +61,7 @@ extension CommonQuestBottomSheetViewModel: ViewModelType {
         case .report(let targetID, let targetType):
             reportCommonQuest(targetID: targetID, targetType: targetType)
         case .delete(let answerID, let targetType):
-            if targetType == .COMMENT {
+            if targetType == .comment {
                 deleteCommentReply(commentID: answerID)
             } else {
                 deleteCommonQuest(answerID: answerID)

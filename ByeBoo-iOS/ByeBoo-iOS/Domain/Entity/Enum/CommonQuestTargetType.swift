@@ -8,6 +8,6 @@
 import Foundation
 
 enum CommonQuestTargetType: String {
-    case COMMENT
-    case COMMON_QUEST
+    case comment = "COMMENT"
+    case commonQuest = "COMMON_QUEST"
 }
