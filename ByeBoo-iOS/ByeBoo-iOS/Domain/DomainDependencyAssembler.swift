@@ -239,12 +239,15 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: FetchHasUnreadNotificationUseCase.self) { _ in
             return DefaultFetchHasUnreadNotificationUseCase(repository: notificationRepository)
         }
+        
         DIContainer.shared.register(type: FetchCommonQuestRepliesUseCase.self) { _ in
             return DefaultFetchCommonQuestRepliesUseCase(repository: commentRepository)
         }
+        
         DIContainer.shared.register(type: DeleteCommentReplyUseCase.self) { _ in
             return DefaultDeleteCommentReplyUseCase(repository: commentRepository)
         }
+        
         DIContainer.shared.register(type: EditCommentReplyUseCase.self) { _ in
             return DefaultEditCommentReplyUseCase(repository: commentRepository)
         }
