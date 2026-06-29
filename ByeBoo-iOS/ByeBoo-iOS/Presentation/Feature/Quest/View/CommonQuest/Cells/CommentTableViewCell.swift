@@ -211,8 +211,9 @@ extension CommentTableViewCell {
         showAllText: Bool,
         isReplySheet: Bool
     ) {
-        if replyCount != nil {
+        if let replyCount {
             setCommentListLayout()
+            updateReplyCount(replyCount: replyCount)
         } else {
             setReplySheetLayout()
         }
@@ -242,6 +243,11 @@ extension CommentTableViewCell {
             let numberOfLines = commentTextView.numberOfLine()
             applyStyleWhenHideText(numberOfLines)
         }
+    }
+    
+    func updateReplyCount(replyCount: Int) {
+        self.replyCount = replyCount
+        replyCountLabel.text = "\(replyCount)"
     }
 }
 

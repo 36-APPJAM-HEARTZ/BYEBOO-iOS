@@ -14,7 +14,7 @@ final class CommonQuestReplyView: BaseView {
     private(set) var backButton = UIButton()
     private let headerLabel = UILabel()
     private(set) var commentListView = UITableView()
-    private let commentTextView = CommentTextView()
+    private(set) var commentTextView = CommentTextView()
     
     private var commentTextViewBottomConstraint: Constraint?
     

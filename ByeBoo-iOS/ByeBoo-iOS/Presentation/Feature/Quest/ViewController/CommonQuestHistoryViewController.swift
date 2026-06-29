@@ -29,6 +29,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
     
     private var answerID: Int = 0
     private var writerID: Int = 0
+    private var editingCommentID: Int?
     
     override func loadView() {
         view = rootView
@@ -39,7 +40,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
         self.tabBarController?.tabBar.isHidden = true
         addKeyboardObservers()
         
-        viewModel.action(.viewWillAppear(answerID: answerID))
+        viewModel.action(.fetchQuestDetail(answerID: answerID))
         
         Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyOthersAnswerPageview)
     }
@@ -77,6 +78,7 @@ final class CommonQuestHistoryViewController: BaseViewController {
             $0.register(CommentTableViewCell.self)
         }
         rootView.questContentView.delegate = self
+        rootView.commentTextView.delegate = self
     }
 }
 
@@ -87,7 +89,6 @@ extension CommonQuestHistoryViewController {
 }
 
 extension CommonQuestHistoryViewController: BackNavigable {
-    
     func back() {
         self.navigationController?.popViewController(animated: false)
     }
@@ -129,9 +130,8 @@ extension CommonQuestHistoryViewController {
     }
 }
 
-extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
-    
-    func didTapEdit(
+extension CommonQuestHistoryViewController: EditCommonQuestProtocol {
+    func didTapCommonQuestEdit(
         answerID: Int,
         answer: String,
         question: String,
@@ -151,6 +151,12 @@ extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
         self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)
     }
     
+    func didTapCommentEdit(commentID: Int, content: String) {
+        editingCommentID = commentID
+        rootView.commentTextView.configureWhenEdit(content: content)
+        rootView.commentTextView.textView.becomeFirstResponder()
+    }
+    
     @objc
     private func bottomUp() {
         commonBottomSheetUp()
@@ -158,7 +164,7 @@ extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
     
     private func setDelegate(bottomSheet: CommonQuestBottomSheetViewController) {
         bottomSheet.do {
-            $0.bottomDelegate = self
+            $0.editDelegate = self
             $0.deleteDelegate = self
             $0.blockDelegate = self
         }
@@ -166,8 +172,9 @@ extension CommonQuestHistoryViewController: CommonQuestBottomSheetDelegate {
 }
 
 extension CommonQuestHistoryViewController: DeleteCommonQuestDelegate {
-    func completeDeleteCommonQuest() {
-        self.navigationController?.popViewController(animated: false)
+    func completeDeleteCommonQuest(deletedID: Int) {
+        ByeBooLogger.debug("댓글 삭제 완료")
+        viewModel.action(.fetchQuestDetail(answerID: answerID))
     }
 }
 
@@ -187,7 +194,26 @@ extension CommonQuestHistoryViewController: CommentProtocol {
     }
     
     func replyIconDidTap(commentID: Int) {
-        let viewController = CommonQuestReplyViewController()
+        let viewController = ViewControllerFactory.shared.makeCommonQuestReplyViewController()
+        let entity = viewModel.getComment(commentID: commentID)
+        guard let entity else { return }
+        viewController.configure(entity: entity, commentID: commentID)
+
+        viewController.onReplyCountChanged = { [weak self] commentID, newCount in
+            guard let self else { return }
+            let item = dataSource.snapshot().itemIdentifiers.first { $0.entity.commentID == commentID }
+            guard let item,
+                  let indexPath = dataSource.indexPath(for: item),
+                  let cell = rootView.commentListView.cellForRow(at: indexPath) as? CommentTableViewCell
+            else { return }
+            cell.updateReplyCount(replyCount: newCount)
+        }
+        
+        viewController.onDismiss = { [weak self] in
+            guard let self else { return }
+            viewModel.action(.fetchQuestDetail(answerID: answerID))
+        }
+
         if let sheet =  viewController.sheetPresentationController{
             sheet.detents = [.large()]
             sheet.prefersGrabberVisible = true
@@ -213,6 +239,17 @@ extension CommonQuestHistoryViewController: BlockReportProtocol {
     }
 }
 
+extension CommonQuestHistoryViewController: CommonQuestCommentProtcol {
+    func postComment(content: String) {
+        viewModel.action(.postComment(answerID: answerID, content: content))
+    }
+    
+    func editComment(content: String) {
+        guard let editingCommentID else { return }
+        viewModel.action(.patchComment(answerID: answerID, commentID: editingCommentID , content: content))
+    }
+}
+
 extension CommonQuestHistoryViewController {
     @objc
     private func dismissKeyboard() {
@@ -220,31 +257,10 @@ extension CommonQuestHistoryViewController {
     }
     
     private func bind() {
-        viewModel.output.fetchCommonQuestDetailPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] result in
-                switch result {
-                case .success(let entity):
-                    self?.bindData(entity: entity)
-                    self?.applySnapshot(commentList: entity.comments)
-                case .failure(let error):
-                    ByeBooLogger.debug(error)
-                }
-            }
-            .store(in: &cancellable)
-        
-        viewModel.output.commonQuestLikeCountPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] result in
-                switch result {
-                case .success(let result):
-                    let entity = result.entity
-                    self?.rootView.questContentView.updateUI(likeCount: entity.likeCount, isLiked: entity.isLiked)
-                case .failure(let error):
-                    ByeBooLogger.error(error)
-                }
-            }
-            .store(in: &cancellable)
+        bindCommonQuestDetail()
+        bindCommonQuestLikeCount()
+        bindPostComment()
+        bindPatchComment()
     }
     
     private func bindData(entity: CommonQuestDetailEntity) {
@@ -264,37 +280,108 @@ extension CommonQuestHistoryViewController {
         )
     }
     
+    private func bindCommonQuestDetail() {
+        viewModel.output.fetchCommonQuestDetailPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let entity):
+                    self?.bindData(entity: entity)
+                    self?.applySnapshot(commentList: entity.comments)
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellable)
+    }
+    
+    private func bindCommonQuestLikeCount() {
+        viewModel.output.commonQuestLikeCountPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let result):
+                    let entity = result.entity
+                    self?.rootView.questContentView.updateUI(likeCount: entity.likeCount, isLiked: entity.isLiked)
+                case .failure(let error):
+                    ByeBooLogger.error(error)
+                }
+            }
+            .store(in: &cancellable)
+    }
+    
+    private func bindPostComment() {
+        viewModel.output.postCommentPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success:
+                    ByeBooLogger.debug("댓글 입력 성공")
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellable)
+    }
+    
+    private func bindPatchComment() {
+        viewModel.output.patchCommentPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success:
+                    ByeBooLogger.debug("댓글 수정 성공")
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellable)
+    }
+}
+
+extension CommonQuestHistoryViewController {
     private func commonBottomSheetUp(commentID: Int? = nil, isMyComment: Bool? = nil) {
         let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
         
         if let commentID, let isMyComment{
-            commonQuestBottomSheet.configure(
-                sheeetType: isMyComment ? .myComment : .otherComment ,
-                targetID: commentID
-            )
+            configureWhenComment(commentID: commentID, isMyComment: isMyComment, sheet: commonQuestBottomSheet)
         } else {
-            let entity = viewModel.detailEntity
-            guard let entity else { return }
-            
-            let sheetType: CommonQuestArchiveType = entity.isMyAnswer ? .myAnswer : .otherAnswer
-            commonQuestBottomSheet.configure(sheeetType: sheetType, targetID: writerID)
-            
-            if entity.isMyAnswer {
-                commonQuestBottomSheet.configureWhenEdit(
-                    sheeetType: sheetType,
-                    answerID: answerID,
-                    answer: entity.content,
-                    question: viewModel.question,
-                    writtenAt: entity.writtenAt
-                )
-            }
+            configureWhenCommonQuest(sheet: commonQuestBottomSheet)
         }
         
         setDelegate(bottomSheet: commonQuestBottomSheet)
         presentBottomSheet(commonQuestBottomSheet, height: 224.adjustedH)
     }
-}
+    
+    private func configureWhenComment(
+        commentID: Int,
+        isMyComment: Bool,
+        sheet: CommonQuestBottomSheetViewController
+    ) {
+        guard let comment = viewModel.getComment(commentID: commentID) else { return }
+        sheet.configure(
+            sheetType: isMyComment ? .myComment : .otherComment ,
+            targetID: commentID,
+            writerID: comment.writerID,
+            content: comment.content
+        )
+    }
 
+    private func configureWhenCommonQuest(sheet: CommonQuestBottomSheetViewController) {
+        let entity = viewModel.detailEntity
+        guard let entity else { return }
+
+        let sheetType: CommonQuestArchiveType = entity.isMyAnswer ? .myAnswer : .otherAnswer
+        sheet.configure(
+            sheetType: sheetType,
+            targetID: answerID,
+            writerID: writerID,
+            answer: entity.isMyAnswer ? entity.content : nil,
+            question: entity.isMyAnswer ? viewModel.question : nil,
+            writtenAt: entity.isMyAnswer ? entity.writtenAt : nil
+        )
+    }
+}
 extension CommonQuestHistoryViewController: KeyboardHandleProtocol {
     func keyboardWillShowOrHide(height: CGFloat, duration: Double) {
         UIView.animate(withDuration: duration) {
@@ -304,7 +391,7 @@ extension CommonQuestHistoryViewController: KeyboardHandleProtocol {
     }
 }
 
-extension CommonQuestHistoryViewController: CommonQuestLikeCommentProtocol {
+extension CommonQuestHistoryViewController: CommonQuestLikeProtocol {
     func likeButtonDidTap(answerID: Int) {
         viewModel.action(.likeButtonDidTap(answerID: answerID))
     }

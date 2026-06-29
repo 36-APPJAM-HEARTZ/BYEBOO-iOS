@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol CommonQuestLikeCommentProtocol: AnyObject {
+protocol CommonQuestLikeProtocol: AnyObject {
     func likeButtonDidTap(answerID: Int)
 }
 
@@ -24,7 +24,7 @@ final class QuestContentView: BaseView {
     private let commentIcon = UIImageView()
     private let commentCountLabel = UILabel()
     
-    weak var delegate: CommonQuestLikeCommentProtocol?
+    weak var delegate: CommonQuestLikeProtocol?
     
     private var answerID: Int = 0
     private var likeCounts: Int = 0

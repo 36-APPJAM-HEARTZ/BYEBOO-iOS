@@ -23,11 +23,12 @@ struct DomainDependencyAssembler: DependencyAssembler {
               let forbiddenWordRepository = DIContainer.shared.resolve(type: ForbiddenWordInterface.self),
               let commonQuestRepository = DIContainer.shared.resolve(type: CommonQuestInterface.self),
               let blocksRepository = DIContainer.shared.resolve(type: BlocksInterface.self),
+              let notificationRepository = DIContainer.shared.resolve(type: NotificationInterface.self),
               let reportsRepository = DIContainer.shared.resolve(type: ReportsInterface.self),
-              let notificationRepository = DIContainer.shared.resolve(type: NotificationInterface.self) else {
-            ByeBooLogger.error(ByeBooError.DIFailedError)
-            return
-        }
+              let commentRepository = DIContainer.shared.resolve(type: CommentInterface.self) else {
+                ByeBooLogger.error(ByeBooError.DIFailedError)
+                return
+            }
         
         DIContainer.shared.register(type: FetchUserJourneyUseCase.self) { _ in
             return DefaultFetchUserJourneyUseCase(repository: userRepository)
@@ -212,6 +213,12 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: FetchCommonQuestDetailUseCase.self) { _ in
             return DefaultFetchCommonQuestDetailUseCase(repository: commonQuestRepository)
         }
+        DIContainer.shared.register(type: PostCommonQuestCommentUseCase.self) { _ in
+            return DefaultPostCommonQuestCommentUseCase(repository: commentRepository)
+        }
+        DIContainer.shared.register(type: PostCommonQuestReplyUseCase.self) { _ in
+            return DefaultPostCommonQuestReplyUseCase(repository: commentRepository)
+        }
         
         DIContainer.shared.register(type: PostCommonQuestLikeUseCase.self) { _ in
              return DefaultPostCommonQuestLikeUseCase(repository: commonQuestRepository)
@@ -231,6 +238,18 @@ struct DomainDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: FetchHasUnreadNotificationUseCase.self) { _ in
             return DefaultFetchHasUnreadNotificationUseCase(repository: notificationRepository)
+        }
+        
+        DIContainer.shared.register(type: FetchCommonQuestRepliesUseCase.self) { _ in
+            return DefaultFetchCommonQuestRepliesUseCase(repository: commentRepository)
+        }
+        
+        DIContainer.shared.register(type: DeleteCommentReplyUseCase.self) { _ in
+            return DefaultDeleteCommentReplyUseCase(repository: commentRepository)
+        }
+        
+        DIContainer.shared.register(type: EditCommentReplyUseCase.self) { _ in
+            return DefaultEditCommentReplyUseCase(repository: commentRepository)
         }
         
         DIContainer.shared.register(type: ReadAllNotificationsUseCase.self) { _ in

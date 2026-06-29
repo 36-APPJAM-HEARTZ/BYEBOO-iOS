@@ -8,13 +8,14 @@
 import Combine
 import UIKit
 
-protocol CommonQuestBottomSheetDelegate: AnyObject {
-    func didTapEdit(
+protocol EditCommonQuestProtocol: AnyObject {
+    func didTapCommonQuestEdit(
         answerID: Int,
         answer: String,
         question: String,
         writtenAt: String
     )
+    func didTapCommentEdit(commentID: Int, content: String)
 }
 
 protocol BlockReportProtocol: AnyObject {
@@ -22,7 +23,7 @@ protocol BlockReportProtocol: AnyObject {
 }
 
 protocol DeleteCommonQuestDelegate: AnyObject {
-    func completeDeleteCommonQuest()
+    func completeDeleteCommonQuest(deletedID: Int)
 }
 
 final class CommonQuestBottomSheetViewController: BaseViewController {
@@ -34,8 +35,9 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     private let viewModel: CommonQuestBottomSheetViewModel
     private var writerID: Int = 0
     private var cancellables = Set<AnyCancellable>()
-    private(set) var answerID: Int?
+    private(set) var targetID: Int?
     private(set) var answer: String?
+    private(set) var content: String?
     private(set) var question: String?
     private(set) var writtenAt: String?
     
@@ -43,7 +45,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
     var action: CommonQuestArchiveType.Action?
     
     weak var blockDelegate: BlockReportProtocol?
-    weak var bottomDelegate: CommonQuestBottomSheetDelegate?
+    weak var editDelegate: EditCommonQuestProtocol?
     weak var deleteDelegate: DeleteCommonQuestDelegate?
     
     init(viewModel: CommonQuestBottomSheetViewModel) {
@@ -63,7 +65,7 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
         super.viewDidLoad()
         bind()
     }
-    
+
     override func setAddTarget() {
         rootView.dismissButton.addTarget(self, action: #selector(dismissButtonDidTap), for: .touchUpInside)
         rootView.itemList.enumerated().forEach { index, item in
@@ -77,27 +79,24 @@ final class CommonQuestBottomSheetViewController: BaseViewController {
 
 extension CommonQuestBottomSheetViewController {
     
-    func configureWhenEdit(
-        sheeetType: CommonQuestArchiveType,
-        answerID: Int? = nil,
+    func configure(
+        sheetType: CommonQuestArchiveType,
+        targetID: Int,
+        writerID: Int = 0,
+        content: String? = nil,
         answer: String? = nil,
         question: String? = nil,
         writtenAt: String? = nil
     ) {
-        self.sheetType = sheeetType
-        self.answerID = answerID
+        self.sheetType = sheetType
+        self.targetID = targetID
+        self.writerID = writerID
+        self.content = content
         self.answer = answer
         self.question = question
         self.writtenAt = writtenAt
-    }
-    
-    
-    func configure(sheeetType: CommonQuestArchiveType, targetID: Int) {
-        self.sheetType = sheeetType
-        self.writerID = targetID
-        if let sheetType {
-            rootView = CommonQuestBottomSheetView(sheetType: sheetType)
-        }
+
+        rootView = CommonQuestBottomSheetView(sheetType: sheetType)
     }
     
     @objc
@@ -111,27 +110,46 @@ extension CommonQuestBottomSheetViewController {
         action = sheetType.items[index].action
         
         switch action {
-        case .edit:
-            guard let answerID, let answer, let question, let writtenAt
-            else {
-                return
-            }
+        case .questEdit:
+            guard let targetID, let answer, let question, let writtenAt else { return }
             
             dismiss(animated: false) { [weak self] in
-                self?.bottomDelegate?.didTapEdit(
-                    answerID: answerID,
+                self?.editDelegate?.didTapCommonQuestEdit(
+                    answerID: targetID,
                     answer: answer,
                     question: question,
                     writtenAt: writtenAt
                 )
             }
+        case .commentEdit:
+            guard let targetID, let content else { return }
+            dismiss(animated: false) { [weak self] in
+                self?.editDelegate?.didTapCommentEdit(commentID: targetID, content: content)
+            }
         case .delete:
-            guard let answerID else { return }
-            presentDeleteQuestModal(answerID: answerID)
+            var targetType: CommonQuestTargetType? = nil
+            switch sheetType {
+            case .myAnswer, .otherAnswer:
+                targetType = .commonQuest
+            case .myComment, .otherComment:
+                targetType = .comment
+            }
+            
+            guard let targetID, let targetType else { return }
+            presentDeleteQuestModal(answerID: targetID, targetType: targetType)
         case .block:
             viewModel.action(.block(userID: writerID))
         case .report:
-            viewModel.action(.report(answerID: answerID ?? 0))
+            var targetType: CommonQuestTargetType? = nil
+            switch sheetType {
+            case .myAnswer, .otherAnswer:
+                targetType = .commonQuest
+            case .myComment, .otherComment:
+                targetType = .comment
+            }
+            
+            guard let targetID, let targetType else { return }
+            viewModel.action(.report(targetID: targetID, targetType: targetType))
         default:
             return
         }
@@ -142,9 +160,9 @@ extension CommonQuestBottomSheetViewController {
         presentingViewController?.dismiss(animated: true)
     }
     
-    private func presentDeleteQuestModal(answerID: Int) {
+    private func presentDeleteQuestModal(answerID: Int, targetType: CommonQuestTargetType) {
         let modalView = createModalView()
-        let action: () -> Void = { self.viewModel.action(.delete(answerID: answerID)) }
+        let action: () -> Void = { self.viewModel.action(.delete(targetID: answerID, targetType: targetType)) }
         
         ModalBuilder(
             modalView: modalView,
@@ -202,11 +220,11 @@ extension CommonQuestBottomSheetViewController {
                 switch result {
                 case .success():
                     ByeBooLogger.debug("삭제 성공")
-                    
                     guard let self else { return }
-                    
-                    self.dismiss(animated: false) { [weak self] in
-                        self?.deleteDelegate?.completeDeleteCommonQuest()
+                    let deleteDelegate = self.deleteDelegate
+                    self.dismiss(animated: false) {
+                        guard let deletedID = self.targetID else { return }
+                        deleteDelegate?.completeDeleteCommonQuest(deletedID: deletedID)
                     }
                 case .failure(let error):
                     ByeBooLogger.debug(error)

@@ -25,24 +25,27 @@ final class CommonQuestBottomSheetViewModel {
     private let blockUserUseCase: BlockUserUseCase
     private let reportCommonQuestUseCase: ReportsCommonQuestAnswerUseCase
     private let deleteCommonQuestUseCase: DeleteCommonQuestUseCase
+    private let deleteCommentReplyUseCase: DeleteCommentReplyUseCase
     private var cancellables = Set<AnyCancellable>()
     
     init(
         blockUserUseCase: BlockUserUseCase,
         reportCommonQuestUseCase: ReportsCommonQuestAnswerUseCase,
-        deleteCommonQuestUseCase: DeleteCommonQuestUseCase
+        deleteCommonQuestUseCase: DeleteCommonQuestUseCase,
+        deleteCommentReplyUseCase: DeleteCommentReplyUseCase
     ) {
         self.blockUserUseCase = blockUserUseCase
         self.reportCommonQuestUseCase = reportCommonQuestUseCase
         self.deleteCommonQuestUseCase = deleteCommonQuestUseCase
+        self.deleteCommentReplyUseCase = deleteCommentReplyUseCase
     }
 }
 
 extension CommonQuestBottomSheetViewModel: ViewModelType {
     enum Input {
         case block(userID: Int)
-        case report(answerID: Int)
-        case delete(answerID: Int)
+        case report(targetID: Int, targetType: CommonQuestTargetType)
+        case delete(targetID: Int, targetType: CommonQuestTargetType)
     }
     
     struct Output {
@@ -55,10 +58,14 @@ extension CommonQuestBottomSheetViewModel: ViewModelType {
         switch trigger {
         case .block(let userID):
             blockUser(userID: userID)
-        case .report(let answerID):
-            reportCommonQuest(answerID: answerID)
-        case .delete(let answerID):
-            deleteCommonQuest(answerID: answerID)
+        case .report(let targetID, let targetType):
+            reportCommonQuest(targetID: targetID, targetType: targetType)
+        case .delete(let answerID, let targetType):
+            if targetType == .comment {
+                deleteCommentReply(commentID: answerID)
+            } else {
+                deleteCommonQuest(answerID: answerID)
+            }
         }
     }
 }
@@ -75,10 +82,10 @@ extension CommonQuestBottomSheetViewModel {
         }
     }
     
-    private func reportCommonQuest(answerID: Int) {
+    private func reportCommonQuest(targetID: Int, targetType: CommonQuestTargetType) {
         Task {
             do {
-                try await reportCommonQuestUseCase.execute(answerID: answerID)
+                try await reportCommonQuestUseCase.execute(targetID: targetID, targetType: targetType)
                 reportQuestSubject.send(.success(()))
             } catch(let error as ByeBooError) {
                 reportQuestSubject.send(.failure(error))
@@ -90,6 +97,17 @@ extension CommonQuestBottomSheetViewModel {
         Task {
             do {
                 try await deleteCommonQuestUseCase.execute(answerID: answerID)
+                deleteQuestSubject.send(.success(()))
+            } catch(let error as ByeBooError){
+                deleteQuestSubject.send(.failure(error))
+            }
+        }
+    }
+    
+    private func deleteCommentReply(commentID: Int) {
+        Task {
+            do {
+                try await deleteCommentReplyUseCase.execute(commentID: commentID)
                 deleteQuestSubject.send(.success(()))
             } catch(let error as ByeBooError){
                 deleteQuestSubject.send(.failure(error))

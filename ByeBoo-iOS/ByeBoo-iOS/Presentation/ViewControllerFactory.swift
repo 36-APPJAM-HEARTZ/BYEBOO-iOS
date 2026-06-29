@@ -250,6 +250,15 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
     func makeByeBooTabBar() -> ByeBooTabBar {
         .init()
     }
+    
+    func makeCommonQuestReplyViewController() -> CommonQuestReplyViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: CommonQuestReplyViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        
+        return .init(viewModel: viewModel)
+    }
 }
 
 extension ViewControllerFactory {

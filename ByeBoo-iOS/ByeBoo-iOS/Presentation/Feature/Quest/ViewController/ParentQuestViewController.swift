@@ -90,7 +90,7 @@ final class ParentQuestViewController<T: TabItem>: BaseViewController, ToastPres
             self.presentToastMessage(type: .block)
         case .report:
             self.presentToastMessage(type: .report)
-        case .edit, .delete:
+        case .questEdit, .commentEdit, .delete:
             return
         }
     }
