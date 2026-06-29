@@ -127,21 +127,29 @@ extension CommonQuestBottomSheetViewController {
                 self?.editDelegate?.didTapCommentEdit(commentID: targetID, content: content)
             }
         case .delete:
-            guard let targetID else { return }
-            if sheetType == .myAnswer || sheetType == .otherAnswer {
-                presentDeleteQuestModal(answerID: targetID, targetType: .COMMON_QUEST)
-            } else {
-                presentDeleteQuestModal(answerID: targetID, targetType: .COMMENT)
+            var targetType: CommonQuestTargetType? = nil
+            switch sheetType {
+            case .myAnswer, .otherAnswer:
+                targetType = .COMMON_QUEST
+            case .myComment, .otherComment:
+                targetType = .COMMENT
             }
+            
+            guard let targetID, let targetType else { return }
+            presentDeleteQuestModal(answerID: targetID, targetType: targetType)
         case .block:
             viewModel.action(.block(userID: writerID))
         case .report:
-            guard let targetID else { return }
-            if sheetType == .myAnswer || sheetType == .otherAnswer {
-                viewModel.action(.report(targetID: targetID, targetType: .COMMON_QUEST))
-            } else {
-                viewModel.action(.report(targetID: targetID, targetType: .COMMENT))
+            var targetType: CommonQuestTargetType? = nil
+            switch sheetType {
+            case .myAnswer, .otherAnswer:
+                targetType = .COMMON_QUEST
+            case .myComment, .otherComment:
+                targetType = .COMMENT
             }
+            
+            guard let targetID, let targetType else { return }
+            viewModel.action(.report(targetID: targetID, targetType: targetType))
         default:
             return
         }
