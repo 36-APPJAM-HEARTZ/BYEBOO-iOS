@@ -257,55 +257,10 @@ extension CommonQuestHistoryViewController {
     }
     
     private func bind() {
-        viewModel.output.fetchCommonQuestDetailPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] result in
-                switch result {
-                case .success(let entity):
-                    self?.bindData(entity: entity)
-                    self?.applySnapshot(commentList: entity.comments)
-                case .failure(let error):
-                    ByeBooLogger.debug(error)
-                }
-            }
-            .store(in: &cancellable)
-        
-        viewModel.output.commonQuestLikeCountPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] result in
-                switch result {
-                case .success(let result):
-                    let entity = result.entity
-                    self?.rootView.questContentView.updateUI(likeCount: entity.likeCount, isLiked: entity.isLiked)
-                case .failure(let error):
-                    ByeBooLogger.error(error)
-                }
-            }
-            .store(in: &cancellable)
-        
-        viewModel.output.postCommentPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { result in
-                switch result {
-                case .success:
-                    ByeBooLogger.debug("댓글 입력 성공")
-                case .failure(let error):
-                    ByeBooLogger.debug(error)
-                }
-            }
-            .store(in: &cancellable)
-        
-        viewModel.output.patchCommentPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { result in
-                switch result {
-                case .success:
-                    ByeBooLogger.debug("댓글 수정 성공")
-                case .failure(let error):
-                    ByeBooLogger.debug(error)
-                }
-            }
-            .store(in: &cancellable)
+        bindCommonQuestDetail()
+        bindCommonQuestLikeCount()
+        bindPostComment()
+        bindPatchComment()
     }
     
     private func bindData(entity: CommonQuestDetailEntity) {
@@ -325,6 +280,66 @@ extension CommonQuestHistoryViewController {
         )
     }
     
+    private func bindCommonQuestDetail() {
+        viewModel.output.fetchCommonQuestDetailPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let entity):
+                    self?.bindData(entity: entity)
+                    self?.applySnapshot(commentList: entity.comments)
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellable)
+    }
+    
+    private func bindCommonQuestLikeCount() {
+        viewModel.output.commonQuestLikeCountPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let result):
+                    let entity = result.entity
+                    self?.rootView.questContentView.updateUI(likeCount: entity.likeCount, isLiked: entity.isLiked)
+                case .failure(let error):
+                    ByeBooLogger.error(error)
+                }
+            }
+            .store(in: &cancellable)
+    }
+    
+    private func bindPostComment() {
+        viewModel.output.postCommentPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success:
+                    ByeBooLogger.debug("댓글 입력 성공")
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellable)
+    }
+    
+    private func bindPatchComment() {
+        viewModel.output.patchCommentPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case .success:
+                    ByeBooLogger.debug("댓글 수정 성공")
+                case .failure(let error):
+                    ByeBooLogger.debug(error)
+                }
+            }
+            .store(in: &cancellable)
+    }
+}
+
+extension CommonQuestHistoryViewController {
     private func commonBottomSheetUp(commentID: Int? = nil, isMyComment: Bool? = nil) {
         let commonQuestBottomSheet = ViewControllerFactory.shared.makeCommonQuestBottomSheetViewController()
         
@@ -367,7 +382,6 @@ extension CommonQuestHistoryViewController {
         )
     }
 }
-
 extension CommonQuestHistoryViewController: KeyboardHandleProtocol {
     func keyboardWillShowOrHide(height: CGFloat, duration: Double) {
         UIView.animate(withDuration: duration) {
