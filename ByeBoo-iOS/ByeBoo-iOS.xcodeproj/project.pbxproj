@@ -11,6 +11,7 @@
 		183EE0E12ED1D10600154F40 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 183EE0E02ED1D10600154F40 /* FirebaseMessaging */; };
 		186847F02ED5567D002827DA /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 186847EF2ED5567D002827DA /* FirebaseCore */; };
 		18A8172D2E154F3D00F68F9F /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 18A8172C2E154F3D00F68F9F /* Alamofire */; };
+		514D021B2FF6ADDD0041A4E1 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 514D021A2FF6ADDD0041A4E1 /* FirebaseRemoteConfig */; };
 		515C127F2E159D45001BA2E0 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 515C127E2E159D45001BA2E0 /* Then */; };
 		515C12822E159D77001BA2E0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 515C12812E159D77001BA2E0 /* SnapKit */; };
 		51691DED2E5CB059008CCEC6 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 51691DEC2E5CB059008CCEC6 /* KakaoSDKAuth */; };
@@ -77,6 +78,7 @@
 				CBB032A72E7925FC00C0855E /* Mixpanel in Frameworks */,
 				51691DED2E5CB059008CCEC6 /* KakaoSDKAuth in Frameworks */,
 				CB71A8A32F3B6F9400176B64 /* FirebaseCrashlytics in Frameworks */,
+				514D021B2FF6ADDD0041A4E1 /* FirebaseRemoteConfig in Frameworks */,
 				183EE0E12ED1D10600154F40 /* FirebaseMessaging in Frameworks */,
 				183EE0DB2ED1CB0E00154F40 /* FirebaseAnalytics in Frameworks */,
 			);
@@ -151,6 +153,7 @@
 				183EE0E02ED1D10600154F40 /* FirebaseMessaging */,
 				186847EF2ED5567D002827DA /* FirebaseCore */,
 				CB71A8A22F3B6F9400176B64 /* FirebaseCrashlytics */,
+				514D021A2FF6ADDD0041A4E1 /* FirebaseRemoteConfig */,
 			);
 			productName = "ByeBoo-iOS";
 			productReference = CB41808B2E0925D2001E7BCB /* ByeBoo-iOS.app */;
@@ -670,6 +673,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 18A8172B2E154F3D00F68F9F /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		514D021A2FF6ADDD0041A4E1 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 183EE0D92ED1CB0E00154F40 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
 		};
 		515C127E2E159D45001BA2E0 /* Then */ = {
 			isa = XCSwiftPackageProductDependency;
