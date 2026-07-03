@@ -265,14 +265,15 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: SplashViewModel.self) { container in
-            guard let autoLoginUseCase = container.resolve(
-                type: AutoLoginUseCase.self
-            )
-            else {
+            guard let autoLoginUseCase = container.resolve(type: AutoLoginUseCase.self),
+                  let checkForceUpdateUseCase = container.resolve(type: CheckForceUpdateUseCase.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
-            return SplashViewModel(autoLoginUseCase: autoLoginUseCase)
+            return SplashViewModel(
+                autoLoginUseCase: autoLoginUseCase,
+                checkForceUpdateUseCase: checkForceUpdateUseCase
+            )
         }
         
         DIContainer.shared.register(type: FinishJourneyViewModel.self) { container in
