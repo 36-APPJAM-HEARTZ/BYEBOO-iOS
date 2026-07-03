@@ -9,26 +9,33 @@ import Combine
 import UIKit
 
 final class SplashViewController: BaseViewController {
-    
+
     private let rootView = SplashView()
     private let viewModel: SplashViewModel
     private var cancellables = Set<AnyCancellable>()
-    
+    private var isFirstLaunch = true
+
     init(viewModel: SplashViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func viewDidLoad() {
         view = rootView
         viewModel.action(.viewDidLoad)
         bind()
-        setAddTarget()
         
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appDidBecomeActive),
+            name: UIApplication.didBecomeActiveNotification,
+            object: nil
+        )
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [weak self] in
             guard let self = self else { return }
             if self.cancellables.isEmpty {
@@ -39,8 +46,26 @@ final class SplashViewController: BaseViewController {
 }
 
 extension SplashViewController {
-    
     private func bind() {
+        bindCheckForceUpdate()
+        bindAutoLogin()
+    }
+    
+    private func bindCheckForceUpdate() {
+        viewModel.output.forceUpdatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { result in
+                switch result {
+                case true:
+                    self.presentForceUpdateModal()
+                case false:
+                    self.viewModel.action(.tryAutoLogin)
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func bindAutoLogin() {
         viewModel.output.autoLoginPublisher
             .receive(on: DispatchQueue.main)
             .sink { result in
@@ -76,6 +101,29 @@ extension SplashViewController {
                 }
             }
             .store(in: &cancellables)
+    }
+    
+    private func presentForceUpdateModal() {
+        let modal = ModalBuilder(
+            modalView: ForceUpdateModalView(),
+            action: openAppstore,
+            rootViewController: self
+        )
+        modal.present()
+    }
+    
+    private func openAppstore() {
+        guard let url = URL(string: AppConstants.appStoreURL) else { return }
+        UIApplication.shared.open(url)
+    }
+    
+    @objc
+    private func appDidBecomeActive() {
+        guard !isFirstLaunch else {
+            isFirstLaunch = false
+            return
+        }
+        viewModel.action(.viewDidLoad)
     }
 }
 
