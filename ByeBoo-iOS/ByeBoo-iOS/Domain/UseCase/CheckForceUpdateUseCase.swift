@@ -8,7 +8,7 @@
 import Foundation
 
 protocol CheckForceUpdateUseCase {
-    func execute() async throws -> Bool
+    func execute() async -> Bool
 }
 
 struct DefaultCheckForceUpdateUsecase: CheckForceUpdateUseCase {
@@ -19,7 +19,7 @@ struct DefaultCheckForceUpdateUsecase: CheckForceUpdateUseCase {
         self.repository = repository
     }
     
-    func execute() async throws -> Bool {
-        return try await repository.checkForUpdate()
+    func execute() async -> Bool {
+        return await repository.checkForUpdate()
     }
 }

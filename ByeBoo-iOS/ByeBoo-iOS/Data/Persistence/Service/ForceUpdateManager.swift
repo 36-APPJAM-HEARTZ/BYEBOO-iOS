@@ -8,7 +8,7 @@
 import FirebaseRemoteConfig
 
 protocol ForceUpdateManager {
-    func checkForUpdate() async throws-> Bool
+    func checkForUpdate() async -> Bool
 }
 
 final class DefaultForceUpdateManager: ForceUpdateManager {
@@ -20,7 +20,7 @@ final class DefaultForceUpdateManager: ForceUpdateManager {
         RemoteConfig.remoteConfig().configSettings = settings
     }
 
-    func checkForUpdate() async throws -> Bool {
+    func checkForUpdate() async -> Bool {
         do {
             try await remoteConfig.fetch()
             try await remoteConfig.activate()
