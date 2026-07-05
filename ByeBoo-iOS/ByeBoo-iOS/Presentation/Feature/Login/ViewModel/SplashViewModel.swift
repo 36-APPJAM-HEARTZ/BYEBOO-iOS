@@ -60,14 +60,12 @@ extension SplashViewModel {
     private func checkForceUpdate() {
         Task {
             do {
-                if try await checkForceUpdateUseCase.execute() {
+                if await checkForceUpdateUseCase.execute() {
                     forceUpdateSubject.send(true)
                     ByeBooLogger.debug("강제 업데이트 필요")
                 } else {
                     forceUpdateSubject.send(false)
                 }
-            } catch {
-                forceUpdateSubject.send(false)
             }
         }
     }

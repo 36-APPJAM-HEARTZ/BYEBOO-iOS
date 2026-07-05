@@ -54,7 +54,8 @@ extension SplashViewController {
     private func bindCheckForceUpdate() {
         viewModel.output.forceUpdatePublisher
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
+                guard let self else { return }
                 switch result {
                 case true:
                     self.presentForceUpdateModal()

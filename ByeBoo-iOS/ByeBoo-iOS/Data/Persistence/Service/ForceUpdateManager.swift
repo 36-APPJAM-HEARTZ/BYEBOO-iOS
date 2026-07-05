@@ -7,11 +7,7 @@
 
 import FirebaseRemoteConfig
 
-protocol ForceUpdateManager {
-    func checkForUpdate() async -> Bool
-}
-
-final class DefaultForceUpdateManager: ForceUpdateManager {
+final class DefaultForceUpdateRepository: ForceUpdateInterface {
     let remoteConfig = RemoteConfig.remoteConfig()
 
     init() {
