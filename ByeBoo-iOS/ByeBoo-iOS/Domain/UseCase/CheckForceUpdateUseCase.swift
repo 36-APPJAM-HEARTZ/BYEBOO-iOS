@@ -13,9 +13,9 @@ protocol CheckForceUpdateUseCase {
 
 struct DefaultCheckForceUpdateUsecase: CheckForceUpdateUseCase {
     
-    private let repository: ForceUpdateManager
+    private let repository: ForceUpdateInterface
     
-    init(repository: ForceUpdateManager) {
+    init(repository: ForceUpdateInterface) {
         self.repository = repository
     }
     

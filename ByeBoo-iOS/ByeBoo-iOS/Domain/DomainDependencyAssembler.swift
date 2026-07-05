@@ -257,7 +257,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
         }
         
         DIContainer.shared.register(type: CheckForceUpdateUseCase.self) { _ in
-            return DefaultCheckForceUpdateUsecase(repository: DefaultForceUpdateManager())
+            return DefaultCheckForceUpdateUsecase(repository: DefaultForceUpdateRepository())
         }
     }
 }
