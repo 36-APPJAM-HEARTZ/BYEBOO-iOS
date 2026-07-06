@@ -11,7 +11,7 @@ protocol CheckForceUpdateUseCase {
     func execute() async -> Bool
 }
 
-struct DefaultCheckForceUpdateUsecase: CheckForceUpdateUseCase {
+struct DefaultCheckForceUpdateUseCase: CheckForceUpdateUseCase {
     
     private let repository: ForceUpdateInterface
     
