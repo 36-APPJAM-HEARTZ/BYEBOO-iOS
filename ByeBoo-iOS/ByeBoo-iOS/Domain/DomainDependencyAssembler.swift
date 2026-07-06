@@ -255,5 +255,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: ReadAllNotificationsUseCase.self) { _ in
             return DefaultReadAllNotificationsUseCase(repository: notificationRepository)
         }
+        
+        DIContainer.shared.register(type: CheckForceUpdateUseCase.self) { _ in
+            return DefaultCheckForceUpdateUseCase(repository: DefaultForceUpdateService())
+        }
     }
 }
