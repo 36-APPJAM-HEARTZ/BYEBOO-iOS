@@ -60,7 +60,7 @@ extension SplashViewController {
                 case true:
                     self.presentForceUpdateModal()
                 case false:
-                    self.viewModel.action(.tryAutoLogin)
+                    ByeBooLogger.debug("강제업데이트 필요 없음")
                 }
             }
             .store(in: &cancellables)

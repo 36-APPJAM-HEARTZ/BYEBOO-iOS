@@ -37,7 +37,6 @@ final class SplashViewModel {
 extension SplashViewModel {
     enum Input {
         case viewDidLoad
-        case tryAutoLogin
     }
     
     struct Output {
@@ -49,8 +48,6 @@ extension SplashViewModel {
         switch trigger {
         case .viewDidLoad:
             checkForceUpdate()
-        case .tryAutoLogin:
-            autoLogin()
         }
     }
     
@@ -65,6 +62,7 @@ extension SplashViewModel {
                     ByeBooLogger.debug("강제 업데이트 필요")
                 } else {
                     forceUpdateSubject.send(false)
+                    autoLogin()
                 }
             }
         }

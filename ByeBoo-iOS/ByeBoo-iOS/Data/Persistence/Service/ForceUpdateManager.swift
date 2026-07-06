@@ -7,13 +7,13 @@
 
 import FirebaseRemoteConfig
 
-final class DefaultForceUpdateRepository: ForceUpdateInterface {
+final class DefaultForceUpdateService: ForceUpdateInterface {
     let remoteConfig = RemoteConfig.remoteConfig()
 
     init() {
         let settings = RemoteConfigSettings()
         settings.minimumFetchInterval = 0
-        RemoteConfig.remoteConfig().configSettings = settings
+        remoteConfig.configSettings = settings
     }
 
     func checkForUpdate() async -> Bool {
