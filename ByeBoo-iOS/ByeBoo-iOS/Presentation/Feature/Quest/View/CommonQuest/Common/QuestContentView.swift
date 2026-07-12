@@ -64,10 +64,15 @@ final class QuestContentView: BaseView {
                 $0.spacing = 4.adjustedW
             }
         }
+        likeContainerView.do {
+            let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(likeButtonDidTap))
+            $0.addGestureRecognizer(tapRecognizer)
+            $0.isUserInteractionEnabled = true
+        }
         likeButton.do {
             $0.setImage(.heartOff, for: .normal)
             $0.setImage(.heartOn, for: .selected)
-            $0.addTarget(self, action: #selector(likeButtonDidTap), for: .touchUpInside)
+            $0.isUserInteractionEnabled = false
         }
         commentIcon.do {
             $0.image = .comment
