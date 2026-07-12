@@ -64,12 +64,14 @@ extension LoginViewController{
     @objc
     private func kakaoLoginButtonDidTap() {
         rootView.kakaoLoginButton.isUserInteractionEnabled = false
+        rootView.appleLoginButton.isUserInteractionEnabled = false
         self.platform = .KAKAO
         viewModel.action(.socialLoginButtonDidTap(platform: .KAKAO))
     }
-    
+
     @objc
     private func appleLoginButtonDidTap() {
+        rootView.kakaoLoginButton.isUserInteractionEnabled = false
         rootView.appleLoginButton.isUserInteractionEnabled = false
         self.platform = .APPLE
         viewModel.action(.socialLoginButtonDidTap(platform: .APPLE))

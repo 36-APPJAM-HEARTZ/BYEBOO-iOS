@@ -23,7 +23,8 @@ final class LoginViewModel: NSObject {
     }
     
     private var cancellables = Set<AnyCancellable>()
-    
+    private var isSocialLoginInProgress = false
+
     private let socialLoginUseCase: SocialLoginUseCase
     private let getIsRegisteredUseCase: GetIsRegisteredUseCase
     private let getUserIDUseCase: GetUserIDUseCase
@@ -60,7 +61,15 @@ extension LoginViewModel {
 
 extension LoginViewModel {
     private func socialLogin(platform: LoginPlatform) {
+        guard !isSocialLoginInProgress else {
+            ByeBooLogger.debug("이미 진행중인 요청 있음")
+            return
+        }
+        isSocialLoginInProgress = true
+
         Task {
+            defer { isSocialLoginInProgress = false }
+
             do {
                 let _ = try await socialLoginUseCase.execute(platform: platform)
                 socialLoginAuthSubject.send(.success(()))
