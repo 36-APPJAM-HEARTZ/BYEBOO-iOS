@@ -21,6 +21,7 @@ final class NoticeCardsView: BaseView {
                 bottom: 24.adjustedH,
                 right: 0
             )
+            $0.sectionHeaderTopPadding = 0
         }
     }
     

@@ -176,6 +176,6 @@ extension NotificationsViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForHeaderInSection section: Int
     ) -> CGFloat {
-        0
+        return section == 0 ? 0 : 24.adjustedH
     }
 }

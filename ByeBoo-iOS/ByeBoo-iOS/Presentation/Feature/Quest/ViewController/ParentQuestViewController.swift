@@ -35,11 +35,6 @@ final class ParentQuestViewController<T: TabItem>: BaseViewController, ToastPres
         tabBar.select(index: selectedIndex)
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        selectedIndex = 0
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
