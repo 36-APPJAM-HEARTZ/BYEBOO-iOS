@@ -21,7 +21,6 @@ final class ServerDateFormatter {
         formatter.do {
             $0.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
             $0.locale = Locale(identifier: "en_US_POSIX")
-            $0.timeZone = TimeZone(secondsFromGMT: 0)
         }
     }
     
