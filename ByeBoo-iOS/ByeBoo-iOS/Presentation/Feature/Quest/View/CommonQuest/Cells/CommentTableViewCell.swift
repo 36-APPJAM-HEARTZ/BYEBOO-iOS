@@ -41,6 +41,9 @@ final class CommentTableViewCell: UITableViewCell {
     
     private var isMyComment: Bool = false
     
+    private var showAllText: Bool = false
+    private var lastTruncationWidth: CGFloat = -1
+    
     override init(
         style: UITableViewCell.CellStyle,
         reuseIdentifier: String?
@@ -55,6 +58,30 @@ final class CommentTableViewCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        // bounds.width가 이 기기 폭으로 확정된 뒤에만 계산해야 기기별 오차가 없다.
+        let width = commentTextView.bounds.width
+        guard width > 0, width != lastTruncationWidth else { return }
+        lastTruncationWidth = width
+
+        updateTextTruncation()
+    }
+    
+    // exclusionPaths 변경으로 layoutSubviews가 재호출돼도 width는 안 바뀌므로 위 guard에서 걸러진다.
+    private func updateTextTruncation() {
+        commentTextView.textContainer.maximumNumberOfLines = 0
+        commentTextView.textContainer.exclusionPaths = []
+        
+        if showAllText {
+            commentTextView.invalidateIntrinsicContentSize()
+            moreLabel.isHidden = true
+        } else {
+            applyStyleWhenHideText()
+        }
     }
     
     private func setUI() {
@@ -229,20 +256,17 @@ extension CommentTableViewCell {
         self.profileIcon.image = profileIcon
         dateLabel.text = writtenAt
         self.content = content
+        self.showAllText = showAllText
         commentTextView.applyTextViewStyle(style: .body6R14, text: content, color: .grayscale100)
-
-        layoutIfNeeded()
 
         commentTextView.textContainer.maximumNumberOfLines = 0
         commentTextView.textContainer.exclusionPaths = []
-        
-        if showAllText {
-            commentTextView.invalidateIntrinsicContentSize()
-            moreLabel.isHidden = true
-        } else {
-            let numberOfLines = commentTextView.numberOfLine()
-            applyStyleWhenHideText(numberOfLines)
-        }
+
+        // setNeedsLayout만으로는 부족하다: commentListView가 스크롤 없는 self-sizing 테이블이라
+        // 일반 테이블처럼 셀이 화면에 나타날 때 자연스럽게 layoutSubviews가 재호출되지 않는다.
+        // layoutIfNeeded로 직접 트리거해야 truncation 계산(layoutSubviews)이 그 자리에서 실행된다.
+        lastTruncationWidth = -1
+        layoutIfNeeded()
     }
     
     func updateReplyCount(replyCount: Int) {
@@ -252,16 +276,37 @@ extension CommentTableViewCell {
 }
 
 extension CommentTableViewCell {
-    private func applyStyleWhenHideText(_ numberOfLines: Int) {
-        moreLabel.isHidden = numberOfLines > 5 ? false : true
-        commentTextView.textContainer.maximumNumberOfLines = 5
-        
+    private func applyStyleWhenHideText() {
+        let textContainer = commentTextView.textContainer
+        let layoutManager = commentTextView.layoutManager
+
+        // textContainer.size는 UITextView가 자기 layoutSubviews에서 뒤늦게 동기화하므로 직접 맞춰준다.
+        textContainer.size = CGSize(width: commentTextView.bounds.width, height: .greatestFiniteMagnitude)
+        textContainer.maximumNumberOfLines = 5
+
+        // glyphRange(for:)는 잘려도 전체 glyph 수를 그대로 반환해 truncation 판단에 못 쓴다.
+        // 마지막 줄이 실제로 잘렸는지는 truncatedGlyphRange(inLineFragmentForGlyphAt:)로 확인한다.
+        layoutManager.ensureLayout(for: textContainer)
+        let glyphRange = layoutManager.glyphRange(for: textContainer)
+        var isTruncated = false
+        if glyphRange.length > 0 {
+            let lastGlyphIndex = NSMaxRange(glyphRange) - 1
+            let truncatedRange = layoutManager.truncatedGlyphRange(inLineFragmentForGlyphAt: lastGlyphIndex)
+            isTruncated = truncatedRange.location != NSNotFound
+        }
+
+        moreLabel.isHidden = !isTruncated
+
+        guard isTruncated else {
+            commentTextView.textContainer.exclusionPaths = []
+            return
+        }
+
         let moreLabelWidth: CGFloat = moreLabel.intrinsicContentSize.width
         let contentHeight = commentTextView.sizeThatFits(
             CGSize(width: commentTextView.bounds.width, height: .infinity)
         ).height
-        
-        
+
         let lineHeight: CGFloat
         if let paragraphStyle = commentTextView.attributedText?.attribute(.paragraphStyle, at: 0, effectiveRange: nil)
             as? NSParagraphStyle,
@@ -270,14 +315,13 @@ extension CommentTableViewCell {
         } else {
             lineHeight = commentTextView.font?.lineHeight ?? 0
         }
-        
+
         let exclusionRect = CGRect(
             x: commentTextView.bounds.width - moreLabelWidth - 10,
             y: contentHeight - lineHeight,
             width: moreLabelWidth,
             height: lineHeight
         )
-        ByeBooLogger.debug("가로 : \(exclusionRect.width), 세로: \(exclusionRect.height)" )
         commentTextView.textContainer.exclusionPaths = [UIBezierPath(rect: exclusionRect)]
     }
     
