@@ -123,7 +123,7 @@ extension CommentTextView: UITextViewDelegate {
     
     func textViewDidChange(_ textView: UITextView) {
         textCountLabel.text = "\(textView.text.count)/500"
-        let hasText = !textView.text.isEmpty
+        let hasText = !textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         confirmButton.isEnabled = hasText
         confirmButton.applyByeBooFont(style: .body2M16, text: "완료", color: hasText ? .primary300 : .grayscale600)
 
