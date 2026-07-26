@@ -114,6 +114,7 @@ extension ParentQuestViewController {
             else {
                 return
             }
+            selectedIndex = index
             show(controllers[index])
         }
     }
