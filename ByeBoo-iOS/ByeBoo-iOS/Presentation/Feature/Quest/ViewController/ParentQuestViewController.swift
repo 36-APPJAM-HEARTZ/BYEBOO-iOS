@@ -49,6 +49,14 @@ final class ParentQuestViewController<T: TabItem>: BaseViewController, ToastPres
         )
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if navigationController?.topViewController === self {
+            selectedIndex = 0
+        }
+    }
+    
     override func setView() {
         view.addSubviews(
             tabBar,
@@ -114,6 +122,7 @@ extension ParentQuestViewController {
             else {
                 return
             }
+            selectedIndex = index
             show(controllers[index])
         }
     }
