@@ -7,6 +7,9 @@
 
 import UIKit
 
+// intrinsicContentSize가 없어 콘텐츠 크기만큼 스스로 커지지 못한다.
+// isScrollEnabled = false로 쓰고 contentSize를 intrinsicContentSize로 노출시켜,
+// 바깥 UIScrollView 안에 스크롤 없이 끼워넣어도 콘텐츠 높이에 맞게 자동으로 커지게 한다.
 final class SelfSizingTableView: UITableView {
     override var contentSize: CGSize {
         didSet {
