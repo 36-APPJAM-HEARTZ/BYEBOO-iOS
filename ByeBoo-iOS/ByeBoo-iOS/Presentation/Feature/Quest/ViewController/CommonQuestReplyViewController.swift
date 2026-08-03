@@ -100,10 +100,12 @@ extension CommonQuestReplyViewController {
         
         viewModel.output.postReplyPublisher
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
+                guard let self else { return }
                 switch result {
                 case .success:
                     ByeBooLogger.debug("답글 입력 성공")
+                    self.scrollToComment()
                 case .failure(let error):
                     ByeBooLogger.debug(error)
                 }
@@ -186,6 +188,14 @@ extension CommonQuestReplyViewController {
     private func backButtonDidTap() {
         self.dismiss(animated: true)
         onDismiss?()
+    }
+    
+    private func scrollToComment() {
+        let snapshot = dataSource.snapshot()
+        let replyCount = snapshot.numberOfItems(inSection: .replies)
+        guard replyCount > 0 else { return }
+        let lastIndex = IndexPath(row: replyCount - 1, section: 1)
+        rootView.commentListView.scrollToRow(at: lastIndex, at: .middle, animated: true)
     }
 }
 
