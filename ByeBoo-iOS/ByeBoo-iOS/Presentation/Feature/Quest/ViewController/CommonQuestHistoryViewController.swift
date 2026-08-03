@@ -184,7 +184,7 @@ extension CommonQuestHistoryViewController: CommentProtocol {
             guard item.entity.commentID == commentID else { return item }
             return CommentItem(entity: item.entity, showAllText: true)
         }
-
+        
         var snapshot = NSDiffableDataSourceSnapshot<CommentSection, CommentItem>()
         snapshot.appendSections([.main])
         snapshot.appendItems(updatedItems, toSection: .main)
@@ -198,7 +198,7 @@ extension CommonQuestHistoryViewController: CommentProtocol {
         let entity = viewModel.getComment(commentID: commentID)
         guard let entity else { return }
         viewController.configure(entity: entity, commentID: commentID)
-
+        
         viewController.onReplyCountChanged = { [weak self] commentID, newCount in
             guard let self else { return }
             let item = dataSource.snapshot().itemIdentifiers.first { $0.entity.commentID == commentID }
@@ -213,7 +213,7 @@ extension CommonQuestHistoryViewController: CommentProtocol {
             guard let self else { return }
             viewModel.action(.fetchQuestDetail(answerID: answerID))
         }
-
+        
         if let sheet =  viewController.sheetPresentationController{
             sheet.detents = [.large()]
             sheet.prefersGrabberVisible = true
@@ -313,10 +313,12 @@ extension CommonQuestHistoryViewController {
     private func bindPostComment() {
         viewModel.output.postCommentPublisher
             .receive(on: DispatchQueue.main)
-            .sink { result in
+            .sink { [weak self] result in
+                guard let self else { return }
                 switch result {
                 case .success:
                     ByeBooLogger.debug("댓글 입력 성공")
+                    self.scrollToComment()
                 case .failure(let error):
                     ByeBooLogger.debug(error)
                 }
@@ -366,11 +368,11 @@ extension CommonQuestHistoryViewController {
             content: comment.content
         )
     }
-
+    
     private func configureWhenCommonQuest(sheet: CommonQuestBottomSheetViewController) {
         let entity = viewModel.detailEntity
         guard let entity else { return }
-
+        
         let sheetType: CommonQuestArchiveType = entity.isMyAnswer ? .myAnswer : .otherAnswer
         sheet.configure(
             sheetType: sheetType,
@@ -380,6 +382,19 @@ extension CommonQuestHistoryViewController {
             question: entity.isMyAnswer ? viewModel.question : nil,
             writtenAt: entity.isMyAnswer ? entity.writtenAt : nil
         )
+    }
+    
+    private func scrollToComment() {
+        let snapshot = dataSource.snapshot()
+        guard snapshot.numberOfItems > 0 else { return }
+        rootView.layoutIfNeeded()
+
+        let lastIndex = IndexPath(row: snapshot.numberOfItems - 1, section: 0)
+        let rowRect = rootView.commentListView.rectForRow(at: lastIndex)
+        var rectInScrollView = rootView.commentListView.convert(rowRect, to: rootView.scrollView)
+        rectInScrollView.size.height = rootView.scrollView.contentSize.height - rectInScrollView.origin.y
+
+        rootView.scrollView.scrollRectToVisible(rectInScrollView, animated: true)
     }
 }
 extension CommonQuestHistoryViewController: KeyboardHandleProtocol {
