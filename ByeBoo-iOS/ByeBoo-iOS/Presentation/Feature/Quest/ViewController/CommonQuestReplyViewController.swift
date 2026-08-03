@@ -194,6 +194,8 @@ extension CommonQuestReplyViewController {
         let snapshot = dataSource.snapshot()
         let replyCount = snapshot.numberOfItems(inSection: .replies)
         guard replyCount > 0 else { return }
+        rootView.layoutIfNeeded()
+        
         let lastIndex = IndexPath(row: replyCount - 1, section: 1)
         rootView.commentListView.scrollToRow(at: lastIndex, at: .bottom, animated: true)
     }
