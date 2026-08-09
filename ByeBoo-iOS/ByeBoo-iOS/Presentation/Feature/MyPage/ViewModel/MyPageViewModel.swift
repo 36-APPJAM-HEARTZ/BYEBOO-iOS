@@ -99,13 +99,10 @@ extension MyPageViewModel {
     private func logout() {
         Task {
             do {
-                try await logoutUseCase.execute()
+                let _ = try await logoutUseCase.execute()
                 logoutResultSubject.send(.success(()))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
-                ByeBooLogger.error(error as ByeBooError)
+            } catch(let error as ByeBooError) {
+                ByeBooLogger.error(error)
                 logoutResultSubject.send(.failure(error))
             }
         }
@@ -114,13 +111,10 @@ extension MyPageViewModel {
     private func withdraw() {
         Task {
             do {
-                try await withdrawUseCase.execute()
+                let _ = try await withdrawUseCase.execute()
                 withdrawResultSubject.send(.success(()))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
-                ByeBooLogger.error(error as ByeBooError)
+            } catch(let error as ByeBooError) {
+                ByeBooLogger.error(error)
                 withdrawResultSubject.send(.failure(error))
             }
         }
@@ -131,11 +125,8 @@ extension MyPageViewModel {
             do {
                 let result = try await changeNotificationPermissionUseCase.execute()
                 notificationResultSubject.send(.success(result))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
-                ByeBooLogger.error(error as ByeBooError)
+            } catch(let error as ByeBooError) {
+                ByeBooLogger.error(error)
                 notificationResultSubject.send(.failure(error))
             }
         }

@@ -11,6 +11,7 @@
 		183EE0E12ED1D10600154F40 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 183EE0E02ED1D10600154F40 /* FirebaseMessaging */; };
 		186847F02ED5567D002827DA /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 186847EF2ED5567D002827DA /* FirebaseCore */; };
 		18A8172D2E154F3D00F68F9F /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 18A8172C2E154F3D00F68F9F /* Alamofire */; };
+		514D021B2FF6ADDD0041A4E1 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 514D021A2FF6ADDD0041A4E1 /* FirebaseRemoteConfig */; };
 		515C127F2E159D45001BA2E0 /* Then in Frameworks */ = {isa = PBXBuildFile; productRef = 515C127E2E159D45001BA2E0 /* Then */; };
 		515C12822E159D77001BA2E0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 515C12812E159D77001BA2E0 /* SnapKit */; };
 		51691DED2E5CB059008CCEC6 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 51691DEC2E5CB059008CCEC6 /* KakaoSDKAuth */; };
@@ -77,6 +78,7 @@
 				CBB032A72E7925FC00C0855E /* Mixpanel in Frameworks */,
 				51691DED2E5CB059008CCEC6 /* KakaoSDKAuth in Frameworks */,
 				CB71A8A32F3B6F9400176B64 /* FirebaseCrashlytics in Frameworks */,
+				514D021B2FF6ADDD0041A4E1 /* FirebaseRemoteConfig in Frameworks */,
 				183EE0E12ED1D10600154F40 /* FirebaseMessaging in Frameworks */,
 				183EE0DB2ED1CB0E00154F40 /* FirebaseAnalytics in Frameworks */,
 			);
@@ -151,6 +153,7 @@
 				183EE0E02ED1D10600154F40 /* FirebaseMessaging */,
 				186847EF2ED5567D002827DA /* FirebaseCore */,
 				CB71A8A22F3B6F9400176B64 /* FirebaseCrashlytics */,
+				514D021A2FF6ADDD0041A4E1 /* FirebaseRemoteConfig */,
 			);
 			productName = "ByeBoo-iOS";
 			productReference = CB41808B2E0925D2001E7BCB /* ByeBoo-iOS.app */;
@@ -307,7 +310,7 @@
 				CODE_SIGN_ENTITLEMENTS = "ByeBoo-iOS/ByeBoo-Dev.entitlements";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 18;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z6682N5G5D;
@@ -325,7 +328,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.3;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.heartz.ByeBoo-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -349,9 +352,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = "ByeBoo-iOS/ByeBoo-Prod.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = Z6682N5G5D;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -368,11 +371,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.2.3;
+				MARKETING_VERSION = 1.3.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.heartz.ByeBoo-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.heartz.ByeBoo-iOS";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development com.heartz.ByeBoo-iOS";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -512,7 +515,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 15;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
@@ -534,7 +537,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 10;
+				CURRENT_PROJECT_VERSION = 15;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				MACOSX_DEPLOYMENT_TARGET = 15.2;
@@ -670,6 +673,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 18A8172B2E154F3D00F68F9F /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		514D021A2FF6ADDD0041A4E1 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 183EE0D92ED1CB0E00154F40 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
 		};
 		515C127E2E159D45001BA2E0 /* Then */ = {
 			isa = XCSwiftPackageProductDependency;

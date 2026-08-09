@@ -11,8 +11,9 @@ final class ParentQuestViewController<T: TabItem>: BaseViewController, ToastPres
     
     private let tabBar: TopTabBar
     private let containerView = UIView()
-    private let controllers: [UIViewController]
+    private(set) var controllers: [UIViewController]
     private var currentViewController: UIViewController?
+    private var selectedIndex: Int = 0
     
     init(items: T.AllCases) {
         self.tabBar = TopTabBar(items: Array(items))
@@ -27,6 +28,11 @@ final class ParentQuestViewController<T: TabItem>: BaseViewController, ToastPres
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         tabBarController?.tabBar.isHidden = false
+        
+        guard controllers.indices.contains(selectedIndex) else { return }
+        
+        show(controllers[selectedIndex])
+        tabBar.select(index: selectedIndex)
     }
     
     override func viewDidLoad() {
@@ -35,17 +41,20 @@ final class ParentQuestViewController<T: TabItem>: BaseViewController, ToastPres
         setLayout()
         bind()
         
-        if let controller = controllers.first {
-            show(controller)
-        }
-        
         NotificationCenter.default.addObserver(
-                self,
-                selector: #selector(handleToast(_:)),
-                name: .showToastMessage,
-                object: nil
+            self,
+            selector: #selector(handleToast(_:)),
+            name: .showToastMessage,
+            object: nil
         )
-
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        if navigationController?.topViewController === self {
+            selectedIndex = 0
+        }
     }
     
     override func setView() {
@@ -57,6 +66,8 @@ final class ParentQuestViewController<T: TabItem>: BaseViewController, ToastPres
     
     func selectTab(index: Int) {
         guard controllers.indices.contains(index) else { return }
+        
+        selectedIndex = index
         show(controllers[index])
         tabBar.select(index: index)
     }
@@ -82,7 +93,7 @@ final class ParentQuestViewController<T: TabItem>: BaseViewController, ToastPres
             self.presentToastMessage(type: .block)
         case .report:
             self.presentToastMessage(type: .report)
-        case .edit, .delete:
+        case .questEdit, .commentEdit, .delete:
             return
         }
     }
@@ -111,6 +122,7 @@ extension ParentQuestViewController {
             else {
                 return
             }
+            selectedIndex = index
             show(controllers[index])
         }
     }

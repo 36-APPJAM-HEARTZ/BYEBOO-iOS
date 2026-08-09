@@ -50,7 +50,7 @@ struct DefaultUsersRepository: UsersInterface {
         )
         let _ = userDefaultsService.save(result.id, key: .userID)
         let _ = userDefaultsService.save(result.name, key: .userName)
-        let _ = userDefaultsService.save(true, key: .isOnboardingCompleted)
+        let _ = userDefaultsService.save(true, key: .isRegistered)
         let _ = userDefaultsService.save(false, key: .hasEnterMyPage)
         let _ = userDefaultsService.save(false, key: .alarmEnabled)
         
@@ -144,11 +144,12 @@ struct DefaultUsersRepository: UsersInterface {
     }
     
     func fetchMyCommonQuestAnswers(cursor: Int?) async throws -> CommonQuestMyAnswersEntity {
+        let userID: Int = userDefaultsService.load(key: .userID) ?? 0
         let result = try await network.request(
             UsersAPI.fetchCommonQuestAnswers(cursor: cursor),
             decodingType: CommonQuestMyAnswersResponseDTO.self
         )
-        return result.toEntity()
+        return result.toEntity(userID: userID)
     }
     
     var alarmEnabled: Bool {

@@ -10,12 +10,13 @@ import UIKit
 
 final class CommonQuestViewModel {
     
-    private let cancellables = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
     private let commonQuestSubject = PassthroughSubject<Result<Void, ByeBooError>, Never>.init()
+    private let likeCountSubject = PassthroughSubject<Result<(answerID: Int, entity: CommonQuestLikeEntity), ByeBooError>, Never>.init()
+    
     private let fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase
-    private let minute: Double = 60
-    private let hour: Double = 3600
-    private let day: Double = 86400
+    private let postCommonQuestLikeUseCase: PostCommonQuestLikeUseCase
+    private let formatElapsedTimeUseCase: FormatElapsedTimeUseCase
     
     private(set) var output: Output
     private var commonQuest: CommonQuestAnswersEntity?
@@ -23,11 +24,19 @@ final class CommonQuestViewModel {
     private(set) var hasMorePages = true
     private var nextCursor: Int? = nil
     private var currentDate: String = DateFormatter.toAPIDateString(from: .now)
+    private var likeTasks: [Int: Task<Void, Never>] = [:]
     
-    init(fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase) {
+    init(
+        fetchCommonQuestByDateUseCase: FetchCommonQuestByDateUseCase,
+        postCommonQuestLikeUseCase: PostCommonQuestLikeUseCase,
+        formatElapsedTimeUseCase: FormatElapsedTimeUseCase
+    ) {
         self.fetchCommonQuestByDateUseCase = fetchCommonQuestByDateUseCase
+        self.postCommonQuestLikeUseCase = postCommonQuestLikeUseCase
+        self.formatElapsedTimeUseCase = formatElapsedTimeUseCase
         self.output = Output(
-            commonQuestPublisher: commonQuestSubject.eraseToAnyPublisher()
+            commonQuestPublisher: commonQuestSubject.eraseToAnyPublisher(),
+            commonQuestLikeCountPublisher: likeCountSubject.eraseToAnyPublisher()
         )
     }
     
@@ -52,9 +61,30 @@ final class CommonQuestViewModel {
                 }
                 
                 commonQuestSubject.send(.success(()))
-            } catch {
-                commonQuestSubject.send(.failure(error as! ByeBooError))
+            } catch(let error as ByeBooError) {
+                commonQuestSubject.send(.failure(error))
             }
+        }
+    }
+    
+    private func postCommonQuestLike(answerID: Int) {
+        likeTasks[answerID]?.cancel()
+
+        likeTasks[answerID] = Task {
+            do {
+                let entity = try await postCommonQuestLikeUseCase.execute(answerID: answerID)
+                try Task.checkCancellation()
+                likeCountSubject.send(.success((answerID: answerID, entity)))
+            } catch is CancellationError {
+                ByeBooLogger.debug("Task 취소됨")
+            } catch {
+                guard let error = error as? ByeBooError else {
+                    return
+                }
+                guard !Task.isCancelled else { return }
+                likeCountSubject.send(.failure(error))
+            }
+            likeTasks[answerID] = nil
         }
     }
 }
@@ -65,10 +95,12 @@ extension CommonQuestViewModel: ViewModelType {
         case viewWillAppear
         case moveDateButtonDidTap(selectedDate: String)
         case scrollAnswer
+        case likeButtonDidTap(answerID: Int)
     }
     
     struct Output {
         let commonQuestPublisher: AnyPublisher<Result<Void, ByeBooError>, Never>
+        let commonQuestLikeCountPublisher: AnyPublisher<Result<(answerID: Int, entity: CommonQuestLikeEntity), ByeBooError>, Never>
     }
     
     func action(_ trigger: Input) {
@@ -85,32 +117,13 @@ extension CommonQuestViewModel: ViewModelType {
                 return
             }
             fetchCommonQuestByDate(date: currentDate, cursor: nextCursor)
+        case .likeButtonDidTap(let answerID):
+            postCommonQuestLike(answerID: answerID)
         }
     }
 }
 
 extension CommonQuestViewModel {
-    
-    private enum ProfileIcon: String, CaseIterable {
-        case sad = "SADNESS"
-        case selfUnderstanding = "SELF_UNDERSTANDING"
-        case soso = "SO_SO"
-        case relieved = "RELIEVED"
-        
-        var image: UIImage {
-            switch self {
-            case .sad:
-                return .sadnessBadge
-            case .selfUnderstanding:
-                return .selfUnderstandingBadge
-            case .soso:
-                return .sosoBadge
-            case .relieved:
-                return .relievedBadge
-            }
-        }
-    }
-        
     var question: String {
         commonQuest?.question ?? ""
     }
@@ -134,7 +147,7 @@ extension CommonQuestViewModel {
     var isUserAnswered: Bool {
         commonQuest?.isAnswered ?? false
     }
-    
+
     func getAnswer(at index: Int) -> CommonQuestAnswerEntity? {
         guard index >= 0 && index < answers.count else {
             return nil
@@ -142,38 +155,24 @@ extension CommonQuestViewModel {
         return answers[index]
     }
     
-    func getProfileIcon(at index: Int) -> UIImage? {
+    func getAnswerID(at index: Int) -> Int? {
         guard index >= 0 && index < answers.count else {
             return nil
         }
-        
-        let iconString = self.answers[index].profileIcon
-        let profileIcon = ProfileIcon.allCases
-            .first { $0.rawValue == iconString }?
-            .image
-        return profileIcon
+        return answers[index].answerID
+    }
+
+    func indexOfAnswer(answerID: Int) -> Int? {
+        answers.firstIndex { $0.answerID == answerID }
+    }
+    
+    func getProfileIcon(at index: Int) -> UIImage? {
+        guard index >= 0 && index < answers.count else { return nil }
+        return ProfileIcon.image(for: answers[index].profileIcon)
     }
     
     func getWrittenAt(at index: Int) -> String? {
-        guard index >= 0 && index < answers.count,
-              let writtenAt = DateFormatter.toDetailDate(from: answers[index].writtenAt)
-        else {
-            return nil
-        }
-        
-        let diffTime = Date().timeIntervalSince(writtenAt)
-        
-        switch diffTime {
-        case ..<minute:
-            return "방금 전"
-        case minute..<hour:
-            let minutes = Int(diffTime / minute)
-            return "\(minutes)분 전"
-        case hour..<day:
-            let hours = Int(diffTime / hour)
-            return "\(hours)시간 전"
-        default:
-            return DateFormatter.toDisplayDateString(from: writtenAt)
-        }
+        guard index >= 0 && index < answers.count else { return nil }
+        return ServerDateFormatter.shared.relativeTimeString(from: answers[index].writtenAt)
     }
 }

@@ -77,17 +77,17 @@ extension QuestTextField: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if isPlaceholderActive == true {
             isPlaceholderActive = false
-            applyTextViewStyle(text: "", color: .grayscale100)
+            textView.applyTextViewStyle(style: .body3R16 ,text: "", color: .grayscale100)
         }
         textView.textColor = .grayscale100
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
-            applyTextViewStyle(text: placeholder, color: .grayscale300)
+            textView.applyTextViewStyle(style: .body3R16 ,text: placeholder, color: .grayscale300)
             isPlaceholderActive = true
         } else {
-            applyTextViewStyle(text: textView.text, color: .grayscale100)
+            textView.applyTextViewStyle(style: .body3R16, text: textView.text, color: .grayscale100)
         }
         questTextViewDelegate?.textViewDidEndEditing()
     }
@@ -102,14 +102,6 @@ extension QuestTextField: UITextViewDelegate {
 }
 
 extension QuestTextField {
-    func applyTextViewStyle(text: String, color: UIColor) {
-        textView.applyByeBooFont(
-            style: .body3R16,
-            text: text,
-            color: color
-        )
-    }
-    
     func updateTextViewHeight() -> CGFloat {
         let width = self.frame.width
         let fittingSize = CGSize(width: width, height: .greatestFiniteMagnitude)

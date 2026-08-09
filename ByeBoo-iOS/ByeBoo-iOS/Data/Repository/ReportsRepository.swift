@@ -15,9 +15,9 @@ struct DefaultReportsRepository: ReportsInterface {
         self.networkService = networkService
     }
     
-    func reportCommonQuest(answerID: Int) async throws {
-        let _ = try await networkService.request(
-            ReportsAPI.postReport(answerID: answerID)
-        )
+    func reportCommonQuest(targetID: Int, targetType: CommonQuestTargetType) async throws {
+        let reportRequestDTO: ReportRequestDTO = .init(targetType: targetType.rawValue, targetId: targetID)
+        ByeBooLogger.debug("\(targetID), \(targetType)")
+        _ = try await networkService.request(ReportsAPI.postReport(dto: reportRequestDTO))
     }
 }

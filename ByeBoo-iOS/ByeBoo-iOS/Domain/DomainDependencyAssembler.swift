@@ -23,7 +23,9 @@ struct DomainDependencyAssembler: DependencyAssembler {
               let forbiddenWordRepository = DIContainer.shared.resolve(type: ForbiddenWordInterface.self),
               let commonQuestRepository = DIContainer.shared.resolve(type: CommonQuestInterface.self),
               let blocksRepository = DIContainer.shared.resolve(type: BlocksInterface.self),
-              let reportsRepository = DIContainer.shared.resolve(type: ReportsInterface.self) else {
+              let notificationRepository = DIContainer.shared.resolve(type: NotificationInterface.self),
+              let reportsRepository = DIContainer.shared.resolve(type: ReportsInterface.self),
+              let commentRepository = DIContainer.shared.resolve(type: CommentInterface.self) else {
                 ByeBooLogger.error(ByeBooError.DIFailedError)
                 return
             }
@@ -171,7 +173,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: FetchCommonQuestMyAnswersUseCase.self) { _ in
             return DefaultFetchCommonQuestMyAnswersUseCase(repository: userRepository)
         }
-      
+        
         DIContainer.shared.register(type: FetchAIAnswerUseCase.self) { _ in
             return DefaultFetchAIAnswerUseCase(repository: questRepository)
         }
@@ -187,7 +189,7 @@ struct DomainDependencyAssembler: DependencyAssembler {
         DIContainer.shared.register(type: UpdateCommonQuestUseCase.self) { _ in
             return DefaultUpdateCommonQuestUseCase(repository: commonQuestRepository)
         }
-      
+        
         DIContainer.shared.register(type: BlockUserUseCase.self) { _ in
             return DefaultBlockUserCase(repository: blocksRepository)
         }
@@ -206,6 +208,56 @@ struct DomainDependencyAssembler: DependencyAssembler {
         
         DIContainer.shared.register(type: DeleteCommonQuestUseCase.self) { _ in
             return DefaultDeleteCommonQuestUseCase(repository: commonQuestRepository)
+        }
+        
+        DIContainer.shared.register(type: FetchCommonQuestDetailUseCase.self) { _ in
+            return DefaultFetchCommonQuestDetailUseCase(repository: commonQuestRepository)
+        }
+        DIContainer.shared.register(type: PostCommonQuestCommentUseCase.self) { _ in
+            return DefaultPostCommonQuestCommentUseCase(repository: commentRepository)
+        }
+        DIContainer.shared.register(type: PostCommonQuestReplyUseCase.self) { _ in
+            return DefaultPostCommonQuestReplyUseCase(repository: commentRepository)
+        }
+        
+        DIContainer.shared.register(type: PostCommonQuestLikeUseCase.self) { _ in
+             return DefaultPostCommonQuestLikeUseCase(repository: commonQuestRepository)
+        }
+        
+        DIContainer.shared.register(type: FetchNotificationListUseCase.self) { _ in
+            return DefaultFetchNotificationListUseCase(repository: notificationRepository)
+        }
+        
+        DIContainer.shared.register(type: FormatElapsedTimeUseCase.self) { _ in
+            return DefaultFormatElapsedTimeUseCase()
+        }
+        
+        DIContainer.shared.register(type: ReadNotificationUseCase.self) { _ in
+            return DefaultReadNotificationUseCase(repository: notificationRepository)
+        }
+        
+        DIContainer.shared.register(type: FetchHasUnreadNotificationUseCase.self) { _ in
+            return DefaultFetchHasUnreadNotificationUseCase(repository: notificationRepository)
+        }
+        
+        DIContainer.shared.register(type: FetchCommonQuestRepliesUseCase.self) { _ in
+            return DefaultFetchCommonQuestRepliesUseCase(repository: commentRepository)
+        }
+        
+        DIContainer.shared.register(type: DeleteCommentReplyUseCase.self) { _ in
+            return DefaultDeleteCommentReplyUseCase(repository: commentRepository)
+        }
+        
+        DIContainer.shared.register(type: EditCommentReplyUseCase.self) { _ in
+            return DefaultEditCommentReplyUseCase(repository: commentRepository)
+        }
+        
+        DIContainer.shared.register(type: ReadAllNotificationsUseCase.self) { _ in
+            return DefaultReadAllNotificationsUseCase(repository: notificationRepository)
+        }
+        
+        DIContainer.shared.register(type: CheckForceUpdateUseCase.self) { _ in
+            return DefaultCheckForceUpdateUseCase(repository: DefaultForceUpdateService())
         }
     }
 }

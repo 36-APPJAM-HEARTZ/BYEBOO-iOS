@@ -38,7 +38,7 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
         date: String,
         cursor: Int?
     ) async throws -> CommonQuestAnswersEntity {
-        let userName: String = userDefaultsService.load(key: .userName) ?? ""
+        let userID: Int = userDefaultsService.load(key: .userID) ?? 0
         let commonQuest = try await network.request(
             CommonQuestAPI.fetchCommonQuest(
                 date: date,
@@ -46,7 +46,7 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
             ),
             decodingType: CommonQuestAnswersResponseDTO.self
         )
-        return commonQuest.toEntity(userName: userName)
+        return commonQuest.toEntity(userID: userID)
     }
     
     func updateCommonQuest(answerID: Int, answer: String) async throws {
@@ -63,5 +63,23 @@ struct DefaultCommonQuestRepository: CommonQuestInterface {
         try await network.request(
             CommonQuestAPI.deleteCommonQuest(answerID: answerID)
         )
+    }
+    
+    func fetchCommonQuestDetail(answerID: Int) async throws -> CommonQuestDetailEntity {
+        let userID: Int = userDefaultsService.load(key: .userID) ?? 0
+        let commonQuestDetail = try await network.request(
+            CommonQuestAPI.fetchCommonQuestDetail(answerID: answerID),
+            decodingType: CommonQuestAnswerDetailResponseDTO.self
+        )
+        
+        return commonQuestDetail.toEntity(userID: userID)
+    }
+    
+    func postCommonQuestLikes(answerID: Int) async throws -> CommonQuestLikeEntity {
+        let response = try await network.request(
+            CommonQuestAPI.postCommonQuestLike(answerID: answerID),
+            decodingType: PostCommonQuestLikeResponseDTO.self
+        )
+        return response.toEntity()
     }
 }

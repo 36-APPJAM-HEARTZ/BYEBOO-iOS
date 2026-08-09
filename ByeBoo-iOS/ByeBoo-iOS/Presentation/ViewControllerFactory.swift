@@ -26,6 +26,15 @@ protocol ViewControllerFactoryProtocol {
     func makeWriteActiveTypeQuestViewController() -> WriteActiveTypeQuestViewController
     func makeFinishJourneyViewController() -> FinishJourneyViewController
     func makeCommonQuestBottomSheetViewController() -> CommonQuestBottomSheetViewController
+    func makeCompletedQuestsViewController() -> CompletedQuestsViewController
+    func makeParentQuestViewController() -> ParentQuestViewController<QuestTabItem>
+    func makeCommonQuestViewController() -> CommonQuestViewController
+    func makeCommonQuestHistoryViewController() -> CommonQuestHistoryViewController
+    func makeCommonQuestMyAnswersViewController() -> CommonQuestMyAnswersViewController
+    func makeBlockedUserListViewController() -> BlockedkUserListViewController
+    func makeAIAnswerViewController() -> AIAnswerViewController
+    func makeNotificationsViewController() -> NotificationsViewController
+    func makeByeBooTabBar() -> ByeBooTabBar
 }
 
 final class ViewControllerFactory: ViewControllerFactoryProtocol {
@@ -187,7 +196,11 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
     }
     
     func makeCommonQuestHistoryViewController() -> CommonQuestHistoryViewController {
-        .init()
+        guard let viewModel = DIContainer.shared.resolve(type: CommonQuestHistoryViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        return .init(viewModel: viewModel)
     }
     
     func makeCommonQuestMyAnswersViewController() -> CommonQuestMyAnswersViewController {
@@ -218,6 +231,28 @@ final class ViewControllerFactory: ViewControllerFactoryProtocol {
     
     func makeAIAnswerViewController() -> AIAnswerViewController {
         guard let viewModel = DIContainer.shared.resolve(type: AIAnswerViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        
+        return .init(viewModel: viewModel)
+    }
+    
+    func makeNotificationsViewController() -> NotificationsViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: NotificationsViewModel.self) else {
+            DIErrorHandle()
+            fatalError()
+        }
+        
+        return .init(viewModel: viewModel)
+    }
+    
+    func makeByeBooTabBar() -> ByeBooTabBar {
+        .init()
+    }
+    
+    func makeCommonQuestReplyViewController() -> CommonQuestReplyViewController {
+        guard let viewModel = DIContainer.shared.resolve(type: CommonQuestReplyViewModel.self) else {
             DIErrorHandle()
             fatalError()
         }

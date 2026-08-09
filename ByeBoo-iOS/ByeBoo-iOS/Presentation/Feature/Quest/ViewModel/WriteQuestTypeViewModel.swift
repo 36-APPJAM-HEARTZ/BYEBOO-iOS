@@ -131,10 +131,7 @@ extension WriteQuestionTypeViewModel {
             do {
                 let questInfo = try await getQuestInfoUseCase.execute(questID: questID)
                 questInfoResultSubject.send(.success(questInfo))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
+            } catch(let error as ByeBooError) {
                 questInfoResultSubject.send(.failure(error))
             }
         }
@@ -145,10 +142,7 @@ extension WriteQuestionTypeViewModel {
             do {
                 try await saveQuestTypeUseCase.execute(questID: questID, answer: answer, emotionState: emotionState)
                 didSuccessPostSubject.send(.success(()))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
+            } catch(let error as ByeBooError) {
                 didSuccessPostSubject.send(.failure(error as ByeBooError))
                 ByeBooLogger.error(error)
             }
@@ -160,10 +154,7 @@ extension WriteQuestionTypeViewModel {
             do {
                 try await editQuestTypeUseCase.execute(questID: questID, answer: answer)
                 didSuccessEditSubject.send(.success(()))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
+            } catch(let error as ByeBooError) {
                 didSuccessEditSubject.send(.failure(error as ByeBooError))
                 ByeBooLogger.error(error)
             }
@@ -175,10 +166,7 @@ extension WriteQuestionTypeViewModel {
             do {
                 try await saveCommonQuestUseCase.execute(questID: questID, answer: answer)
                 didSuccessPostSubject.send(.success(()))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
+            } catch(let error as ByeBooError) {
                 didSuccessPostSubject.send(.failure(error as ByeBooError))
                 ByeBooLogger.error(error)
             }
@@ -200,10 +188,7 @@ extension WriteQuestionTypeViewModel {
             do {
                 try await updateCommonQuestUseCase.execute(answerID: answerID, answer: answer)
                 didSucessUpdateSubject.send(.success(()))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
+            } catch(let error as ByeBooError) {
                 didSuccessPostSubject.send(.failure(error as ByeBooError))
                 ByeBooLogger.error(error)
             }

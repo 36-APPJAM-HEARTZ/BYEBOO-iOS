@@ -63,16 +63,6 @@ extension HomeView {
         speechBoxView.updateText(text, withAnimation: withAnimation)
     }
     
-    func updateProgressView(
-        name: String,
-        progress: Int,
-        journey: String
-    ) {
-        headerView.updateProgress(progress)
-        headerView.updateName(name)
-        headerView.updateJourney(journey)
-    }
-    
     func updateState(_ state: HomeState, _ journeyTitle: String? = nil) {
         headerView.updateState(state, journeyTitle)
     }

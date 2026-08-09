@@ -35,11 +35,13 @@ final class LoginView: BaseView {
         appleLoginButton.do {
             $0.setImage(.appleLoginButton, for: .normal)
             $0.alpha = 0
+            $0.isExclusiveTouch = true
         }
-        
+
         kakaoLoginButton.do {
             $0.setImage(.kakaoLoginButton, for: .normal)
             $0.alpha = 0
+            $0.isExclusiveTouch = true
         }
     }
     

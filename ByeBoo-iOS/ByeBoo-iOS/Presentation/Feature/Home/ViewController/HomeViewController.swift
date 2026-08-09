@@ -47,6 +47,9 @@ final class HomeViewController: BaseViewController {
         super.viewWillAppear(animated)
         
         viewModel.action(.viewWillAppear)
+        if isFirstVisit { isFirstVisit.toggle() }
+        
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
         
         let property = HomeEvents.HomePageProperty(
             isFirstPageView: isFirstVisit,
@@ -56,13 +59,20 @@ final class HomeViewController: BaseViewController {
             event: HomeEvents.Name.homePageView,
             properties: property.dictionary
         )
-        
-        if isFirstVisit { isFirstVisit.toggle() }
     }
     
     override func setAddTarget() {
         setGesture()
-        rootView.headerView.helperButton.addTarget(self, action: #selector(helperDidTap), for: .touchUpInside)
+        rootView.headerView.helperButton.addTarget(
+            self,
+            action: #selector(helperDidTap),
+            for: .touchUpInside
+        )
+        rootView.headerView.noticeButton.addTarget(
+            self,
+            action: #selector(noticeButtonDidTap),
+            for: .touchUpInside
+        )
     }
     
     private func setGesture() {
@@ -79,6 +89,7 @@ final class HomeViewController: BaseViewController {
 }
 
 extension HomeViewController {
+    
     @objc
     private func headerDidTap() {
         switch state {
@@ -105,6 +116,15 @@ extension HomeViewController {
     }
     
     @objc
+    private func noticeButtonDidTap() {
+        let viewController = ViewControllerFactory.shared.makeNotificationsViewController()
+        viewController.hidesBottomBarWhenPushed = true
+        
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        self.navigationController?.pushViewController(viewController, animated: false)
+    }
+    
+    @objc
     private func boriDidTap() {
         
         guard !isAnimating,
@@ -125,6 +145,13 @@ extension HomeViewController {
 
 extension HomeViewController: ToastPresentable, ToastErrorHandler {
     private func bind() {
+        bindCharacter()
+        bindHomeState()
+        bindHelper()
+        bindHasNotification()
+    }
+    
+    private func bindCharacter() {
         viewModel.output.characterResult
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
@@ -136,7 +163,9 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
                 }
             }
             .store(in: &cancellables)
-  
+    }
+    
+    private func bindHomeState() {
         Publishers.CombineLatest3(
             viewModel.output.userResult,
             viewModel.output.journeyResult,
@@ -148,14 +177,9 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
                 journey,
                 state in
                 switch (name, journey, state) {
-                case let (name, .success(journey), .success(state)):
+                case let (_, .success(journey), .success(state)):
                     self?.rootView.updateState(state.currentStatus)
                     self?.state = state.currentStatus
-                    self?.rootView.updateProgressView(
-                        name: name,
-                        progress: state.questCount,
-                        journey: journey.title
-                    )
                     self?.journeyType = JourneyType.titleToEnum(journey.title) ?? .recording
                 case let (_, .success(journey), .failure(.notFound)):
                     self?.rootView.updateState(.beforeJourneyStart, journey.title)
@@ -171,12 +195,28 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
                 }
             }
             .store(in: &cancellables)
-        
+    }
+    
+    private func bindHelper() {
         viewModel.output.helperResult
             .receive(on: DispatchQueue.main)
             .sink { [weak self] result in
                 if !result {
                     self?.rootView.headerView.startHelperAnimation()
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func bindHasNotification() {
+        viewModel.output.hasNotifcationResult
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let entity):
+                    self?.rootView.headerView.updateNotice(isExist: entity.hasUnread)
+                case .failure(let error):
+                    self?.handleError(error)
                 }
             }
             .store(in: &cancellables)

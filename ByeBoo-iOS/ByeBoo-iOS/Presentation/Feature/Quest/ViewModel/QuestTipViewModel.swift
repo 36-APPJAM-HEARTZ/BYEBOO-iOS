@@ -51,10 +51,7 @@ extension QuestTipViewModel {
             do {
                 let tips = try await useCase.fetchQuestTips(questID: questID)
                 questTipSubject.send((.success(tips)))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
+            } catch(let error as ByeBooError) {
                 ByeBooLogger.error(error as ByeBooError)
                 questTipSubject.send(.failure(error))
             }

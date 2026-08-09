@@ -12,14 +12,21 @@ import Alamofire
 enum CommonQuestAPI {
     case postCommonQuest(questID: Int, dto: SaveCommonQuestRequestDTO)
     case fetchCommonQuest(date: String, cursor: Int?)
+    case fetchCommonQuestDetail(answerID: Int)
     case updateCommonQuest(answerID: Int, dto: UpdateCommonQuestRequestDTO)
     case deleteCommonQuest(answerID: Int)
+    case postCommonQuestLike(answerID: Int)
 }
 
 extension CommonQuestAPI: EndPoint {
     
     var basePath: String {
-        return "/api/v1/common-quests"
+        switch self {
+        case .fetchCommonQuest, .fetchCommonQuestDetail:
+            return "/api/v2/common-quests"
+        case .postCommonQuest, .updateCommonQuest, .deleteCommonQuest, .postCommonQuestLike:
+            return "/api/v1/common-quests"
+        }
     }
     
     var path: String {
@@ -28,16 +35,18 @@ extension CommonQuestAPI: EndPoint {
             return "/\(questID)"
         case .fetchCommonQuest:
             return ""
-        case .updateCommonQuest(let answerID, _), .deleteCommonQuest(let answerID):
+        case .updateCommonQuest(let answerID, _), .deleteCommonQuest(let answerID), .fetchCommonQuestDetail(let answerID):
             return "/\(answerID)"
+        case .postCommonQuestLike(let answerID):
+            return "/\(answerID)/likes"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .postCommonQuest:
+        case .postCommonQuest, .postCommonQuestLike:
             return .post
-        case .fetchCommonQuest:
+        case .fetchCommonQuest, .fetchCommonQuestDetail:
             return .get
         case .updateCommonQuest:
             return .patch
@@ -48,23 +57,24 @@ extension CommonQuestAPI: EndPoint {
     
     var headers: HeaderType {
         switch self {
-        case .postCommonQuest, .fetchCommonQuest, .updateCommonQuest, .deleteCommonQuest:
+        case .postCommonQuest, .fetchCommonQuest, .updateCommonQuest, .deleteCommonQuest, .fetchCommonQuestDetail,
+                .postCommonQuestLike:
             return .withAuth
         }
     }
     
     var parameterEncoding: any ParameterEncoding {
         switch self {
-        case .postCommonQuest, .updateCommonQuest:
+        case .postCommonQuest, .updateCommonQuest, .postCommonQuestLike:
             return JSONEncoding.default
-        case .fetchCommonQuest, .deleteCommonQuest:
+        case .fetchCommonQuest, .deleteCommonQuest, .fetchCommonQuestDetail:
             return  URLEncoding.default
         }
     }
     
     var queryParameters: [String : String]? {
         switch self {
-        case .postCommonQuest, .updateCommonQuest, .deleteCommonQuest:
+        case .postCommonQuest, .updateCommonQuest, .deleteCommonQuest, .fetchCommonQuestDetail, .postCommonQuestLike:
             return nil
         case .fetchCommonQuest(let date, let cursor):
             if let cursor {
@@ -81,7 +91,7 @@ extension CommonQuestAPI: EndPoint {
         switch self {
         case .postCommonQuest(_, let dto):
             return try? dto.toDictionary()
-        case .fetchCommonQuest, .deleteCommonQuest:
+        case .fetchCommonQuest, .deleteCommonQuest, .fetchCommonQuestDetail, .postCommonQuestLike:
             return nil
         case .updateCommonQuest(_, let dto):
             return try? dto.toDictionary()

@@ -24,9 +24,9 @@ extension UsersAPI: EndPoint {
     var basePath: String {
         switch self {
         case .journey, .character, .count, .start,
-            .modifyName, .updateNotificationPermission, .fetchCommonQuestAnswers:
+            .modifyName, .updateNotificationPermission:
             return "/api/v1/users"
-        case .sendUser:
+        case .sendUser, .fetchCommonQuestAnswers:
             return "/api/v2/users"
         }
     }

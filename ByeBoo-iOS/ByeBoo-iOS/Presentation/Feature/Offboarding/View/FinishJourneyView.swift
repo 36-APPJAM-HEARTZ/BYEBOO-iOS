@@ -19,7 +19,7 @@ final class FinishJourneyView: BaseView {
     private let thirdTextLabel = UILabel()
     private let characterLottie = LottieAnimationView(name: "bori_cake")
     
-    let startButton = ByeBooButton(titleText: "새로운 이별 극복 여정 시작하기", type: .enabled)
+    let startButton = ByeBooButton(titleText: "새로운 여정 시작하기", type: .enabled)
     let lookBackButton = ByeBooButton(titleText: "완료한 여정 다시보기", type: .sub)
     let backHomeLabel = UILabel()
     

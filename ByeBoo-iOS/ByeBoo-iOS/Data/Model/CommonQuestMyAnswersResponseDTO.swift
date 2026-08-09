@@ -16,15 +16,18 @@ struct CommonQuestMyAnswerResponseDTO: Decodable {
     let writtenAt: String
     let content: String
     let question: String
+    let likeCount: Int
+    let commentCount: Int
+    let isLiked: Bool
 }
 
 extension CommonQuestMyAnswersResponseDTO {
-    func toEntity() -> CommonQuestMyAnswersEntity {
+    func toEntity(userID: Int) -> CommonQuestMyAnswersEntity {
         .init(
             hasNext: hasNext,
             nextCursor: nextCursor,
-            answers: answers.map { $0.toEntity()
-            })
+            answers: answers.map { $0.toEntity() }
+        )
     }
 }
 
@@ -34,7 +37,10 @@ extension CommonQuestMyAnswerResponseDTO {
             answerID: answerId,
             writtenAt: writtenAt,
             content: content,
-            question: question
+            question: question,
+            isLiked: isLiked,
+            likeCount: likeCount,
+            commentCount: commentCount
         )
     }
 }

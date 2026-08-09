@@ -9,11 +9,17 @@ import Foundation
 import UIKit
 
 enum CommonQuestArchiveType {
-    case mine
-    case other
+    case myAnswer
+    case otherAnswer
+    case myComment
+    case otherComment
     
     enum Action {
-        case edit, delete, report, block
+        case questEdit
+        case commentEdit
+        case delete
+        case report
+        case block
     }
     
     struct Item {
@@ -25,15 +31,25 @@ enum CommonQuestArchiveType {
     
     var items: [Item] {
         switch self {
-        case .mine:
+        case .myAnswer:
             return [
-                Item(title: "수정하기", icon: .edit, color: .white, action: .edit),
+                Item(title: "수정하기", icon: .edit, color: .white, action: .questEdit),
                 Item(title: "삭제하기", icon: .trash, color: .error300, action: .delete)
             ]
-        case .other:
+        case .myComment:
+            return [
+                Item(title: "수정하기", icon: .edit, color: .white, action: .commentEdit),
+                Item(title: "삭제하기", icon: .trash, color: .error300, action: .delete)
+            ]
+        case .otherAnswer:
             return [
                 Item(title: "사용자 차단하기", icon: .block, color: .white, action: .block),
                 Item(title: "게시글 신고하기", icon: .report, color: .error300, action: .report)
+            ]
+        case .otherComment:
+            return [
+                Item(title: "차단하기", icon: .block, color: .white, action: .block),
+                Item(title: "신고하기", icon: .report, color: .error300, action: .report)
             ]
         }
     }

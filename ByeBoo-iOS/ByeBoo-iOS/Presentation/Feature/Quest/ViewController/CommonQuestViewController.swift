@@ -86,6 +86,32 @@ extension CommonQuestViewController {
                 }
             }
             .store(in: &cancellable)
+        
+        viewModel.output.commonQuestLikeCountPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] result in
+                switch result {
+                case .success(let result):
+                    let entity = result.entity
+                    self?.updateLikeCount(answerID: result.answerID, likeCount: entity.likeCount, isLiked: entity.isLiked)
+                case .failure(let error):
+                    ByeBooLogger.error(error)
+                }
+            }
+            .store(in: &cancellable)
+    }
+
+    private func updateLikeCount(answerID: Int, likeCount: Int, isLiked: Bool) {
+        guard let answerIndex = viewModel.indexOfAnswer(answerID: answerID) else {
+            return
+        }
+
+        let indexPath = IndexPath(row: answerIndex + 1, section: 0)
+        guard let cell = rootView.commonQuestTableView.cellForRow(at: indexPath) as? CommonQuestAnswerCell else {
+            return
+        }
+
+        cell.questContentView.updateUI(likeCount: likeCount, isLiked: isLiked)
     }
 }
 
@@ -129,29 +155,12 @@ extension CommonQuestViewController: UITableViewDelegate {
         }
         
         let answerIndex = indexPath.row - 1
-        guard let answer = viewModel.getAnswer(at: answerIndex) else {
-            return
-        }
-        
-        let formattedWrittenAt = DateFormatter.toDetailDate(from: answer.writtenAt).map {
-            DateFormatter.toDisplayDateString(from: $0)
-        }
-        
-        guard let formattedWrittenAt else {
+        guard let answerID = viewModel.getAnswerID(at: answerIndex) else {
             return
         }
         
         let historyViewController = ViewControllerFactory.shared.makeCommonQuestHistoryViewController()
-        historyViewController.configure(
-            question: viewModel.question,
-            writtenAt: formattedWrittenAt,
-            profileIcon: viewModel.getProfileIcon(at: answerIndex),
-            nickname: answer.writer,
-            content: answer.content,
-            answerID: answer.answerID,
-            writerID: answer.writerID,
-            isMyAnswer: answer.isMyAnswer
-        )
+        historyViewController.configure(answerID: answerID)
         historyViewController.navigationItem.hidesBackButton = true
         self.navigationController?.pushViewController(
             historyViewController,
@@ -163,7 +172,7 @@ extension CommonQuestViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForRowAt indexPath: IndexPath
     ) -> CGFloat {
-        indexPath.row == 0 ? UITableView.automaticDimension : 171.adjustedH
+        UITableView.automaticDimension
     }
     
     func tableView(
@@ -260,7 +269,7 @@ extension CommonQuestViewController: UITableViewDataSource {
         let answer = viewModel.getAnswer(at: indexPath.row - 1)
         let profileIcon = viewModel.getProfileIcon(at: indexPath.row - 1)
         let writtenAt = viewModel.getWrittenAt(at: indexPath.row - 1)
-        
+        cell.questContentView.delegate = self
         if let answer,
            let writtenAt {
             cell.bind(
@@ -279,5 +288,12 @@ extension CommonQuestViewController: UITableViewDataSource {
     ) -> UITableViewCell {
         let cell: NoAnswerCell = tableView.dequeueReusableCell(for: indexPath)
         return cell
+    }
+}
+
+extension CommonQuestViewController: CommonQuestLikeProtocol {
+    func likeButtonDidTap(answerID: Int) {
+        ByeBooLogger.debug("answerID: \(answerID)")
+        viewModel.action(.likeButtonDidTap(answerID: answerID))
     }
 }

@@ -50,6 +50,12 @@ final class AIAnswerViewController: BaseViewController {
             )
         )
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        viewModel.action(.viewDidDisappear)
+    }
 }
 
 extension AIAnswerViewController {

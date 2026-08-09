@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
     ) {
-        guard let notificationRepository = DIContainer.shared.resolve(type: DefaultNotificationRepository.self) else {
+        guard let notificationRepository = DIContainer.shared.resolve(type: DefaultNotificationTokenRepository.self) else {
             return
         }
         

@@ -70,11 +70,8 @@ extension BlockedUserListViewModel {
                 self.blockedUsers = try await getBlockedUsersListUseCase.execute()
                 ByeBooLogger.debug("차단한 유저 \(blockedUsers)")
                 getBlockedUsersListSubject.send(.success(blockedUsers))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
-                ByeBooLogger.error(error as ByeBooError)
+            } catch(let error as ByeBooError) {
+                ByeBooLogger.error(error)
                 getBlockedUsersListSubject.send(.failure(error))
             }
         }
@@ -87,11 +84,8 @@ extension BlockedUserListViewModel {
                 try await deleteBlockedUserUseCase.execute(blockID: blockID)
                 ByeBooLogger.debug("차단 완료 \(blockID)")
                 deleteBlockUserSubject.send(.success(()))
-            } catch {
-                guard let error = error as? ByeBooError else {
-                    return
-                }
-                ByeBooLogger.error(error as ByeBooError)
+            } catch(let error as ByeBooError) {
+                ByeBooLogger.error(error)
                 deleteBlockUserSubject.send(.failure(error))
             }
             
