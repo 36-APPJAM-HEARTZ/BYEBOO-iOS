@@ -19,31 +19,60 @@ ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
 ENV["FASTLANE_XCODEBUILD_SETTINGS_RETRIES"] = "10"
 
 platform :ios do
+
+  def notify_discord_success(lane_name)
+    sh(
+      "curl -H 'Content-Type: application/json' " +
+      "-d '{\"content\": \"💟🍎 **#{lane_name}** 성공! 🎉\"}' " +
+      "#{ENV['DISCORD_URL']}"
+    )
+  end
+
+  def notify_discord_failure(lane_name, error_message)
+    sh(
+      "curl -H 'Content-Type: application/json' " +
+      "-d '{\"content\": \"🤔🌀 **#{lane_name}** 실패\\n```#{error_message.to_s.gsub('"', "'").gsub("\n", " ")}```\"}' " +
+      "#{ENV['DISCORD_URL']}"
+    )
+  end
+
   desc "Push a new beta build to TestFlight"
   lane :upload_testflight do
-    increment_build_number(xcodeproj: "ByeBoo-iOS.xcodeproj")
-    match(type: "appstore")
-    build_app(
-	scheme: "ByeBoo-iOS",
-	export_method: "app-store"
-	)
-    upload_to_testflight
+    begin
+      increment_build_number(xcodeproj: "ByeBoo-iOS.xcodeproj")
+      match(type: "appstore")
+      build_app(
+        scheme: "ByeBoo-iOS",
+        export_method: "app-store"
+      )
+      upload_to_testflight
+      notify_discord_success("TestFlight 업로드")
+    rescue => e
+      notify_discord_failure("TestFlight 업로드", e.message)
+      raise e
+    end
   end
 
   desc "Release a new version to the App Store"
   lane :release_app_store do
-    increment_build_number(xcodeproj: "ByeBoo-iOS.xcodeproj")
-    match(type: "appstore")
-    build_app(
-      scheme: "ByeBoo-iOS",
-      export_method: "app-store"
-    )
-    upload_to_app_store(
-      skip_screenshots: true,
-      skip_metadata: true,
-      submit_for_review: true,   
-      force: true                
-    )
+    begin
+      increment_build_number(xcodeproj: "ByeBoo-iOS.xcodeproj")
+      match(type: "appstore")
+      build_app(
+        scheme: "ByeBoo-iOS",
+        export_method: "app-store"
+      )
+      upload_to_app_store(
+        skip_screenshots: true,
+        skip_metadata: true,
+        submit_for_review: true,
+        force: true
+      )
+      notify_discord_success("App Store 배포")
+    rescue => e
+      notify_discord_failure("App Store 배포", e.message)
+      raise e
+    end
   end
-end
+
 end
