@@ -18,6 +18,9 @@ default_platform(:ios)
 ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120"
 ENV["FASTLANE_XCODEBUILD_SETTINGS_RETRIES"] = "10"
 
+XCODEPROJ = "ByeBoo-iOS.xcodeproj"
+SCHEME = "ByeBoo-iOS"
+
 platform :ios do
 
   def notify_discord_success(lane_name)
@@ -36,17 +39,45 @@ platform :ios do
     )
   end
 
+  def prepare_ci_and_signing
+    setup_ci
+    match(type: "appstore")
+    update_project_team(
+      path: XCODEPROJ,
+      teamid: ENV['TEAM_ID']
+    )
+  end
+
+  def next_build_number
+    latest_build = latest_testflight_build_number(
+      app_identifier: ENV['APP_IDENTIFIER'],
+      initial_build_number: 0
+    )
+    latest_build + 1
+  end
+
+
   desc "Push a new beta build to TestFlight"
   lane :upload_testflight do
     begin
-      increment_build_number(xcodeproj: "ByeBoo-iOS.xcodeproj")
-      match(type: "appstore")
+      iprepare_ci_and_signing
+
+      build_number = next_build_number
+      increment_build_number(
+        xcodeproj: XCODEPROJ,
+        build_number: build_number
+      )
+
       build_app(
-        scheme: "ByeBoo-iOS",
+        scheme: SCHEME,
         export_method: "app-store"
       )
-      upload_to_testflight
-      notify_discord_success("TestFlight 업로드")
+
+      upload_to_testflight(
+        skip_waiting_for_build_processing: true
+      )
+
+      notify_discord_success("TestFlight 업로드", build_number)
     rescue => e
       notify_discord_failure("TestFlight 업로드", e.message)
       raise e
@@ -56,19 +87,30 @@ platform :ios do
   desc "Release a new version to the App Store"
   lane :release_app_store do
     begin
-      increment_build_number(xcodeproj: "ByeBoo-iOS.xcodeproj")
-      match(type: "appstore")
+      prepare_ci_and_signing
+
+      build_number = next_build_number
+      increment_build_number(
+        xcodeproj: XCODEPROJ,
+        build_number: build_number
+      )
+
       build_app(
-        scheme: "ByeBoo-iOS",
+        scheme: SCHEME,
         export_method: "app-store"
       )
+
       upload_to_app_store(
         skip_screenshots: true,
         skip_metadata: true,
-        submit_for_review: true,
-        force: true
-      )
-      notify_discord_success("App Store 배포")
+        force: true,
+        submit_for_review: true,               # 자동으로 심사 제출 
+        automatic_release: true,               # 심사 통과 후 자동 출시
+        precheck_include_in_app_purchases: false,
+        submission_information: {
+          add_id_info_uses_idfa: false,          # admob 추가 시 true로 변경 
+          export_compliance_uses_encryption: false  
+        }
     rescue => e
       notify_discord_failure("App Store 배포", e.message)
       raise e
