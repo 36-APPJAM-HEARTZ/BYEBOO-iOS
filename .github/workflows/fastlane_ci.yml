@@ -14,8 +14,11 @@ jobs:
   fastlane:
     name: Run Fastlane
     runs-on: macos-latest
-    if: github.event.pull_request.merged == true
-
+    if: github.event_name == 'push' || github.event.pull_request.merged == true
+    defaults:
+      run:
+        working-directory: ./ByeBoo-iOS
+        
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -32,7 +35,6 @@ jobs:
 
     - name: Install dependencies
       run: bundle install
-      working-directory: ./ByeBoo-iOS
 
     - name: Output Fastlane environment
       run: bundle exec fastlane env
@@ -54,7 +56,7 @@ jobs:
       run: bundle exec fastlane upload_testflight
 
     - name: Run release_app_store on main
-      if: github.event.pull_request.base.ref == 'main'
+      if: github.event_name == 'push' || github.event.pull_request.base.ref == 'main'
       env:
         APPLE_ID: ${{ secrets.APPLE_ID }}
         APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
