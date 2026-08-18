@@ -94,6 +94,10 @@ extension CommonQuestViewController {
                 case .success(let result):
                     let entity = result.entity
                     self?.updateLikeCount(answerID: result.answerID, likeCount: entity.likeCount, isLiked: entity.isLiked)
+                    
+                    if entity.isLiked {
+                        Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyLike)
+                    }
                 case .failure(let error):
                     ByeBooLogger.error(error)
                 }

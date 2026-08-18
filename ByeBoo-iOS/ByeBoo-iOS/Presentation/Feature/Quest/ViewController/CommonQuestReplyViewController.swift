@@ -8,6 +8,8 @@
 import Combine
 import UIKit
 
+import Mixpanel
+
 final class CommonQuestReplyViewController: BaseViewController {
     
     private let rootView = CommonQuestReplyView()
@@ -106,6 +108,8 @@ extension CommonQuestReplyViewController {
                 case .success:
                     ByeBooLogger.debug("답글 입력 성공")
                     self.scrollToComment()
+                    
+                    Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyComment)
                 case .failure(let error):
                     ByeBooLogger.debug(error)
                 }

@@ -22,6 +22,20 @@ XCODEPROJ = "ByeBoo-iOS.xcodeproj"
 SCHEME = "ByeBoo-iOS"
 
 platform :ios do
+  def prepare_ci_and_signing
+    app_store_connect_api_key(
+      key_id: ENV['APP_STORE_CONNECT_API_KEY_KEY_ID'],
+      issuer_id: ENV['APP_STORE_CONNECT_API_KEY_ISSUER_ID'],
+      key_content: ENV['APP_STORE_CONNECT_API_KEY_CONTENT'],
+      is_key_content_base64: true
+    )
+    setup_ci
+    match(type: "appstore")
+    update_project_team(
+      path: XCODEPROJ,
+      teamid: ENV['TEAM_ID']
+    )
+  end
 
   def notify_discord_success(lane_name, build_number)
     version = get_version_number(xcodeproj: XCODEPROJ)
@@ -41,21 +55,10 @@ platform :ios do
     )
   end
 
-  def prepare_ci_and_signing
-    setup_ci
-    match(type: "appstore")
-    update_project_team(
-      path: XCODEPROJ,
-      teamid: ENV['TEAM_ID']
-    )
-  end
-
+  # 날짜+시간 기반 빌드 번호 (예: 2026081815 -> 2026년 08월 18일 15시)
+  # 재배포 시에도 항상 이전보다 큰 값이 되도록 YYMMDDHM으로 사용
   def next_build_number
-    latest_build = latest_testflight_build_number(
-      app_identifier: ENV['APP_IDENTIFIER'],
-      initial_build_number: 0
-    )
-    latest_build + 1
+    Time.now.getlocal("+09:00").strftime("%Y%m%d%H%M").to_i # 한국시간 기준 
   end
 
   desc "Push a new beta build to TestFlight"
@@ -103,10 +106,11 @@ platform :ios do
 
       upload_to_app_store(
         skip_screenshots: true,
-        skip_metadata: true,
+        skip_metadata: false,
+        skip_app_version_update: true,
         force: true,
         submit_for_review: true,                  # 자동으로 심사 제출
-        automatic_release: true,                  # 심사 통과 후 자동 출시 
+        automatic_release: false,                 
         precheck_include_in_app_purchases: false,
         submission_information: {
           add_id_info_uses_idfa: false,             # AdMob 추가 시 true로 변경

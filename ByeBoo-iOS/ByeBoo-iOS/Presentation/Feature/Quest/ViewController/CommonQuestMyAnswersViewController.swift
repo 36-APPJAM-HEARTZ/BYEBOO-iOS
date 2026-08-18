@@ -8,6 +8,8 @@
 import Combine
 import UIKit
 
+import Mixpanel
+
 final class CommonQuestMyAnswersViewController: BaseViewController {
     
     private let rootView = CommonQuestMyAnswersView()
@@ -112,6 +114,10 @@ extension CommonQuestMyAnswersViewController {
                         likeCount: entity.likeCount,
                         isLiked: entity.isLiked
                     )
+                    
+                    if entity.isLiked {
+                        Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyLike)
+                    }
                 case .failure(let error):
                     ByeBooLogger.error(error)
                 }
