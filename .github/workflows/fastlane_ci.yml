@@ -1,9 +1,12 @@
 name: Fastlane CI
 
 on:
+  push:
+    branches:
+      - release
   pull_request:
     branches:
-      - main
+      - release
       - develop
     types: [closed]
 
@@ -11,11 +14,14 @@ jobs:
   fastlane:
     name: Run Fastlane
     runs-on: macos-latest
-    if: github.event.pull_request.merged == true
-
+    if: github.event_name == 'push' || github.event.pull_request.merged == true
+    defaults:
+      run:
+        working-directory: ./ByeBoo-iOS
+        
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
@@ -36,12 +42,10 @@ jobs:
     - name: Run upload_testflight
       if: github.event.pull_request.base.ref == 'develop'
       env:
-        APPLE_ID: ${{ secrets.APPLE_ID }}
-        APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+        APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY_ID }}
+        APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+        APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
         APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER }}
-        FASTLANE_ITC_TEAM_ID: ${{ secrets.FASTLANE_ITC_TEAM_ID }}
         TEAM_ID: ${{ secrets.TEAM_ID }}
         PRIVATE_REPOSITORY: ${{ secrets.PRIVATE_REPOSITORY }}
         MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
@@ -49,15 +53,13 @@ jobs:
         DISCORD_URL: ${{ secrets.DISCORD_URL }}
       run: bundle exec fastlane upload_testflight
 
-    - name: Run release_app_store on main
-      if: github.event.pull_request.base.ref == 'main'
+    - name: Run release_app_store on release
+      if: github.event_name == 'push' || github.event.pull_request.base.ref == 'release'
       env:
-        APPLE_ID: ${{ secrets.APPLE_ID }}
-        APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
-        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+        APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY_ID }}
+        APP_STORE_CONNECT_API_KEY_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_ISSUER_ID }}
+        APP_STORE_CONNECT_API_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_API_KEY_CONTENT }}
         APP_IDENTIFIER: ${{ secrets.APP_IDENTIFIER }}
-        FASTLANE_ITC_TEAM_ID: ${{ secrets.FASTLANE_ITC_TEAM_ID }}
         TEAM_ID: ${{ secrets.TEAM_ID }}
         PRIVATE_REPOSITORY: ${{ secrets.PRIVATE_REPOSITORY }}
         MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
