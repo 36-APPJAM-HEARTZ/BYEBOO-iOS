@@ -303,6 +303,8 @@ extension CommonQuestHistoryViewController {
                 case .success(let result):
                     let entity = result.entity
                     self?.rootView.questContentView.updateUI(likeCount: entity.likeCount, isLiked: entity.isLiked)
+                    
+                    Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyLike)
                 case .failure(let error):
                     ByeBooLogger.error(error)
                 }
@@ -319,6 +321,8 @@ extension CommonQuestHistoryViewController {
                 case .success:
                     ByeBooLogger.debug("댓글 입력 성공")
                     self.scrollToComment()
+                    
+                    Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyComment)
                 case .failure(let error):
                     ByeBooLogger.debug(error)
                 }

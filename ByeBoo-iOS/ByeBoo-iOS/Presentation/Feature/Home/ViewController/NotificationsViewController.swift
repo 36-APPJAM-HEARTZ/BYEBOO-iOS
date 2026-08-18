@@ -8,6 +8,8 @@
 import Combine
 import UIKit
 
+import Mixpanel
+
 final class NotificationsViewController: BaseViewController {
     
     private let rootView = NoticesView()
@@ -30,6 +32,8 @@ final class NotificationsViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         viewModel.action(.viewWillAppear)
+        
+        Mixpanel.mainInstance().track(event: AlarmEvents.Name.alarmMain)
     }
     
     override func viewDidLoad() {
