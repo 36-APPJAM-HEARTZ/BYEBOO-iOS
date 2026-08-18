@@ -13,5 +13,7 @@ struct CommonJourneyEvents {
         static let commonJourneyWriteClick = "common_journey_write_click"
         static let commonJourneyWriteSuccess = "common_journey_write_success"
         static let commonJourneyOthersAnswerPageview = "common_journey_others_answer_pageview"
+        static let commonJourneyComment = "common_journey_comment"
+        static let commonJourneyLike = "common_journey_like"
     }
 }

@@ -270,7 +270,7 @@ extension CommonQuestHistoryViewController {
         rootView.configure(
             answerID: answerID,
             question: entity.question,
-            writtenAt: ServerDateFormatter.shared.relativeTimeString(from: answer.writtenAt) ?? "", //TODO: ViewModel로 수정
+            writtenAt: ServerDateFormatter.shared.relativeTimeString(from: answer.writtenAt) ?? "",
             profileIcon: ProfileIcon.image(for: answer.profileIcon) ?? .relievedBadge,
             nickname: answer.writer,
             content: answer.content,
@@ -303,6 +303,8 @@ extension CommonQuestHistoryViewController {
                 case .success(let result):
                     let entity = result.entity
                     self?.rootView.questContentView.updateUI(likeCount: entity.likeCount, isLiked: entity.isLiked)
+                    
+                    Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyLike)
                 case .failure(let error):
                     ByeBooLogger.error(error)
                 }
@@ -319,6 +321,8 @@ extension CommonQuestHistoryViewController {
                 case .success:
                     ByeBooLogger.debug("댓글 입력 성공")
                     self.scrollToComment()
+                    
+                    Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyComment)
                 case .failure(let error):
                     ByeBooLogger.debug(error)
                 }
