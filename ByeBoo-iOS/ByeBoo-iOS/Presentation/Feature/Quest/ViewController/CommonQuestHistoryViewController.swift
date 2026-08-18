@@ -304,7 +304,9 @@ extension CommonQuestHistoryViewController {
                     let entity = result.entity
                     self?.rootView.questContentView.updateUI(likeCount: entity.likeCount, isLiked: entity.isLiked)
                     
-                    Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyLike)
+                    if entity.isLiked {
+                        Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyLike)
+                    }
                 case .failure(let error):
                     ByeBooLogger.error(error)
                 }
