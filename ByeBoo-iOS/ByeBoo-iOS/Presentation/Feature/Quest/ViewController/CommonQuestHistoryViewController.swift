@@ -270,7 +270,7 @@ extension CommonQuestHistoryViewController {
         rootView.configure(
             answerID: answerID,
             question: entity.question,
-            writtenAt: ServerDateFormatter.shared.relativeTimeString(from: answer.writtenAt) ?? "", //TODO: ViewModel로 수정
+            writtenAt: ServerDateFormatter.shared.relativeTimeString(from: answer.writtenAt) ?? "",
             profileIcon: ProfileIcon.image(for: answer.profileIcon) ?? .relievedBadge,
             nickname: answer.writer,
             content: answer.content,
