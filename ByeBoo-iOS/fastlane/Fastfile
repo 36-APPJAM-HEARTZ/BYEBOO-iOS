@@ -22,7 +22,6 @@ XCODEPROJ = "ByeBoo-iOS.xcodeproj"
 SCHEME = "ByeBoo-iOS"
 
 platform :ios do
-
   def prepare_ci_and_signing
     app_store_connect_api_key(
       key_id: ENV['APP_STORE_CONNECT_API_KEY_KEY_ID'],
