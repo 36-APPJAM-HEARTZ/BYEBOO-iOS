@@ -23,6 +23,21 @@ SCHEME = "ByeBoo-iOS"
 
 platform :ios do
 
+  def prepare_ci_and_signing
+    app_store_connect_api_key(
+      key_id: ENV['APP_STORE_CONNECT_API_KEY_KEY_ID'],
+      issuer_id: ENV['APP_STORE_CONNECT_API_KEY_ISSUER_ID'],
+      key_content: ENV['APP_STORE_CONNECT_API_KEY_CONTENT'],
+      is_key_content_base64: true
+    )
+    setup_ci
+    match(type: "appstore")
+    update_project_team(
+      path: XCODEPROJ,
+      teamid: ENV['TEAM_ID']
+    )
+  end
+
   def notify_discord_success(lane_name, build_number)
     version = get_version_number(xcodeproj: XCODEPROJ)
     sh(
@@ -38,15 +53,6 @@ platform :ios do
       "curl -H 'Content-Type: application/json' " +
       "-d '{\"content\": \"🤔🌀 **#{lane_name}** 실패\\n```#{safe_message}```\"}' " +
       "#{ENV['DISCORD_URL']}"
-    )
-  end
-
-  def prepare_ci_and_signing
-    setup_ci
-    match(type: "appstore")
-    update_project_team(
-      path: XCODEPROJ,
-      teamid: ENV['TEAM_ID']
     )
   end
 
@@ -103,7 +109,8 @@ platform :ios do
 
       upload_to_app_store(
         skip_screenshots: true,
-        skip_metadata: true,
+        skip_metadata: false,
+        skip_app_version_update: true,
         force: true,
         submit_for_review: true,                  # 자동으로 심사 제출
         automatic_release: true,                  # 심사 통과 후 자동 출시 
