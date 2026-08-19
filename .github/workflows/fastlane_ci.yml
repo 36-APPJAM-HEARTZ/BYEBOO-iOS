@@ -42,6 +42,18 @@ jobs:
       env:
         GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.GOOGLE_SERVICE_INFO_BASE64 }}
 
+    - name: Generate Config.xcconfig
+      run: |
+        cat <<EOF > ByeBoo-iOS/Data/Config/Config.xcconfig
+        BASE_URL = ${BASE_URL}
+        KAKAO_NATIVE_APP_KEY = ${KAKAO_NATIVE_APP_KEY}
+        MIXPANEL_TOKEN = ${MIXPANEL_TOKEN}
+        EOF
+      env:
+        BASE_URL: ${{ secrets.BASE_URL }}
+        KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+        MIXPANEL_TOKEN: ${{ secrets.MIXPANEL_TOKEN }}
+
     - name: Output Fastlane environment
       run: bundle exec fastlane env
 
