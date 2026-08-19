@@ -46,12 +46,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         NotificationCenter.default.removeObserver(self, name: .navigateLoginViewController, object: nil)
     }
     
-    func sceneDidBecomeActive(_ scene: UIScene) {
-        NotificationCenter.default.post(
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
-    }
+    func sceneDidBecomeActive(_ scene: UIScene) { }
     
     func sceneWillResignActive(_ scene: UIScene) { }
     
