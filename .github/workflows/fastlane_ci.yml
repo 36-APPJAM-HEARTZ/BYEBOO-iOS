@@ -36,6 +36,12 @@ jobs:
     - name: Install dependencies
       run: bundle install
 
+    - name: Generate GoogleService-Info.plist
+      run: |
+        echo "${GOOGLE_SERVICE_INFO_BASE64}" | base64 --decode > ByeBoo-iOS/GoogleService-Info.plist
+      env:
+        GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.GOOGLE_SERVICE_INFO_BASE64 }}
+
     - name: Output Fastlane environment
       run: bundle exec fastlane env
 
