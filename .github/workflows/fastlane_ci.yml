@@ -44,6 +44,7 @@ jobs:
 
     - name: Generate Config.xcconfig
       run: |
+        mkdir -p ByeBoo-iOS/Data/Config
         cat <<EOF > ByeBoo-iOS/Data/Config/Config.xcconfig
         BASE_URL = ${BASE_URL}
         KAKAO_NATIVE_APP_KEY = ${KAKAO_NATIVE_APP_KEY}
