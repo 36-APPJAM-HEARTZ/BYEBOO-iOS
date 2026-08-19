@@ -18,10 +18,16 @@ jobs:
 
       - name: Generate xcconfig
         run: |
-          mkdir -p ByeBoo-iOS/Data/Config
-          echo "BASE_URL = ${BASE_URL}" > ByeBoo-iOS/Data/Config/Config.xcconfig
+          mkdir -p ByeBoo-iOS/ByeBoo-iOS/Data/Config
+          cat <<EOF > ByeBoo-iOS/ByeBoo-iOS/Data/Config/Config.xcconfig
+          BASE_URL = ${BASE_URL}
+          KAKAO_NATIVE_APP_KEY = ${KAKAO_NATIVE_APP_KEY}
+          MIXPANEL_TOKEN = ${MIXPANEL_TOKEN}
+          EOF
         env:
           BASE_URL: ${{ secrets.BASE_URL }}
+          KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+          MIXPANEL_TOKEN: ${{ secrets.MIXPANEL_TOKEN }}
           
       - name: Generate GoogleService-Info.plist
         run: |
