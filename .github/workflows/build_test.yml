@@ -25,7 +25,7 @@ jobs:
           
       - name: Generate GoogleService-Info.plist
         run: |
-          echo "${GOOGLE_SERVICE_INFO_BASE64}" | base64 --decode > ByeBoo-iOS/GoogleService-Info.plist
+          echo "${GOOGLE_SERVICE_INFO_BASE64}" | base64 --decode > ByeBoo-iOS/ByeBoo-iOS/GoogleService-Info.plist
         env:
           GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.GOOGLE_SERVICE_INFO_BASE64 }}
 
