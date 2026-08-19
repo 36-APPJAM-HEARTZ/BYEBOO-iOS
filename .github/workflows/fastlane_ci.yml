@@ -33,6 +33,25 @@ jobs:
     - name: Install dependencies
       run: bundle install
 
+    - name: Generate GoogleService-Info.plist
+      run: |
+        echo "${GOOGLE_SERVICE_INFO_BASE64}" | base64 --decode > ByeBoo-iOS/GoogleService-Info.plist
+      env:
+        GOOGLE_SERVICE_INFO_BASE64: ${{ secrets.GOOGLE_SERVICE_INFO_BASE64 }}
+
+    - name: Generate Config.xcconfig
+      run: |
+        mkdir -p ByeBoo-iOS/Data/Config
+        cat <<EOF > ByeBoo-iOS/Data/Config/Config.xcconfig
+        BASE_URL = ${BASE_URL}
+        KAKAO_NATIVE_APP_KEY = ${KAKAO_NATIVE_APP_KEY}
+        MIXPANEL_TOKEN = ${MIXPANEL_TOKEN}
+        EOF
+      env:
+        BASE_URL: ${{ secrets.BASE_URL }}
+        KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+        MIXPANEL_TOKEN: ${{ secrets.MIXPANEL_TOKEN }}
+
     - name: Output Fastlane environment
       run: bundle exec fastlane env
 
