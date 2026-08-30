@@ -18,6 +18,7 @@ final class TutorialModalViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
