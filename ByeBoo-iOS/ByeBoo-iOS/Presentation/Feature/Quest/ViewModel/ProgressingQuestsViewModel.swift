@@ -26,6 +26,7 @@ final class ProgressingQuestsViewModel {
     
     private(set) var questsEntity: ProgressingQuestsEntity?
     private var timeCancellabels: AnyCancellable?
+    private var questIndexMap: [Int: IndexPath] = [:]
     
     init(
         progressingQuestsUseCase: GetProgressingQuestsUseCase,
@@ -70,7 +71,8 @@ final class ProgressingQuestsViewModel {
             do {
                 let questsEntity = try await progressingQuestsUseCase.execute()
                 self.questsEntity = questsEntity
-                self.setQuestTimer()
+                setQuestTimer()
+                buildQuestIndexMap(from: questsEntity)
                 questsSubject.send(.success(questsEntity))
                 loadingSubject.send(false)
             } catch(let error as ByeBooError) {
@@ -125,6 +127,16 @@ final class ProgressingQuestsViewModel {
     private func formatTime(_ hours: Int, _ minutes: Int) -> String {
         String(format: "%02d:%02d", hours, minutes)
     }
+    
+    private func buildQuestIndexMap(from quests: ProgressingQuestsEntity) {
+        questIndexMap = [:]
+        
+        for (sectionIndex, step) in quests.steps.enumerated() {
+            for (itemIndex, quest) in step.quests.enumerated() {
+                questIndexMap[quest.questNumber] = IndexPath(item: itemIndex, section: sectionIndex)
+            }
+        }
+    }
 }
 
 extension ProgressingQuestsViewModel {
@@ -138,15 +150,7 @@ extension ProgressingQuestsViewModel {
         )
     }
     var currentQuestIndexPath: IndexPath {
-        var indexPath = IndexPath()
-        
-        for (sectionIndex, step) in steps.enumerated() {
-            if let itemIndex = step.quests.firstIndex(where: { $0.questNumber == currentStep }) {
-                indexPath = IndexPath(item: itemIndex, section: sectionIndex)
-                break
-            }
-        }
-        return indexPath
+        questIndexMap[currentStep] ?? IndexPath()
     }
     
     func getStep(section: Int) -> StepEntity? {
@@ -180,13 +184,11 @@ extension ProgressingQuestsViewModel {
     }
     
     func findQuest(questNumber: Int) -> QuestEntity? {
-        for (sectionIndex, step) in steps.enumerated() {
-            if let itemIndex = step.quests.firstIndex(where: { $0.questNumber == questNumber }) {
-                return getQuest(section: sectionIndex, item: itemIndex)
-            }
+        guard let indexPath = questIndexMap[questNumber] else {
+            return nil
         }
         
-        return nil
+        return getQuest(section: indexPath.section, item: indexPath.item)
     }
 }
 
