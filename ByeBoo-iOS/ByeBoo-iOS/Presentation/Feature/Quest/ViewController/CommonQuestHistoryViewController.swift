@@ -52,7 +52,6 @@ final class CommonQuestHistoryViewController: BaseViewController {
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
             type: .backAndMenu(header: .black),
-            action: #selector(back),
             secondAction: #selector(bottomUp)
         )
         
@@ -85,12 +84,6 @@ final class CommonQuestHistoryViewController: BaseViewController {
 extension CommonQuestHistoryViewController {
     func configure(answerID: Int) {
         self.answerID = answerID
-    }
-}
-
-extension CommonQuestHistoryViewController: BackNavigable {
-    func back() {
-        self.navigationController?.popViewController(animated: false)
     }
 }
 
