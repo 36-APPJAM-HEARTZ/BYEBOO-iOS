@@ -38,8 +38,7 @@ final class LookBackJourneyViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .back(),
-            action: #selector(back)
+            type: .back()
         )
         
         bind()
@@ -98,11 +97,5 @@ extension LookBackJourneyViewController: ToastPresentable, ToastErrorHandler {
                 }
             }
             .store(in: &cancellables)
-    }
-}
-
-extension LookBackJourneyViewController: BackNavigable {
-    func back() {
-        navigationController?.popViewController(animated: false)
     }
 }

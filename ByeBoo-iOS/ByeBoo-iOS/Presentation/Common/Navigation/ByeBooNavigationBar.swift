@@ -123,108 +123,55 @@ struct ByeBooNavigationBar {
         action: Selector?,
         secondAction: Selector? = nil
     ) {
+        navigationItem.leftBarButtonItem = nil
+        navigationItem.hidesBackButton = false
+        
         switch type {
-        case .back:
-            let backButtonItem = makeBarButtonItem(
-                image: .left.withTintColor(.white),
-                target: topViewController,
-                action: action
-            )
-            navigationItem.leftBarButtonItems = [makeSpacer(), backButtonItem]
-            
-        case .backAndMenu:
-            let backButtonItem = makeBarButtonItem(
-                image: .left.withTintColor(.white),
-                target: topViewController,
-                action: action
-            )
-            navigationItem.leftBarButtonItems = [makeSpacer(), backButtonItem]
-            makeTopRightButtonItem(
-                image: .menu,
-                target: topViewController,
-                navigationItem: navigationItem,
-                action: secondAction,
-                padding: 0
-            )
-        case .backAndEdit:
-            let backButtonItem = makeBarButtonItem(
-                image: .left.withTintColor(.white),
-                target: topViewController,
-                action: action
-            )
-            navigationItem.leftBarButtonItems = [makeSpacer(), backButtonItem]
-            
-            let editButtonItem = makeBarButtonItem(
-                image: .edit,
-                target: topViewController,
-                action: secondAction
-            )
-            navigationItem.rightBarButtonItems = [makeSpacer(), editButtonItem]
-            
-        case .title(let string, _):
-            navigationItem.title = string
-            
-        case .close:
-            makeTopRightButtonItem(
-                image: .xicon,
-                target: topViewController,
-                navigationItem: navigationItem,
-                action: action
-            )
-            
-        case .titleAndClose(let string, _):
-            navigationItem.title = string
-            makeTopRightButtonItem(
-                image: .xicon,
-                target: topViewController,
-                navigationItem: navigationItem,
-                action: action
-            )
-            
-        case .titleAndBack(let string, _):
-            navigationItem.title = string
-            let backButtonItem = makeBarButtonItem(
-                image: .left.withTintColor(.white),
-                target: topViewController,
-                action: action
-            )
-            navigationItem.leftBarButtonItems = [makeSpacer(), backButtonItem]
-            
-        case .editAndClose:
-            let editButtonItem = makeBarButtonItem(
-                image: .edit,
-                target: topViewController,
-                action: secondAction
-            )
-            navigationItem.leftBarButtonItems = [makeSpacer(), editButtonItem]
-            makeTopRightButtonItem(
-                image: .xicon,
-                target: topViewController,
-                navigationItem: navigationItem,
-                action: action,
-                padding: 8.adjustedH
-            )
-        case .confirmAndBack:
-            let backButtonItem = makeBarButtonItem(
-                image: .left.withTintColor(.white),
-                target: topViewController,
-                action: action
-            )
-            let confirmButtonItem = makeBarButtonItem(
-                title: "완료",
-                target: topViewController,
-                action: secondAction
-            )
-            navigationItem.leftBarButtonItems = [makeSpacer(), backButtonItem]
-            navigationItem.rightBarButtonItems = [makeSpacer(padding: 16), confirmButtonItem]
+        case .back, .titleAndBack, .backAndMenu, .backAndEdit, .confirmAndBack:
+            setBackButton(navigationItem: navigationItem, target: topViewController, action: action)
         case .none:
-            let emptyItem = makeBarButtonItem(
-                image: UIImage(),
-                target: topViewController,
-                action: nil
-            )
-            navigationItem.leftBarButtonItem = emptyItem
+            navigationItem.hidesBackButton = true
+        case .title, .close, .titleAndClose, .editAndClose:
+            break
         }
+        
+        switch type {
+        case .title(let string, _), .titleAndBack(let string, _), .titleAndClose(let string, _):
+            navigationItem.title = string
+        default:
+            break
+        }
+        
+        switch type {
+        case .backAndMenu:
+            navigationItem.rightBarButtonItem = makeBarButtonItem(image: .menu, target: topViewController, action: secondAction)
+        case .backAndEdit:
+            navigationItem.rightBarButtonItem = makeBarButtonItem(image: .edit, target: topViewController, action: secondAction)
+        case .close, .titleAndClose:
+            navigationItem.rightBarButtonItem = makeBarButtonItem(image: .xicon, target: topViewController, action: action)
+        case .editAndClose:
+            navigationItem.leftBarButtonItem = makeBarButtonItem(image: .edit, target: topViewController, action: secondAction)
+            navigationItem.rightBarButtonItem = makeBarButtonItem(image: .xicon, target: topViewController, action: action)
+        case .confirmAndBack(let title, _):
+            navigationItem.rightBarButtonItem = makeBarButtonItem(title: title, target: topViewController, action: secondAction)
+        default:
+            break
+        }
+    }
+    
+    /// action이 없으면 시스템 back 버튼(스와이프 뒤로가기 포함)을 사용하고,
+    /// 뒤로가기 전 확인 등 커스텀 동작이 필요한 경우에만 action으로 대체한다.
+    private static func setBackButton(
+        navigationItem: UINavigationItem,
+        target: BaseViewController,
+        action: Selector?
+    ) {
+        guard let action else { return }
+        navigationItem.leftBarButtonItem = makeBarButtonItem(
+            image: UIImage(systemName: "chevron.backward"),
+            target: target,
+            action: action
+        )
     }
     
     private static func registerBarAppearance(
@@ -234,6 +181,7 @@ struct ByeBooNavigationBar {
         navigationController?.navigationBar.do {
             $0.standardAppearance = barAppearance
             $0.scrollEdgeAppearance = barAppearance
+            $0.tintColor = .white
         }
     }
     
@@ -267,28 +215,5 @@ struct ByeBooNavigationBar {
             target: target,
             action: action
         )
-    }
-    
-    private static func makeTopRightButtonItem(
-        image: UIImage,
-        target: BaseViewController,
-        navigationItem: UINavigationItem,
-        action: Selector?,
-        padding: CGFloat = 16.adjustedW
-    ) {
-        let closeButtonItem = makeBarButtonItem(image: image, target: target, action: action)
-        let spacer = makeSpacer(padding: padding)
-        navigationItem.rightBarButtonItems = [spacer, closeButtonItem]
-    }
-    
-    private static func makeSpacer(padding: CGFloat = 2.adjustedW) -> UIBarButtonItem {
-        let spacer = UIBarButtonItem(
-            barButtonSystemItem: .fixedSpace,
-            target: nil,
-            action: nil
-        )
-        spacer.width = padding
-        
-        return spacer
     }
 }
