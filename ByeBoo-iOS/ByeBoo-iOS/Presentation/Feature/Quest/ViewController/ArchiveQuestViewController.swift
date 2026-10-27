@@ -122,7 +122,7 @@ extension ArchiveQuestViewController: ToastPresentable, ToastErrorHandler {
     }
 }
 
-extension ArchiveQuestViewController: Dismissible {
+extension ArchiveQuestViewController: Dismissible, ReviewRequestProtocol {
     func close() {
         guard let entryViewController else { return }
         switch entryViewController {
@@ -140,6 +140,12 @@ extension ArchiveQuestViewController: Dismissible {
                     viewController: viewController,
                     withAnimation: true
                 )
+            }
+            
+            if entryViewController == .writeQuest,
+               let questNumber = viewModel.entity?.questNumber,
+               requestQuestNumber.contains(questNumber) {
+                reviewRequest()
             }
         }
     }
