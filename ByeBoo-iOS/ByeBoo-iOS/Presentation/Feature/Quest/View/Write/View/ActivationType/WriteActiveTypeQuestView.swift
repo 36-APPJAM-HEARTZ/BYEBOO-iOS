@@ -214,7 +214,7 @@ extension WriteActiveTypeQuestView: WriteQuestBaseProtocol {
         textCountLabel
     }
     var tipTagView: UIView {
-        headerView.tipTag ?? UIView()
+        headerView.tipTag
     }
     var bottomView: UIView {
         bottomContainerView

@@ -86,7 +86,7 @@ extension HomeViewModel: ViewModelType {
                 async let journey: Void = fetchJourney()
                 async let hasNotification: Void = fetchHasUnreadNotification()
                 
-                let _ = await (dialogue, status, journey)
+                let _ = await (dialogue, status, journey, hasNotification)
             }
             
         case .helperDidTap:

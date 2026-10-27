@@ -76,7 +76,8 @@ extension CommonQuestBottomSheetViewModel {
             do {
                 try await blockUserUseCase.execute(userID: userID)
                 blockUserSubject.send(.success(()))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 blockUserSubject.send(.failure(error))
             }
         }
@@ -87,7 +88,8 @@ extension CommonQuestBottomSheetViewModel {
             do {
                 try await reportCommonQuestUseCase.execute(targetID: targetID, targetType: targetType)
                 reportQuestSubject.send(.success(()))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 reportQuestSubject.send(.failure(error))
             }
         }
@@ -98,7 +100,8 @@ extension CommonQuestBottomSheetViewModel {
             do {
                 try await deleteCommonQuestUseCase.execute(answerID: answerID)
                 deleteQuestSubject.send(.success(()))
-            } catch(let error as ByeBooError){
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 deleteQuestSubject.send(.failure(error))
             }
         }
@@ -109,7 +112,8 @@ extension CommonQuestBottomSheetViewModel {
             do {
                 try await deleteCommentReplyUseCase.execute(commentID: commentID)
                 deleteQuestSubject.send(.success(()))
-            } catch(let error as ByeBooError){
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 deleteQuestSubject.send(.failure(error))
             }
         }
