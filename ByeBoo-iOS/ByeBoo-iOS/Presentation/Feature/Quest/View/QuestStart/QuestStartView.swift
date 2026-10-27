@@ -15,7 +15,6 @@ final class QuestStartView: BaseView {
     private var nickname: String?
     private var journey: String?
     
-    private(set) var backButton = UIImageView()
     private let titleLabel = UILabel()
     private let cloverImageView = UIImageView()
     private let descriptionLabel = UILabel()
@@ -23,10 +22,6 @@ final class QuestStartView: BaseView {
     
     override func setStyle() {
         backgroundColor = .grayscale900
-        backButton.do {
-            $0.image = .left.withTintColor(.white)
-            $0.isUserInteractionEnabled = true
-        }
         titleLabel.do {
             $0.applyByeBooFont(
                 style: .head1M24,
@@ -56,7 +51,6 @@ final class QuestStartView: BaseView {
     
     override func setUI() {
         addSubviews(
-            backButton,
             titleLabel,
             cloverImageView,
             descriptionLabel,
@@ -65,13 +59,8 @@ final class QuestStartView: BaseView {
     }
     
     override func setLayout() {
-        backButton.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(72.adjustedH)
-            $0.leading.equalToSuperview().inset(24.adjustedW)
-            $0.size.equalTo(24.adjustedW)
-        }
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(backButton.snp.bottom).offset(67.adjustedH)
+            $0.top.equalTo(safeAreaLayoutGuide.snp.top).offset(69.adjustedH)
             $0.centerX.equalToSuperview()
         }
         cloverImageView.snp.makeConstraints {

@@ -90,9 +90,10 @@ extension NewJourneySelectViewController {
         
         let viewController = ViewControllerFactory.shared.makeQuestStartViewController()
         viewController.configure(journeyTitle: journeyType.title)
-        viewController.modalPresentationStyle = .fullScreen
         viewController.delegate = self
-        self.present(viewController, animated: false)
+        let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        self.present(navigationController, animated: false)
         
         let property = QuestEvents.NewJourneyProperty(newJourneyType: journeyType.mixpanelKey)
         Mixpanel.mainInstance().track(

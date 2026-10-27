@@ -207,12 +207,13 @@ extension CommonQuestHistoryViewController: CommentProtocol {
             viewModel.action(.fetchQuestDetail(answerID: answerID))
         }
         
-        if let sheet =  viewController.sheetPresentationController{
+        let navigationController = UINavigationController(rootViewController: viewController)
+        if let sheet = navigationController.sheetPresentationController {
             sheet.detents = [.large()]
             sheet.prefersGrabberVisible = true
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
         }
-        self.present(viewController, animated: true)
+        self.present(navigationController, animated: true)
     }
     
     func menuButtonDidTap(commentID: Int, isMyComment: Bool) {

@@ -17,8 +17,9 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     
     func moveQuestStart() {
         let viewController = ViewControllerFactory.shared.makeQuestStartViewController()
-        viewController.modalPresentationStyle = .fullScreen
-        rootViewController?.present(viewController, animated: false)
+        let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        rootViewController?.present(navigationController, animated: false)
     }
     
     func moveFinishQuest() {

@@ -50,6 +50,13 @@ final class CommonQuestReplyViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        ByeBooNavigationBar.makeNavigationBar(
+            navigationItem: self.navigationItem,
+            navigationController: self.navigationController,
+            type: .titleAndBack("답글"),
+            action: #selector(backButtonDidTap)
+        )
+        
         configureDataSource()
         bind()
     }
@@ -57,10 +64,6 @@ final class CommonQuestReplyViewController: BaseViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         removeKeyboardObservers()
-    }
-    
-    override func setAddTarget() {
-        rootView.backButton.addTarget(self, action: #selector(backButtonDidTap), for: .touchUpInside)
     }
     
     override func setDelegate() {
