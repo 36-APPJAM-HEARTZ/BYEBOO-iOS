@@ -10,7 +10,6 @@ import UIKit
 import SnapKit
 import Then
 
-
 final class SplashView: BaseView {
     private let backgroundImageView = UIImageView()
     private let logoImageView = UIImageView()
@@ -18,7 +17,8 @@ final class SplashView: BaseView {
     override func setStyle() {
         backgroundImageView.do {
             $0.image = .bgDark
-            $0.contentMode = .scaleAspectFit
+            $0.contentMode = .scaleAspectFill
+            $0.clipsToBounds = true
         }
         
         logoImageView.do {
