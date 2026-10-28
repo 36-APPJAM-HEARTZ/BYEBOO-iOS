@@ -66,29 +66,29 @@ final class QuestCardView: BaseView {
     
     override func setLayout() {
         backgroundView.snp.makeConstraints {
-            $0.width.equalTo(158.adjustedW)
-            $0.height.equalTo(198.adjustedH)
+            $0.width.equalTo(158)
+            $0.height.equalTo(198)
         }
         
         cardImageView.snp.makeConstraints {
-            $0.top.equalTo(backgroundView.snp.top).offset(23.adjustedH)
+            $0.top.equalTo(backgroundView.snp.top).offset(23)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(56.adjustedW)
-            $0.height.equalTo(56.adjustedH)
+            $0.width.equalTo(56)
+            $0.height.equalTo(56)
         }
         
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(cardImageView.snp.bottom).offset(10.adjustedH)
+            $0.top.equalTo(cardImageView.snp.bottom).offset(10)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(114.adjustedW)
-            $0.height.equalTo(22.adjustedH)
+            $0.width.equalTo(114)
+            $0.height.equalTo(22)
         }
         
         subTitleLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(10.adjustedH)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(10)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(114.adjustedW)
-            $0.height.equalTo(63.adjustedH)
+            $0.width.equalTo(114)
+            $0.height.equalTo(63)
         }
     }
     

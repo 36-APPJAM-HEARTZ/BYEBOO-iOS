@@ -10,8 +10,8 @@ import UIKit
 import SnapKit
 import Then
 
-final class SplashView: BaseView {
-    private let backgroundImageView = UIImageView()
+final class SplashView: BaseView, ArrangementBackground {
+    let backgroundImageView = UIImageView()
     private let logoImageView = UIImageView()
     
     override func setStyle() {

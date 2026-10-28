@@ -38,25 +38,16 @@ final class InformationViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setTopNavigationBar(type: .none())
+        navigationItem.hidesBackButton = true
         setAddTarget(informationBaseView: informationBaseView)
         bind()
     }
-    
+
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
         if let inputNicknameView = informationBaseView.informationView as? InputNicknameView {
             inputNicknameView.nicknameTextField.setTextFieldStyle(.onBeginEditing)
         }
-    }
-    
-    private func setTopNavigationBar(type: NavigationBarType) {
-        ByeBooNavigationBar.makeNavigationBar(
-            navigationItem: self.navigationItem,
-            navigationController: self.navigationController,
-            type: type,
-            action: type == .none() ? nil : #selector(back)
-        )
     }
     
     private func setAddTarget(informationBaseView: InformationBaseView) {
@@ -161,7 +152,7 @@ extension InformationViewController: ToastPresentable, ToastErrorHandler {
                     let loadingViewController = LoadingViewController()
                     loadingViewController.nickname = userName
                     loadingViewController.navigationItem.hidesBackButton = true
-                    self?.navigationController?.pushViewController(loadingViewController, animated: false)
+                    self?.navigationController?.pushViewController(loadingViewController.arrangedWithEmptyView(), animated: false)
                 case .failure:
                     break
                 }
@@ -175,13 +166,6 @@ extension InformationViewController {
     private func move(view: BaseView, progress: ProgressBarType) {
         self.informationBaseView.replace(informationView: view, progressBarType: progress)
         setAddTarget(informationBaseView: informationBaseView)
-        
-        switch view {
-        case is InputNicknameView: setTopNavigationBar(type: .none())
-        case is SelectQuestView: setTopNavigationBar(type: .back())
-        default:
-            break
-        }
     }
 }
 

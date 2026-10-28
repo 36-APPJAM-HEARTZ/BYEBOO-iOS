@@ -86,31 +86,36 @@ final class CardJourneyView: BaseView {
         backgroundView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
+        // iPhone Duo 대응
+        // - 안내 문구, 카드, 확인 버튼을 한 덩어리로 safe area 가운데에 둠 (기존 디자인도 812pt 기준 가운데)
+        // - 높이가 낮은 화면(펼친 Duo 가로, 외부 디스플레이)에서는 카드가 290:420 비율을 유지한 채 줄어듦
         tipDescriptionLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(145.adjustedH)
-            $0.centerX.equalToSuperview()
+            $0.top.greaterThanOrEqualTo(safeAreaLayoutGuide).inset(24)
+            $0.bottom.equalTo(containerView.snp.top).offset(-32)
+            $0.centerX.equalTo(safeAreaLayoutGuide)
         }
         containerView.snp.makeConstraints {
-            $0.top.equalTo(tipDescriptionLabel.snp.bottom).offset(32.adjustedH)
-            $0.centerX.equalToSuperview()
+            $0.centerY.equalTo(safeAreaLayoutGuide)
+            $0.centerX.equalTo(safeAreaLayoutGuide)
+            $0.width.equalTo(containerView.snp.height).multipliedBy(290.0 / 420.0)
+            $0.height.lessThanOrEqualTo(420)
+            $0.height.equalTo(420).priority(.high)
         }
         cardImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
-            $0.width.equalTo(290.adjustedW)
-            $0.height.equalTo(420.adjustedH)
         }
         descriptionImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
-            $0.width.equalTo(290.adjustedW)
-            $0.height.equalTo(420.adjustedH)
         }
         descriptionLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(139.adjustedH)
+            // 카드 높이 420 중 139 위치를 카드 크기에 비례하게 유지
+            $0.top.equalTo(descriptionImageView.snp.bottom).multipliedBy(139.0 / 420.0)
             $0.centerX.equalToSuperview()
         }
         confirmLabel.snp.makeConstraints {
-            $0.top.equalTo(containerView.snp.bottom).offset(32.adjustedH)
-            $0.centerX.equalToSuperview()
+            $0.top.equalTo(containerView.snp.bottom).offset(32)
+            $0.bottom.lessThanOrEqualTo(safeAreaLayoutGuide).inset(24)
+            $0.centerX.equalTo(safeAreaLayoutGuide)
         }
     }
 }
