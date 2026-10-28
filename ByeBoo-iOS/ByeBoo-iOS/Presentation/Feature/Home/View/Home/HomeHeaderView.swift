@@ -7,17 +7,19 @@
 
 import UIKit
 
+import SnapKit
+
 final class HomeHeaderView: BaseView {
     
-    private(set) var noticeButton = UIButton()
     private(set) var homeStateView: HomeStateView = HomeStateView(state: .beforeJourneyStart)
     
     private let stackView = UIStackView()
     private let helperButtonImage = UIImageView()
     let helperButton = UIButton()
-    private let helperImageView = UIImageView()
+    private(set) var helperImageView = UIImageView()
     
     private let state: HomeState = .afterJourney
+    private var stackViewTopConstraint: Constraint?
     
     override func setStyle() {
         backgroundColor = .clear
@@ -41,7 +43,6 @@ final class HomeHeaderView: BaseView {
     
     override func setUI() {
         addSubviews(
-            noticeButton,
             stackView,
             helperButton,
             helperImageView
@@ -52,28 +53,32 @@ final class HomeHeaderView: BaseView {
         )
     }
     
+    // iPhone Duo 대응: 네비바가 세로 바로 가서 위쪽 safe area가 0이면 기존 디자인 여백(108) 대신 위로 붙임
+    override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        stackViewTopConstraint?.update(inset: safeAreaInsets.top > 0 ? 108 : 20)
+    }
+    
     override func setLayout() {
-        noticeButton.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(72.adjustedH)
-            $0.trailing.equalToSuperview().inset(24.adjustedH)
-            $0.size.equalTo(24.adjustedW)
-        }
         stackView.snp.makeConstraints {
-            $0.top.equalTo(noticeButton.snp.bottom).offset(12.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            // 기존 디자인 위치(화면 위에서 72 + 알림 버튼 24 + 12)를 유지하되 네비바 아래로는 들어가지 않음
+            self.stackViewTopConstraint = $0.top.equalToSuperview().inset(108).priority(.high).constraint
+            $0.top.greaterThanOrEqualTo(safeAreaLayoutGuide)
+            $0.horizontalEdges.equalToSuperview().inset(24)
         }
         helperButton.snp.makeConstraints {
-            $0.top.equalTo(stackView.snp.bottom).offset(20.5.adjustedH)
-            $0.trailing.equalToSuperview().inset(24.adjustedW)
-            $0.size.equalTo(36.adjustedW)
+            $0.top.equalTo(stackView.snp.bottom).offset(20.5)
+            $0.trailing.equalToSuperview().inset(24)
+            $0.size.equalTo(36)
         }
         helperImageView.snp.makeConstraints {
-            $0.top.equalTo(helperButton.snp.bottom).offset(4.adjustedH)
-            $0.trailing.equalToSuperview().inset(24.adjustedW)
+            $0.top.equalTo(helperButton.snp.bottom).offset(4)
+            $0.trailing.equalToSuperview().inset(24)
         }
         
         self.snp.makeConstraints {
-            $0.height.greaterThanOrEqualTo(100.adjustedH)
+            $0.height.greaterThanOrEqualTo(100)
+            $0.bottom.equalTo(helperButton.snp.bottom)
         }
     }
 }
@@ -90,15 +95,6 @@ extension HomeHeaderView {
         stackView.subviews.dropFirst().forEach {
             stackView.removeArrangedSubview($0)
             $0.removeFromSuperview()
-        }
-        stackView.snp.remakeConstraints {
-            $0.top.equalTo(noticeButton.snp.bottom).offset(12.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-        }
-        self.snp.makeConstraints {
-            $0.top.equalToSuperview()
-            $0.horizontalEdges.equalToSuperview()
-            $0.bottom.equalTo(helperButton.snp.bottom)
         }
     }
     
@@ -127,8 +123,4 @@ extension HomeHeaderView {
         helperImageView.alpha = 0
     }
     
-    func updateNotice(isExist: Bool) {
-        let image: UIImage = isExist ? .existNotice : .emptyNotice
-        noticeButton.setImage(image, for: .normal)
-    }
 }

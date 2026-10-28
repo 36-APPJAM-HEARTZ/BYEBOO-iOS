@@ -49,7 +49,13 @@ final class HomeViewController: BaseViewController {
         viewModel.action(.viewWillAppear)
         if isFirstVisit { isFirstVisit.toggle() }
         
-        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        // 알림 버튼은 시스템 네비바 오른쪽 버튼. iPhone Duo에서는 세로 바 안으로 들어감
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        ByeBooNavigationBar.makeNavigationBar(
+            navigationItem: navigationItem,
+            navigationController: navigationController,
+            type: .none()
+        )
         
         let property = HomeEvents.HomePageProperty(
             isFirstPageView: isFirstVisit,
@@ -68,10 +74,11 @@ final class HomeViewController: BaseViewController {
             action: #selector(helperDidTap),
             for: .touchUpInside
         )
-        rootView.headerView.noticeButton.addTarget(
-            self,
-            action: #selector(noticeButtonDidTap),
-            for: .touchUpInside
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage.emptyNotice.withRenderingMode(.alwaysOriginal),
+            style: .plain,
+            target: self,
+            action: #selector(noticeButtonDidTap)
         )
     }
     
@@ -119,8 +126,6 @@ extension HomeViewController {
     private func noticeButtonDidTap() {
         let viewController = ViewControllerFactory.shared.makeNotificationsViewController()
         viewController.hidesBottomBarWhenPushed = true
-        
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.pushViewController(viewController, animated: false)
     }
     
@@ -214,7 +219,8 @@ extension HomeViewController: ToastPresentable, ToastErrorHandler {
             .sink { [weak self] result in
                 switch result {
                 case .success(let entity):
-                    self?.rootView.headerView.updateNotice(isExist: entity.hasUnread)
+                    let image: UIImage = entity.hasUnread ? .existNotice : .emptyNotice
+                    self?.navigationItem.rightBarButtonItem?.image = image.withRenderingMode(.alwaysOriginal)
                 case .failure(let error):
                     self?.handleError(error)
                 }
