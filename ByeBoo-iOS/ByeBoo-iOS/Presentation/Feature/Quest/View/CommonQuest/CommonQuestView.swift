@@ -13,7 +13,15 @@ final class CommonQuestView: BaseView {
     
     private(set) var commonQuestTableView = UITableView()
     private(set) var headerView = CommonQuestHeaderView()
-    
+    private var tableViewTopConstraint: Constraint?
+
+    // iPhone Duo 대응: 상태바가 세로 바로 가서 창 위쪽 safe area가 0이면 탭과 타이틀 사이 여백을 더 줌
+    // 목록 칸은 세로로 길어서 이 뷰의 크기로는 펼친 상태를 판단할 수 없으므로 창 기준
+    override func layoutSubviews() {
+        tableViewTopConstraint?.update(inset: window?.safeAreaInsets.top == 0 ? 12 : 0)
+        super.layoutSubviews()
+    }
+
     override func setStyle() {
         commonQuestTableView.do {
             $0.backgroundColor = .grayscale900
@@ -41,7 +49,8 @@ final class CommonQuestView: BaseView {
     
     override func setLayout() {
         commonQuestTableView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            tableViewTopConstraint = $0.top.equalToSuperview().constraint
+            $0.horizontalEdges.bottom.equalToSuperview()
         }
     }
 }

@@ -101,8 +101,10 @@ final class WriteQuestionTypeQuestView: BaseView {
     }
     
     override func setLayout() {
+        // iPhone Duo 대응: 오른쪽 세로 바(상태바, 탭 바)와 겹치지 않도록 좌우는 safe area 기준
         scrollView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.verticalEdges.equalToSuperview()
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide)
         }
         
         contentView.snp.makeConstraints {
@@ -182,7 +184,7 @@ extension WriteQuestionTypeQuestView: UpdateUIWhenKeyboardProtocol {
         bottomContainerView.removeFromSuperview()
         addSubview(bottomContainerView)
         bottomContainerView.snp.remakeConstraints {
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.trailing.equalTo(safeAreaLayoutGuide)
             $0.height.equalTo(42.adjustedH)
             bottomConstraint = $0.bottom.equalToSuperview().constraint
         }

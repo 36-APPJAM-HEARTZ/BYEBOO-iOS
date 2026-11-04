@@ -12,9 +12,8 @@ import Then
 
 final class QuestTipView: BaseView {
     
-    private let navigationView = UIView()
-    private let titleLabel = UILabel()
-    private(set) var closeButton = UIButton()
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
     private let stepStackView = UIStackView()
     private var stepNum: Int = 0
     private let stepLabel = ByeBooTextTag(type: .gray, text: "STEP 0")
@@ -24,14 +23,15 @@ final class QuestTipView: BaseView {
     
     private let questType: QuestType
     private var tipQuestion: [String] = []
+    private var stepStackViewTopConstraint: Constraint?
     
     override func setUI() {
-        addSubviews(
-            navigationView,
+        addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        contentView.addSubviews(
             stepStackView,
             title
         )
-        navigationView.addSubviews(closeButton, titleLabel)
         stepStackView.addArrangedSubviews(stepLabel, questLabel)
     }
     
@@ -68,7 +68,7 @@ final class QuestTipView: BaseView {
             let iconTitleLabel = IconOneLineTextView(iconType: iconType[index], text: tipQuestion[index])
             let textView = TextBoxView(title: tip.tipAnswer)
             let dividerView = SectionDividerView()
-            self.addSubviews(iconTitleLabel, textView, dividerView)
+            contentView.addSubviews(iconTitleLabel, textView, dividerView)
             
             iconTitleLabel.snp.makeConstraints {
                 let offset = previousView == title ? 36.5.adjustedH : 24.5.adjustedH
@@ -89,26 +89,15 @@ final class QuestTipView: BaseView {
                 previousView = dividerView
             }
             
+            if index == tips.count - 1 {
+                textView.snp.makeConstraints {
+                    $0.bottom.equalToSuperview().inset(24.adjustedH)
+                }
+            }
         }
     }
     
     override func setStyle() {
-        navigationView.do {
-            $0.backgroundColor = .grayscale900
-        }
-        
-        titleLabel.applyByeBooFont (
-            style: .sub1Sb20,
-            text: "퀘스트 작성 TIP",
-            color: .white
-        )
-        
-        closeButton.do {
-            let image = UIImage.xicon.withRenderingMode(.alwaysTemplate)
-            $0.setImage(image, for: .normal)
-            $0.tintColor = .white
-        }
-        
         stepStackView.do {
             $0.axis = .horizontal
             $0.spacing = 8
@@ -127,27 +116,27 @@ final class QuestTipView: BaseView {
         }
     }
     
+    // iPhone Duo 대응: 네비바가 세로 바로 가서 위쪽 safe area가 0이면 화면 위에 붙지 않도록 여백을 더 줌
+    override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        stepStackViewTopConstraint?.update(inset: safeAreaInsets.top > 0 ? 8.adjustedH : 24)
+    }
+    
     override func setLayout() {
         backgroundColor = .grayscale900
         
-        navigationView.snp.makeConstraints {
-            $0.top.equalTo(safeAreaLayoutGuide.snp.top)
-            $0.leading.trailing.equalTo(safeAreaLayoutGuide)
-            $0.height.equalTo(24.adjustedH)
+        // iPhone Duo 대응: 오른쪽 세로 바(네비바, 상태바)와 겹치지 않도록 safe area 기준. 낮은 화면에서는 스크롤
+        scrollView.snp.makeConstraints {
+            $0.edges.equalTo(safeAreaLayoutGuide)
         }
         
-        titleLabel.snp.makeConstraints {
-            $0.center.equalTo(navigationView.snp.center)
-        }
-        
-        closeButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(24)
-            $0.centerY.equalTo(navigationView.snp.centerY)
-            $0.width.height.equalTo(24.adjustedW)
+        contentView.snp.makeConstraints {
+            $0.edges.equalTo(scrollView.contentLayoutGuide)
+            $0.width.equalTo(scrollView.frameLayoutGuide)
         }
         
         stepStackView.snp.makeConstraints {
-            $0.top.equalTo(navigationView.snp.bottom).offset(28.adjustedH)
+            stepStackViewTopConstraint = $0.top.equalToSuperview().inset(8.adjustedH).constraint
             $0.centerX.equalToSuperview()
         }
         

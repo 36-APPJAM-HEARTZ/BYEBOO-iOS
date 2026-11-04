@@ -55,12 +55,12 @@ final class QuestStateCell: UICollectionViewCell {
     }
     
     private func setLayout() {
+        // iPhone Duo 대응: 칸 크기는 레이아웃(CollectionViewFactory)이 정하고, 안쪽은 디자인 비율(96 : 80 : 24)대로
         questBackgroundView.snp.makeConstraints {
-            $0.center.equalToSuperview()
-            $0.width.height.equalTo(96.adjustedW)
+            $0.edges.equalToSuperview()
         }
         frontView.snp.makeConstraints {
-            $0.width.height.equalTo(80.adjustedW)
+            $0.size.equalTo(questBackgroundView).multipliedBy(80.0 / 96.0)
             $0.center.equalToSuperview()
         }
         questNumberLabel.snp.makeConstraints {
@@ -68,7 +68,7 @@ final class QuestStateCell: UICollectionViewCell {
             $0.leading.equalTo(frontView.snp.leading)
         }
         imageContentView.snp.makeConstraints {
-            $0.width.height.equalTo(80.adjustedW)
+            $0.size.equalTo(questBackgroundView).multipliedBy(80.0 / 96.0)
             $0.center.equalToSuperview()
         }
         timerLabel.snp.makeConstraints {
@@ -115,10 +115,10 @@ extension QuestStateCell {
             switch state {
             case .upComing, .locked:
                 $0.center.equalToSuperview()
-                $0.width.height.equalTo(24.adjustedW)
+                $0.size.equalToSuperview().multipliedBy(24.0 / 80.0)
             case .completed:
                 $0.centerX.equalToSuperview()
-                $0.width.height.equalTo(80.adjustedW)
+                $0.size.equalToSuperview()
                 $0.edges.equalToSuperview().inset(
                     UIEdgeInsets(
                         top: 8.adjustedH,
@@ -129,7 +129,7 @@ extension QuestStateCell {
                 )
             case .ongoing:
                 $0.centerX.equalToSuperview()
-                $0.width.height.equalTo(80.adjustedW)
+                $0.size.equalToSuperview()
             }
         }
     }
