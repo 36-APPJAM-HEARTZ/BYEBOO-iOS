@@ -22,7 +22,6 @@ struct WriteActiveTypeViewModel: ViewModelType {
     private let isValidQuestAnswerUseCase: IsValidQuestAnswerUseCase
     
     private let questInfoResultSubject: PassthroughSubject<Result<QuestInfoEntity, ByeBooError>, Never> = .init()
-    private let questActiveResultSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private let didSuccessPostSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private let didSuccessEditSubject: PassthroughSubject<Result<Void, ByeBooError>, Never> = .init()
     private let isValidTextSubject: PassthroughSubject<Bool, Never> = .init()

@@ -62,7 +62,6 @@ final class FinishJourneyViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationItem.hidesBackButton = true
         tabBarController?.hidesBottomBarWhenPushed = true
     }
     

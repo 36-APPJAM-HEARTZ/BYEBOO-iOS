@@ -8,7 +8,6 @@
 import Combine
 import UIKit
 
-import SnapKit
 import Then
 import Mixpanel
 
@@ -117,7 +116,6 @@ extension HomeViewController {
         Mixpanel.mainInstance().track(event: HomeEvents.Name.tutorialIconClick)
         
         let tutorialViewController = TutorialModalViewController()
-        tutorialViewController.navigationItem.hidesBackButton = true
         tutorialViewController.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(tutorialViewController, animated: false)
     }

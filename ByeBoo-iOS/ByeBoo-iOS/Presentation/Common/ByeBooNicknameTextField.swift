@@ -32,17 +32,6 @@ enum NicknameFieldType {
             return UIColor.error300.cgColor
         }
     }
-    
-    var errorImage: UIImage? {
-        switch self {
-        case .onBeginEditing:
-            return .error
-        case .normal:
-            return nil
-        case .error:
-            return .errorRed
-        }
-    }
 }
 
 final class ByeBooNicknameTextField: BaseView {

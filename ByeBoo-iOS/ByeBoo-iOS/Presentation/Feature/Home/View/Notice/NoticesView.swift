@@ -42,14 +42,12 @@ final class NoticesView: BaseView {
         )
     }
     
-    // iPhone Duo 대응: 네비바가 세로 바로 가서 위쪽 safe area가 0이면 화면 위에 붙지 않도록 여백을 더 줌
     override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
         headerTopConstraint?.update(offset: safeAreaInsets.top > 0 ? 16.adjustedH : 24)
     }
     
     override func setLayout() {
-        // iPhone Duo 대응: 오른쪽 세로 바와 겹치지 않도록 safe area 기준, 전체 폭은 가장 큰 iPhone(440)까지만 쓰고 가운데 정렬
         noticesHeaderView.snp.makeConstraints {
             headerTopConstraint = $0.top.equalTo(safeAreaLayoutGuide.snp.top).offset(16.adjustedH).constraint
             $0.centerX.equalTo(safeAreaLayoutGuide)

@@ -33,8 +33,6 @@ final class AIAnswerViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.hidesBackButton = true
-        
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,

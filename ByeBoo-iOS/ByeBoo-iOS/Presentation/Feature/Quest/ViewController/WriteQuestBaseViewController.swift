@@ -35,7 +35,6 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
     var isKeyboardUsed: Bool = false
     private var keyboardFrameInWindow: CGRect = .zero
     private var currentKeyboardOffset: CGFloat = 0
-    private var previousTextViewHeight: CGFloat = 0
     
     init(rootView: RootView) {
         self.rootView = rootView

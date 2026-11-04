@@ -108,7 +108,6 @@ final class WriteActiveTypeQuestView: BaseView {
     }
     
     override func setLayout() {
-        // iPhone Duo 대응: 오른쪽 세로 바(상태바, 탭 바)와 겹치지 않도록 좌우는 safe area 기준
         scrollView.snp.makeConstraints {
             $0.verticalEdges.equalToSuperview()
             $0.horizontalEdges.equalTo(safeAreaLayoutGuide)

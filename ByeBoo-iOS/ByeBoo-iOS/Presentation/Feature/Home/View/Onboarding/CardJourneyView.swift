@@ -86,9 +86,6 @@ final class CardJourneyView: BaseView {
         backgroundView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
-        // iPhone Duo 대응
-        // - 안내 문구, 카드, 확인 버튼을 한 덩어리로 safe area 가운데에 둠 (기존 디자인도 812pt 기준 가운데)
-        // - 높이가 낮은 화면(펼친 Duo 가로, 외부 디스플레이)에서는 카드가 290:420 비율을 유지한 채 줄어듦
         tipDescriptionLabel.snp.makeConstraints {
             $0.top.greaterThanOrEqualTo(safeAreaLayoutGuide).inset(24)
             $0.bottom.equalTo(containerView.snp.top).offset(-32)

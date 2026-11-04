@@ -82,7 +82,6 @@ final class HomeView: BaseView {
             $0.bottom.equalTo(homeBori.snp.top).offset(-40)
         }
         
-        // 좌우는 오른쪽 세로 바(상태바, 탭 바)와 겹치지 않도록 safe area 기준
         // 세로로 긴 큰 화면(펼친 Duo를 세로로 돌린 경우)에서도 iPhone처럼 보이도록 헤더 폭은 가장 큰 iPhone(440)까지만
         compactConstraints = homeBori.snp.prepareConstraints {
             $0.centerX.equalTo(safeAreaLayoutGuide)

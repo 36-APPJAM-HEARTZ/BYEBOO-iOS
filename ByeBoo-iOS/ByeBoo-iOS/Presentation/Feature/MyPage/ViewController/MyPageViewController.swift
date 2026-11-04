@@ -288,7 +288,6 @@ extension MyPageViewController {
     @objc
     private func viewByeBooWorldDidTap() {
         let tutorialViewController = TutorialModalViewController()
-        tutorialViewController.navigationItem.hidesBackButton = true
         tutorialViewController.hidesBottomBarWhenPushed = true
         // 펼친 iPhone Duo에서는 목록 오른쪽에, 그 외에는 push
         showDetail(tutorialViewController)

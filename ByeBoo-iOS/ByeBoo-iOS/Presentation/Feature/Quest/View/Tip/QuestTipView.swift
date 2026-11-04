@@ -116,7 +116,6 @@ final class QuestTipView: BaseView {
         }
     }
     
-    // iPhone Duo 대응: 네비바가 세로 바로 가서 위쪽 safe area가 0이면 화면 위에 붙지 않도록 여백을 더 줌
     override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
         stepStackViewTopConstraint?.update(inset: safeAreaInsets.top > 0 ? 8.adjustedH : 24)
@@ -125,7 +124,6 @@ final class QuestTipView: BaseView {
     override func setLayout() {
         backgroundColor = .grayscale900
         
-        // iPhone Duo 대응: 오른쪽 세로 바(네비바, 상태바)와 겹치지 않도록 safe area 기준. 낮은 화면에서는 스크롤
         scrollView.snp.makeConstraints {
             $0.edges.equalTo(safeAreaLayoutGuide)
         }

@@ -7,8 +7,6 @@
 
 import UIKit
 
-import SnapKit
-
 enum NavigationHeaderType {
     case clear
     case black

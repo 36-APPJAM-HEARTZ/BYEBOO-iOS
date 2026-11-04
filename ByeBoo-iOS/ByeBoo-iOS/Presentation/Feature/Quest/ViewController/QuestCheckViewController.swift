@@ -8,7 +8,6 @@
 import Combine
 import UIKit
 
-import SnapKit
 import Mixpanel
 
 final class QuestCheckViewController: BaseViewController {

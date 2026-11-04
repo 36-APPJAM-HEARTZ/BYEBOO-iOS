@@ -110,23 +110,6 @@ final class ListDetailArrangementViewController: UIArrangementViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        #if DEBUG
-        // TODO: Duo 레이아웃 확인용 임시 로그. 확인 후 삭제
-        let primaryView: UIView = primaryNavigationController.view
-        let navigationBar = primaryNavigationController.navigationBar
-        NSLog("[Duo] view \(view.bounds.size) safe \(view.safeAreaInsets)")
-        NSLog("[Duo] primary frame \(primaryView.frame) safe \(primaryView.safeAreaInsets) top safe \(primaryNavigationController.topViewController?.view.safeAreaInsets ?? .zero)")
-        NSLog("[Duo] primary navBar isHidden \(navigationBar.isHidden) navHidden \(primaryNavigationController.isNavigationBarHidden) frame \(navigationBar.frame)")
-        NSLog("[Duo] secondary frame \(secondaryNavigationController.view.frame)")
-        var stack: [UIView] = [primaryView]
-        while let current = stack.popLast() {
-            if let scrollView = current as? UIScrollView, scrollView is UICollectionView || scrollView is UITableView {
-                NSLog("[Duo] \(type(of: scrollView)) frame \(scrollView.convert(scrollView.bounds, to: primaryView)) safe \(scrollView.safeAreaInsets) adjusted \(scrollView.adjustedContentInset)")
-            }
-            stack += current.subviews
-        }
-        #endif
-
         updatePrimaryTrailingInset()
         
         // 레이아웃 중에 네비게이션 스택을 바꾸지 않도록 다음 런루프에서 처리
@@ -150,10 +133,6 @@ final class ListDetailArrangementViewController: UIArrangementViewController {
     }
 
     fileprivate func openDetail(_ viewController: UIViewController) {
-        #if DEBUG
-        let secondaryState = state(for: .secondary)
-        NSLog("[Duo] openDetail \(type(of: viewController)) secondaryState hidden \(String(describing: secondaryState?.isHidden)) axis \(String(describing: secondaryState?.splitAxis)) isSplit \(isSplit) view \(view.bounds.size) primary \(primaryNavigationController.viewControllers.count) secondary \(secondaryNavigationController.viewControllers.count)")
-        #endif
         if isSecondaryVisible {
             viewController.hidesBottomBarWhenPushed = false
             secondaryNavigationController.setViewControllers([emptyViewController, viewController], animated: false)

@@ -14,7 +14,6 @@ final class HomeHeaderView: BaseView {
     private(set) var homeStateView: HomeStateView = HomeStateView(state: .beforeJourneyStart)
     
     private let stackView = UIStackView()
-    private let helperButtonImage = UIImageView()
     let helperButton = UIButton()
     private(set) var helperImageView = UIImageView()
     
@@ -53,7 +52,6 @@ final class HomeHeaderView: BaseView {
         )
     }
     
-    // iPhone Duo 대응: 네비바가 세로 바로 가서 위쪽 safe area가 0이면 기존 디자인 여백(108) 대신 위로 붙임
     override func safeAreaInsetsDidChange() {
         super.safeAreaInsetsDidChange()
         stackViewTopConstraint?.update(inset: safeAreaInsets.top > 0 ? 108 : 20)

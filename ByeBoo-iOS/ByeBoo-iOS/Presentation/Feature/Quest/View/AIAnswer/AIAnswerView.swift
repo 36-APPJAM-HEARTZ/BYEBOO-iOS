@@ -45,7 +45,6 @@ final class AIAnswerView: BaseView {
     }
     
     override func setLayout() {
-        // iPhone Duo 대응: 오른쪽 세로 바(상태바, 탭 바)와 겹치지 않도록 safe area 기준
         stackView.snp.makeConstraints {
             $0.horizontalEdges.equalTo(safeAreaLayoutGuide).inset(48.adjustedW)
             $0.centerY.equalTo(safeAreaLayoutGuide)
