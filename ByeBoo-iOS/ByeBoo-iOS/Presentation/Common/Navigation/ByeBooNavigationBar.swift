@@ -129,9 +129,10 @@ struct ByeBooNavigationBar {
         switch type {
         case .back, .titleAndBack, .backAndMenu, .backAndEdit, .confirmAndBack:
             setBackButton(navigationItem: navigationItem, target: topViewController, action: action)
-        case .none:
+        case .none, .close, .titleAndClose, .editAndClose:
+            // 닫기 버튼이 있는 화면에 시스템 뒤로가기가 같이 나오지 않도록 숨김
             navigationItem.hidesBackButton = true
-        case .title, .close, .titleAndClose, .editAndClose:
+        case .title:
             break
         }
         

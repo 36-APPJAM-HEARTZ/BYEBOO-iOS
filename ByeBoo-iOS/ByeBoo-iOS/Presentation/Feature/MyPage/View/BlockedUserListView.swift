@@ -36,13 +36,14 @@ final class BlockedUserListView: BaseView {
     
     override func setLayout() {
         userTableView.snp.makeConstraints {
+            // iPhone Duo 대응: 오른쪽 세로 바(상태바, 탭 바)와 겹치지 않도록 좌우는 safe area 기준
             $0.top.equalToSuperview().inset(12.adjustedH)
-            $0.horizontalEdges.equalToSuperview()
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide)
             $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
         emptyLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(334.5.adjustedH)
-            $0.centerX.equalToSuperview()
+            $0.centerX.equalTo(safeAreaLayoutGuide)
         }
     }
 }

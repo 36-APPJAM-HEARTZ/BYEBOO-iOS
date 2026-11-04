@@ -45,17 +45,18 @@ final class LookBackJourneyView: BaseView {
     
     override func setLayout() {
         let safeArea = safeAreaLayoutGuide
+        // iPhone Duo 대응: 오른쪽 세로 바(상태바, 탭 바)와 겹치지 않도록 좌우는 safe area 기준
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(safeArea).inset(10.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.horizontalEdges.equalTo(safeArea).inset(24.adjustedW)
         }
         divider.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(10.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.horizontalEdges.equalTo(safeArea).inset(24.adjustedW)
         }
         journeyView.snp.makeConstraints {
             $0.top.equalTo(divider.snp.bottom).offset(20.adjustedH)
-            $0.horizontalEdges.equalToSuperview()
+            $0.horizontalEdges.equalTo(safeArea)
         }
     }
 }

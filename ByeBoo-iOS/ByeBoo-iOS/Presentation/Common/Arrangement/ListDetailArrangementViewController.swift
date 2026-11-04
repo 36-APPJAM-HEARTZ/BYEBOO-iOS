@@ -91,6 +91,14 @@ final class ListDetailArrangementViewController: UIArrangementViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // 상세 화면들이 viewWillAppear에서 탭 바를 숨기는데, 탭을 전환해 돌아오면 didShow가 불리지 않으므로 여기서 다시 보여줌
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if isSecondaryVisible {
+            tabBarController?.tabBar.isHidden = false
+        }
+    }
+
     // arrangement에는 상태 변경 콜백이 없으므로 크기 변화와 레이아웃 시점에 직접 확인
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)

@@ -42,8 +42,6 @@ final class QuestTipViewController: BaseViewController {
             type: .titleAndClose("퀘스트 작성 TIP", header: .black),
             action: #selector(closeButtonDidTap)
         )
-        // 스택에 push된 경우에도 닫기 버튼만 보이도록 함
-        self.navigationItem.hidesBackButton = true
         
         viewModel.action(.questTipDidLoad(questID: questID))
         bind()

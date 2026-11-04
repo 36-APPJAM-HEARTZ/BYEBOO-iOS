@@ -39,7 +39,8 @@ final class ByeBooTabBar: UITabBarController {
             createViewController(
                 for: myPageViewController,
                 title: "내 정보",
-                imageName: .userOff
+                imageName: .userOff,
+                container: myPageViewController.embeddedInListDetail()
             )
         ]
     }

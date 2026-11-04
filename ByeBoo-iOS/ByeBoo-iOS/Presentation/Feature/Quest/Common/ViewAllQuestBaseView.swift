@@ -37,8 +37,9 @@ final class ViewAllQuestBaseView: BaseView {
     override func setLayout() {
         // iPhone Duo 대응: 넓은 화면에서 칸이 너무 커지지 않도록 가장 큰 iPhone 폭(440)까지만 쓰고 가운데 정렬
         questCheckHeaderView.snp.makeConstraints {
-            $0.centerX.equalToSuperview()
-            $0.width.equalToSuperview().priority(.high)
+            // 오른쪽 칸에서 세로 바와 겹치지 않도록 safe area 기준
+            $0.centerX.equalTo(safeAreaLayoutGuide)
+            $0.width.equalTo(safeAreaLayoutGuide).priority(.high)
             $0.width.lessThanOrEqualTo(440)
             if questCheckHeaderView is QuestCheckHeaderView {
                 $0.top.equalToSuperview()

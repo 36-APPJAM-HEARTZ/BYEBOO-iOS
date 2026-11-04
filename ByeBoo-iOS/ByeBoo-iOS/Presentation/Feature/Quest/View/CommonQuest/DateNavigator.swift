@@ -126,6 +126,13 @@ final class DateNavigator: UITableViewHeaderFooterView {
 
 extension DateNavigator {
     
+    /// 헤더는 다시 만들어지거나 재사용될 수 있으므로 표시할 날짜를 바깥에서 받아 상태를 맞춤
+    func configure(currentDate: Date) {
+        self.currentDate = currentDate
+        dateLabel.text = dateFormatter.string(from: currentDate)
+        updateButtons()
+    }
+    
     @objc
     private func moveYesterday() {
         guard !isMinDate else { return }
@@ -135,6 +142,8 @@ extension DateNavigator {
     
     @objc
     private func moveTomorrow() {
+        guard !isToday else { return }
+        
         moveDay(to: tommorow)
     }
     

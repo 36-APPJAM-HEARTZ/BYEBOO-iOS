@@ -14,6 +14,7 @@ final class CommonQuestViewController: BaseViewController {
     
     private let rootView = CommonQuestView()
     private let viewModel: CommonQuestViewModel
+    private var selectedDate: Date = .now
     
     private var cancellable = Set<AnyCancellable>()
     
@@ -157,6 +158,7 @@ extension CommonQuestViewController: DateNavigatorDelegate {
     }
     
     func dateDidChanged(to date: Date) {
+        selectedDate = date
         let _ = viewModel.action(
             .moveDateButtonDidTap(selectedDate: DateFormatter.toAPIDateString(from: date))
         )
@@ -202,6 +204,7 @@ extension CommonQuestViewController: UITableViewDelegate {
         }
         
         navigator.delegate = self
+        navigator.configure(currentDate: selectedDate)
         return navigator
     }
     
