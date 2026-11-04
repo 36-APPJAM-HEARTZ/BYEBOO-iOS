@@ -92,7 +92,10 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
     }
     
     func back() {
-        tabBarController?.tabBar.isHidden = true
+        // 펼친 iPhone Duo에서는 탭 바가 세로 바에 그대로 보여야 함
+        if !isDetailPaneVisible {
+            tabBarController?.tabBar.isHidden = true
+        }
         
         let action: (() -> Void) = {
             self.navigationController?.popViewController(animated: true)

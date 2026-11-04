@@ -200,5 +200,9 @@ extension ListDetailArrangementViewController: UINavigationControllerDelegate {
     ) {
         // 상세 화면들이 viewWillAppear에서 탭 바를 숨기므로 trailing에서는 다시 보여줌
         tabBarController?.tabBar.isHidden = false
+        
+        if viewController === emptyViewController {
+            NotificationCenter.default.post(name: .listDetailDidClose, object: nil)
+        }
     }
 }

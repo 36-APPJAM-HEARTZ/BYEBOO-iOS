@@ -82,7 +82,7 @@ final class DateNavigator: UITableViewHeaderFooterView {
     }
     
     private func setUI() {
-        addSubview(navigatorStackView)
+        contentView.addSubview(navigatorStackView)
         navigatorStackView.addArrangedSubviews(
             previousButton,
             dateLabel,
@@ -101,7 +101,7 @@ final class DateNavigator: UITableViewHeaderFooterView {
             $0.centerY.equalToSuperview()
         }
         dateLabel.snp.makeConstraints {
-            $0.width.equalTo(58.adjustedW)
+            $0.width.equalTo(72)
             $0.centerY.equalToSuperview()
         }
         nextButton.snp.makeConstraints {

@@ -90,9 +90,10 @@ final class CommonQuestHistoryView: BaseView {
     }
     
     override func setLayout() {
+        // iPhone Duo 대응: 오른쪽 세로 바(상태바, 탭 바)와 겹치지 않도록 좌우는 safe area 기준
         scrollView.snp.makeConstraints {
             $0.top.equalTo(safeAreaLayoutGuide).offset(16.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide).inset(24.adjustedW)
             $0.bottom.equalTo(commentTextView.snp.top)
         }
         contentView.snp.makeConstraints {
@@ -148,7 +149,7 @@ final class CommonQuestHistoryView: BaseView {
             $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
         commentTextView.snp.makeConstraints {
-            $0.horizontalEdges.equalToSuperview()
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide)
             commentTextViewBottomConstraint = $0.bottom.equalToSuperview().inset(34.adjustedH).constraint
         }
     }

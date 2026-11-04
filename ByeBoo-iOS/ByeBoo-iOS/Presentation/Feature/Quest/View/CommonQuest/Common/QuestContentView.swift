@@ -114,12 +114,13 @@ final class QuestContentView: BaseView {
         isLiked: Bool,
         likeCount: Int,
         commentCount: Int,
-        showAllText: Bool
+        showAllText: Bool,
+        maximumLinesWhenFolded: Int = 2
     ) {
         self.answerID = answerID
         self.likeCounts = likeCount
         answerContentTextView.do {
-            $0.textContainer.maximumNumberOfLines = showAllText ? 0 : 2
+            $0.textContainer.maximumNumberOfLines = showAllText ? 0 : maximumLinesWhenFolded
             $0.applyTextViewStyle(style: .body3R16, text: content, color: .grayscale100)
         }
         if let writtenAt {
