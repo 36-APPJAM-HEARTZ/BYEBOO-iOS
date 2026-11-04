@@ -171,6 +171,8 @@ final class ListDetailArrangementViewController: UIArrangementViewController {
             details.forEach { $0.hidesBottomBarWhenPushed = false }
             primaryNavigationController.setViewControllers([primaryStack[0]], animated: false)
             secondaryNavigationController.setViewControllers([emptyViewController] + details, animated: false)
+            // 목록 스택에 있을 때 받은 음수 여백이 남아 세로 바와 겹치지 않도록 옮긴 직후 다시 계산
+            updatePrimaryTrailingInset()
         } else {
             let details = Array(secondaryNavigationController.viewControllers.dropFirst())
             guard !details.isEmpty else { return }
