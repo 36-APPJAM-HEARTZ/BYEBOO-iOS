@@ -43,8 +43,14 @@ final class QuestStartViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        ByeBooNavigationBar.makeNavigationBar(
+            navigationItem: self.navigationItem,
+            navigationController: self.navigationController,
+            type: .back(),
+            action: #selector(back)
+        )
+        
         bind()
-        setGesture()
         viewModel.action(.viewDidLoad)
     }
     
@@ -70,13 +76,6 @@ final class QuestStartViewController: BaseViewController {
             action: #selector(questStartButtonDidTap),
             for: .touchUpInside
         )
-    }
-    
-    private func setGesture() {
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(back))
-        tapGestureRecognizer.isEnabled = true
-        tapGestureRecognizer.cancelsTouchesInView = false
-        rootView.backButton.addGestureRecognizer(tapGestureRecognizer)
     }
 }
 

@@ -42,8 +42,7 @@ final class CommonQuestMyAnswersViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .back(header: .black),
-            action: #selector(back)
+            type: .back(header: .black)
         )
         
         bind()
@@ -56,13 +55,6 @@ final class CommonQuestMyAnswersViewController: BaseViewController {
             $0.register(CommonQuestMyAnswerCell.self)
             $0.register(NoAnswerCell.self)
         }
-    }
-}
-
-extension CommonQuestMyAnswersViewController: BackNavigable {
-    
-    func back() {
-        self.navigationController?.popViewController(animated: false)
     }
 }
 

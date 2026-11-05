@@ -12,8 +12,10 @@ final class ByeBooTabBar: UITabBarController {
         super.viewDidLoad()
         
         view.backgroundColor = .grayscale900
-        
-        setValue(ByeBooTabBarView(), forKey: "tabBar")
+
+        if #unavailable(iOS 26) {
+            setValue(ByeBooTabBarView(), forKey: "tabBar")
+        }
         setViewController()
         setViewControllerAppearance()
     }
@@ -46,20 +48,28 @@ final class ByeBooTabBar: UITabBarController {
     
     private func setViewControllerAppearance() {
         let appearance = UITabBarAppearance()
-        appearance.configureWithTransparentBackground()
-        appearance.backgroundColor = .grayscale900
-        appearance.shadowColor = .grayscale800
+        let titleOffset: UIOffset
+
+        if #available(iOS 26, *) {
+            appearance.configureWithDefaultBackground()
+            titleOffset = UIOffset(horizontal: 0, vertical: 4.adjustedH)
+        } else {
+            appearance.configureWithTransparentBackground()
+            appearance.backgroundColor = .grayscale900
+            appearance.shadowColor = .grayscale800
+            titleOffset = UIOffset(horizontal: 0, vertical: -4.adjustedH)
+        }
 
         let itemAppearance = UITabBarItemAppearance()
         itemAppearance.normal.iconColor = .grayscale400
-        itemAppearance.normal.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -4.adjustedH)
+        itemAppearance.normal.titlePositionAdjustment = titleOffset
         itemAppearance.normal.titleTextAttributes = [
             .foregroundColor: UIColor.grayscale400,
             .font: FontManager.body6R14.font
         ]
         
         itemAppearance.selected.iconColor = .primary300
-        itemAppearance.selected.titlePositionAdjustment = UIOffset(horizontal: 0, vertical: -4.adjustedH)
+        itemAppearance.selected.titlePositionAdjustment = titleOffset
         itemAppearance.selected.titleTextAttributes = [
             .foregroundColor: UIColor.primary300,
             .font: FontManager.body6R14.font

@@ -34,8 +34,7 @@ final class ModifyNicknameViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .titleAndBack("프로필 수정", header: .clear),
-            action: #selector(back)
+            type: .titleAndBack("프로필 수정", header: .clear)
         )
         
         bind()
