@@ -19,7 +19,7 @@ final class FinishJourneyView: BaseView {
     private let thirdTextLabel = UILabel()
     private let characterLottie = LottieAnimationView(name: "bori_cake")
     
-    let startButton = ByeBooButton(titleText: "새로운 여정 시작하기", type: .enabled)
+    let startButton = ByeBooButton(titleText: "새로운 여정 시작하기", type: .enabled, image: UIImage(named: "reset"))
     let lookBackButton = ByeBooButton(titleText: "완료한 여정 다시보기", type: .sub)
     let backHomeLabel = UILabel()
     
@@ -47,13 +47,6 @@ final class FinishJourneyView: BaseView {
             $0.loopMode = .loop
             $0.contentMode = .scaleAspectFill
         }
-        startButton.do {
-            $0.setImage(UIImage(named: "reset")?.withRenderingMode(.alwaysTemplate), for: .normal)
-            $0.tintColor = .white
-            $0.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 4.adjustedW)
-            $0.titleEdgeInsets = UIEdgeInsets(top: 0, left: 4.adjustedW, bottom: 0, right: 0)
-        }
-        
         firstTextLabel.applyByeBooFont (
             style: .body5M14,
             text: animationText[0],

@@ -74,7 +74,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     @objc
     private func navigateLoginViewController() {
-        guard let window = window else { return }
+        guard window != nil else { return }
         let viewController = ViewControllerFactory.shared.makeLoginViewController()
         
         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,

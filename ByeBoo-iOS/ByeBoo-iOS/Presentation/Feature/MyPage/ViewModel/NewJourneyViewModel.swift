@@ -52,7 +52,8 @@ extension NewJourneyViewModel {
             do {
                 let journeys = try await getNewJourneyUseCase.execute()
                 newJourneySubject.send(.success(journeys))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 ByeBooLogger.error(error)
                 newJourneySubject.send(.failure(error))
             }

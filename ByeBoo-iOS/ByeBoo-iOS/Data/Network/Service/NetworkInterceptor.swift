@@ -57,7 +57,8 @@ final class NetworkInterceptor: RequestInterceptor {
                     try await self.tokenService.reissue()
                     ByeBooLogger.debug("401 Error -> 토큰 재발급 성공")
                     completion(.retry)
-                } catch(let error as ByeBooError) {
+                } catch {
+                    let error = error as? ByeBooError ?? .unknownError
                     completion(.doNotRetryWithError(error))
                 }
             }

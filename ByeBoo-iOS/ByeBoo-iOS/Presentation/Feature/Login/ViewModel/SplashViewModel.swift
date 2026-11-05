@@ -80,7 +80,8 @@ extension SplashViewModel {
                     ByeBooLogger.debug("자동로그인 실패")
                     autoLoginSubject.send(.failure((.noData)))
                 }
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 autoLoginSubject.send(.failure((.noData)))
                 ByeBooLogger.debug(ByeBooError.networkConnect)
                 ByeBooLogger.error(error)

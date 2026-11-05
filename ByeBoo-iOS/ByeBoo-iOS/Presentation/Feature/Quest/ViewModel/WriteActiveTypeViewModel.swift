@@ -175,8 +175,10 @@ extension WriteActiveTypeViewModel {
                 } else {
                     ByeBooLogger.error(ByeBooError.noData)
                 }
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
+                didSuccessEditSubject.send(.failure(error))
             }
-            
         }
     }
     

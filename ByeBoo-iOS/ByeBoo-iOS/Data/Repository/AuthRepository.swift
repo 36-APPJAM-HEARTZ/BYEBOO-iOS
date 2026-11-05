@@ -115,7 +115,6 @@ struct DefaultAuthRepository: AuthInterface {
     }
     
     func logout() async throws -> Bool {
-        let accessToken = keychainService.load(key: .accessToken)
         let header: HeaderType = .withAuth
         
         do {

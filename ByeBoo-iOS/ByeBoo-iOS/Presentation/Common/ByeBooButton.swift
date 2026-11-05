@@ -75,21 +75,40 @@ enum ByeBooButtonType {
 }
 
 final class ByeBooButton: UIButton {
-    private let titleText: String
     private var type: ByeBooButtonType
     
     init(
         titleText: String,
-        type: ByeBooButtonType
+        type: ByeBooButtonType,
+        image: UIImage? = nil
     ) {
-        self.titleText = titleText
         self.type = type
         
         super.init(frame: .zero)
         
-        self.setTitle(titleText, for: .normal)
-        self.setTitleColor(type.textColor, for: .normal)
-        self.titleLabel?.font = type.font
+        var configuration = UIButton.Configuration.plain()
+        configuration.title = titleText
+        configuration.image = image?.withRenderingMode(.alwaysTemplate)
+        configuration.imagePadding = 8.adjustedW
+        configuration.contentInsets = .zero
+        configuration.titleLineBreakMode = .byTruncatingTail
+        self.configuration = configuration
+        
+        // 상태(disabled/highlighted)와 관계없이 타입 색상을 그대로 유지
+        self.configurationUpdateHandler = { button in
+            guard let button = button as? ByeBooButton,
+                  var configuration = button.configuration else { return }
+            let type = button.type
+            configuration.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer {
+                var attributes = $0
+                attributes.font = type.font
+                attributes.foregroundColor = type.textColor
+                return attributes
+            }
+            configuration.imageColorTransformer = UIConfigurationColorTransformer { _ in type.textColor }
+            button.configuration = configuration
+        }
+        
         self.backgroundColor = type.backgroundColor
         self.layer.borderWidth = 1
         self.layer.borderColor = type.borderColor
@@ -108,14 +127,14 @@ final class ByeBooButton: UIButton {
     func updateType(_ type: ByeBooButtonType) {
         self.do {
             $0.type = type
-            $0.setTitleColor(type.textColor, for: .normal)
             $0.backgroundColor = type.backgroundColor
             $0.layer.borderColor = type.borderColor
             $0.isEnabled = type.isEnabled
+            $0.setNeedsUpdateConfiguration()
         }
     }
     
     func updateTitle(_ title: String) {
-        self.setTitle(title, for: .normal)
+        configuration?.title = title
     }
 }

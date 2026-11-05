@@ -101,7 +101,8 @@ extension MyPageViewModel {
             do {
                 let _ = try await logoutUseCase.execute()
                 logoutResultSubject.send(.success(()))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 ByeBooLogger.error(error)
                 logoutResultSubject.send(.failure(error))
             }
@@ -113,7 +114,8 @@ extension MyPageViewModel {
             do {
                 let _ = try await withdrawUseCase.execute()
                 withdrawResultSubject.send(.success(()))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 ByeBooLogger.error(error)
                 withdrawResultSubject.send(.failure(error))
             }
@@ -125,7 +127,8 @@ extension MyPageViewModel {
             do {
                 let result = try await changeNotificationPermissionUseCase.execute()
                 notificationResultSubject.send(.success(result))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 ByeBooLogger.error(error)
                 notificationResultSubject.send(.failure(error))
             }

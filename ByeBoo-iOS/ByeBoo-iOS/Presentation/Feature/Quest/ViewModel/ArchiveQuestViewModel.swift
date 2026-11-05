@@ -69,7 +69,8 @@ extension ArchiveQuestViewModel {
                 guard let entity = self.entity else { return }
                 resultSubject.send(.success(entity))
                 loadingSubject.send(false)
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 resultSubject.send(.failure(error))
                 loadingSubject.send(false)
             }

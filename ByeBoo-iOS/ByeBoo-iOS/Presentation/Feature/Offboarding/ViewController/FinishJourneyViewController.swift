@@ -130,7 +130,7 @@ extension FinishJourneyViewController {
     
     @objc
     private func homeLabelDidTap() {
-        guard let navigationController else {
+        guard navigationController != nil else {
             ByeBooLogger.error(ByeBooError.navigationControllerMissing)
             return
         }

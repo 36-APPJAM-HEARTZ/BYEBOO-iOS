@@ -20,7 +20,7 @@ final class CommonQuestView: BaseView {
             headerView.frame = CGRect(
                 x: 0,
                 y: 0,
-                width: UIScreen.main.bounds.width,
+                width: 375.adjustedW,
                 height: 152.adjustedH
             )
             $0.tableHeaderView = headerView

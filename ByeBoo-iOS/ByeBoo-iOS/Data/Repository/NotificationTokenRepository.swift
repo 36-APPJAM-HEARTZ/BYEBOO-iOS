@@ -64,7 +64,6 @@ struct DefaultNotificationTokenRepository: NotificationTokenInterface {
     
     func deleteToken(token: String) async throws {
         let fcmTokenDTO = createDTO(token: token)
-        let accessToken = keychainService.load(key: .accessToken)
         try await network.request(
             NotificationTokenAPI.deleteToken(dto: fcmTokenDTO)
         )
