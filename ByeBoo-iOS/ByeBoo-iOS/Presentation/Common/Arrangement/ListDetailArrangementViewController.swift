@@ -16,49 +16,68 @@ import UIKit
 ///   - 합쳐질 때: 상세 스택의 화면들을 목록 스택 뒤로
 /// - 화면에서는 showDetail(_:) / resetDetail()만 사용. 상세 안에서의 이동은 기존처럼 push / pop
 /// - iOS 27.1 미만에서는 UINavigationController 하나
+/// - Xcode 27 미만에는 UIArrangementViewController가 없으므로 #if compiler로 제외 (이 경우 듀오 분할 없이 빌드됨)
 extension UIViewController {
     /// 탭에 넣을 컨테이너
     func embeddedInListDetail() -> UIViewController {
-        guard #available(iOS 27.1, *) else { return ByeBooNavigationController(rootViewController: self) }
-        return ListDetailArrangementViewController(root: self)
+        #if compiler(>=6.4)
+        if #available(iOS 27.1, *) {
+            return ListDetailArrangementViewController(root: self)
+        }
+        #endif
+        return ByeBooNavigationController(rootViewController: self)
     }
 
     /// 탭 컨테이너의 목록 쪽 네비게이션 컨트롤러
     var listNavigationController: UINavigationController? {
+        #if compiler(>=6.4)
         if #available(iOS 27.1, *), let arrangement = self as? ListDetailArrangementViewController {
             return arrangement.primaryNavigationController
         }
+        #endif
         return self as? UINavigationController
     }
 
     /// 상세 열기. 목록 - 상세로 나뉜 상태면 trailing에, 아니면 기존처럼 push
     func showDetail(_ viewController: UIViewController) {
+        #if compiler(>=6.4)
         if #available(iOS 27.1, *), let arrangement = listDetailArrangement {
             arrangement.openDetail(viewController)
             return
         }
+        #endif
         navigationController?.pushViewController(viewController, animated: false)
     }
 
     /// 목록 - 상세로 나뉘어 trailing이 보이는 상태인지
     var isDetailPaneVisible: Bool {
-        guard #available(iOS 27.1, *) else { return false }
-        return listDetailArrangement?.isSecondaryVisible ?? false
+        #if compiler(>=6.4)
+        if #available(iOS 27.1, *) {
+            return listDetailArrangement?.isSecondaryVisible ?? false
+        }
+        #endif
+        return false
     }
 
     /// trailing을 빈 화면으로 되돌림 (목록이 바뀌는 경우)
     func resetDetail() {
-        guard #available(iOS 27.1, *) else { return }
-        listDetailArrangement?.closeDetail()
+        #if compiler(>=6.4)
+        if #available(iOS 27.1, *) {
+            listDetailArrangement?.closeDetail()
+        }
+        #endif
     }
 
+    #if compiler(>=6.4)
     @available(iOS 27.1, *)
     private var listDetailArrangement: ListDetailArrangementViewController? {
         sequence(first: self, next: \.parent)
             .first { $0 is ListDetailArrangementViewController } as? ListDetailArrangementViewController
     }
+    #endif
 }
 
+#if compiler(>=6.4)
 @available(iOS 27.1, *)
 final class ListDetailArrangementViewController: UIArrangementViewController {
 
@@ -195,3 +214,4 @@ extension ListDetailArrangementViewController: UINavigationControllerDelegate {
         }
     }
 }
+#endif

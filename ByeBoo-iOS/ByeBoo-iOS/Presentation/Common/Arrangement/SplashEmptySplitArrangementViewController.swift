@@ -16,13 +16,19 @@ protocol ArrangementBackground: UIView {
 /// - 가로가 더 넓은 화면(펼친 Duo 내부 디스플레이)에서는 기존 화면을 leading 절반에 두고 trailing 절반은 빈 화면으로 둠
 /// - 세로로는 나누지 않으므로 외부 디스플레이, 일반 iPhone, Split View에서는 기존 화면만 보임
 /// - iOS 27.1 미만에서는 기존 화면을 그대로 반환
+/// - Xcode 27 미만에는 UIArrangementViewController가 없으므로 #if compiler로 제외 (이 경우 듀오 분할 없이 빌드됨)
 extension UIViewController {
     func arrangedWithEmptyView() -> UIViewController {
-        guard #available(iOS 27.1, *) else { return self }
-        return SplashEmptySplitArrangementViewController(primary: self)
+        #if compiler(>=6.4)
+        if #available(iOS 27.1, *) {
+            return SplashEmptySplitArrangementViewController(primary: self)
+        }
+        #endif
+        return self
     }
 }
 
+#if compiler(>=6.4)
 @available(iOS 27.1, *)
 final class SplashEmptySplitArrangementViewController: UIArrangementViewController {
 
@@ -67,3 +73,4 @@ final class SplashEmptySplitArrangementViewController: UIArrangementViewControll
         primary
     }
 }
+#endif
