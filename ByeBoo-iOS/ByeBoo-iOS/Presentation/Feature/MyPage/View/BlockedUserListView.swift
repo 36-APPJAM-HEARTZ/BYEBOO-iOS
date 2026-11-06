@@ -37,12 +37,12 @@ final class BlockedUserListView: BaseView {
     override func setLayout() {
         userTableView.snp.makeConstraints {
             $0.top.equalToSuperview().inset(12.adjustedH)
-            $0.horizontalEdges.equalToSuperview()
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide)
             $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
         emptyLabel.snp.makeConstraints {
             $0.top.equalToSuperview().inset(334.5.adjustedH)
-            $0.centerX.equalToSuperview()
+            $0.centerX.equalTo(safeAreaLayoutGuide)
         }
     }
 }

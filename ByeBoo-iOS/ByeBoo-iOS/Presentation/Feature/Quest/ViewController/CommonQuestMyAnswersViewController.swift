@@ -150,16 +150,6 @@ extension CommonQuestMyAnswersViewController: UITableViewDelegate {
     
     func tableView(
         _ tableView: UITableView,
-        heightForRowAt indexPath: IndexPath
-    ) -> CGFloat {
-        if viewModel.answersCount == 0 {
-            return UITableView.automaticDimension
-        }
-        return 149.adjustedH
-    }
-    
-    func tableView(
-        _ tableView: UITableView,
         viewForHeaderInSection section: Int
     ) -> UIView? {
         UIView()

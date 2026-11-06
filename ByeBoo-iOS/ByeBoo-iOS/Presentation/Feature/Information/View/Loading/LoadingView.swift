@@ -64,7 +64,7 @@ final class LoadingView: BaseView {
     
     override func setLayout() {
         loadingStackView.snp.makeConstraints {
-            $0.center.equalToSuperview()
+            $0.center.equalTo(safeAreaLayoutGuide)
             $0.width.equalTo(168.adjustedW)
             $0.height.equalTo(96.adjustedH)
         }

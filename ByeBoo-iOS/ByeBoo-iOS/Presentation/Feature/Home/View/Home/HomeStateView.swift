@@ -58,17 +58,17 @@ final class HomeStateView: BaseView {
     
     override func setLayout() {
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(16.adjustedH)
-            $0.leading.equalToSuperview().inset(24.adjustedW)
+            $0.top.equalToSuperview().inset(16)
+            $0.leading.equalToSuperview().inset(24)
         }
         descriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(6.adjustedH)
-            $0.leading.equalToSuperview().inset(24.adjustedW)
-            $0.bottom.equalToSuperview().inset(16.adjustedH)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(6)
+            $0.leading.equalToSuperview().inset(24)
+            $0.bottom.equalToSuperview().inset(16)
         }
         arrowImageView.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.trailing.equalToSuperview().inset(24.adjustedW)
+            $0.trailing.equalToSuperview().inset(24)
         }
     }
 }

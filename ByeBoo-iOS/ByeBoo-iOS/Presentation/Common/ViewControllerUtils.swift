@@ -48,7 +48,7 @@ struct ViewControllerUtils {
     static func changeQuestTabWithIndex(index: Int, completion: (() -> Void)? = nil) {
         let viewController = ByeBooTabBar()
         viewController.selectedIndex = 1
-        guard let questMaintab = viewController.viewControllers?[1] as? UINavigationController,
+        guard let questMaintab = viewController.viewControllers?[1].listNavigationController,
               let commonQuestTab = questMaintab.viewControllers.first as? ParentQuestViewController<QuestTabItem> else {
             return }
         

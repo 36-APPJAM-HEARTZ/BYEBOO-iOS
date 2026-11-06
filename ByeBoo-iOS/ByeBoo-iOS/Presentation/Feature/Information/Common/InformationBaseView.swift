@@ -10,9 +10,9 @@ import UIKit
 import SnapKit
 import Then
 
-final class InformationBaseView: BaseView {
+final class InformationBaseView: BaseView, ArrangementBackground {
     
-    private let backgroundImageView = UIImageView()
+    let backgroundImageView = UIImageView()
     private var progressBarType: ProgressBarType
     private lazy var progressView = ProgressBarView(type: progressBarType)
     var informationView: BaseView
@@ -57,19 +57,20 @@ final class InformationBaseView: BaseView {
         
         progressView.snp.makeConstraints {
             $0.top.equalTo(safeAreaLayoutGuide.snp.top)
+            $0.centerX.equalTo(safeAreaLayoutGuide)
         }
         
         informationView.snp.makeConstraints {
             $0.top.equalTo(progressView.snp.bottom)
-            $0.width.equalTo(375.adjustedH)
-            $0.height.equalTo(312.adjustedH)
+            $0.centerX.equalTo(safeAreaLayoutGuide)
+            $0.width.equalTo(375)
+            $0.height.equalTo(312)
         }
         
         nextButton.snp.makeConstraints {
             $0.bottom.equalTo(safeAreaLayoutGuide.snp.bottom)
-            $0.centerX.equalToSuperview()
-            $0.width.equalTo(326.adjustedH)
-            $0.height.equalTo(53.adjustedH)
+            $0.centerX.equalTo(safeAreaLayoutGuide)
+            $0.width.equalTo(327)
         }
     }
 }

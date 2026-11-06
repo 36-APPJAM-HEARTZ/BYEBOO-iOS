@@ -32,17 +32,6 @@ enum NicknameFieldType {
             return UIColor.error300.cgColor
         }
     }
-    
-    var errorImage: UIImage? {
-        switch self {
-        case .onBeginEditing:
-            return .error
-        case .normal:
-            return nil
-        case .error:
-            return .errorRed
-        }
-    }
 }
 
 final class ByeBooNicknameTextField: BaseView {
@@ -109,8 +98,8 @@ final class ByeBooNicknameTextField: BaseView {
     }
     
     override func setLayout() {
+        // 폭은 사용하는 쪽에서 정함 (고정하면 iPhone Duo의 좁은 칸에서 제약이 충돌)
         self.snp.makeConstraints {
-            $0.width.equalTo(327.adjustedW)
             $0.height.equalTo(56.adjustedH)
         }
         

@@ -13,7 +13,15 @@ final class CommonQuestView: BaseView {
     
     private(set) var commonQuestTableView = UITableView()
     private(set) var headerView = CommonQuestHeaderView()
-    
+    private var tableViewTopConstraint: Constraint?
+
+    // iPhone Duo 대응: 창이 가장 큰 iPhone 폭(440)보다 넓으면 탭과 타이틀 사이 여백을 더 줌
+    // 목록 칸은 세로로 길어서 이 뷰의 크기로는 펼친 상태를 판단할 수 없으므로 창 기준
+    override func layoutSubviews() {
+        tableViewTopConstraint?.update(inset: (window?.bounds.width ?? 0) > 440 ? 12 : 0)
+        super.layoutSubviews()
+    }
+
     override func setStyle() {
         commonQuestTableView.do {
             $0.backgroundColor = .grayscale900
@@ -41,7 +49,12 @@ final class CommonQuestView: BaseView {
     
     override func setLayout() {
         commonQuestTableView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            tableViewTopConstraint = $0.top.equalToSuperview().constraint
+            $0.bottom.equalToSuperview()
+            // iPhone Duo 대응: 나의 여정과 같이 가장 큰 iPhone 폭(440)까지만 쓰고 가운데 정렬
+            $0.centerX.equalToSuperview()
+            $0.width.equalToSuperview().priority(.high)
+            $0.width.lessThanOrEqualTo(440)
         }
     }
 }

@@ -43,7 +43,8 @@ final class TutorialModalView: BaseView {
     
     override func setLayout() {
         scrollView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.verticalEdges.equalToSuperview()
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide)
         }
         contentView.snp.makeConstraints {
             $0.edges.equalTo(scrollView.contentLayoutGuide)
@@ -51,7 +52,8 @@ final class TutorialModalView: BaseView {
         }
         imageStackView.snp.makeConstraints {
             $0.verticalEdges.equalToSuperview().inset(24.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(46.adjustedW)
+            // 이미지 폭이 고정이라 좌우를 붙이면 좁은 칸에서 제약이 충돌하므로 가운데 정렬
+            $0.centerX.equalToSuperview()
         }
     }
 }

@@ -52,14 +52,14 @@ final class QuestCardsView: BaseView {
     override func setLayout() {
         questStackView.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.width.equalTo(327.adjustedW)
-            $0.height.equalTo(198.adjustedH)
+            $0.width.equalTo(327)
+            $0.height.equalTo(198)
         }
         
         questCards.forEach { card in
             card.snp.makeConstraints {
-                $0.width.equalTo(158.adjustedW)
-                $0.height.equalTo(198.adjustedH)
+                $0.width.equalTo(158)
+                $0.height.equalTo(198)
             }
         }
     }

@@ -60,18 +60,18 @@ final class ModifyNicknameView: BaseView {
     override func setLayout() {
         nicknameLabel.snp.makeConstraints {
             $0.top.equalTo(safeAreaLayoutGuide.snp.top).inset(16.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide).inset(24.adjustedW)
         }
         nicknameTextField.snp.makeConstraints {
             $0.top.equalTo(nicknameLabel.snp.bottom).offset(16.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide).inset(24.adjustedW)
         }
         nicknameStateView.snp.makeConstraints {
             $0.top.equalTo(nicknameTextField.snp.bottom).offset(8.adjustedH)
-            $0.horizontalEdges.equalToSuperview()
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide)
         }
         confirmButton.snp.makeConstraints {
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide).inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(36.adjustedH)
         }
     }

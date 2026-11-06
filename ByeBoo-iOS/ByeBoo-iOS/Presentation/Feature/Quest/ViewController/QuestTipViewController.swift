@@ -36,10 +36,14 @@ final class QuestTipViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.hidesBackButton = true
+        ByeBooNavigationBar.makeNavigationBar(
+            navigationItem: self.navigationItem,
+            navigationController: self.navigationController,
+            type: .titleAndClose("퀘스트 작성 TIP", header: .black),
+            action: #selector(closeButtonDidTap)
+        )
+        
         viewModel.action(.questTipDidLoad(questID: questID))
-                
-        setAction()
         bind()
         
         let property = QuestEvents.QuestTipProperty(questNumber: questNumber)
@@ -48,17 +52,18 @@ final class QuestTipViewController: BaseViewController {
             properties: property.dictionary
         )
     }
-    
-    private func setAction() {
-        rootView?.closeButton.addTarget(self, action: #selector(closeButtonDidTap), for: .touchUpInside)
-    }
 }
 
 extension QuestTipViewController {
     
     @objc
     func closeButtonDidTap() {
-        self.dismiss(animated: true)
+        // 전체 화면 모달로 띄운 경우 닫고, 스택에 push된 경우(작성 화면, 펼친 iPhone Duo의 오른쪽 칸) pop
+        if navigationController?.viewControllers.first === self {
+            self.dismiss(animated: true)
+        } else {
+            navigationController?.popViewController(animated: false)
+        }
     }
 }
 

@@ -36,12 +36,14 @@ final class ByeBooTabBar: UITabBarController {
             createViewController(
                 for: questViewController,
                 title: "퀘스트",
-                imageName: .questOff
+                imageName: .questOff,
+                container: questViewController.embeddedInListDetail()
             ),
             createViewController(
                 for: myPageViewController,
                 title: "내 정보",
-                imageName: .userOff
+                imageName: .userOff,
+                container: myPageViewController.embeddedInListDetail()
             )
         ]
     }
@@ -82,10 +84,12 @@ final class ByeBooTabBar: UITabBarController {
     
     private func createViewController(for rootViewController: UIViewController,
                                       title: String,
-                                      imageName: UIImage) -> UIViewController {
-        let viewController = UINavigationController(rootViewController: rootViewController)
+                                      imageName: UIImage,
+                                      container: UIViewController? = nil) -> UIViewController {
+        let viewController = container ?? ByeBooNavigationController(rootViewController: rootViewController)
         rootViewController.tabBarItem.title = title
         rootViewController.tabBarItem.image = imageName.withRenderingMode(.alwaysTemplate)
+        viewController.tabBarItem = rootViewController.tabBarItem
         return viewController
     }
 }

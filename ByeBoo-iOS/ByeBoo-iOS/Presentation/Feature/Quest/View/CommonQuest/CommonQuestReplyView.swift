@@ -31,11 +31,11 @@ final class CommonQuestReplyView: BaseView {
     override func setLayout() {
         commentListView.snp.makeConstraints {
             $0.top.equalTo(safeAreaLayoutGuide.snp.top).offset(6.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(20.adjustedW)
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide).inset(20.adjustedW)
             $0.bottom.equalTo(commentTextView.snp.top)
         }
         commentTextView.snp.makeConstraints {
-            $0.horizontalEdges.equalToSuperview()
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide)
             commentTextViewBottomConstraint = $0.bottom.equalToSuperview().inset(34.adjustedH).constraint
         }
     }

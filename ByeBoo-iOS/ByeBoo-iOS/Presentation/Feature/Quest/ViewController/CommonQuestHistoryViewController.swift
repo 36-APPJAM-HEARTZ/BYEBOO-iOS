@@ -207,6 +207,12 @@ extension CommonQuestHistoryViewController: CommentProtocol {
             viewModel.action(.fetchQuestDetail(answerID: answerID))
         }
         
+        // 펼친 iPhone Duo에서는 시트 대신 오른쪽 칸 안에서 이동
+        if isDetailPaneVisible {
+            self.navigationController?.pushViewController(viewController, animated: false)
+            return
+        }
+        
         let navigationController = UINavigationController(rootViewController: viewController)
         if let sheet = navigationController.sheetPresentationController {
             sheet.detents = [.large()]

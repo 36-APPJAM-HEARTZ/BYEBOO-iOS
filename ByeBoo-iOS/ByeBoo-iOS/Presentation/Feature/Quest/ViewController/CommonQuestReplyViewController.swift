@@ -193,7 +193,16 @@ extension CommonQuestReplyViewController {
     
     @objc
     private func backButtonDidTap() {
-        self.dismiss(animated: true)
+        close()
+    }
+    
+    /// 시트로 띄운 경우 닫고, 오른쪽 칸에 push된 경우(펼친 iPhone Duo) pop
+    private func close() {
+        if navigationController?.viewControllers.first === self {
+            dismiss(animated: true)
+        } else {
+            navigationController?.popViewController(animated: false)
+        }
         onDismiss?()
     }
     
@@ -291,8 +300,7 @@ extension CommonQuestReplyViewController: CommonQuestCommentProtcol {
 extension CommonQuestReplyViewController: DeleteCommonQuestDelegate {
     func completeDeleteCommonQuest(deletedID: Int) {
         if deletedID == self.commentID {
-            dismiss(animated: true)
-            onDismiss?()
+            close()
         } else {
             viewModel.action(.fetchReplyList(commentID: commentID))
         }

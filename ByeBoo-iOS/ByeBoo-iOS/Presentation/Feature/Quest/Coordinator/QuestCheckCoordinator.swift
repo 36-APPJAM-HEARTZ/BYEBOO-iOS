@@ -33,7 +33,8 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
         archiveQuestViewController.entryViewController = .questMain
         archiveQuestViewController.configure(questID: quest?.questId ?? 1, questType: quest?.questStyle ?? .activation)
         archiveQuestViewController.hidesBottomBarWhenPushed = true
-        rootViewController?.navigationController?.pushViewController(archiveQuestViewController, animated: false)
+        // 펼친 iPhone Duo에서는 목록 오른쪽에, 그 외에는 push
+        rootViewController?.showDetail(archiveQuestViewController)
     }
     
     func presentQuestModal(quest: QuestEntity?) {
@@ -63,9 +64,18 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
     func moveQuestTip(quest: QuestEntity?) {
         let questTipViewController = ViewControllerFactory.shared.makeQuestTipViewController()
         questTipViewController.bind(questID: quest?.questId ?? 1, questType: quest?.questStyle ?? .activation, questNumber: quest?.questNumber ?? 1)
-        questTipViewController.modalPresentationStyle = .fullScreen
         let topViewController = UIApplication.shared.topViewController()
-        topViewController?.present(questTipViewController, animated: false)
+        
+        // 펼친 iPhone Duo에서는 모달을 닫고 목록 오른쪽에, 그 외에는 모달 위에 전체 화면으로
+        if rootViewController?.isDetailPaneVisible == true {
+            topViewController?.dismiss(animated: false)
+            rootViewController?.showDetail(questTipViewController)
+            return
+        }
+        
+        let navigationController = UINavigationController(rootViewController: questTipViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        topViewController?.present(navigationController, animated: false)
     }
     
     func moveWriteQuest(quest: QuestEntity) {
@@ -80,13 +90,15 @@ final class QuestCheckCoordinator: QuestCheckCoordinating {
         let questionQuestViewController = ViewControllerFactory.shared.makeWriteQuestionTypeQuestViewController()
         questionQuestViewController.configureToWrite(questID, questNumber, questType, nil)
         rootViewController?.tabBarController?.tabBar.isHidden = true
-        rootViewController?.navigationController?.pushViewController(questionQuestViewController, animated: false)
+        // 펼친 iPhone Duo에서는 목록 오른쪽에, 그 외에는 push
+        rootViewController?.showDetail(questionQuestViewController)
     }
     
     private func moveToWriteActivity(questID: Int, questNumber: Int, questType: QuestType) {
         let activationQuestViewController = ViewControllerFactory.shared.makeWriteActiveTypeQuestViewController()
         activationQuestViewController.configure(questID, questNumber, questType, nil)
         rootViewController?.tabBarController?.tabBar.isHidden = true
-        rootViewController?.navigationController?.pushViewController(activationQuestViewController, animated: false)
+        // 펼친 iPhone Duo에서는 목록 오른쪽에, 그 외에는 push
+        rootViewController?.showDetail(activationQuestViewController)
     }
 }

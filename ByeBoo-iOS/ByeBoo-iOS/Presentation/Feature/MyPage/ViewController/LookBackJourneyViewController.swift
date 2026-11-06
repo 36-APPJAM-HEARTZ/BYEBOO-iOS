@@ -77,7 +77,6 @@ extension LookBackJourneyViewController: SelectCompletedJourneyProtocol {
         
         let completedQuestsViewController = ViewControllerFactory.shared.makeCompletedQuestsViewController()
         completedQuestsViewController.configure(journey: view.title)
-        completedQuestsViewController.navigationItem.hidesBackButton = true
         
         self.navigationController?.pushViewController(completedQuestsViewController, animated: false)
     }

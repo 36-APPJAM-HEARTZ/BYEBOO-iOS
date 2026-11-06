@@ -8,7 +8,6 @@
 import Combine
 import UIKit
 
-import SnapKit
 import Mixpanel
 
 final class QuestCheckViewController: BaseViewController {
@@ -42,7 +41,8 @@ final class QuestCheckViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        navigationController?.navigationBar.isHidden = true
+        // isHidden은 네비바 자리(일반 iPhone 위쪽 44pt, iPhone Duo 세로 바 84pt)를 남기므로 네비게이션 컨트롤러로 숨김
+        navigationController?.setNavigationBarHidden(true, animated: false)
         
         bind()
         viewModel.action(.questViewWillAppear)
@@ -61,7 +61,7 @@ final class QuestCheckViewController: BaseViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.navigationController?.navigationBar.isHidden = false
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
     override func setDelegate() {

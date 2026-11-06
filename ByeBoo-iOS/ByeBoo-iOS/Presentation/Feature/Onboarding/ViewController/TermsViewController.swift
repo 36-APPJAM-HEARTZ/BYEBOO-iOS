@@ -100,7 +100,7 @@ extension TermsViewController {
     
     @objc
     private func moveNextButtonDidTap() {
-        let viewController = ViewControllerFactory.shared.makeInformationViewController()
-        self.navigationController?.pushViewController(viewController, animated: true)
+        let viewController = ViewControllerFactory.shared.makeInformationViewController().arrangedWithEmptyView()
+        self.navigationController?.pushViewController(viewController, animated: false)
     }
 }
