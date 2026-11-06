@@ -13,17 +13,20 @@ on:
 jobs:
   fastlane:
     name: Run Fastlane
-    runs-on: macos-latest
+    runs-on: xcode-27
     if: github.event_name == 'push' || github.event.pull_request.merged == true
     defaults:
       run:
         working-directory: ./ByeBoo-iOS
-        
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set Xcode version
+      run: sudo xcode-select -s /Applications/Xcode_27.1.app
 
     - name: Setup Ruby
       uses: ruby/setup-ruby@v1
