@@ -185,23 +185,14 @@ extension QuestCheckViewController {
     }
     
     private func scrollToStep() {
-        guard let sectionIndex = findCurrentStepSectionIndex(),
-              let step = viewModel.getStep(section: sectionIndex) else { return }
+        let sectionIndex = viewModel.currentQuestIndexPath.section
+        guard let step = viewModel.getStep(section: sectionIndex) else { return }
        
         if isLastStep(stepNumber: step.stepNumber) {
             scrollToBottom()
             return
         }
         scrollToHeader(at: sectionIndex)
-    }
-    
-    private func findCurrentStepSectionIndex() -> Int? {
-        for (sectionIndex, step) in viewModel.steps.enumerated() {
-            if step.quests.contains(where: { $0.questNumber == viewModel.currentStep }) {
-                return sectionIndex
-            }
-        }
-        return nil
     }
     
     private func isLastStep(stepNumber: Int) -> Bool {
