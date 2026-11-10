@@ -113,7 +113,8 @@ extension CommonQuestHistoryViewModel {
                 ByeBooLogger.debug("content: \(content)")
                 await fetchCommonQuestComments(answerID: answerID)
                 postCommentSubject.send(.success(()))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 postCommentSubject.send(.failure(error))
             }
         }
@@ -147,7 +148,8 @@ extension CommonQuestHistoryViewModel {
                 ByeBooLogger.debug("content: \(content)")
                 await fetchCommonQuestComments(answerID: answerID)
                 patchCommentSubject.send(.success(()))
-            }  catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 patchCommentSubject.send(.failure(error))
             }
         }

@@ -18,8 +18,7 @@ struct PresentationDependencyAssembler: DependencyAssembler {
         preAssembler.assemble()
         
         guard let getUserNameUseCase = DIContainer.shared.resolve(type: GetUserNameUseCase.self),
-              let fetchUserJourneyUseCase = DIContainer.shared.resolve(type: FetchUserJourneyUseCase.self),
-              let isForbiddenWordUseCase = DIContainer.shared.resolve(type: IsForbiddenWordUseCase.self)
+              let fetchUserJourneyUseCase = DIContainer.shared.resolve(type: FetchUserJourneyUseCase.self)
         else {
             ByeBooLogger.error(ByeBooError.DIFailedError)
             return

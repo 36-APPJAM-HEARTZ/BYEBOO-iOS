@@ -111,7 +111,9 @@ extension CommonQuestMyAnswerCell {
             isLiked: isLiked,
             likeCount: likeCount,
             commentCount: commentCount,
-            showAllText: true
+            // 답변은 한 줄만 보여주고, 셀 높이는 질문 줄 수에 맞춰 자동으로 정해짐
+            showAllText: false,
+            maximumLinesWhenFolded: 1
         )
     }
 }

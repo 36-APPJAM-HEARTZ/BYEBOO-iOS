@@ -46,15 +46,19 @@ final class AIAnswerView: BaseView {
     
     override func setLayout() {
         stackView.snp.makeConstraints {
-            $0.horizontalEdges.equalToSuperview().inset(48.adjustedW)
-            $0.centerY.equalToSuperview()
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide).inset(48.adjustedW)
+            $0.centerY.equalTo(safeAreaLayoutGuide)
         }
         imageView.snp.makeConstraints {
             $0.size.equalTo(100)
         }
+        // 편지 이미지 비율(327 x 569) 그대로, 디자인 크기를 넘지 않고 화면이 작으면 줄어듦
         cardView.snp.makeConstraints {
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-            $0.centerY.equalToSuperview()
+            $0.center.equalTo(safeAreaLayoutGuide)
+            $0.width.equalTo(cardView.snp.height).multipliedBy(327.0 / 569.0)
+            $0.width.equalTo(327).priority(.high)
+            $0.width.lessThanOrEqualTo(safeAreaLayoutGuide).offset(-48)
+            $0.height.lessThanOrEqualTo(safeAreaLayoutGuide).offset(-32)
         }
     }
 }

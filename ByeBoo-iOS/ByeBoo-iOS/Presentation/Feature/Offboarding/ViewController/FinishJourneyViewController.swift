@@ -62,7 +62,6 @@ final class FinishJourneyViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationItem.hidesBackButton = true
         tabBarController?.hidesBottomBarWhenPushed = true
     }
     
@@ -130,7 +129,7 @@ extension FinishJourneyViewController {
     
     @objc
     private func homeLabelDidTap() {
-        guard let navigationController else {
+        guard navigationController != nil else {
             ByeBooLogger.error(ByeBooError.navigationControllerMissing)
             return
         }

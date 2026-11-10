@@ -131,7 +131,8 @@ extension WriteQuestionTypeViewModel {
             do {
                 let questInfo = try await getQuestInfoUseCase.execute(questID: questID)
                 questInfoResultSubject.send(.success(questInfo))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 questInfoResultSubject.send(.failure(error))
             }
         }
@@ -142,7 +143,8 @@ extension WriteQuestionTypeViewModel {
             do {
                 try await saveQuestTypeUseCase.execute(questID: questID, answer: answer, emotionState: emotionState)
                 didSuccessPostSubject.send(.success(()))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 didSuccessPostSubject.send(.failure(error as ByeBooError))
                 ByeBooLogger.error(error)
             }
@@ -154,7 +156,8 @@ extension WriteQuestionTypeViewModel {
             do {
                 try await editQuestTypeUseCase.execute(questID: questID, answer: answer)
                 didSuccessEditSubject.send(.success(()))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 didSuccessEditSubject.send(.failure(error as ByeBooError))
                 ByeBooLogger.error(error)
             }
@@ -166,7 +169,8 @@ extension WriteQuestionTypeViewModel {
             do {
                 try await saveCommonQuestUseCase.execute(questID: questID, answer: answer)
                 didSuccessPostSubject.send(.success(()))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 didSuccessPostSubject.send(.failure(error as ByeBooError))
                 ByeBooLogger.error(error)
             }
@@ -188,7 +192,8 @@ extension WriteQuestionTypeViewModel {
             do {
                 try await updateCommonQuestUseCase.execute(answerID: answerID, answer: answer)
                 didSucessUpdateSubject.send(.success(()))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 didSuccessPostSubject.send(.failure(error as ByeBooError))
                 ByeBooLogger.error(error)
             }

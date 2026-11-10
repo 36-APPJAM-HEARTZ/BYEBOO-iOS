@@ -47,15 +47,15 @@ final class LookBackJourneyView: BaseView {
         let safeArea = safeAreaLayoutGuide
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(safeArea).inset(10.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.horizontalEdges.equalTo(safeArea).inset(24.adjustedW)
         }
         divider.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom).offset(10.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.horizontalEdges.equalTo(safeArea).inset(24.adjustedW)
         }
         journeyView.snp.makeConstraints {
             $0.top.equalTo(divider.snp.bottom).offset(20.adjustedH)
-            $0.horizontalEdges.equalToSuperview()
+            $0.horizontalEdges.equalTo(safeArea)
         }
     }
 }

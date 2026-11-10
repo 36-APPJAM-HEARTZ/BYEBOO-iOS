@@ -70,9 +70,9 @@ final class WriteActiveTypeQuestViewController: WriteQuestBaseViewController<Wri
     override func tipTagDidTap() {
         let viewController = ViewControllerFactory.shared.makeQuestTipViewController()
         viewController.bind(questID: questID, questType: questType, questNumber: questNumber)
-        viewController.navigationItem.hidesBackButton = true
-        viewController.modalPresentationStyle = .fullScreen
-        self.present(viewController, animated: false)
+        // 작성 중인 내용을 유지하도록 같은 스택에 push. 펼친 iPhone Duo에서는 오른쪽 칸에 그대로 열림
+        viewController.hidesBottomBarWhenPushed = hidesBottomBarWhenPushed
+        navigationController?.pushViewController(viewController, animated: false)
     }
     
     @objc
@@ -193,9 +193,9 @@ extension WriteActiveTypeQuestViewController: ToastPresentable, ToastErrorHandle
                 guard let self else { return }
                 switch result {
                 case true:
-                    self.navigationItem.rightBarButtonItems?[1].isEnabled = true
+                    self.navigationItem.rightBarButtonItem?.isEnabled = true
                 case false:
-                    self.navigationItem.rightBarButtonItems?[1].isEnabled = false
+                    self.navigationItem.rightBarButtonItem?.isEnabled = false
                 }
             }
             .store(in: &cancellables)
@@ -303,7 +303,7 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
         rootView.updateImageCountLabel(count: 1)
         rootView.imageContainer.changeIconHidden()
         rootView.textCountLabel.text = "\(answerText.count)/\(rootView.limitCount)"
-        self.navigationItem.rightBarButtonItems?[1].isEnabled = false
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
         
         if questAnswer.isEmpty {
             rootView.questTextField.textView.text = "꼭 적지 않아도 괜찮지만, 글로 정리해 보면 스스로에게 한 걸음 더 가까워질 수 있어요."
@@ -319,9 +319,9 @@ extension WriteActiveTypeQuestViewController: EditQuestProtocol {
 extension WriteActiveTypeQuestViewController: QuestCompleteProtocol {
     func changeCount(count: Int) {
         if count == 1 {
-            self.navigationItem.rightBarButtonItems?[1].isEnabled = true
+            self.navigationItem.rightBarButtonItem?.isEnabled = true
         } else {
-            self.navigationItem.rightBarButtonItems?[1].isEnabled = false
+            self.navigationItem.rightBarButtonItem?.isEnabled = false
         }
     }
     

@@ -73,9 +73,9 @@ final class WriteQuestionTypeQuestViewController: WriteQuestBaseViewController<W
     override func tipTagDidTap() {
         let viewController = ViewControllerFactory.shared.makeQuestTipViewController()
         viewController.bind(questID: questID, questType: questType, questNumber: questNumber)
-        viewController.navigationItem.hidesBackButton = true
-        viewController.modalPresentationStyle = .fullScreen
-        self.present(viewController, animated: false)
+        // 작성 중인 내용을 유지하도록 같은 스택에 push. 펼친 iPhone Duo에서는 오른쪽 칸에 그대로 열림
+        viewController.hidesBottomBarWhenPushed = hidesBottomBarWhenPushed
+        navigationController?.pushViewController(viewController, animated: false)
     }
     
     @objc
@@ -177,9 +177,9 @@ extension WriteQuestionTypeQuestViewController: ToastPresentable, ToastErrorHand
                 guard let self else { return }
                 switch result {
                 case true:
-                    self.navigationItem.rightBarButtonItems?[1].isEnabled = true
+                    self.navigationItem.rightBarButtonItem?.isEnabled = true
                 case false:
-                    self.navigationItem.rightBarButtonItems?[1].isEnabled = false
+                    self.navigationItem.rightBarButtonItem?.isEnabled = false
                 }
             }
             .store(in: &cancellables)
@@ -325,7 +325,7 @@ extension WriteQuestionTypeQuestViewController {
                 guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                       let window = scene.windows.first,
                       let tabBar = window.rootViewController as? ByeBooTabBar,
-                      let navigationController = tabBar.viewControllers?[1] as? UINavigationController,
+                      let navigationController = tabBar.viewControllers?[1].listNavigationController,
                       let targetViewController = navigationController.topViewController as? ParentQuestViewController<QuestTabItem>
                 else { return }
                 
@@ -377,7 +377,7 @@ extension WriteQuestionTypeQuestViewController: EditQuestProtocol {
         
         setQuestTextField(answer: questAnswer)
         rootView.textCountLabel.text = "\(answerText.count)/\(rootView.limitCount)"
-        self.navigationItem.rightBarButtonItems?[1].isEnabled = false
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
     }
 }
 

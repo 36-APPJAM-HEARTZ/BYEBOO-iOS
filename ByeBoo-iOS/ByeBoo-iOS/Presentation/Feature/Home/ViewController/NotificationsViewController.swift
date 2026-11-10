@@ -42,8 +42,7 @@ final class NotificationsViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .titleAndBack("알림"),
-            action: #selector(back)
+            type: .titleAndBack("알림")
         )
         
         bind()
@@ -63,13 +62,6 @@ final class NotificationsViewController: BaseViewController {
             $0.delegate = self
             $0.register(NoticeCardCell.self)
         }
-    }
-}
-
-extension NotificationsViewController: BackNavigable {
-    
-    func back() {
-        self.navigationController?.popViewController(animated: false)
     }
 }
 

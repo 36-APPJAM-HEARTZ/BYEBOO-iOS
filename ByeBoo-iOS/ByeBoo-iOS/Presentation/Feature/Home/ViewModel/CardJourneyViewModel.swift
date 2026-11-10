@@ -60,7 +60,8 @@ extension CardJourneyViewModel {
                 let journey = try await fetchUserJourneyUseCase.execute()
                 
                 journeyResultSubject.send(.success(journey))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 journeyResultSubject.send(.failure(error))
             }
         }

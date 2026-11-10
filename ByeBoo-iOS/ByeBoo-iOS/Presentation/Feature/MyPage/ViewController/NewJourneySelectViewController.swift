@@ -41,8 +41,7 @@ final class NewJourneySelectViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .back(),
-            action: #selector(back)
+            type: .back()
         )
         
         Mixpanel.mainInstance().track(event: QuestEvents.Name.journeyNewPageView)
@@ -62,17 +61,6 @@ extension NewJourneySelectViewController: ToastPresentable, ToastErrorHandler {
                 }
             }
             .store(in: &cancellables)
-    }
-}
-
-extension NewJourneySelectViewController: BackNavigable {
-    func back() {
-        guard let navigationController else {
-            ByeBooLogger.error(ByeBooError.navigationControllerMissing)
-            return
-        }
-        
-        navigationController.popViewController(animated: true)
     }
 }
 
@@ -102,9 +90,10 @@ extension NewJourneySelectViewController {
         
         let viewController = ViewControllerFactory.shared.makeQuestStartViewController()
         viewController.configure(journeyTitle: journeyType.title)
-        viewController.modalPresentationStyle = .fullScreen
         viewController.delegate = self
-        self.present(viewController, animated: false)
+        let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.modalPresentationStyle = .fullScreen
+        self.present(navigationController, animated: false)
         
         let property = QuestEvents.NewJourneyProperty(newJourneyType: journeyType.mixpanelKey)
         Mixpanel.mainInstance().track(

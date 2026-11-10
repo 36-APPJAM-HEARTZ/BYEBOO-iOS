@@ -47,7 +47,7 @@ extension UsersAPI: EndPoint {
             return "/name"
         case .updateNotificationPermission:
             return "/alarm"
-        case .fetchCommonQuestAnswers(cursor: let cursor):
+        case .fetchCommonQuestAnswers:
             return "/me/common-quests"
         }
     }

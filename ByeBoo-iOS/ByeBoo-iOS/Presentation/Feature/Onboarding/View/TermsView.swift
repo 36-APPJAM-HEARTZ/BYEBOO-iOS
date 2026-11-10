@@ -7,9 +7,9 @@
 
 import UIKit
 
-final class TermsView: BaseView {
+final class TermsView: BaseView, ArrangementBackground {
     
-    private let backgroundImageView = UIImageView()
+    let backgroundImageView = UIImageView()
     private let mainTitleLabel = UILabel()
     private let subTitleLabel = UILabel()
     private(set) var allAgreeView = UIView()
@@ -74,42 +74,42 @@ final class TermsView: BaseView {
             $0.edges.equalToSuperview()
         }
         mainTitleLabel.snp.makeConstraints {
-            $0.top.equalTo(safeAreaLayoutGuide.snp.top).inset(20.5.adjustedH)
-            $0.leading.equalToSuperview().inset(24.adjustedW)
+            $0.top.equalTo(safeAreaLayoutGuide.snp.top).inset(20.5)
+            $0.leading.equalTo(safeAreaLayoutGuide).inset(24)
         }
         subTitleLabel.snp.makeConstraints {
-            $0.top.equalTo(mainTitleLabel.snp.bottom).offset(8.adjustedH)
-            $0.leading.equalToSuperview().inset(24.adjustedW)
+            $0.top.equalTo(mainTitleLabel.snp.bottom).offset(8)
+            $0.leading.equalTo(safeAreaLayoutGuide).inset(24)
         }
         allAgreeView.snp.makeConstraints {
-            $0.top.equalTo(subTitleLabel.snp.bottom).offset(28.5.adjustedH)
-            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
-            $0.height.equalTo(59.adjustedH)
+            $0.top.equalTo(subTitleLabel.snp.bottom).offset(28.5)
+            $0.leading.trailing.equalTo(safeAreaLayoutGuide).inset(24)
+            $0.height.equalTo(59)
         }
         allCheckButton.snp.makeConstraints {
-            $0.leading.equalTo(allAgreeView.snp.leading).offset(24.adjustedW)
+            $0.leading.equalTo(allAgreeView.snp.leading).offset(24)
             $0.centerY.equalTo(allAgreeView.snp.centerY)
-            $0.size.equalTo(18.adjustedW)
+            $0.size.equalTo(18)
         }
         allAgreeLabel.snp.makeConstraints {
-            $0.leading.equalTo(allCheckButton.snp.trailing).offset(8.adjustedW)
+            $0.leading.equalTo(allCheckButton.snp.trailing).offset(8)
             $0.centerY.equalTo(allAgreeView.snp.centerY)
         }
         serviceAgreeView.snp.makeConstraints {
-            $0.top.equalTo(allAgreeView.snp.bottom).offset(24.adjustedH)
-            $0.leading.trailing.equalToSuperview()
+            $0.top.equalTo(allAgreeView.snp.bottom).offset(24)
+            $0.leading.trailing.equalTo(safeAreaLayoutGuide)
         }
         privacyAgreeView.snp.makeConstraints {
-            $0.top.equalTo(serviceAgreeView.snp.bottom).offset(16.adjustedH)
-            $0.leading.trailing.equalToSuperview()
+            $0.top.equalTo(serviceAgreeView.snp.bottom).offset(16)
+            $0.leading.trailing.equalTo(safeAreaLayoutGuide)
         }
         ageAgreeView.snp.makeConstraints {
-            $0.top.equalTo(privacyAgreeView.snp.bottom).offset(16.adjustedH)
-            $0.leading.trailing.equalToSuperview()
+            $0.top.equalTo(privacyAgreeView.snp.bottom).offset(16)
+            $0.leading.trailing.equalTo(safeAreaLayoutGuide)
         }
         moveNextButton.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
-            $0.bottom.equalToSuperview().inset(36.adjustedH)
+            $0.leading.trailing.equalTo(safeAreaLayoutGuide).inset(24)
+            $0.bottom.equalToSuperview().inset(36)
         }
     }
 }

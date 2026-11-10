@@ -12,6 +12,7 @@ class BaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         ByeBooLogger.lifeCycle("viewDidLoad 호출 - \(type(of: self))")
+        navigationItem.backButtonDisplayMode = .minimal
 
         setView()
         setAddTarget()

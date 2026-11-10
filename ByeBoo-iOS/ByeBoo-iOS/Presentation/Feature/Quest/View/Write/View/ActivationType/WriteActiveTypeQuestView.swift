@@ -109,7 +109,8 @@ final class WriteActiveTypeQuestView: BaseView {
     
     override func setLayout() {
         scrollView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
+            $0.verticalEdges.equalToSuperview()
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide)
         }
         
         contentView.snp.makeConstraints {
@@ -214,7 +215,7 @@ extension WriteActiveTypeQuestView: WriteQuestBaseProtocol {
         textCountLabel
     }
     var tipTagView: UIView {
-        headerView.tipTag ?? UIView()
+        headerView.tipTag
     }
     var bottomView: UIView {
         bottomContainerView
@@ -240,7 +241,7 @@ extension WriteActiveTypeQuestView: UpdateUIWhenKeyboardProtocol {
         bottomContainerView.removeFromSuperview()
         addSubview(bottomContainerView)
         bottomContainerView.snp.remakeConstraints {
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.trailing.equalTo(safeAreaLayoutGuide)
             $0.height.equalTo(42.adjustedH)
             bottomConstraint = $0.bottom.equalToSuperview().constraint
         }

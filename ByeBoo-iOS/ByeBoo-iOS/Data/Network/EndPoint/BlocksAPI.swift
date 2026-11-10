@@ -41,7 +41,6 @@ extension BlocksAPI: EndPoint {
     }
     
     var headers: HeaderType {
-        let keychainService = DefaultKeychainService()
         return .withAuth
     }
     

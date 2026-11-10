@@ -35,9 +35,12 @@ final class CustomModalController: BaseViewController {
         
         view.addSubview(modalView)
         
+        // 디자인(375pt) 기준 폭 280 고정. 넓은 화면(펼친 iPhone Duo)에서 가로로 늘어나지 않도록 함
+        // 좁은 화면에서는 좌우 여백 24를 남기고 줄어듦
         modalView.snp.makeConstraints {
-            $0.horizontalEdges.equalToSuperview().inset(47.5.adjustedW)
-            $0.centerY.equalToSuperview()
+            $0.center.equalTo(view.safeAreaLayoutGuide)
+            $0.width.equalTo(280).priority(.high)
+            $0.width.lessThanOrEqualTo(view.safeAreaLayoutGuide).inset(24)
         }
     }
     

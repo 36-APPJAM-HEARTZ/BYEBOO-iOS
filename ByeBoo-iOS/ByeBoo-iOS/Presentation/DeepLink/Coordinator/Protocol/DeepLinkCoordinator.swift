@@ -20,6 +20,6 @@ extension DeepLinkCoordinator {
             return nil
         }
         
-        return tabBarController.viewControllers?[index] as? UINavigationController
+        return tabBarController.viewControllers?[index].listNavigationController
     }
 }

@@ -53,31 +53,31 @@ final class SelectQuestView: BaseView {
     
     override func setLayout() {
         titleView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(30.adjustedH)
-            $0.width.equalTo(375.adjustedW)
-            $0.height.equalTo(98.adjustedH)
+            $0.top.equalToSuperview().inset(30)
+            $0.width.equalTo(375)
+            $0.height.equalTo(98)
         }
         
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(15.adjustedH)
-            $0.leading.equalToSuperview().inset(25.adjustedW)
+            $0.top.equalToSuperview().inset(15)
+            $0.leading.equalToSuperview().inset(25)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(327.adjustedW)
-            $0.height.equalTo(31.adjustedH)
+            $0.width.equalTo(327)
+            $0.height.equalTo(31)
         }
         
         subTitleLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(9.adjustedH)
-            $0.leading.equalToSuperview().inset(25.adjustedW)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(9)
+            $0.leading.equalToSuperview().inset(25)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(327.adjustedW)
-            $0.height.equalTo(18.adjustedH)
+            $0.width.equalTo(327)
+            $0.height.equalTo(18)
         }
         
         questCardsView.snp.makeConstraints {
             $0.top.equalTo(titleView.snp.bottom)
-            $0.width.equalTo(375.adjustedW)
-            $0.height.equalTo(214.adjustedH)
+            $0.width.equalTo(375)
+            $0.height.equalTo(214)
         }
     }
     

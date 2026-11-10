@@ -66,16 +66,17 @@ final class HomeOnboardingView: BaseView {
         }
         descriptionLabel.snp.makeConstraints {
             $0.top.equalTo(speechBoxView.snp.top)
-            $0.centerX.equalToSuperview()
+            $0.centerX.equalTo(safeAreaLayoutGuide)
         }
+
         speechBoxView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(316.adjustedH)
-            $0.horizontalEdges.equalToSuperview()
+            $0.top.equalTo(characterLottie.snp.top).offset(-94)
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide)
         }
         characterLottie.snp.makeConstraints {
-            $0.bottom.equalToSuperview().inset(143.adjustedH)
-            $0.width.height.equalTo(259.adjustedH)
-            $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(143)
+            $0.width.height.equalTo(259)
+            $0.centerX.equalTo(safeAreaLayoutGuide)
         }
         foregroundView.snp.makeConstraints {
             $0.edges.equalToSuperview()

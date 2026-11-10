@@ -58,7 +58,8 @@ final class ProgressingQuestsViewModel {
                 let journeyEntity = try await fetchUserJourneyUseCase.execute()
                 journeySubject.send(.success(journeyEntity))
                 loadingSubject.send(false)
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 journeySubject.send(.failure(error))
                 loadingSubject.send(false)
             }
@@ -73,7 +74,8 @@ final class ProgressingQuestsViewModel {
                 self.setQuestTimer()
                 questsSubject.send(.success(questsEntity))
                 loadingSubject.send(false)
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 questsSubject.send(.failure(error))
                 loadingSubject.send(false)
             }

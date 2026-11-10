@@ -75,7 +75,8 @@ extension LoginViewModel {
                 socialLoginAuthSubject.send(.success(()))
                 getIsRegistered()
                 getUserID()
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 ByeBooLogger.error(error)
                 socialLoginAuthSubject.send(.failure(error))
             }

@@ -34,11 +34,11 @@ final class CommonQuestMyAnswersView: BaseView {
     override func setLayout() {
         myAnswerGuideLabel.snp.makeConstraints {
             $0.top.equalTo(safeAreaLayoutGuide).inset(26.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide).inset(24.adjustedW)
         }
         answersTableView.snp.makeConstraints {
             $0.top.equalTo(myAnswerGuideLabel.snp.bottom).offset(20.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
+            $0.horizontalEdges.equalTo(safeAreaLayoutGuide).inset(24.adjustedW)
             $0.bottom.equalToSuperview().inset(24.adjustedH)
         }
     }

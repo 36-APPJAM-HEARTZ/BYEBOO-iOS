@@ -72,38 +72,38 @@ final class InputNicknameView: BaseView {
     
     override func setLayout() {
         titleView.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(30.adjustedH)
-            $0.width.equalTo(375.adjustedW)
-            $0.height.equalTo(98.adjustedH)
+            $0.top.equalToSuperview().offset(30)
+            $0.width.equalTo(375)
+            $0.height.equalTo(98)
         }
         titleLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(15.adjustedH)
-            $0.leading.equalToSuperview().offset(25.adjustedW)
+            $0.top.equalToSuperview().offset(15)
+            $0.leading.equalToSuperview().offset(25)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(327.adjustedW)
-            $0.height.equalTo(31.adjustedH)
+            $0.width.equalTo(327)
+            $0.height.equalTo(31)
         }
         subTitleLabel.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(9.adjustedH)
-            $0.leading.equalToSuperview().offset(25.adjustedW)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(9)
+            $0.leading.equalToSuperview().offset(25)
             $0.centerX.equalToSuperview()
-            $0.width.equalTo(327.adjustedW)
-            $0.height.equalTo(18.adjustedH)
+            $0.width.equalTo(327)
+            $0.height.equalTo(18)
         }
         nicknameFieldView.snp.makeConstraints {
             $0.top.equalTo(titleView.snp.bottom)
-            $0.width.equalTo(375.adjustedW)
-            $0.height.equalTo(72.adjustedH)
+            $0.width.equalTo(375)
+            $0.height.equalTo(72)
         }
         nicknameTextField.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.width.equalTo(327.adjustedW)
-            $0.height.equalTo(56.adjustedH)
+            $0.width.equalTo(327)
+            $0.height.equalTo(56)
         }
         nicknameStateView.snp.makeConstraints {
             $0.top.equalTo(nicknameFieldView.snp.bottom)
-            $0.width.equalTo(375.adjustedW)
-            $0.height.equalTo(48.adjustedH)
+            $0.width.equalTo(375)
+            $0.height.equalTo(48)
         }
     }
     

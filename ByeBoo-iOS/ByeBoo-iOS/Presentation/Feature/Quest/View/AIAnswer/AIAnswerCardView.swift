@@ -20,6 +20,7 @@ final class AIAnswerCardView: BaseView {
         
         cardImageView.do {
             $0.image = .boriLetter
+            $0.contentMode = .scaleAspectFit
             $0.isUserInteractionEnabled = true
         }
         scrollView.do {
@@ -53,10 +54,11 @@ final class AIAnswerCardView: BaseView {
         cardImageView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
+        // 편지 이미지(327 x 569) 안의 글 영역 위치를 카드 높이에 비례하게 유지 (위 217, 아래 98)
         scrollView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(217.adjustedH)
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-            $0.bottom.equalToSuperview().inset(98.adjustedH)
+            $0.top.equalTo(cardImageView.snp.bottom).multipliedBy(217.0 / 569.0)
+            $0.horizontalEdges.equalToSuperview().inset(24)
+            $0.bottom.equalTo(cardImageView.snp.bottom).multipliedBy((569.0 - 98.0) / 569.0)
         }
         contentView.snp.makeConstraints {
             $0.edges.equalToSuperview()
@@ -68,8 +70,8 @@ final class AIAnswerCardView: BaseView {
             $0.verticalEdges.equalToSuperview()
         }
         boriLabel.snp.makeConstraints {
-            $0.top.equalTo(scrollView.snp.bottom).offset(44.adjustedH)
-            $0.trailing.equalToSuperview().inset(24.adjustedW)
+            $0.top.equalTo(scrollView.snp.bottom).offset(44)
+            $0.trailing.equalToSuperview().inset(24)
         }
     }
 }

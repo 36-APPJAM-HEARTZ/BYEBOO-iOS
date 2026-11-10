@@ -52,7 +52,6 @@ final class CommonQuestHistoryViewController: BaseViewController {
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
             type: .backAndMenu(header: .black),
-            action: #selector(back),
             secondAction: #selector(bottomUp)
         )
         
@@ -85,12 +84,6 @@ final class CommonQuestHistoryViewController: BaseViewController {
 extension CommonQuestHistoryViewController {
     func configure(answerID: Int) {
         self.answerID = answerID
-    }
-}
-
-extension CommonQuestHistoryViewController: BackNavigable {
-    func back() {
-        self.navigationController?.popViewController(animated: false)
     }
 }
 
@@ -214,12 +207,19 @@ extension CommonQuestHistoryViewController: CommentProtocol {
             viewModel.action(.fetchQuestDetail(answerID: answerID))
         }
         
-        if let sheet =  viewController.sheetPresentationController{
+        // 펼친 iPhone Duo에서는 시트 대신 오른쪽 칸 안에서 이동
+        if isDetailPaneVisible {
+            self.navigationController?.pushViewController(viewController, animated: false)
+            return
+        }
+        
+        let navigationController = UINavigationController(rootViewController: viewController)
+        if let sheet = navigationController.sheetPresentationController {
             sheet.detents = [.large()]
             sheet.prefersGrabberVisible = true
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
         }
-        self.present(viewController, animated: true)
+        self.present(navigationController, animated: true)
     }
     
     func menuButtonDidTap(commentID: Int, isMyComment: Bool) {

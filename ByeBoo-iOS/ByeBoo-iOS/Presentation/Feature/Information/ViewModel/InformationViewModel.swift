@@ -18,7 +18,6 @@ final class InformationViewModel {
     
     private var currentNickname: String?
     private var currentQuestStyle: SelectQuestType?
-    private var user: UserEntity = UserEntity(id: 1, name: "")
     
     private let checkValidNicknameUseCase: CheckValidNicknameUseCase
     private let isForbiddenWordUseCase: IsForbiddenWordUseCase
@@ -58,7 +57,8 @@ final class InformationViewModel {
                     questStyle: questStyle.key
                 )
                 getUserName()
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 userInformationSubject.send(.failure(error))
             }
         }
@@ -109,12 +109,5 @@ extension InformationViewModel: ViewModelType {
             )
             userInformationSubject.send(.success(()))
         }
-    }
-}
-
-extension InformationViewModel {
-    
-    func resetData() {
-        currentQuestStyle = nil
     }
 }

@@ -35,8 +35,11 @@ final class ViewAllQuestBaseView: BaseView {
     }
     
     override func setLayout() {
+        // iPhone Duo 대응: 넓은 화면에서 칸이 너무 커지지 않도록 가장 큰 iPhone 폭(440)까지만 쓰고 가운데 정렬
         questCheckHeaderView.snp.makeConstraints {
-            $0.leading.trailing.equalToSuperview()
+            $0.centerX.equalTo(safeAreaLayoutGuide)
+            $0.width.equalTo(safeAreaLayoutGuide).priority(.high)
+            $0.width.lessThanOrEqualTo(440)
             if questCheckHeaderView is QuestCheckHeaderView {
                 $0.top.equalToSuperview()
                 return
@@ -45,7 +48,8 @@ final class ViewAllQuestBaseView: BaseView {
         }
         questCollectionView.snp.makeConstraints {
             $0.top.equalTo(questCheckHeaderView.snp.bottom)
-            $0.leading.trailing.bottom.equalToSuperview()
+            $0.horizontalEdges.equalTo(questCheckHeaderView)
+            $0.bottom.equalToSuperview()
         }
     }
 }

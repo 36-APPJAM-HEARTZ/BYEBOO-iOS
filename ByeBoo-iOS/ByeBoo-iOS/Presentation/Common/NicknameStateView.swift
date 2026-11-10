@@ -44,8 +44,8 @@ final class NicknameStateView: BaseView {
     }
     
     override func setLayout() {
+        // 폭은 사용하는 쪽에서 정함 (고정하면 iPhone Duo의 좁은 칸에서 제약이 충돌)
         self.snp.makeConstraints {
-            $0.width.equalTo(375.adjustedW)
             $0.height.equalTo(48.adjustedH)
         }
         errorIconImageView.snp.makeConstraints {
@@ -56,7 +56,7 @@ final class NicknameStateView: BaseView {
         stateLabel.snp.makeConstraints {
             $0.leading.equalTo(errorIconImageView.snp.trailing).offset(3.adjustedW)
             $0.top.equalToSuperview().offset(8.adjustedH)
-            $0.width.equalTo(300.adjustedW)
+            $0.trailing.lessThanOrEqualTo(letterCountLabel.snp.leading).offset(-4)
             $0.height.equalTo(16.adjustedH)
         }
         letterCountLabel.snp.makeConstraints {

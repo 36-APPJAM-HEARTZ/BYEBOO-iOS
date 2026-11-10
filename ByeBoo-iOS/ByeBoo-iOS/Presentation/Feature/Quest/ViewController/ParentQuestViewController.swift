@@ -67,6 +67,7 @@ final class ParentQuestViewController<T: TabItem>: BaseViewController, ToastPres
     func selectTab(index: Int) {
         guard controllers.indices.contains(index) else { return }
         
+        if selectedIndex != index { resetDetail() }
         selectedIndex = index
         show(controllers[index])
         tabBar.select(index: index)
@@ -122,6 +123,7 @@ extension ParentQuestViewController {
             else {
                 return
             }
+            if selectedIndex != index { resetDetail() }
             selectedIndex = index
             show(controllers[index])
         }

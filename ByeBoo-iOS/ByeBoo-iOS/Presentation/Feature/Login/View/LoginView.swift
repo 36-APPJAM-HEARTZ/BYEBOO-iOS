@@ -20,11 +20,12 @@ final class LoginView: BaseView {
     
     private var logoTopConstraint: Constraint?
     private var appleButtonTopConstraint: Constraint?
-    private var kakaoButtonTopConstraint: Constraint?
     
     override func setStyle() {
         backgroundImageView.do {
             $0.image = .bgDark
+            $0.contentMode = .scaleAspectFill
+            $0.clipsToBounds = true
         }
         
         logoImageView.do {
@@ -66,22 +67,26 @@ final class LoginView: BaseView {
         }
         
         appleLoginButton.snp.makeConstraints {
-            self.appleButtonTopConstraint = $0.top.equalToSuperview().offset(UIScreen.main.bounds.height + 100).constraint
+            self.appleButtonTopConstraint = $0.top.equalToSuperview().constraint
             $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
             $0.height.equalTo(53.adjustedH)
         }
         
         kakaoLoginButton.snp.makeConstraints {
-            self.kakaoButtonTopConstraint = $0.top.equalToSuperview().offset(UIScreen.main.bounds.height + 100).constraint
-            $0.leading.trailing.equalToSuperview().inset(24.adjustedW)
+            $0.top.equalTo(appleLoginButton.snp.bottom).offset(16.adjustedH)
+            $0.leading.trailing.height.equalTo(appleLoginButton)
         }
     }
     
     func startAnimation() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            // 화면 아래에서 올라오도록 현재 뷰 높이 기준으로 시작 위치 설정
+            let hiddenOffset = self.bounds.height + 100
+            self.appleButtonTopConstraint?.update(offset: hiddenOffset)
+            self.layoutIfNeeded()
+            
             self.logoTopConstraint?.update(inset: 265.adjustedH)
             self.appleButtonTopConstraint?.update(offset: 265.adjustedH + 57.adjustedH + 314.adjustedH)
-            self.kakaoButtonTopConstraint?.update(offset: 265.adjustedH + 57.adjustedH + 314.adjustedH + 53 + 16.adjustedH)
             
             
             UIView.animate(withDuration: 0.6, delay: 0, options: [.curveEaseOut]) {

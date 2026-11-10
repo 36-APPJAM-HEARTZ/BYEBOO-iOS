@@ -62,21 +62,22 @@ final class ProgressBarView: BaseView {
     
     override func setLayout() {
         progressGroupView.snp.makeConstraints {
-            $0.width.equalTo(375.adjustedW)
+            $0.edges.equalToSuperview()
+            $0.width.equalTo(375)
         }
         progressStackView.snp.makeConstraints {
             $0.center.equalToSuperview()
-            $0.horizontalEdges.equalToSuperview().inset(24.adjustedW)
-            $0.top.equalToSuperview().inset(13.adjustedH)
-            $0.bottom.equalToSuperview().inset(13.adjustedH)
+            $0.horizontalEdges.equalToSuperview().inset(24)
+            $0.top.equalToSuperview().inset(13)
+            $0.bottom.equalToSuperview().inset(13)
         }
         firstProgressView.snp.makeConstraints {
-            $0.width.equalTo(160.adjustedW)
-            $0.height.equalTo(6.adjustedH)
+            $0.width.equalTo(160)
+            $0.height.equalTo(6)
         }
         secondProgressView.snp.makeConstraints {
-            $0.width.equalTo(160.adjustedW)
-            $0.height.equalTo(6.adjustedH)
+            $0.width.equalTo(160)
+            $0.height.equalTo(6)
         }
     }
     
@@ -95,7 +96,7 @@ final class ProgressBarView: BaseView {
         progressView.do {
             $0.trackTintColor = .primary30020
             $0.progressTintColor = .primary300
-            $0.layer.cornerRadius = 12.adjustedW
+            $0.layer.cornerRadius = 12
         }
     }
 }

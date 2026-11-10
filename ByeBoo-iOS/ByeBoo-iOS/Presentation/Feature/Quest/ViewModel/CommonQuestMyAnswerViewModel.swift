@@ -21,7 +21,6 @@ final class CommonQuestMyAnswerViewModel {
     
     
     private(set) var output: Output
-    private var commonQuestAnswers: CommonQuestMyAnswersEntity?
     private var answers: [CommonQuestMyAnswerEntity] = []
     private(set) var hasMorePages = true
     private var nextCursor: Int? = nil
@@ -57,13 +56,13 @@ final class CommonQuestMyAnswerViewModel {
                 }
                 
                 let result = try await fetchCommonQuestMyAnswersUseCase.execute(cursor: cursor)
-                commonQuestAnswers = result
                 hasMorePages = result.hasNext
                 nextCursor = result.nextCursor
                 answers.append(contentsOf: result.answers)
                 
                 answersSubject.send(.success(()))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 answersSubject.send(.failure(error))
             }
         }

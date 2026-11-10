@@ -37,8 +37,7 @@ final class BlockedkUserListViewController: BaseViewController {
         ByeBooNavigationBar.makeNavigationBar(
             navigationItem: self.navigationItem,
             navigationController: self.navigationController,
-            type: .titleAndBack("차단 사용자 목록", header: .black),
-            action: #selector(back)
+            type: .titleAndBack("차단 사용자 목록", header: .black)
         )
     }
     
@@ -84,12 +83,6 @@ extension BlockedkUserListViewController {
                 }
             }
             .store(in: &cancellables)
-    }
-}
-extension BlockedkUserListViewController: BackNavigable {
-    
-    func back() {
-        self.navigationController?.popViewController(animated: false)
     }
 }
 

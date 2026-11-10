@@ -58,6 +58,13 @@ final class MyPageViewController: BaseViewController {
             name: UIApplication.didBecomeActiveNotification,
             object: nil
         )
+        // iPhone Duo 대응: 상세가 오른쪽에 열리면 viewWillAppear가 불리지 않으므로 닫힐 때 닉네임을 다시 불러옴
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(detailDidClose),
+            name: .listDetailDidClose,
+            object: nil
+        )
     }
     
     override func setAddTarget() {
@@ -260,10 +267,20 @@ extension MyPageViewController {
     }
     
     @objc
+    private func detailDidClose() {
+        viewModel.action(.viewWillAppear)
+    }
+    
+    @objc
     private func lookBackButtonDidTap() {
         let lookBackJourneyViewController = ViewControllerFactory.shared.makeLookBackJourneyViewController()
         lookBackJourneyViewController.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(lookBackJourneyViewController, animated: true)
+        // 펼친 iPhone Duo에서는 목록 오른쪽에, 그 외에는 기존처럼 애니메이션과 함께 push
+        if isDetailPaneVisible {
+            showDetail(lookBackJourneyViewController)
+        } else {
+            navigationController?.pushViewController(lookBackJourneyViewController, animated: true)
+        }
         
         Mixpanel.mainInstance().track(event: MyPageEvents.Name.myPageJourneyReviewClick)
     }
@@ -271,9 +288,9 @@ extension MyPageViewController {
     @objc
     private func viewByeBooWorldDidTap() {
         let tutorialViewController = TutorialModalViewController()
-        tutorialViewController.navigationItem.hidesBackButton = true
         tutorialViewController.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(tutorialViewController, animated: false)
+        // 펼친 iPhone Duo에서는 목록 오른쪽에, 그 외에는 push
+        showDetail(tutorialViewController)
         
         Mixpanel.mainInstance().track(event: MyPageEvents.Name.tutorialButtonClick)
     }
@@ -283,7 +300,8 @@ extension MyPageViewController {
         let modifyNicknameViewController = ViewControllerFactory.shared.makeModifyNicknameViewController()
         modifyNicknameViewController.updateName(self.name)
         modifyNicknameViewController.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(modifyNicknameViewController, animated: false)
+        // 펼친 iPhone Duo에서는 목록 오른쪽에, 그 외에는 push
+        showDetail(modifyNicknameViewController)
     }
     
     @objc
@@ -329,7 +347,8 @@ extension MyPageViewController {
             let viewController = ViewControllerFactory.shared.makeBlockedUserListViewController()
             viewController.navigationItem.hidesBackButton = true
             viewController.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController(viewController, animated: false)
+            // 펼친 iPhone Duo에서는 목록 오른쪽에, 그 외에는 push
+            showDetail(viewController)
         case .privacyPolicy:
             ExternalLink.privacyPolicy.openURL(for: self)
         case .serviceTerm:

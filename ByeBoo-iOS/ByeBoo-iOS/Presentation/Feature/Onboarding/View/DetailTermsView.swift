@@ -55,18 +55,18 @@ final class DetailTermsView: BaseView {
     
     override func setLayout() {
         self.snp.makeConstraints {
-            $0.height.equalTo(16.adjustedH)
+            $0.height.equalTo(16)
         }
         checkButton.snp.makeConstraints {
-            $0.leading.equalToSuperview().inset(39.5.adjustedW)
-            $0.size.equalTo(12.adjustedW)
+            $0.leading.equalToSuperview().inset(39.5)
+            $0.size.equalTo(12)
         }
         contentLabel.snp.makeConstraints {
-            $0.leading.equalTo(checkButton.snp.trailing).offset(16.adjustedW)
+            $0.leading.equalTo(checkButton.snp.trailing).offset(16)
             $0.centerY.equalTo(checkButton.snp.centerY)
         }
         viewMoreButton.snp.makeConstraints {
-            $0.trailing.equalToSuperview().inset(39.5.adjustedW)
+            $0.trailing.equalToSuperview().inset(39.5)
             $0.centerY.equalTo(checkButton.snp.centerY)
         }
     }

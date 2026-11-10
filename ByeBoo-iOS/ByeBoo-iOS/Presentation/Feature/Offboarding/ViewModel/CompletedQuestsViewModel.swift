@@ -47,7 +47,8 @@ final class CompletedQuestsViewModel {
                 )
                 self.questsEntity = completedQuestsEntity
                 questsSubject.send(.success(completedQuestsEntity))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 questsSubject.send(.failure(error))
             }
         }

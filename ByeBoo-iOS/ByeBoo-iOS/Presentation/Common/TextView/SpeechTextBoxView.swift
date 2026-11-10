@@ -43,12 +43,12 @@ final class SpeechTextBoxView: BaseView {
     
     override func setLayout() {
         image.snp.makeConstraints {
-            $0.width.equalTo(327.adjustedW)
+            $0.width.equalTo(327)
             $0.centerX.equalToSuperview()
             $0.verticalEdges.equalToSuperview()
         }
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(image.snp.top).offset(14.adjustedH)
+            $0.top.equalTo(image.snp.top).offset(14)
             $0.centerX.equalTo(image)
         }
     }

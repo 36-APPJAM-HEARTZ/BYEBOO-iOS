@@ -14,6 +14,7 @@ final class CommonQuestViewController: BaseViewController {
     
     private let rootView = CommonQuestView()
     private let viewModel: CommonQuestViewModel
+    private var selectedDate: Date = .now
     
     private var cancellable = Set<AnyCancellable>()
     
@@ -42,6 +43,14 @@ final class CommonQuestViewController: BaseViewController {
         super.viewDidLoad()
         
         bind()
+        
+        // iPhone Duo 대응: 상세가 오른쪽에 열리면 이 화면의 viewWillAppear가 불리지 않으므로 상세가 닫힐 때 다시 불러옴
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(detailDidClose),
+            name: .listDetailDidClose,
+            object: nil
+        )
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -122,14 +131,17 @@ extension CommonQuestViewController {
 extension CommonQuestViewController: DateNavigatorDelegate {
     
     @objc
+    private func detailDidClose() {
+        viewModel.action(.viewWillAppear)
+    }
+    
+    @objc
     private func myAnswerHistoryButtonDidTap() {
         let myAnswersViewController = ViewControllerFactory.shared.makeCommonQuestMyAnswersViewController()
         myAnswersViewController.navigationItem.hidesBackButton = true
         
-        self.navigationController?.pushViewController(
-            myAnswersViewController,
-            animated: false
-        )
+        // 펼친 iPhone Duo에서는 목록 오른쪽에, 그 외에는 push
+        showDetail(myAnswersViewController)
     }
     
     @objc
@@ -139,15 +151,19 @@ extension CommonQuestViewController: DateNavigatorDelegate {
         writeCommonQuestViewController.navigationItem.hidesBackButton = true
         writeCommonQuestViewController.questScope = .common
         writeCommonQuestViewController.configureToWrite(questID, nil, QuestType.question, viewModel.question)
-        self.navigationController?.pushViewController(writeCommonQuestViewController, animated: false)
+        // 펼친 iPhone Duo에서는 목록 오른쪽에, 그 외에는 push
+        showDetail(writeCommonQuestViewController)
         
         Mixpanel.mainInstance().track(event: CommonJourneyEvents.Name.commonJourneyWriteClick)
     }
     
     func dateDidChanged(to date: Date) {
+        selectedDate = date
         let _ = viewModel.action(
             .moveDateButtonDidTap(selectedDate: DateFormatter.toAPIDateString(from: date))
         )
+        // 목록이 바뀌므로 오른쪽에 열린 이전 날짜의 상세를 닫음. 닫힐 때 새로고침이 새 날짜로 가도록 날짜 변경 뒤에 호출
+        resetDetail()
     }
 }
 
@@ -166,10 +182,8 @@ extension CommonQuestViewController: UITableViewDelegate {
         let historyViewController = ViewControllerFactory.shared.makeCommonQuestHistoryViewController()
         historyViewController.configure(answerID: answerID)
         historyViewController.navigationItem.hidesBackButton = true
-        self.navigationController?.pushViewController(
-            historyViewController,
-            animated: false
-        )
+        // 펼친 iPhone Duo에서는 목록 오른쪽에, 그 외에는 push
+        showDetail(historyViewController)
     }
     
     func tableView(
@@ -190,6 +204,7 @@ extension CommonQuestViewController: UITableViewDelegate {
         }
         
         navigator.delegate = self
+        navigator.configure(currentDate: selectedDate)
         return navigator
     }
     
@@ -197,7 +212,8 @@ extension CommonQuestViewController: UITableViewDelegate {
         _ tableView: UITableView,
         heightForHeaderInSection section: Int
     ) -> CGFloat {
-        76.adjustedH
+        // 고정 높이면 높이가 낮은 화면(iPhone Duo 외부 디스플레이)에서 날짜 버튼이 눌리므로 내용에 맞춤
+        UITableView.automaticDimension
     }
     
     func tableView(

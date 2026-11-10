@@ -77,7 +77,8 @@ extension QuestStartViewModel {
             do {
                 try await startJourneyUseCase.execute()
                 startResultSubject.send(.success(true))
-            } catch(let error as ByeBooError){
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 startResultSubject.send(.failure(error))
             }
         }
@@ -88,7 +89,8 @@ extension QuestStartViewModel {
             do {
                 let _ = try await postJourneyUseCase.execute(journey: JourneyType.titleToEnum(journey) ?? .recording)
                 startResultSubject.send(.success(true))
-            } catch(let error as ByeBooError) {
+            } catch {
+                let error = error as? ByeBooError ?? .unknownError
                 ByeBooLogger.error(error as ByeBooError)
                 startResultSubject.send(.failure((error)))
             }

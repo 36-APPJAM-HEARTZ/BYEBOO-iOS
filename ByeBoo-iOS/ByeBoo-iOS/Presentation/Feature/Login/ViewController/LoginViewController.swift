@@ -94,7 +94,10 @@ extension LoginViewController {
                     if isRegisterd {
                         nextViewController = ByeBooTabBar()
                     } else {
-                        nextViewController = UINavigationController(rootViewController: ViewControllerFactory.shared.makeTermsViewController())
+                        let navigationController = UINavigationController(rootViewController: ViewControllerFactory.shared.makeTermsViewController().arrangedWithEmptyView())
+
+                        navigationController.interactivePopGestureRecognizer?.isEnabled = false
+                        nextViewController = navigationController
                     }
                     
                     if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,

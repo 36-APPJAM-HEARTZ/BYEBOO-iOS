@@ -35,7 +35,6 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
     var isKeyboardUsed: Bool = false
     private var keyboardFrameInWindow: CGRect = .zero
     private var currentKeyboardOffset: CGFloat = 0
-    private var previousTextViewHeight: CGFloat = 0
     
     init(rootView: RootView) {
         self.rootView = rootView
@@ -66,7 +65,7 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
             secondAction: #selector(confirmButtonDidTap)
         )
         
-        self.navigationItem.rightBarButtonItems?[1].isEnabled = false
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -92,7 +91,10 @@ class WriteQuestBaseViewController<RootView: BaseView & WriteQuestBaseProtocol>:
     }
     
     func back() {
-        tabBarController?.tabBar.isHidden = true
+        // 펼친 iPhone Duo에서는 탭 바가 세로 바에 그대로 보여야 함
+        if !isDetailPaneVisible {
+            tabBarController?.tabBar.isHidden = true
+        }
         
         let action: (() -> Void) = {
             self.navigationController?.popViewController(animated: true)
