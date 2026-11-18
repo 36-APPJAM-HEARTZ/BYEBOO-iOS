@@ -22,7 +22,6 @@ XCODEPROJ = "ByeBoo-iOS.xcodeproj"
 SCHEME = "ByeBoo-iOS"
 
 platform :ios do
-
   def prepare_ci_and_signing
     app_store_connect_api_key(
       key_id: ENV['APP_STORE_CONNECT_API_KEY_KEY_ID'],
@@ -108,7 +107,7 @@ platform :ios do
       upload_to_app_store(
         skip_screenshots: true,
         skip_metadata: false,
-        skip_app_version_update: true,
+        app_version: get_version_number(xcodeproj: XCODEPROJ, target: SCHEME), # ASC에 버전 없으면 자동 생성
         force: true,
         submit_for_review: true,                  # 자동으로 심사 제출
         automatic_release: false,                 
