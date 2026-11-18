@@ -179,7 +179,9 @@ extension QuestCheckViewController {
         )
         self.questsCheckView.questCollectionView.reloadData()
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            // 화면에서 빠진 경우 스크롤하지 않음
+            guard let self, self.view.window != nil else { return }
             self.scrollToStep()
         }
     }
